@@ -126,9 +126,10 @@ Real acceleration levers (free):
 - **Auto-trending Procreate & digital-art highlights.** The homepage builds a daily-rotating
   “Trending in Procreate & Digital Art” section from your own products + internal trending-search
   links. The products page has a **Trending** filter.
-- **Auto-add Payhip products.** `.github/workflows/sync-payhip.yml` runs daily (and on demand) to
-  detect new products on `payhip.com/digikitpro`, add them to `data/products.json`, rebuild the
-  site, and commit. See `SEO-INDEXING.md` §3.
+- **Auto-add Payhip products.** `tools/payhip_sync.py` plus
+  `docs/automation/payhip-auto-sync.yml` (install it as `.github/workflows/sync-payhip.yml`) detect
+  new products on `payhip.com/digikitpro`, add them to `data/products.json`, rebuild the site, and
+  commit. See `SEO-INDEXING.md` §3 and `docs/automation/README.md`.
 - **IndexNow instant indexing.** Add a repository variable `INDEXNOW_KEY` and the deploy workflow
   pings Bing/Yandex/Seznam automatically.
 - The word “New” no longer appears in the header/homepage badges or the eBook section eyebrow.

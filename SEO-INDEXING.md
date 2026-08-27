@@ -13,8 +13,9 @@ What this update adds (and how to use it):
 2. **Auto-trending highlights** — the homepage builds a daily-rotating “Trending in Procreate &
    Digital Art” section from your own catalog (best-sellers, bundles, freebies) plus internal
    “Trending searches” links. Products page has a **Trending** filter chip.
-3. **Auto-add Payhip products** — `tools/payhip_sync.py` runs on a schedule (`.github/workflows/sync-payhip.yml`)
-   and on demand. It reads your public Payhip store, discovers new product IDs, fetches the product
+3. **Auto-add Payhip products** — `tools/payhip_sync.py` plus the ready-to-install
+   `docs/automation/payhip-auto-sync.yml` (move it to `.github/workflows/sync-payhip.yml`).
+   It reads your public Payhip store, discovers new product IDs, fetches the product
    details, adds them to `data/products.json`, rebuilds the site, and commits. Products you add on
    Payhip appear on the site automatically. (It never overwrites hand-written SEO copy.)
 4. **IndexNow** — optional free instant indexing for Bing/Yandex/Seznam.
@@ -77,6 +78,8 @@ python3 tools/payhip_sync.py      # adds/updates data/products.json
 python3 tools/build.py            # regenerates product pages, sitemap, search index
 ```
 
+- Install the workflow: copy `docs/automation/payhip-auto-sync.yml` to
+  `.github/workflows/sync-payhip.yml` (see `docs/automation/README.md`).
 - If the workflow finds new Payhip products it commits them and the deploy workflow publishes them.
 - New products are added as **Trending/featured** so they appear near the top, but they are **not**
   labeled “New”.

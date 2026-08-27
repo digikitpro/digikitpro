@@ -102,8 +102,9 @@ Nothing is invented. If a product is added/removed in the store later, update
 
 ## 7. Auto-sync from Payhip, translation & trending (v2)
 
-- **Payhip → site:** run `python3 tools/payhip_sync.py` (or let `.github/workflows/sync-payhip.yml`
-  run daily) to detect and add new products automatically. It never overwrites hand-written SEO copy.
+- **Payhip → site:** run `python3 tools/payhip_sync.py` (or install
+  `docs/automation/payhip-auto-sync.yml` as `.github/workflows/sync-payhip.yml` to run it daily) to
+  detect and add new products automatically. It never overwrites hand-written SEO copy.
 - **International:** the header includes a 7-language Google Translate switcher and the homepage has
   a worldwide trust band. `tools/core.py` has `LANGUAGES` and `GEO_META` if you want to change them.
 - **Trending:** homepage and `/products.html` build auto-rotating trending product cards + trending
