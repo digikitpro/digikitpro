@@ -1,0 +1,58 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# DigiKitPro — automatic build & deploy to GitHub Pages (100% free)
+#
+# HOW IT WORKS
+#   1. Push this folder to a GitHub repository (see GO-LIVE.md for click-by-click).
+#   2. In the repo: Settings → Pages → "Build and deployment" → Source = "GitHub Actions".
+#   3. From then on, EVERY edit triggers this workflow:
+#        python3 tools/build.py  →  rebuilds all HTML/sitemap  →  deploys live.
+#      You can edit data/products.json or add a file in content/blog/ directly
+#      on github.com (pencil icon → Commit) — no tools on your PC needed.
+# ─────────────────────────────────────────────────────────────────────────────
+name: Build & deploy site
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:            # "Run workflow" button for a manual rebuild
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build static site (products.json + content/blog/*.md → HTML, sitemap, index)
+        env:
+          # Project page URL = https://<username>.github.io/<repo-name>
+          # If your repo is literally named <username>.github.io, change the line to:
+          #   SITE_URL: https://${{ github.repository_owner }}.github.io
+          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          # Optional: paste verification tokens here once Search Console issues them
+          GOOGLE_VERIFY: ${{ vars.GOOGLE_VERIFY }}
+          BING_VERIFY: ${{ vars.BING_VERIFY }}
+        run: python3 tools/build.py
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .               # the repository root IS the built site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

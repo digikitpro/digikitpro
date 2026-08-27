@@ -1,0 +1,14 @@
+# DigiKitPro — Git ignores
+# local exports
+*.zip
+digikitpro-github-ready.zip
+# scratch / QA
+shots/
+uploads/
+.cache/
+# python
+__pycache__/
+*.pyc
+# os cruft
+.DS_Store
+Thumbs.db

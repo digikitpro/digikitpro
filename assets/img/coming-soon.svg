@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#141417"/>
+  <rect x="28" y="28" width="1144" height="744" fill="none" stroke="#29292f" stroke-width="2"/>
+  <circle cx="600" cy="330" r="64" fill="none" stroke="#c9a86a" stroke-width="2.5"/>
+  <text x="600" y="356" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="72" fill="#c9a86a">D</text>
+  <text x="600" y="470" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#f5f2eb">Artwork coming soon</text>
+  <text x="600" y="530" text-anchor="middle" font-family="Verdana, sans-serif" font-size="22" fill="#aaa7a0">DigiKitPro · payhip.com/digikitpro</text>
+</svg>
