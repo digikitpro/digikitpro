@@ -24,6 +24,8 @@ def build_misc():
       <li><strong>Real media behavior.</strong> Bleeds, tooth, crumble and granulation, digital tools should carry the soul of physical media.</li>
       <li><strong>Honest pricing.</strong> Professional kits for the price of a coffee, and a free collection big enough to start a career with.</li>
     </ul>
+    <h2>Worldwide, instant, in your language</h2>
+    <p>Everything here is a digital download delivered instantly through Payhip, so artists in the <strong>United States, Canada, Europe and every other country</strong> get the same files at the same moment. There is no shipping and no physical product. Prices display in USD, and Payhip automatically converts the charge to your local currency at checkout. Use the globe button in the header to translate the whole site into English, Español, Français, Deutsch, Italiano, Português or Nederlands.</p>
     <h2 id="contact">Contact</h2>
     <p>Questions about a product, an order, or a collaboration? Email us directly at <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> or use the contact form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a>, we read everything.</p>
   </div></section>
@@ -126,18 +128,26 @@ Sitemap: {SITE_URL}/sitemap.xml
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for u in urls:
         pr = "1.0" if u == "/" else "0.8" if u.endswith("/") else "0.6"
-        sm += f" <url><loc>{SITE_URL}{u}</loc><lastmod>{BUILD_DATE}</lastmod><priority>{pr}</priority></url>\n"
+        freq = "daily" if u == "/" or u.startswith("/products/") else "weekly"
+        sm += f" <url><loc>{SITE_URL}{u}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>{freq}</changefreq><priority>{pr}</priority></url>\n"
     sm += "</urlset>\n"
     write("sitemap.xml", sm)
+
+    # IndexNow key file (Bing/Yandex/Seznam instant indexing). Only written when
+    # INDEXNOW_KEY env var / GitHub Actions variable is configured.
+    if INDEXNOW_KEY:
+        write(f"{INDEXNOW_KEY}.txt", INDEXNOW_KEY)
+        print(f"wrote IndexNow key file: {INDEXNOW_KEY}.txt")
 
     # ── search index (lean, served as window.DKP_INDEX) ──
     idx_products = []
     for p in PRODUCTS:
         im = p.get("images") or {}
+        card = im.get("card", "")
         idx_products.append({
             "t": p["name"], "u": f"products/{p['slug']}/", "c": p["category"],
             "p": p["priceText"], "s": p["short"][:140],
-            "img": f"assets/products/{p['slug']}/{im.get('card','')}",
+            "img": card if is_abs(card) else f"assets/products/{p['slug']}/{card}",
             "k": " ".join([p["name"], p["category"], " ".join(p.get("tags", [])), p.get("assets") or "",
                             "free" if p["free"] else "", "bundle" if p["category"] == "Bundles" else ""]).lower(),
             "free": p["free"],

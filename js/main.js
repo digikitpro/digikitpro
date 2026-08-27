@@ -45,8 +45,9 @@
 
  /* ---------- error boundary: never fail into a silent black page ---------- */
  window.addEventListener("error", function (e) {
- if (document.getElementById("dkp-errbar")) return;
- if (e.target && e.target.tagName === "IMG") return; // handled above, quietly
+    if (document.getElementById("dkp-errbar")) return;
+    if (e.target && e.target.tagName === "IMG") return; // handled above, quietly
+    if (e.target && e.target.tagName === "SCRIPT") return; // optional scripts (translate.js) handled by their own code
  var bar = document.createElement("div");
  bar.id = "dkp-errbar";
  bar.className = "err-bar";
@@ -66,11 +67,11 @@
  }
 
  /* ---------- search ---------- */
- function relTo(path) {
- var depth = (location.pathname.replace(/\/index\.html$/, "/").match(/\//g) || []).length - 1;
- // count depth under site root lives; use data-driven prefix instead:
- return (window.__DKP_PREFIX || "") + path;
- }
+  function relTo(path) {
+    // Absolute URLs are left alone (used by Payhip-hosted images for auto-added products).
+    if (/^(?:https?:)?\/\//i.test(path || "")) return path;
+    return (window.__DKP_PREFIX || "") + path;
+  }
  // compute root prefix from the injected script path (works on any depth)
  (function () {
  var sc = document.querySelector('script[src$="js/main.js"]');
@@ -159,15 +160,18 @@
  var cards = $$(".card[data-category]");
  if (chips.length && cards.length) {
  var emptyNote = $("[data-empty-note]");
- var apply = function (f) {
- var shown = 0;
- cards.forEach(function (c) {
- var match = f === "all" || (f === "__free" ? c.getAttribute("data-free") === "1" : c.getAttribute("data-category") === f);
- c.classList.toggle("hidden", !match);
- if (match) shown++;
- });
- if (emptyNote) emptyNote.hidden = shown !== 0;
- };
+  var apply = function (f) {
+    var shown = 0;
+    cards.forEach(function (c) {
+      var match = f === "all"
+        || (f === "__free" ? c.getAttribute("data-free") === "1"
+          : (f === "__featured" ? c.getAttribute("data-featured") === "1"
+            : c.getAttribute("data-category") === f));
+      c.classList.toggle("hidden", !match);
+      if (match) shown++;
+    });
+    if (emptyNote) emptyNote.hidden = shown !== 0;
+  };
  chips.forEach(function (ch) {
  ch.addEventListener("click", function () {
  chips.forEach(function (c) { c.classList.remove("active"); });

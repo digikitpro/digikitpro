@@ -50,7 +50,8 @@ def md_to_html(body, depth=2):
         if re.match(r"^\d+\. ", ln):
             buf = []
             while i < len(lines) and re.match(r"^\d+\. ", lines[i]):
-                buf.append(f"<li>{inline(re.sub(r'^\d+\. ', '', lines[i]), depth)}</li>"); i += 1
+                clean = re.sub(r"^\d+\. ", "", lines[i])
+                buf.append(f"<li>{inline(clean, depth)}</li>"); i += 1
             out.append("<ol>" + "".join(buf) + "</ol>"); continue
         buf = [ln]
         i += 1
@@ -71,10 +72,11 @@ def load_articles():
         prods = [s for s in (fm.get("products") or []) if s in BY_SLUG]
         if prods:
             im = BY_SLUG[prods[0]]["images"] or {}
+            card_url, main_url = im.get("card",""), im.get("main","")
             fm["_pslug"], fm["_im"] = prods[0], im
-            fm["image"] = f"assets/products/{prods[0]}/{im.get('card','')}"
+            fm["image"] = card_url if is_abs(card_url) else f"assets/products/{prods[0]}/{card_url}"
             fm["imgW"], fm["imgH"] = im.get("cardW") or 750, im.get("cardH") or 500
-            fm["hero"] = f"assets/products/{prods[0]}/{im.get('main','')}"
+            fm["hero"] = main_url if is_abs(main_url) else f"assets/products/{prods[0]}/{main_url}"
             fm["heroW"], fm["heroH"] = im.get("fullW") or 1200, im.get("fullH") or 800
         else: # every article card MUST have a thumbnail → branded fallback
             fm["image"] = "assets/img/og-cover.jpg"
@@ -142,9 +144,10 @@ def build_blog():
                 f'<a class="text-link" href="../{r["slug"]}/">{esc(r["title"])}</a>' for r in rel_arts) + "</div></nav>"
         schemas = schema_article(a) + schema_breadcrumb([("Home","/"),("Blog","/blog.html"),(a["title"], f"/blog/{a['slug']}/")])
         hero_ss = img_srcset(depth, a.get("_pslug",""), a.get("_im") or {}, "(min-width: 860px) 760px, 94vw")
+        og_img = (asset_abs(a["products"][0], BY_SLUG[a["products"][0]]["images"]["card"])
+                  if a.get("products") and a["products"][0] in BY_SLUG else None)
         html_out = head(f"{a['title']} | DigiKitPro", a["description"], absurl(f"blog/{a['slug']}/"), depth,
-                        schemas=schemas, page_type="article",
-                        og_image=f"assets/products/{a['products'][0]}/{BY_SLUG[a['products'][0]]['images']['card']}" if a.get("products") and a["products"][0] in BY_SLUG else None)
+                        schemas=schemas, page_type="article", og_image=og_img)
         html_out += header(depth, active="blog.html")
         html_out += f"""
 <main id="main">
@@ -155,7 +158,7 @@ def build_blog():
       <h1>{esc(a['title'])}</h1>
       <p class="article-meta">By the {SITE_NAME} studio · <time datetime="{a['date']}">{a['date']}</time></p>
     </header>
-    {f'<figure class="article-hero"><img src="../../{a["hero"]}"{hero_ss} width="{a.get("heroW",1200)}" height="{a.get("heroH",800)}" alt="{esc(a["title"])}" fetchpriority="high" decoding="async"><figcaption>Artwork shown: {esc(BY_SLUG[a["products"][0]]["name"]) if a.get("products") else SITE_NAME}</figcaption></figure>' if a.get('hero') else ''}
+    {f'<figure class="article-hero"><img src="{a["hero"] if is_abs(a["hero"]) else rel(depth, a["hero"])}"{hero_ss} width="{a.get("heroW",1200)}" height="{a.get("heroH",800)}" alt="{esc(a["title"])}" fetchpriority="high" decoding="async"><figcaption>Artwork shown: {esc(BY_SLUG[a["products"][0]]["name"]) if a.get("products") else SITE_NAME}</figcaption></figure>' if a.get('hero') else ''}
     <div class="prose article-body">{body_html}</div>
     {rel_html}
     <nav class="article-nav" aria-label="More articles"><a class="btn btn-line" href="../../blog.html">← All articles</a><a class="btn btn-gold" href="../../products.html">Browse brushes</a></nav>

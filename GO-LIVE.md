@@ -112,3 +112,25 @@ Real acceleration levers (free):
 - SEO-critical: never leave `SITE_URL` pointing at a domain you don’t use —
   it feeds canonical URLs and the sitemap. One line in `tools/core.py`, rebuild,
   done (or just tell me the URL and I’ll rebuild the package for you).
+
+---
+
+## 🆕 Latest launch features (August 2026)
+
+- **Auto-translation (7 languages).** A header globe button lets visitors translate the whole
+  site to English, Español, Français, Deutsch, Italiano, Português or Nederlands. Visitors whose
+  browser is non-English get a one-time non-blocking prompt.
+- **Worldwide + US / Canada / Europe targeting.** The homepage now states worldwide instant
+  delivery, no-shipping checkout, secure payment, and 7-language support. Schema and meta now carry
+  `og:locale` alternates, content-language and geo metadata.
+- **Auto-trending Procreate & digital-art highlights.** The homepage builds a daily-rotating
+  “Trending in Procreate & Digital Art” section from your own products + internal trending-search
+  links. The products page has a **Trending** filter.
+- **Auto-add Payhip products.** `.github/workflows/sync-payhip.yml` runs daily (and on demand) to
+  detect new products on `payhip.com/digikitpro`, add them to `data/products.json`, rebuild the
+  site, and commit. See `SEO-INDEXING.md` §3.
+- **IndexNow instant indexing.** Add a repository variable `INDEXNOW_KEY` and the deploy workflow
+  pings Bing/Yandex/Seznam automatically.
+- The word “New” no longer appears in the header/homepage badges or the eBook section eyebrow.
+
+> Full SEO + verification + auto-sync guide: **`SEO-INDEXING.md`**.

@@ -15,7 +15,7 @@ def build_home():
     showcase = ""
     for i, s in enumerate(showcase_slugs):
         p = byslug[s]; im = p["images"]
-        showcase += f'<figure class="hero-card h{i+1}"><img src="assets/products/{p["slug"]}/{im["main"]}" width="{im.get("fullW") or 1200}" height="{im.get("fullH") or 800}" alt="{esc(p["name"])}" loading="{"eager" if i==0 else "lazy"}" fetchpriority="{"high" if i==0 else "auto"}" decoding="async"><figcaption>{esc(p["name"])}</figcaption></figure>'
+        showcase += f'<figure class="hero-card h{i+1}"><img src="{asset_file(0, p["slug"], im.get("main",""))}" width="{im.get("fullW") or 1200}" height="{im.get("fullH") or 800}" alt="{esc(p["name"])}" loading="{"eager" if i==0 else "lazy"}" fetchpriority="{"high" if i==0 else "auto"}" decoding="async"><figcaption>{esc(p["name"])}</figcaption></figure>'
 
     freebies = [p for p in PRODUCTS if p["free"] and not p.get("comingSoon") and p["category"] != "Guides & eBooks"]
     featured = sorted([p for p in PRODUCTS if p.get("featured")], key=lambda x: x["featured"])[:8]
@@ -27,12 +27,13 @@ def build_home():
     ebook_cards = ""
     for e in ebooks:
         im = e["images"]
+        e_label = "Masterclass" if str(e.get("badge") or "").strip().lower() == "new" else e.get("badge")
         e_badge = ('<span class="badge badge-free">Free</span>' if e["free"]
-                   else (f'<span class="badge">{esc(e["badge"])}</span>' if e.get("badge") else ""))
+                   else (f'<span class="badge">{esc(e_label)}</span>' if e_label else ""))
         e_cta = "Get Free ↗" if e["free"] else "Buy Now ↗"
         ebook_cards += f"""<article class="ebook-card">
   <a class="ebook-cover" href="products/{e['slug']}/">
-    <img src="assets/products/{e['slug']}/{im['card']}" width="{im.get('cardW') or 1200}" height="{im.get('cardH') or 800}" alt="{esc(e['name'])}: cover" loading="lazy" decoding="async">
+    <img src="{asset_file(0, e['slug'], im.get('card',''))}" width="{im.get('cardW') or 1200}" height="{im.get('cardH') or 800}" alt="{esc(e['name'])}: cover" loading="lazy" decoding="async">
   </a>
   <div class="ebook-body">
     {e_badge}
@@ -51,7 +52,7 @@ def build_home():
         ebook_section = f"""<section class="section" id="ebooks">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">New from the studio</p><h2>Learn Procreate Portraits with Our eBooks</h2></div>
+        <div><p class="eyebrow">From the studio</p><h2>Learn Procreate Portraits with Our eBooks</h2></div>
         <p class="sec-note muted">Start with the free guide, then go deep with the Masterclass.</p>
       </div>
       <div class="ebook-duo">{ebook_cards}</div>
@@ -74,7 +75,7 @@ def build_home():
     for p in bundles[:4]:
         im = p["images"]
         bundle_cards += f"""<a class="bundle-tile" href="products/{p['slug']}/">
-  <img src="assets/products/{p['slug']}/{im['card']}"{img_srcset(0, p['slug'], im, "(min-width: 1100px) 300px, 90vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
+  <img src="{asset_file(0, p['slug'], im.get('card',''))}"{img_srcset(0, p['slug'], im, "(min-width: 1100px) 300px, 90vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
   <div class="bundle-tile-body">
     <span class="badge">{esc(p.get('badge') or 'Bundle')}</span>
     <h3>{esc(p['name'])}</h3>
@@ -83,11 +84,28 @@ def build_home():
   </div>
 </a>"""
 
+    # ── Trending in Procreate & digital art ──────────────────────────────
+    # Auto-rotating daily: keeps the homepage fresh for returning visitors and
+    # crawlers while always pointing at best-sellers, bundles and freebies.
+    featured_all = sorted([p for p in PRODUCTS if p.get("featured")], key=lambda x: (x["featured"], x["name"]))
+    trending_pool = (featured_all + [p for p in PRODUCTS if p.get("badge")]
+                     + [p for p in PRODUCTS if p["category"] == "Bundles"] + [p for p in PRODUCTS if p["free"]])
+    seen, trending = set(), []
+    for p in trending_pool:
+        if p["slug"] not in seen:
+            seen.add(p["slug"]); trending.append(p)
+    if len(trending) < 4:
+        trending += [p for p in PRODUCTS if p["slug"] not in seen]
+    day = date.today().toordinal()
+    trending = trending[day % len(trending):] + trending[:day % len(trending)]
+    trending = trending[:4]
+    trend_cards = product_grid(trending, 0)
+
     articles = [a for a in load_articles() if a.get("image")][:3]
     def art_card(a, depth):
         ss = img_srcset(depth, a.get("_pslug", ""), a.get("_im") or {}, "(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw")
         return f"""<a class="art-card" href="{rel(depth, 'blog/' + a['slug'] + '/')}">
-      <img class="art-img" src="{rel(depth, a['image'])}"{ss} width="{a.get('imgW',750)}" height="{a.get('imgH',500)}" alt="{esc(a['title'])}" loading="lazy" decoding="async">
+      <img class="art-img" src="{a['image'] if is_abs(a['image']) else rel(depth, a['image'])}"{ss} width="{a.get('imgW',750)}" height="{a.get('imgH',500)}" alt="{esc(a['title'])}" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">{esc(a['category'])}</span>
       <h3>{esc(a['title'])}</h3>
       <p class="muted">{esc(a['description'])}</p>
@@ -117,6 +135,8 @@ def build_home():
     </div>
   </section>
 
+  {trust_band(0)}
+
   <section class="section" id="free">
     <div class="wrap">
       <div class="sec-head">
@@ -135,6 +155,17 @@ def build_home():
         <a class="text-link" href="products.html">Browse all {len(PRODUCTS)} products →</a>
       </div>
       {product_grid(featured, 0)}
+    </div>
+  </section>
+
+  <section class="section section-alt" id="trending" aria-labelledby="trending-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">What artists are searching</p><h2 id="trending-title">Trending in Procreate &amp; Digital Art</h2></div>
+        <a class="text-link" href="products.html">Browse the full catalog →</a>
+      </div>
+      {trend_topics()}
+      {trend_cards}
     </div>
   </section>
 
@@ -195,7 +226,9 @@ def build_home():
 def build_products():
     counts = {}
     for p in PRODUCTS: counts[p["category"]] = counts.get(p["category"], 0) + 1
+    featured_count = sum(1 for p in PRODUCTS if p.get("featured") or p.get("badge"))
     chips = f'<button class="chip active" type="button" data-filter="all">All ({len(PRODUCTS)})</button>'
+    chips += f'<button class="chip" type="button" data-filter="__featured">Trending ({featured_count})</button>'
     chips += f'<button class="chip chip-free" type="button" data-filter="__free">Free ({sum(1 for p in PRODUCTS if p["free"])})</button>'
     for c in CATEGORIES:
         if counts.get(c):
@@ -204,15 +237,18 @@ def build_products():
     ordered = sorted(PRODUCTS, key=lambda p: (0 if p["free"] else 1, -(p.get("featured") or 0), p["name"]))
     html_out = head("All Procreate Brushes & Digital Art Tools, DigiKitPro",
         f"Browse the complete DigiKitPro catalog: {len(PRODUCTS)} Procreate brush kits, bundles, palettes and digital resources, filter by category.",
-        SITE_URL + "/products.html", 0, schemas=schema_breadcrumb([("Home","/"),("Products","/products.html")]))
+        SITE_URL + "/products.html", 0,
+        schemas=schema_breadcrumb([("Home","/"),("Products","/products.html")]) + schema_itemlist(PRODUCTS))
     html_out += header(0, active="products.html")
     html_out += f"""
 <main id="main">
   {page_head(0, "The complete catalog", "Every Brush. Every Kit. One Store.", 
     f"All {len(PRODUCTS)} DigiKitPro products, hand-tested for Procreate on iPad. Filter by craft, or hit the free section first.",
     [("Products","products.html")])}
+  {trust_band(0)}
   <section class="section">
     <div class="wrap">
+      {trend_topics()}
       <div class="filter-bar" role="toolbar" aria-label="Filter products by category">{chips}</div>
       {product_grid(ordered, 0, eager_first=4)}
       <p class="muted empty-note" data-empty-note hidden>No products match this filter yet, try another category.</p>
@@ -265,7 +301,7 @@ def build_bundles():
             rows = f'<ul class="bundle-list">{rows}</ul>'
         tiles += f"""<article class="bundle-panel">
   <div class="bundle-media">
-    <img class="fit{" contain" if (im.get("fullH") or 0) > (im.get("fullW") or 0) else ""}" src="assets/products/{p['slug']}/{im['main']}" width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
+    <img class="fit{" contain" if (im.get("fullH") or 0) > (im.get("fullW") or 0) else ""}" src="{asset_file(0, p['slug'], im.get('main',''))}" width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
   </div>
   <div class="bundle-body">
     <span class="badge">{esc(p.get('badge') or 'Bundle')}</span>

@@ -37,7 +37,7 @@ Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 | Design / colors | `css/style.css` (variables at top) | — (no rebuild) |
 | Behavior (search, filters, gallery) | `js/main.js` | — |
 
-`data/products.json` is the single source of truth — 49 products, each with
+`data/products.json` is the single source of truth — 51 products, each with
 `name, slug, price, category, short, descriptionHtml, included[], features[], technical[],
 requirements[], images, tags[], related[], payhipUrl, seoTitle, seoDesc, featured, free`.
 Delete an entry → its pages disappear on rebuild. Add one → page, card, sitemap and search
@@ -74,8 +74,8 @@ Until then, submits gracefully deep-link to the store's Freebies collection.
 ```
 index.html  products.html  bundles.html  freebies.html  blog.html  about.html
 search.html  privacy.html  terms.html  404.html
-products/<slug>/index.html        × 49 product pages
-blog/<slug>/index.html            × 10 articles
+products/<slug>/index.html        × 51 product pages
+blog/<slug>/index.html            × 16 articles
 assets/products/<slug>/*.webp     × 174 original product images (3 size variants)
 assets/img/                       brand assets (favicon / OG cover)
 css/style.css  js/main.js  js/search-index.js
@@ -90,7 +90,7 @@ scraped/                          ← original scraper + Payhip source data (ref
 
 Unique title/meta per page · canonicals · Open Graph + Twitter cards · Product + Offer JSON-LD
 with real Payhip prices · Article schema · BreadcrumbList · Organization + WebSite (SearchAction) ·
-FAQPage schema on product pages · `sitemap.xml` (69 URLs) · `robots.txt` · semantic HTML5 ·
+FAQPage schema on product pages · `sitemap.xml` (76+ URLs) · `robots.txt` · semantic HTML5 ·
 lazy-loading responsive WebP · descriptive alt text · clean URLs.
 
 ## 6. Where the data came from
@@ -99,3 +99,17 @@ Product names, prices, file sizes, full descriptions, galleries and the Payhip U
 from the live store `payhip.com/digikitpro` on 2026-08-11 (see `scraped/catalog.json`).
 Nothing is invented. If a product is added/removed in the store later, update
 `data/products.json` to match. Social profile URLs are intentionally blank until configured.
+
+## 7. Auto-sync from Payhip, translation & trending (v2)
+
+- **Payhip → site:** run `python3 tools/payhip_sync.py` (or let `.github/workflows/sync-payhip.yml`
+  run daily) to detect and add new products automatically. It never overwrites hand-written SEO copy.
+- **International:** the header includes a 7-language Google Translate switcher and the homepage has
+  a worldwide trust band. `tools/core.py` has `LANGUAGES` and `GEO_META` if you want to change them.
+- **Trending:** homepage and `/products.html` build auto-rotating trending product cards + trending
+  search links from `data/products.json`.
+- **IndexNow:** set `INDEXNOW_KEY` as a GitHub repo variable; the build writes `<key>.txt` and the
+  deploy/sync workflows ping Bing, Yandex and Seznam.
+
+See `SEO-INDEXING.md` for Google Search Console + Bing Webmaster + IndexNow setup and a content
+cadence that keeps the site visible on search results.
