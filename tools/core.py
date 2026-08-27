@@ -29,11 +29,29 @@ EMAIL_ENDPOINT = f"https://formsubmit.co/{EMAIL_TO}" # FormSubmit forwards every
 # ── Search Console verification tokens (paste once Google/Bing give them to you) ──
 GOOGLE_VERIFY = os.environ.get("GOOGLE_VERIFY", "") # content of the <meta name="google-site-verification"> token
 BING_VERIFY = os.environ.get("BING_VERIFY", "") # content of the <meta name="msvalidate.01"> token
-BUILD_DATE = "2026-08-11"
+INDEXNOW_KEY = os.environ.get("INDEXNOW_KEY", "") # IndexNow API key file name (no extension); see tools/submit_index.py
+BUILD_DATE = date.today().isoformat()
 SOCIAL = { # ← add your profiles; hidden while empty
     "Pinterest": "",
     "Instagram": "",
     "TikTok": "",
+}
+# Languages offered by the in-page translation switcher (Google Translate).
+LANGUAGES = [
+    ("en", "English"),
+    ("es", "Español"),
+    ("fr", "Français"),
+    ("de", "Deutsch"),
+    ("it", "Italiano"),
+    ("pt", "Português"),
+    ("nl", "Nederlands"),
+]
+# Official, worldwide-inclusive meta used by search engines & social crawlers.
+GEO_META = {
+    "geo.region": "US",            # Set: country of the business. Digital products are sold worldwide.
+    "geo.placename": "DigiKitPro",
+    "ICBM": "40.7128, -74.0060",   # NYC origin only as a neutral placeholder; update if you want a real HQ.
+    "content-language": "en",
 }
 CATEGORIES = ["Portrait", "Skin Texture", "Line Art", "Sketching", "Watercolor", "Anime",
               "Hair", "Glitter & Effects", "Traditional", "Figure Drawing", "Bundles", "Guides & eBooks", "Other"]
@@ -57,31 +75,54 @@ def rel(depth, path):
 
 def money(p): return p["priceText"]
 
+def is_abs(u):
+    return bool(u) and (u.startswith("http://") or u.startswith("https://") or u.startswith("//"))
+
+def asset_file(depth, slug, f):
+    """Local asset path or an absolute remote URL (Payhip-hosted image for auto-synced products)."""
+    return f if is_abs(f) else rel(depth, f"assets/products/{slug}/{f}")
+
+def asset_abs(slug, f):
+    """Absolute URL for schema / OG / preload; leaves remote URLs untouched."""
+    return f if is_abs(f) else absurl(f"assets/products/{slug}/{f}")
+
 def card_img(p):
     im = p.get("images") or {}
-    return f"assets/products/{p['slug']}/{im.get('card','') }", im.get("cardW"), im.get("cardH")
+    return im.get("card", ""), im.get("cardW"), im.get("cardH")
 
 # ── schema ──────────────────────────────────────────────────────────────
 def schema_org_home():
+    im = None
     return [
       {"@context":"https://schema.org","@type":"Organization","@id":SITE_URL+"/#org",
        "name":SITE_NAME,"url":SITE_URL,"logo":absurl("assets/img/logo.svg"),
-       "description":"DigiKitPro creates premium Procreate brushes and digital art resources for iPad artists.",
+       "description":"DigiKitPro creates premium Procreate brushes and digital art resources for iPad artists. Worldwide instant digital delivery.",
+       "areaServed":"Worldwide","knowsLanguage":["en","es","fr","de","it","pt","nl"],
        "sameAs":[STORE_URL]+[v for v in SOCIAL.values() if v]},
       {"@context":"https://schema.org","@type":"WebSite","@id":SITE_URL+"/#website",
        "url":SITE_URL,"name":SITE_NAME,"publisher":{"@id":SITE_URL+"/#org"},
+       "inLanguage":["en","es","fr","de","it","pt","nl"],
        "potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint",
         "urlTemplate":SITE_URL+"/search.html?q={search_term_string}"},"query-input":"required name=search_term_string"}}
     ]
 
 def schema_product(p):
+    im = p.get("images") or {}
+    img = im.get("card", "")
     return [{"@context":"https://schema.org","@type":"Product",
-       "name":p["name"],"image":absurl(f"assets/products/{p['slug']}/{(p.get('images') or {}).get('card','')}"),
+       "name":p["name"],"image":(asset_abs(p["slug"], img) if img else absurl("assets/img/og-cover.jpg")),
        "description":p["short"],"brand":{"@type":"Brand","name":SITE_NAME},
-       "url":absurl(f"products/{p['slug']}/"),
+       "url":absurl(f"products/{p['slug']}/"),"contentLocation":{"@type":"Place","name":"Worldwide"},
        "offers":{"@type":"Offer","price":f"{p['price']:.2f}","priceCurrency":"USD",
                  "availability":"https://schema.org/InStock","url":p["payhipUrl"],
+                 "priceValidUntil":f"{date.today().year+1}-12-31",
                  "seller":{"@type":"Organization","name":SITE_NAME}}}]
+
+def schema_itemlist(items):
+    """ItemList / OfferCatalog used on the products index for richer Google snippets."""
+    return [{"@context":"https://schema.org","@type":"ItemList",
+        "name":"DigiKitPro Procreate Brushes Catalog",
+        "itemListElement":[{"@type":"ListItem","position":i+1,"name":p["name"],"url":absurl(f"products/{p['slug']}/")} for i,p in enumerate(items[:500])]}]
 
 def schema_breadcrumb(items):
     return [{"@context":"https://schema.org","@type":"BreadcrumbList",
@@ -100,11 +141,15 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     if schemas:
         for sc in schemas:
             s += f' <script type="application/ld+json">{json.dumps(sc, ensure_ascii=False)}</script>\n'
-    pl = f' <link rel="preload" as="image" href="{rel(depth, preload)}" fetchpriority="high">\n' if preload else ""
-    ogimg = absurl(og_image or "assets/img/og-cover.jpg")
+    pl = (f' <link rel="preload" as="image" href="{preload if is_abs(preload) else rel(depth, preload)}" fetchpriority="high">\n'
+          if preload else "")
+    ogimg = og_image if is_abs(og_image) else absurl(og_image or "assets/img/og-cover.jpg")
     vmeta = ""
     if GOOGLE_VERIFY: vmeta += f'\n <meta name="google-site-verification" content="{esc(GOOGLE_VERIFY)}">'
     if BING_VERIFY: vmeta += f'\n <meta name="msvalidate.01" content="{esc(BING_VERIFY)}">'
+    geo = "".join(f'\n  <meta name="{esc(k)}" content="{esc(v)}">' for k, v in GEO_META.items())
+    locales = "".join(f'\n  <meta property="og:locale:alternate" content="{loc}">' for loc in
+                      ["es_ES", "fr_FR", "de_DE", "it_IT", "pt_BR", "nl_NL"])
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -122,18 +167,24 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <meta property="og:description" content="{esc(desc)}">
   <meta property="og:url" content="{esc(canonical)}">
   <meta property="og:image" content="{ogimg}">
+  <meta property="og:locale" content="en_US">{locales}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{esc(title)}">
   <meta name="twitter:description" content="{esc(desc)}">
-  <meta name="twitter:image" content="{ogimg}">
+  <meta name="twitter:image" content="{ogimg}">{geo}
+  <meta name="format-detection" content="telephone=no">
   <link rel="icon" type="image/svg+xml" href="{rel(depth,'assets/img/favicon.svg')}">
   <link rel="apple-touch-icon" href="{rel(depth,'assets/img/apple-touch-icon.png')}">
+  <link rel="preconnect" href="https://payhip.com" crossorigin>
+  <link rel="dns-prefetch" href="https://pe56d.s3.amazonaws.com">
+  <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}">
 {pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}'}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
   <script src="{rel(depth,'js/main.js')}" defer></script>
+  <script src="{rel(depth,'js/translate.js')}" defer></script>
 {s}</head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled.</div></noscript>
@@ -143,8 +194,12 @@ NAV = [("Free Brushes","freebies.html"),("Products","products.html"),("Bundles",
        ("Articles","blog.html"),("About","about.html")]
 
 def header(depth, active=None):
-    links = "".join(f'<a href="{rel(depth,u)}"{" class=\"active\"" if active==u else ""}>{n}</a>' for n,u in NAV)
+    links = ""
+    for n, u in NAV:
+        cls = ' class="active"' if active == u else ""
+        links += f'<a href="{rel(depth,u)}"{cls}>{n}</a>' 
     mlinks = "".join(f'<a href="{rel(depth,u)}">{n}</a>' for n,u in NAV)
+    lang_items = "".join(f'<button class="lang-opt" type="button" data-lang="{code}" data-lang-name="{name}">{name}<span class="lang-code">{code.upper()}</span></button>' for code,name in LANGUAGES)
     return f"""<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-inner">
@@ -154,6 +209,16 @@ def header(depth, active=None):
     </a>
     <nav class="main-nav" aria-label="Primary">{links}</nav>
     <div class="header-actions">
+      <div class="lang-wrap" data-lang-wrap>
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+          <span class="lang-cd">EN</span>
+        </button>
+        <div class="lang-menu" data-lang-menu hidden>
+          <p class="lang-title">Translate this page</p>
+          {lang_items}
+        </div>
+      </div>
       <button class="icon-btn" type="button" data-search-open aria-label="Search products and articles">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
@@ -164,6 +229,7 @@ def header(depth, active=None):
     </div>
   </div>
   <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile">{mlinks}<a class="btn btn-gold" href="{STORE_URL}" target="_blank" rel="noopener">Shop the Store</a></nav>
+  <div id="google_translate_element" class="gt-holder" aria-hidden="true"></div>
 </header>
 <div class="search-overlay" data-search-overlay hidden>
   <div class="search-panel" role="dialog" aria-modal="true" aria-label="Site search">
@@ -245,7 +311,7 @@ def footer(depth):
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© {date.today().year} {SITE_NAME}. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© {date.today().year} {SITE_NAME}. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>
@@ -269,9 +335,10 @@ def crumbs(depth, items):
 
 # ── product cards ───────────────────────────────────────────────────────
 def img_srcset(depth, slug, im, sizes):
-    """Responsive srcset (card + full render) for a product image pair. Empty for vector covers."""
+    """Responsive srcset (card + full render) for a local product image pair.
+    Empty for vector covers or remote Payhip-hosted images (single source used)."""
     card, main = (im or {}).get("card", ""), (im or {}).get("main", "")
-    if not card or not main or card == main or str(card).endswith(".svg"):
+    if not card or not main or card == main or str(card).endswith(".svg") or is_abs(card) or is_abs(main):
         return ""
     base = f"assets/products/{slug}"
     return (f' srcset="{rel(depth, f"{base}/{card}")} {im.get("cardW") or 750}w, '
@@ -291,10 +358,11 @@ def product_card(p, depth, eager=False):
     cta = "Notify Me" if coming else ("Get Free" if p["free"] else "View Product")
     loading = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     fit = " contain" if (im.get("cardH") or 0) > (im.get("cardW") or 0) else ""
-    srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw")
-    return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}">
+    srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw") if card else ""
+    img_src = asset_file(depth, p["slug"], card) if card else rel(depth, "assets/img/coming-soon.svg")
+    return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}">
   <a class="card-media" href="{u}">
-    <img class="fit{fit}" src="{rel(depth, f"assets/products/{p['slug']}/{card}")}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
+    <img class="fit{fit}" src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
     {badge}
   </a>
   <div class="card-body">
@@ -316,6 +384,32 @@ def product_grid(products, depth, eager_first=0, classes="grid cards"):
     return "\n".join(out)
 
 cat_slug = lambda c: "cat-" + c.replace(" ", "%20")
+
+# ── worldwide trust band + trending topics (homepage / catalog) ─────────
+def trust_band(depth=0):
+    items = [
+        ("Worldwide", "Instant digital delivery in every country"),
+        ("No shipping", "No GST/VAT surprises — Payhip handles payments"),
+        ("Pay safely", "PayPal, cards, Apple Pay & more"),
+        ("7 languages", "Auto-translate the whole site in one click"),
+    ]
+    cells = "".join(f'<div class="tb-item"><span>{title}</span><p>{sub}</p></div>' for title, sub in items)
+    return f'<div class="trust-band" role="region" aria-label="Why artists worldwide choose DigiKitPro"><div class="wrap trust-inner">{cells}</div></div>'
+
+def trend_topics():
+    topics = [
+        ("Best Procreate brushes", "blog.html"),
+        ("Realistic skin", "products.html#cat-Skin%20Texture"),
+        ("Anime brushes", "products.html#cat-Anime"),
+        ("Watercolor", "products.html#cat-Watercolor"),
+        ("Line art", "products.html#cat-Line%20Art"),
+        ("Tattoo flash", "search.html?q=tattoo"),
+        ("Procreate bundles", "bundles.html"),
+        ("Free brush packs", "freebies.html"),
+        ("Starter guide", "blog/best-procreate-brushes-for-beginners/"),
+    ]
+    pills = "".join(f'<a class="trend-pill" href="{u}">{n}</a>' for n, u in topics)
+    return f'<p class="trend-label">Trending now in Procreate &amp; digital art</p><div class="trend-pills">{pills}</div>'
 
 def write(path, content):
     p = os.path.join(ROOT, path)

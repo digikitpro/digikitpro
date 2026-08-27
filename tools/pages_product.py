@@ -22,7 +22,7 @@ def gallery_html(p):
     first = items[0]
     srcset = img_srcset(2, slug, im, "(min-width: 960px) 46vw, 100vw")
     main_fig = f"""<figure class="gal-main">
-      <img data-gal-main src="../../assets/products/{slug}/{first[0]}"{srcset} width="{first[1] or 1200}" height="{first[2] or 800}" alt="{esc(first[3])}" fetchpriority="high" decoding="async">
+      <img data-gal-main src="{asset_file(2, slug, first[0])}"{srcset} width="{first[1] or 1200}" height="{first[2] or 800}" alt="{esc(first[3])}" fetchpriority="high" decoding="async">
     </figure>"""
     thumbs = ""
     if len(items) > 1:
@@ -30,9 +30,9 @@ def gallery_html(p):
         for i, (f, w, h, alt) in enumerate(items):
             g = next((x for x in ([{"file": main, "card": im.get("card")}] + im.get("gallery", [])) if x["file"] == f), None)
             th = g.get("card", f) if g else f
-            btns.append(f'<button class="gal-thumb{" active" if i==0 else ""}" type="button" data-gal-thumb data-full="../../assets/products/{slug}/{f}" data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}" aria-label="View image {i+1}"><img src="../../assets/products/{slug}/{th}" width="{g.get("cardW") or 150}" height="{g.get("cardH") or 100}" alt="" loading="lazy" decoding="async"></button>')
+            btns.append(f'<button class="gal-thumb{" active" if i==0 else ""}" type="button" data-gal-thumb data-full="{asset_file(2, slug, f)}" data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}" aria-label="View image {i+1}"><img src="{asset_file(2, slug, th)}" width="{g.get("cardW") or 150}" height="{g.get("cardH") or 100}" alt="" loading="lazy" decoding="async"></button>')
         thumbs = f'<div class="gal-thumbs">{"".join(btns)}</div>'
-    return main_fig + thumbs, absurl(f"assets/products/{slug}/{first[0]}")
+    return main_fig + thumbs, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
 
 def faq_html(p):
     if not p.get("faqs"): return ""
@@ -139,9 +139,10 @@ def build_product_pages():
           <p class="buy-cap">{caption}</p>
         </div>"""
 
+        _og_img = asset_abs(slug, im.get("card", "")) if im.get("card", "") else absurl("assets/img/og-cover.jpg")
+        _preload = asset_abs(slug, im.get("main", "")) if im.get("main", "") else None
         html_out = head(p["seoTitle"], p["seoDesc"], absurl(f"products/{slug}/"), depth,
-                        schemas=schemas, og_image=f"assets/products/{slug}/{im.get('card','')}", page_type="product",
-                        preload=f"assets/products/{slug}/{im.get('main','')}")
+                        schemas=schemas, og_image=_og_img, page_type="product", preload=_preload)
         html_out += header(depth, active="products.html")
         html_out += f"""
 <main id="main">

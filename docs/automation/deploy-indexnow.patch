@@ -1,0 +1,23 @@
+diff --git a/.github/workflows/deploy.yml b/.github/workflows/deploy.yml
+index 32115e3..825042a 100644
+--- a/.github/workflows/deploy.yml
++++ b/.github/workflows/deploy.yml
+@@ -46,6 +46,7 @@ jobs:
+           # Optional: paste verification tokens here once Search Console issues them
+           GOOGLE_VERIFY: ${{ vars.GOOGLE_VERIFY }}
+           BING_VERIFY: ${{ vars.BING_VERIFY }}
++          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+         run: python3 tools/build.py
+ 
+       - uses: actions/configure-pages@v5
+@@ -56,3 +57,10 @@ jobs:
+ 
+       - id: deployment
+         uses: actions/deploy-pages@v4
++
++      - name: Ping search engines (IndexNow) for changed URLs
++        if: ${{ vars.INDEXNOW_KEY != '' }}
++        env:
++          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
++          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
++        run: python3 tools/submit_index.py

@@ -365,3 +365,57 @@ h3{font-size:1.15rem}
 dialog.gal-light{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);max-width:min(92vw,1100px);padding:0}
 dialog.gal-light img{max-height:82vh;width:auto;max-width:92vw}
 dialog.gal-light::backdrop{background:rgba(5,5,7,.86)}
+
+/* ══════════════════════════════════════════════════════════
+   DigiKitPro v2 — international translation, worldwide trust,
+   auto-trending highlights, polish & accessibility
+   ══════════════════════════════════════════════════════════ */
+
+/* ── language switcher (header + toast) ── */
+.lang-wrap{position:relative}
+.lang-btn{gap:.35rem;width:auto;padding:0 .35rem}
+.lang-cd{font:700 .66rem var(--sans);letter-spacing:.08em;color:var(--gold);border:1px solid var(--border);border-radius:6px;padding:.16rem .34rem}
+.lang-menu{position:absolute;right:0;top:calc(100% + 10px);min-width:210px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:.55rem;z-index:120}
+.lang-menu[hidden]{display:none}
+.lang-title{font:600 .66rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:.35rem .6rem .5rem;border-bottom:1px solid var(--border);margin-bottom:.35rem}
+.lang-opt{display:flex;justify-content:space-between;align-items:center;gap:1rem;width:100%;text-align:left;background:transparent;border:0;border-radius:8px;color:var(--text);font:500 .88rem var(--sans);padding:.55rem .65rem;cursor:pointer}
+.lang-opt:hover{background:var(--surface-2);color:var(--gold)}
+.lang-code{font-size:.68rem;color:var(--muted);font-weight:700;letter-spacing:.06em}
+.lang-toast{position:fixed;right:18px;bottom:18px;z-index:260;display:flex;align-items:center;gap:.7rem;max-width:min(480px,calc(100% - 36px));background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:var(--radius);box-shadow:0 24px 60px -24px rgba(0,0,0,.7);padding:.85rem 1rem;opacity:1;transform:translateY(0);transition:opacity .4s,transform .4s}
+.lang-toast.out{opacity:0;transform:translateY(12px)}
+.lang-toast-copy{font-size:.88rem;line-height:1.4}
+.lang-toast .icon-btn{width:32px;height:32px}
+@media(max-width:640px){.lang-menu{right:-8px}}
+
+/* ── worldwide trust band ── */
+.trust-band{border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(201,168,106,.05),rgba(201,168,106,0));padding:.7rem 0}
+.trust-inner{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem 1rem}
+@media(min-width:760px){.trust-inner{grid-template-columns:repeat(4,1fr)}}
+.tb-item{font:600 .82rem var(--sans);color:var(--text);line-height:1.3}
+.tb-item span{color:var(--gold);display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.16rem}
+.tb-item p{font-weight:400;font-size:.78rem;color:var(--muted);line-height:1.35}
+
+/* ── trending highlights (auto-built from product data) ── */
+#trending .sec-head{margin-bottom:1rem}
+.trend-label{font:600 .7rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:.2rem 0 .9rem}
+.trend-pills{display:flex;flex-wrap:wrap;gap:.55rem;margin-bottom:1.6rem}
+.trend-pill{display:inline-flex;padding:.48rem .95rem;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--muted);font:500 .82rem var(--sans);transition:color .18s,border-color .18s,transform .18s}
+.trend-pill:hover{color:var(--gold);border-color:var(--gold);transform:translateY(-2px)}
+.trend-pill:active{transform:translateY(0)}
+
+/* ── professional polish ── */
+h1,h2,h3{text-wrap:balance}
+.lead,.hero-sub,.pdp-short{text-wrap:pretty}
+.card-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,12,0) 62%,rgba(10,10,12,.28));pointer-events:none}
+.hero-card figcaption,.bundle-tile-body{letter-spacing:.01em}
+.site-header{box-shadow:0 10px 30px -24px rgba(0,0,0,.9)}
+.nav a,.chip,.btn,.cat-pill,.trend-pill,.lang-opt{transition:transform .18s ease,color .18s ease,border-color .18s ease,background .18s ease}
+img{background:var(--surface-2)}
+.footer-links a{width:fit-content}
+@media(prefers-reduced-motion:reduce){.cat-track,.card,.bundle-tile,.hero-card img{transition:none;animation:none}.hero-card:hover img{transform:none}.card:hover,.bundle-tile:hover{transform:none}}
+
+/* ── search result image for remote Payhip images ── */
+.sr-item img{background:var(--surface-2)}
+/* Google Translate loads a real element in an off-screen holder so it can be
+   driven from our own header menu; the off-screen holder keeps it invisible. */
+.gt-holder{position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
