@@ -45,6 +45,16 @@ This uses **GitHub Actions variables**, not code edits, so you don’t break any
    `msvalidate.01` token and rebuild.
 3. Submit the sitemap in Bing Webmaster Tools too (Bing feeds DuckDuckGo/Ecosia).
 
+### Google Analytics 4 (GA4)
+1. In Google Analytics (`analytics.google.com`), go to **Admin → Data Streams → Web** and copy your **Measurement ID** (format: `G-XXXXXXXXXX`).
+2. To enable tracking across every page on the site, provide your Measurement ID in one of two ways:
+   - **Repository Variable (recommended)**: In GitHub repo **Settings → Secrets and variables → Actions → Variables → New variable**:
+     - **Name**: `GA_MEASUREMENT_ID`
+     - **Value**: `G-XXXXXXXXXX`
+   - **Direct in code**: Edit `GA_MEASUREMENT_ID` in `tools/core.py`.
+3. When built, the generator automatically injects the official Google tag (`gtag.js`) into the `<head>` of all 77+ pages.
+4. Deploy the site, then check Google Analytics **Realtime** report to see live visitors.
+
 ### Submit the sitemap
 - Google: Search Console → **Sitemaps** → add `sitemap.xml` → Submit.
 - Bing: Webmaster Tools → **Sitemaps** → `sitemap.xml`.
