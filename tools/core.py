@@ -30,6 +30,7 @@ EMAIL_ENDPOINT = f"https://formsubmit.co/{EMAIL_TO}" # FormSubmit forwards every
 GOOGLE_VERIFY = os.environ.get("GOOGLE_VERIFY", "") # content of the <meta name="google-site-verification"> token
 BING_VERIFY = os.environ.get("BING_VERIFY", "") # content of the <meta name="msvalidate.01"> token
 INDEXNOW_KEY = os.environ.get("INDEXNOW_KEY", "") # IndexNow API key file name (no extension); see tools/submit_index.py
+GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "G-5MFQFHNB6B") # Google Analytics 4 Measurement ID
 BUILD_DATE = date.today().isoformat()
 SOCIAL = { # ← add your profiles; hidden while empty
     "Pinterest": "",
@@ -150,10 +151,21 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     geo = "".join(f'\n  <meta name="{esc(k)}" content="{esc(v)}">' for k, v in GEO_META.items())
     locales = "".join(f'\n  <meta property="og:locale:alternate" content="{loc}">' for loc in
                       ["es_ES", "fr_FR", "de_DE", "it_IT", "pt_BR", "nl_NL"])
+    ga = ""
+    if GA_MEASUREMENT_ID:
+        ga = f"""  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={esc(GA_MEASUREMENT_ID)}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+    gtag('config', '{esc(GA_MEASUREMENT_ID)}');
+  </script>
+"""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+{ga}  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(desc)}">
