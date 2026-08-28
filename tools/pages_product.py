@@ -113,7 +113,8 @@ def build_product_pages():
         if coming:
             badge = '<span class="badge badge-soon">Coming Soon</span>'
         else:
-            badge = f'<span class="badge">{esc(p["badge"])}</span>' if p.get("badge") and not p["free"] else ('<span class="badge badge-free">Free</span>' if p["free"] else "")
+            _blabel = badge_text(p)
+            badge = f'<span class="badge">{esc(_blabel)}</span>' if _blabel and not p["free"] else ('<span class="badge badge-free">Free</span>' if p["free"] else "")
         trust_items = (["Launches soon, right here on Payhip", "Newsletter subscribers get it first", "Procreate on iPad recommended"]
                        if coming else
                        ["Instant download via Payhip", "Lifetime access",
@@ -125,7 +126,7 @@ def build_product_pages():
         # badge chips row (status - assets - category), like the reference design
         status_chip = ('<span class="meta-chip soon">Coming Soon</span>' if coming else
                        ('<span class="meta-chip free">Free</span>' if p["free"] else
-                        (f'<span class="meta-chip gold">{esc(p["badge"])}</span>' if p.get("badge") else "")))
+                        (f'<span class="meta-chip gold">{esc(badge_text(p))}</span>' if badge_text(p) else "")))
         assets_chip = f'<span class="meta-chip">{esc(p["assets"])}</span>' if p.get("assets") else ""
         cat_chip = (f'<a class="meta-chip cat" href="../../products.html#cat-{p["category"].replace(" ", "%20")}">'
                     f'{esc(p["category"])}</a>')

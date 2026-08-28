@@ -333,6 +333,19 @@ def crumbs(depth, items):
     inner = '<svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>'.join(links)
     return f'<nav class="crumbs" aria-label="Breadcrumb">{inner}</nav>'
 
+# ── badges ──────────────────────────────────────────────────────────────
+# Labels that must never be painted over a product image. "New" ages badly
+# (it is still there months later) and "Masterclass" only repeats what the
+# product title already says, so both are suppressed everywhere: cards, eBook
+# tiles, bundle tiles and product pages. The value in data/products.json is
+# kept untouched so sorting/"featured" logic and the Payhip sync still work.
+HIDDEN_BADGES = {"new", "masterclass"}
+
+def badge_text(p):
+    """Visible badge label for a product, or '' when that label is hidden."""
+    b = str((p or {}).get("badge") or "").strip()
+    return "" if b.lower() in HIDDEN_BADGES else b
+
 # ── product cards ───────────────────────────────────────────────────────
 def img_srcset(depth, slug, im, sizes):
     """Responsive srcset (card + full render) for a local product image pair.
@@ -353,15 +366,23 @@ def product_card(p, depth, eager=False):
     if coming:
         badge = '<span class="badge badge-soon">Coming Soon</span>'
     else:
-        badge = f'<span class="badge badge-free">Free</span>' if p["free"] else (f'<span class="badge">{esc(p["badge"])}</span>' if p.get("badge") else "")
+        blabel = badge_text(p)
+        badge = f'<span class="badge badge-free">Free</span>' if p["free"] else (f'<span class="badge">{esc(blabel)}</span>' if blabel else "")
     price = "Free" if p["free"] else money(p)
     cta = "Notify Me" if coming else ("Get Free" if p["free"] else "View Product")
     loading = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     fit = " contain" if (im.get("cardH") or 0) > (im.get("cardW") or 0) else ""
     srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw") if card else ""
     img_src = asset_file(depth, p["slug"], card) if card else rel(depth, "assets/img/coming-soon.svg")
+    # Phones show one card per row, so the media box can take the image's own
+    # aspect ratio: the whole artwork is visible, with no crop and no letterbox
+    # bars. Ratios outside 0.7-1.6 (very tall covers) stay letterboxed instead
+    # of making a single card fill the entire screen.
+    ratio = (w / h) if h else 1.5
+    ar = min(max(ratio, 0.7), 1.6)
+    exact = " exact" if 0.7 <= ratio <= 1.6 else ""
     return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}">
-  <a class="card-media" href="{u}">
+  <a class="card-media{exact}" href="{u}" style="--card-ar:{ar:.4f}">
     <img class="fit{fit}" src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
     {badge}
   </a>
