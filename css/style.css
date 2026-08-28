@@ -108,12 +108,14 @@ h3{font-size:1.15rem}
 .hero-meta{margin-top:1.1rem;font-size:.82rem;color:#7d7a73;letter-spacing:.04em}
 .hero-showcase{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .hero-card{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;background:var(--surface)}
-.hero-card img{width:100%;aspect-ratio:3/4;object-fit:cover;transition:transform .5s ease}
+.hero-card img{width:100%;aspect-ratio:var(--hero-ar,4/5);object-fit:cover;transition:transform .5s ease}
 .hero-card:hover img{transform:scale(1.045)}
 .hero-card figcaption{position:absolute;left:0;right:0;bottom:0;padding:1rem .8rem .55rem;font-size:.68rem;color:var(--text);background:linear-gradient(transparent,rgba(5,5,7,.88));letter-spacing:.02em}
 .hero-card.h2{transform:translateY(18px)}
 .hero-card.h3{transform:translateY(36px)}
 @media(min-width:960px){.hero{padding:5.4rem 0 4.4rem}.hero-grid{grid-template-columns:1.05fr .95fr;gap:3.4rem}}
+/* phones: two larger covers instead of three postage stamps, no stagger overflow */
+@media(max-width:640px){.hero-showcase{grid-template-columns:repeat(2,1fr);gap:12px}.hero-card.h2,.hero-card.h3{transform:none}.hero-card.h3{display:none}}
 
 /* ── sections ── */
 .section{padding:3.4rem 0}
@@ -136,6 +138,7 @@ h3{font-size:1.15rem}
 .card-media img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
 .card:hover .card-media img{transform:scale(1.05)}
 .card-media img.fit.contain{object-fit:contain;padding:12px;background:#0D0D11}
+@media(max-width:559px){.card-media{aspect-ratio:var(--card-ar,3/2)}.card-media.exact img.fit.contain{object-fit:cover;padding:0;background:transparent}}
 .bundle-media img.fit.contain{object-fit:contain;background:#0D0D11}
 .badge{position:absolute;top:10px;left:10px;background:rgba(12,12,14,.82);backdrop-filter:blur(6px);border:1px solid rgba(201,168,106,.45);color:var(--gold);font:600 .66rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:.42rem .6rem;border-radius:999px}
 .badge-free{border-color:rgba(140,200,140,.5);color:#9FD8A4}
@@ -148,11 +151,11 @@ h3{font-size:1.15rem}
 .ebook-card{display:grid;grid-template-columns:200px 1fr;border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(155deg,#17171c,#101013);overflow:hidden;transition:border-color .25s,transform .25s,box-shadow .25s}
 .ebook-card:hover{border-color:rgba(201,168,106,.55);transform:translateY(-3px);box-shadow:0 18px 44px -18px rgba(201,168,106,.22)}
 .ebook-cover{display:block;height:100%}
-.ebook-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.ebook-cover img{width:100%;height:100%;object-fit:contain;background:#0D0D11;display:block}
 .ebook-body{padding:1.3rem 1.3rem 1.2rem;display:flex;flex-direction:column;gap:.55rem}
 .ebook-body h3{font-size:1.22rem;line-height:1.25}
 .ebook-foot{margin-top:auto;display:flex;align-items:center;gap:.9rem;flex-wrap:wrap;padding-top:.4rem}
-@media(max-width:640px){.ebook-card{grid-template-columns:1fr}.ebook-cover img{aspect-ratio:16/9}}
+@media(max-width:640px){.ebook-card{grid-template-columns:1fr}.ebook-cover img{aspect-ratio:3/4;height:auto;max-height:70vh;object-fit:contain}}
 /* ── boundary bars: no-script notice + runtime error boundary ── */
 .noscript-bar{background:#241d10;border-bottom:1px solid rgba(201,168,106,.5);color:#d8c79e;text-align:center;font:500 .8rem var(--sans);padding:.55rem 1rem}
 .err-bar{position:sticky;top:0;z-index:200;background:#2b1a12;border-bottom:1px solid rgba(216,120,90,.6);color:#eab4a0;text-align:center;font:500 .8rem var(--sans);padding:.55rem 1rem}
@@ -187,6 +190,7 @@ h3{font-size:1.15rem}
 .bundle-tile-body{position:relative;width:100%;padding:1.4rem;background:linear-gradient(transparent,rgba(8,8,10,.94) 42%)}
 .bundle-tile-body h3{margin:.5rem 0 .25rem;color:var(--text)}
 .bundles-grid .bundle-tile .badge{position:static;display:inline-block}
+@media(max-width:560px){.bundle-tile{min-height:380px}}
 .bundle-stack{display:flex;flex-direction:column;gap:2.2rem}
 .bundle-panel{display:grid;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
 @media(min-width:900px){.bundle-panel{grid-template-columns:1.1fr 1fr}}
@@ -279,7 +283,7 @@ h3{font-size:1.15rem}
 .gal-main img{width:100%;cursor:zoom-in}
 .gal-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
 .gal-thumb{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;padding:0;background:var(--surface-2);cursor:pointer;opacity:.65;transition:opacity .2s,border-color .2s}
-.gal-thumb img{width:100%;aspect-ratio:3/2;object-fit:cover}
+.gal-thumb img{width:100%;aspect-ratio:3/2;object-fit:contain;background:#0D0D11}
 .gal-thumb:hover{opacity:1}
 .gal-thumb.active{opacity:1;border-color:var(--gold)}
 .pdp-info{display:flex;flex-direction:column;gap:.9rem}
@@ -419,3 +423,9 @@ img{background:var(--surface-2)}
 /* Google Translate loads a real element in an off-screen holder so it can be
    driven from our own header menu; the off-screen holder keeps it invisible. */
 .gt-holder{position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+/* Google Translate chrome: keep our own header, drop Google's banner bar
+   and its yellow highlight so a translated page looks like the original. */
+iframe.skiptranslate{display:none !important}
+body{top:0 !important}
+.goog-text-highlight{background:none !important;box-shadow:none !important}
+.lang-toast .text-link{white-space:nowrap}

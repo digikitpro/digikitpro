@@ -1,37 +1,84 @@
-/* DigiKitPro — instant in-page translation (Google Translate widget).
+/* DigiKitPro — instant in-page translation (Google Translate).
  *
- * Why: the store sells digital products worldwide (US, Canada, Europe, and
- * everywhere else). A visitor whose browser is in Spanish, French, German,
- * Italian, Portuguese, or Dutch gets the whole site translated in one click —
- * no page reload, no separate translated pages to maintain.
+ * Why: the store sells digital products worldwide (US, Canada, Europe, North
+ * Africa and everywhere else). A visitor whose browser is in Spanish, French,
+ * German, Italian, Portuguese or Dutch gets the whole site translated in one
+ * click — no separate translated pages to maintain.
  *
- * Behavior:
- *   1. Offers a header globe menu with 7 languages.
- *   2. Auto-detects the visitor's browser language and shows a one-time,
- *      non-blocking prompt if it is not English.
- *   3. Uses Google's own TranslateElement so translation quality stays high.
- *   4. Degrades gracefully: online preview/live site works; file:// preview
- *      shows an honest note instead of a broken widget.
+ * How it works (and why it is built this way):
+ *   1. Choosing a language writes Google's own `googtrans` cookie and reloads.
+ *      The Translate script reads that cookie on load and translates the page
+ *      itself. The old approach — waiting for the hidden widget's <select> to
+ *      appear and firing a change event on it — silently failed whenever the
+ *      widget was slow or the gadget markup changed, which is what produced
+ *      the "Translation is still loading" dead end.
+ *   2. The script is loaded from translate.googleapis.com (the CDN endpoint
+ *      that answers worldwide); translate.google.com is only a fallback,
+ *      because in several countries it redirects to a regional domain.
+ *   3. If translation still cannot run (blocked network, strict privacy mode),
+ *      the visitor is not left stranded: the toast offers a one-click link to
+ *      the same page on Google's translate.goog proxy.
+ *   4. file:// preview degrades to an honest note instead of a broken widget.
  */
 (function () {
   "use strict";
   var APP_LANGS = ["en", "es", "fr", "de", "it", "pt", "nl"];
+  var NAMES = { en: "English", es: "Español", fr: "Français", de: "Deutsch", it: "Italiano", pt: "Português", nl: "Nederlands" };
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
-  var COOKIE = "dkp_lang";
+  var COOKIE = "dkp_lang";       // our own memory of the visitor's choice
+  var GOOGLE_COOKIE = "googtrans";
+  var CDN = [
+    "https://translate.googleapis.com/translate_a/element.js?cb=googleTranslateElementInit",
+    "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+  ];
+  var cdnIndex = 0;
   var widgetLoaded = false;
   var loadQueued = false;
-  var targetLang = "";
-  var toastPool = {};
 
-  function cookie(name, value, days) {
-    if (value === undefined) {
-      var m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
-      return m ? decodeURIComponent(m[1]) : "";
+  /* ── cookies ────────────────────────────────────────────────── */
+  function readCookie(name) {
+    var m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+    return m ? decodeURIComponent(m[1]) : "";
+  }
+
+  function writeCookie(name, value, days) {
+    document.cookie = name + "=" + encodeURIComponent(value) +
+      ";max-age=" + ((days || 365) * 86400) + ";path=/;SameSite=Lax";
+  }
+
+  /* Google reads `googtrans` from the exact host and, for multi-host setups,
+     from the dotted parent domain. Write and clear both so the choice sticks
+     on digikitpro.com, www.digikitpro.com and *.github.io alike. */
+  function writeGoogTrans(code) {
+    var value = "/en/" + code;
+    var host = location.hostname;
+    document.cookie = GOOGLE_COOKIE + "=" + value + ";path=/;max-age=31536000;SameSite=Lax";
+    if (host.indexOf(".") !== -1 && !/^\d+(\.\d+){3}$/.test(host)) {
+      document.cookie = GOOGLE_COOKIE + "=" + value + ";domain=." + host + ";path=/;max-age=31536000;SameSite=Lax";
     }
-    var d = new Date();
-    d.setTime(d.getTime() + (days || 365) * 864e5);
-    document.cookie = name + "=" + encodeURIComponent(value) + ";max-age=" + (days * 86400) + ";path=/;SameSite=Lax";
+  }
+
+  function clearGoogTrans() {
+    var host = location.hostname;
+    var dead = "=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    document.cookie = GOOGLE_COOKIE + dead;
+    if (host.indexOf(".") !== -1) {
+      document.cookie = GOOGLE_COOKIE + "=;domain=." + host + ";path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT";
+      var parts = host.split(".");
+      if (parts.length > 2) {
+        document.cookie = GOOGLE_COOKIE + "=;domain=." + parts.slice(-2).join(".") +
+          ";path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT";
+      }
+    }
+  }
+
+  function activeLang() {
+    var g = readCookie(GOOGLE_COOKIE);           // "/en/fr"
+    var m = g && g.match(/\/[a-zA-Z-]*\/([a-zA-Z-]+)$/);
+    if (m && APP_LANGS.indexOf(m[1].toLowerCase()) !== -1) return m[1].toLowerCase();
+    var saved = readCookie(COOKIE);
+    return APP_LANGS.indexOf(saved) !== -1 ? saved : "en";
   }
 
   function browserLang() {
@@ -39,8 +86,15 @@
     return APP_LANGS.indexOf(lang) !== -1 ? lang : "en";
   }
 
-  function isOffline() {
-    return location.protocol === "file:";
+  function isOffline() { return location.protocol === "file:"; }
+
+  /* Same page on Google's public translate.goog proxy — the escape hatch when
+     the in-page widget cannot run at all. */
+  function proxyUrl(code) {
+    var host = location.hostname.replace(/-/g, "--").replace(/\./g, "-") + ".translate.goog";
+    var sep = location.search ? "&" : "?";
+    return location.protocol + "//" + host + location.pathname + location.search + sep +
+      "_x_tr_sl=en&_x_tr_tl=" + code + "&_x_tr_hl=" + code + location.hash;
   }
 
   /* ── header menu ────────────────────────────────────────────── */
@@ -68,16 +122,22 @@
     });
   }
 
-  /* ── tiny non-blocking toast for auto-detect / status ───────── */
+  /* ── tiny non-blocking toast ────────────────────────────────── */
   function toast(msg, sticky) {
     var el = document.createElement("div");
-    el.className = "lang-toast";
+    el.className = "lang-toast notranslate";
+    el.setAttribute("translate", "no");
     el.setAttribute("role", "status");
     el.innerHTML = msg;
     (document.body || document.documentElement).appendChild(el);
     var close = $("[data-lang-toast-close]", el);
     if (close) { close.addEventListener("click", function () { el.remove(); }); }
-    if (!sticky) { setTimeout(function () { el.classList.add("out"); setTimeout(function () { el.remove(); }, 400); }, 6000); }
+    if (!sticky) {
+      setTimeout(function () {
+        el.classList.add("out");
+        setTimeout(function () { el.remove(); }, 400);
+      }, 6000);
+    }
     return el;
   }
 
@@ -87,83 +147,85 @@
   }
 
   function updateButton(code) {
-    if (code && toggle) {
-      var cd = toggle.querySelector(".lang-cd");
-      if (cd) cd.textContent = code.toUpperCase();
-    }
+    if (!code || !toggle) return;
+    var cd = toggle.querySelector(".lang-cd");
+    if (cd) cd.textContent = code.toUpperCase();
+    toggle.setAttribute("aria-label", "Translate this page — current language: " + (NAMES[code] || code));
+    $$("[data-lang]").forEach(function (b) {
+      b.setAttribute("aria-current", b.getAttribute("data-lang") === code ? "true" : "false");
+    });
   }
 
-  /* ── Google Translate widget ────────────────────────────────── */
+  /* ── Google Translate script ────────────────────────────────── */
   function loadWidget() {
     if (widgetLoaded || loadQueued) return;
-    loadQueued = true;
     if (isOffline()) {
       toast("Translation needs the live website. Open the hosted site to translate this page.", true);
       return;
     }
+    loadQueued = true;
     var s = document.createElement("script");
-    s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    s.src = CDN[cdnIndex];
     s.async = true;
-    s.addEventListener("error", function () { loadQueued = false; toast("Translation service could not load. Please try again.", true); });
+    s.addEventListener("error", function () {
+      loadQueued = false;
+      cdnIndex += 1;
+      if (cdnIndex < CDN.length) { loadWidget(); return; }   // try the other host
+      failSoft(activeLang());
+    });
     document.head.appendChild(s);
   }
 
   window.googleTranslateElementInit = function () {
     widgetLoaded = true;
     loadQueued = false;
-    new google.translate.TranslateElement({
-      pageLanguage: "en",
-      autoDisplay: false,
-      multilanguagePage: false,
-      includedLanguages: APP_LANGS.join(","),
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, "google_translate_element");
-    if (targetLang && targetLang !== "en") setWidgetLang(targetLang);
+    try {
+      new google.translate.TranslateElement({
+        pageLanguage: "en",
+        autoDisplay: false,
+        multilanguagePage: false,
+        includedLanguages: APP_LANGS.join(","),
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, "google_translate_element");
+    } catch (_) {
+      failSoft(activeLang());
+    }
   };
 
-  function setWidgetLang(code) {
-    targetLang = code;
-    if (code === "en") { resetLang(); return; }
-    var tries = 0;
-    var timer = setInterval(function () {
-      var combo = document.querySelector(".goog-te-combo");
-      if (combo) {
-        clearInterval(timer);
-        try {
-          combo.value = code;
-          combo.dispatchEvent(new Event("change", { bubbles: true }));
-        } catch (_) {
-          // Older browsers: fire onchange directly.
-          var evt = document.createEvent("HTMLEvents");
-          evt.initEvent("change", true, false);
-          combo.dispatchEvent(evt);
-        }
-        updateButton(code);
-        cookie(COOKIE, code, 365);
-        return;
-      }
-      if (++tries > 60) {
-        clearInterval(timer);
-        toast("Translation is still loading. Try again in a moment.", true);
-      }
-    }, 300);
+  function isTranslated() {
+    var c = document.documentElement.className || "";
+    return /translated-(ltr|rtl)/.test(c) || !!document.querySelector(".goog-te-combo, iframe.skiptranslate");
   }
 
-  function resetLang() {
-    cookie(COOKIE, "en", 365);
-    updateButton("en");
-    try { location.reload(); } catch (_) {}
+  /* Never leave the visitor on a dead end: offer the proxy instead. */
+  function failSoft(code) {
+    if (!code || code === "en") return;
+    toast('<span class="lang-toast-copy">This page could not be translated here. ' +
+      '<a class="text-link" href="' + proxyUrl(code) + '" rel="nofollow noopener">Open it in Google Translate ' + flag(code) + '</a></span>' +
+      '<button type="button" class="icon-btn" data-lang-toast-close aria-label="Dismiss">✕</button>', true);
   }
 
+  /* ── choosing a language ────────────────────────────────────── */
   function choose(code, name) {
-    if (code === browserLang()) { updateButton(code); cookie(COOKIE, code, 365); closeMenu(); return; }
+    if (APP_LANGS.indexOf(code) === -1) return;
     closeMenu();
-    if (code === "en") { resetLang(); return; }
-    loadWidget();
-    if (widgetLoaded) setWidgetLang(code); else targetLang = code;
-    if (!isOffline()) {
-      toast("<strong>" + flag(code) + " Translating to " + (name || code.toUpperCase()) + "</strong> — it usually takes a second.", false);
+    if (code === activeLang()) { writeCookie(COOKIE, code, 365); updateButton(code); return; }
+
+    if (isOffline()) {
+      toast("Translation needs the live website. Open the hosted site to translate this page.", true);
+      return;
     }
+
+    writeCookie(COOKIE, code, 365);
+    if (code === "en") {
+      clearGoogTrans();
+      location.reload();
+      return;
+    }
+    writeGoogTrans(code);
+    toast("<strong>" + flag(code) + " Translating to " + (name || NAMES[code] || code.toUpperCase()) + "</strong> — one moment…", false);
+    // Reload so Google's script picks the cookie up and translates the page.
+    setTimeout(function () { location.reload(); }, 250);
   }
 
   $$("[data-lang]").forEach(function (btn) {
@@ -172,21 +234,33 @@
     });
   });
 
-  /* ── auto-detect on load (non-blocking, one-time) ───────────── */
+  /* ── boot ───────────────────────────────────────────────────── */
   function boot() {
-    var bl = browserLang();
-    var saved = cookie(COOKIE);
-    if (saved && APP_LANGS.indexOf(saved) !== -1) { updateButton(saved); }
+    var current = activeLang();
+    updateButton(current);
 
-    if (!isOffline() && bl !== "en" && !saved) {
-      var names = { es: "Español", fr: "Français", de: "Deutsch", it: "Italiano", pt: "Português", nl: "Nederlands" };
+    if (current !== "en" && !isOffline()) {
+      // A language is active: load the script so it applies the cookie, and
+      // check afterwards that the page really did get translated.
+      loadWidget();
+      setTimeout(function () { if (!isTranslated()) failSoft(current); }, 9000);
+      return;
+    }
+
+    // First visit from a non-English browser: offer it once, never nag.
+    var bl = browserLang();
+    if (!isOffline() && bl !== "en" && !readCookie(COOKIE)) {
       setTimeout(function () {
         var t = toast(
-          '<span class="lang-toast-copy">Translate this page to <strong>' + names[bl] + '</strong>?</span>' +
+          '<span class="lang-toast-copy">Translate this page to <strong>' + NAMES[bl] + '</strong>?</span>' +
           '<button type="button" class="btn btn-gold btn-sm" data-lang-toast-yes>Translate</button>' +
           '<button type="button" class="icon-btn" data-lang-toast-close aria-label="Dismiss">✕</button>', true);
         var yes = $("[data-lang-toast-yes]", t);
-        if (yes) { yes.addEventListener("click", function () { choose(bl, names[bl]); t.remove(); }); }
+        if (yes) {
+          yes.addEventListener("click", function () { t.remove(); choose(bl, NAMES[bl]); });
+        }
+        var no = $("[data-lang-toast-close]", t);
+        if (no) { no.addEventListener("click", function () { writeCookie(COOKIE, "en", 365); }); }
       }, 1200);
     }
   }

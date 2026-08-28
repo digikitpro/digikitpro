@@ -15,7 +15,8 @@ def build_home():
     showcase = ""
     for i, s in enumerate(showcase_slugs):
         p = byslug[s]; im = p["images"]
-        showcase += f'<figure class="hero-card h{i+1}"><img src="{asset_file(0, p["slug"], im.get("main",""))}" width="{im.get("fullW") or 1200}" height="{im.get("fullH") or 800}" alt="{esc(p["name"])}" loading="{"eager" if i==0 else "lazy"}" fetchpriority="{"high" if i==0 else "auto"}" decoding="async"><figcaption>{esc(p["name"])}</figcaption></figure>'
+        _hw, _hh = im.get("fullW") or 1200, im.get("fullH") or 800
+        showcase += f'<figure class="hero-card h{i+1}" style="--hero-ar:{_hw}/{_hh}"><img src="{asset_file(0, p["slug"], im.get("main",""))}" width="{im.get("fullW") or 1200}" height="{im.get("fullH") or 800}" alt="{esc(p["name"])}" loading="{"eager" if i==0 else "lazy"}" fetchpriority="{"high" if i==0 else "auto"}" decoding="async"><figcaption>{esc(p["name"])}</figcaption></figure>'
 
     freebies = [p for p in PRODUCTS if p["free"] and not p.get("comingSoon") and p["category"] != "Guides & eBooks"]
     featured = sorted([p for p in PRODUCTS if p.get("featured")], key=lambda x: x["featured"])[:8]
@@ -27,7 +28,7 @@ def build_home():
     ebook_cards = ""
     for e in ebooks:
         im = e["images"]
-        e_label = "Masterclass" if str(e.get("badge") or "").strip().lower() == "new" else e.get("badge")
+        e_label = badge_text(e)   # "New"/"Masterclass" labels are suppressed site-wide
         e_badge = ('<span class="badge badge-free">Free</span>' if e["free"]
                    else (f'<span class="badge">{esc(e_label)}</span>' if e_label else ""))
         e_cta = "Get Free ↗" if e["free"] else "Buy Now ↗"
@@ -77,7 +78,7 @@ def build_home():
         bundle_cards += f"""<a class="bundle-tile" href="products/{p['slug']}/">
   <img src="{asset_file(0, p['slug'], im.get('card',''))}"{img_srcset(0, p['slug'], im, "(min-width: 1100px) 300px, 90vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
   <div class="bundle-tile-body">
-    <span class="badge">{esc(p.get('badge') or 'Bundle')}</span>
+    <span class="badge">{esc(badge_text(p) or 'Bundle')}</span>
     <h3>{esc(p['name'])}</h3>
     <p class="muted">{esc(p['assets'] or '')}</p>
     <span class="price">{p['priceText']}</span>
@@ -304,7 +305,7 @@ def build_bundles():
     <img class="fit{" contain" if (im.get("fullH") or 0) > (im.get("fullW") or 0) else ""}" src="{asset_file(0, p['slug'], im.get('main',''))}" width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
   </div>
   <div class="bundle-body">
-    <span class="badge">{esc(p.get('badge') or 'Bundle')}</span>
+    <span class="badge">{esc(badge_text(p) or 'Bundle')}</span>
     <h2>{esc(p['name'])}</h2>
     <p class="lead-sm">{esc(p['short'])}</p>
     {rows}
