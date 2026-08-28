@@ -30,7 +30,7 @@ def gallery_html(p):
         for i, (f, w, h, alt) in enumerate(items):
             g = next((x for x in ([{"file": main, "card": im.get("card")}] + im.get("gallery", [])) if x["file"] == f), None)
             th = g.get("card", f) if g else f
-            btns.append(f'<button class="gal-thumb{" active" if i==0 else ""}" type="button" data-gal-thumb data-full="{asset_file(2, slug, f)}" data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}" aria-label="View image {i+1}"><img src="{asset_file(2, slug, th)}" width="{g.get("cardW") or 150}" height="{g.get("cardH") or 100}" alt="" loading="lazy" decoding="async"></button>')
+            btns.append(f'<button class="gal-thumb{" active" if i==0 else ""}" type="button" data-gal-thumb data-full="{asset_file(2, slug, f)}" data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}" aria-label="View image {i+1}"><img src="{asset_file(2, slug, th)}" width="{g.get("cardW") or 150}" height="{g.get("cardH") or 100}" alt="{esc(alt)} thumbnail" loading="lazy" decoding="async"></button>')
         thumbs = f'<div class="gal-thumbs">{"".join(btns)}</div>'
     return main_fig + thumbs, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
 

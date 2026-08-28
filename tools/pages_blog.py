@@ -146,7 +146,19 @@ def build_blog():
         hero_ss = img_srcset(depth, a.get("_pslug",""), a.get("_im") or {}, "(min-width: 860px) 760px, 94vw")
         og_img = (asset_abs(a["products"][0], BY_SLUG[a["products"][0]]["images"]["card"])
                   if a.get("products") and a["products"][0] in BY_SLUG else None)
-        html_out = head(f"{a['title']} | DigiKitPro", a["description"], absurl(f"blog/{a['slug']}/"), depth,
+        raw_title = a['title']
+        if len(f"{raw_title} | {SITE_NAME}") > 65:
+            t = raw_title
+            if " (" in t:
+                t = t.split(" (")[0].strip()
+            if ":" in t:
+                t = t.split(":")[0].strip()
+            if len(f"{t} | {SITE_NAME}") > 65 and " for " in t:
+                t = t.split(" for ")[0].strip()
+            seo_t = f"{t} | {SITE_NAME}" if len(f"{t} | {SITE_NAME}") <= 65 else f"{raw_title[:45]}... | {SITE_NAME}"
+        else:
+            seo_t = f"{raw_title} | {SITE_NAME}"
+        html_out = head(seo_t, a["description"], absurl(f"blog/{a['slug']}/"), depth,
                         schemas=schemas, page_type="article", og_image=og_img)
         html_out += header(depth, active="blog.html")
         html_out += f"""
