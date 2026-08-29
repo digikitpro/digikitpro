@@ -1,7 +1,7 @@
-# DigiKitPro — Website
+# DigiKitPro - Website
 
 A complete, production-ready static ecommerce-content site for the **DigiKitPro** digital art store
-(Procreate brushes & digital art resources). 100% static HTML/CSS/JS — no backend, no database,
+(Procreate brushes & digital art resources). 100% static HTML/CSS/JS - no backend, no database,
 no build dependencies. **All product data, images and prices are the real store data from
 https://payhip.com/digikitpro** (scraped and verified on 2026-08-11).
 
@@ -18,13 +18,13 @@ The site works as-is on any static host:
 | **GitHub Pages** | Push to a repo → Settings → Pages → deploy from branch root |
 | **Vercel / others** | New project → no framework preset, no build step |
 
-Works from a subdomain, apex domain **or** a sub-path (e.g. `user.github.io/repo/`) —
+Works from a subdomain, apex domain **or** a sub-path (e.g. `user.github.io/repo/`) -
 all links are relative.
 
 **Before going live:** open `tools/build.py` and set
 - `SITE_URL = "https://your-domain.com"` → then run `python3 tools/build.py`
   (regenerates canonical URLs, Open Graph URLs and `sitemap.xml`)
-- `SOCIAL = {...}` → your Pinterest / Instagram / TikTok URLs (hidden while empty — we never fake links)
+- `SOCIAL = {...}` → your Pinterest / Instagram / TikTok URLs (hidden while empty - we never fake links)
 
 Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 
@@ -34,10 +34,10 @@ Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 |---|---|---|
 | Products (name, price, images, descriptions, Payhip URL, categories…) | `data/products.json` | `python3 tools/build.py` |
 | Blog articles | `content/blog/*.md` (front-matter + markdown) | `python3 tools/build.py` |
-| Design / colors | `css/style.css` (variables at top) | — (no rebuild) |
-| Behavior (search, filters, gallery) | `js/main.js` | — |
+| Design / colors | `css/style.css` (variables at top) | - (no rebuild) |
+| Behavior (search, filters, gallery) | `js/main.js` | - |
 
-`data/products.json` is the single source of truth — 51 products, each with
+`data/products.json` is the single source of truth - 51 products, each with
 `name, slug, price, category, short, descriptionHtml, included[], features[], technical[],
 requirements[], images, tags[], related[], payhipUrl, seoTitle, seoDesc, featured, free`.
 Delete an entry → its pages disappear on rebuild. Add one → page, card, sitemap and search
@@ -50,12 +50,12 @@ image tool; `scraped/images.py` shows the exact pipeline used originally).
 ## 3. Email capture ✅ configured
 
 Newsletter forms (home, blog, products, freebies…) post **real submissions to
-`digikitprostudio@gmail.com`** via FormSubmit — visitors never leave the page (AJAX),
+`digikitprostudio@gmail.com`** via FormSubmit - visitors never leave the page (AJAX),
 and a genuine success/error message is shown for each attempt.
 
 **One-time activation (required):** check the `digikitprostudio@gmail.com` inbox (and spam)
 for an email from FormSubmit titled *"Confirm your email"* / containing an
-**"Activate Form"** link — click it once. From then on, every signup arrives in
+**"Activate Form"** link - click it once. From then on, every signup arrives in
 that inbox with subject **"New DigiKitPro subscriber"**.
 
 To move to another provider later (Brevo, MailerLite, ConvertKit…): replace
@@ -66,7 +66,7 @@ provider's form-action URL and rebuild.
 > file (`file://`), so mail services refuse those submissions by design. The
 > form shows an honest "offline preview" message there; signups work from the
 > hosted site and from `python -m http.server`.
-(ConvertKit / MailerLite / Brevo all provide one) and rebuild — forms will POST to it.
+(ConvertKit / MailerLite / Brevo all provide one) and rebuild - forms will POST to it.
 Until then, submits gracefully deep-link to the store's Freebies collection.
 
 ## 4. Structure

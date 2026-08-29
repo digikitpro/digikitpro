@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://digikitpro.com/sitemap.xml
+Sitemap: https://digikitpro.github.io/digikitpro/sitemap.xml

@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# DigiKitPro — automatic build & deploy to GitHub Pages (100% free)
+# DigiKitPro - automatic build & deploy to GitHub Pages (100% free)
 #
 # HOW IT WORKS
 #   1. Push this folder to a GitHub repository (see GO-LIVE.md for click-by-click).
@@ -7,7 +7,7 @@
 #   3. From then on, EVERY edit triggers this workflow:
 #        python3 tools/build.py  →  rebuilds all HTML/sitemap  →  deploys live.
 #      You can edit data/products.json or add a file in content/blog/ directly
-#      on github.com (pencil icon → Commit) — no tools on your PC needed.
+#      on github.com (pencil icon → Commit) - no tools on your PC needed.
 # ─────────────────────────────────────────────────────────────────────────────
 name: Build & deploy site
 on:

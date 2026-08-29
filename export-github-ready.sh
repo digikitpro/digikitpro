@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────
-# DigiKitPro — build the site and export digikitpro-github-ready.zip
+# DigiKitPro - build the site and export digikitpro-github-ready.zip
 # macOS / Linux. Usage:  bash export-github-ready.sh
 # ─────────────────────────────────────────────────────────────
 set -e

@@ -1,4 +1,4 @@
-# DigiKitPro — GitHub Actions automation (bring-your-own-workflow)
+# DigiKitPro - GitHub Actions automation (bring-your-own-workflow)
 
 **Status (re-verified 2026-08-27):** the GitHub App token used by this assistant
 still does **not** have the `workflows` permission. A push that added
@@ -12,7 +12,7 @@ was rejected by GitHub with:
 
 That is a GitHub-side permission, not a code problem. Everything the workflows
 call (`tools/payhip_sync.py`, `tools/submit_index.py`, `tools/build.py` and all
-site changes) is already merged into `main` and needs no permission at all —
+site changes) is already merged into `main` and needs no permission at all -
 only the two YAML files below have to be placed by a human (or by this
 assistant once the permission is granted).
 
@@ -24,7 +24,7 @@ assistant once the permission is granted).
 | `deploy.patched.yml` | **Complete, ready-to-paste** copy of the current `deploy.yml` *with* the IndexNow additions | replaces `.github/workflows/deploy.yml` |
 | `deploy-indexnow.patch` | The same change as a diff, if you prefer `git apply` | applies to `.github/workflows/deploy.yml` |
 
-## Option A — install by hand on github.com (2 minutes, no permission change)
+## Option A - install by hand on github.com (2 minutes, no permission change)
 
 1. Repo → `.github/workflows/` → **Add file → Create new file**.
    Name it `sync-payhip.yml`, paste the whole contents of
@@ -39,7 +39,7 @@ assistant once the permission is granted).
 4. **Actions** tab → **Auto-sync new Payhip products** → **Run workflow** once to
    confirm it is green.
 
-## Option B — grant the App the `workflows` permission (recommended)
+## Option B - grant the App the `workflows` permission (recommended)
 
 Repository/installation **Settings → GitHub Apps → (this app) → Configure →
 Permissions → Workflows: Read and write**. After approving it, this assistant

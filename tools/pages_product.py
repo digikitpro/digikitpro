@@ -30,7 +30,7 @@ def gallery_html(p):
         for i, (f, w, h, alt) in enumerate(items):
             g = next((x for x in ([{"file": main, "card": im.get("card")}] + im.get("gallery", [])) if x["file"] == f), None)
             th = g.get("card", f) if g else f
-            btns.append(f'<button class="gal-thumb{" active" if i==0 else ""}" type="button" data-gal-thumb data-full="{asset_file(2, slug, f)}" data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}" aria-label="View image {i+1}"><img src="{asset_file(2, slug, th)}" width="{g.get("cardW") or 150}" height="{g.get("cardH") or 100}" alt="" loading="lazy" decoding="async"></button>')
+            btns.append(f'<button class="gal-thumb{" active" if i==0 else ""}" type="button" data-gal-thumb data-full="{asset_file(2, slug, f)}" data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}" aria-label="View image {i+1}"><img src="{asset_file(2, slug, th)}" width="{g.get("cardW") or 150}" height="{g.get("cardH") or 100}" alt="{esc(alt)} thumbnail" loading="lazy" decoding="async"></button>')
         thumbs = f'<div class="gal-thumbs">{"".join(btns)}</div>'
     return main_fig + thumbs, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
 
@@ -68,7 +68,19 @@ def build_product_pages():
         slug = p["slug"]; depth = 2
         im = p["images"]
         gal, og_img = gallery_html(p)
-        schemas = schema_product(p) + schema_breadcrumb([("Home","/"),("Products","/products.html"),(p["name"], f"/products/{slug}/")])
+        cslug = CATEGORY_SLUGS.get(p.get("category"))
+        crumb_items = [("Home","/"),("Products","/products.html")]
+        visual_crumbs = [("Products","products.html")]
+        if cslug:
+            crumb_items.append((p["category"], f"/category/{cslug}/"))
+            visual_crumbs.append((p["category"], f"category/{cslug}/"))
+        elif p.get("category") == "Bundles":
+            crumb_items.append(("Bundles", "/bundles.html"))
+            visual_crumbs.append(("Bundles", "bundles.html"))
+        crumb_items.append((p["name"], f"/products/{slug}/"))
+        visual_crumbs.append((p["name"], f"products/{slug}/"))
+
+        schemas = schema_product(p) + schema_breadcrumb(crumb_items)
         schemas += [{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":f["q"],"acceptedAnswer":{"@type":"Answer","text":f["a"]}} for f in p.get("faqs",[])]}] if p.get("faqs") else schemas
 
         href_cc = f'https://creativecommons.org'
@@ -128,8 +140,9 @@ def build_product_pages():
                        ('<span class="meta-chip free">Free</span>' if p["free"] else
                         (f'<span class="meta-chip gold">{esc(badge_text(p))}</span>' if badge_text(p) else "")))
         assets_chip = f'<span class="meta-chip">{esc(p["assets"])}</span>' if p.get("assets") else ""
-        cat_chip = (f'<a class="meta-chip cat" href="../../products.html#cat-{p["category"].replace(" ", "%20")}">'
-                    f'{esc(p["category"])}</a>')
+        cslug = CATEGORY_SLUGS.get(p.get("category"))
+        cat_href = f"../../category/{cslug}/" if cslug else (f"../../bundles.html" if p.get("category") == "Bundles" else f"../../products.html#cat-{p['category'].replace(' ', '%20')}")
+        cat_chip = f'<a class="meta-chip cat" href="{cat_href}">{esc(p["category"])}</a>'
         chips_html = status_chip + assets_chip + cat_chip
         caption = ("Launches soon · Newsletter subscribers get it first · Opens the store in a new tab"
                    if coming else "Secure checkout on Payhip · Instant download · Opens in a new tab")
@@ -148,7 +161,7 @@ def build_product_pages():
         html_out += f"""
 <main id="main">
   <div class="wrap">
-    {crumbs(depth, [("Products","products.html"),(p["name"], f"products/{slug}/")])}
+    {crumbs(depth, visual_crumbs)}
     <article class="pdp">
       <div class="pdp-media">{gal}</div>
       <div class="pdp-info">

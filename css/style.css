@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════
-   DigiKitPro — premium dark design system (mobile-first)
+   DigiKitPro - premium dark design system (mobile-first)
    Fonts: Playfair Display (display serif) + Manrope (sans)
    ══════════════════════════════════════════════════════════ */
 @font-face{font-family:"Playfair Display";src:url("../assets/fonts/playfairdisplay-normal.woff2") format("woff2");font-weight:400 900;font-style:normal;font-display:swap}
@@ -371,7 +371,7 @@ dialog.gal-light img{max-height:82vh;width:auto;max-width:92vw}
 dialog.gal-light::backdrop{background:rgba(5,5,7,.86)}
 
 /* ══════════════════════════════════════════════════════════
-   DigiKitPro v2 — international translation, worldwide trust,
+   DigiKitPro v2 - international translation, worldwide trust,
    auto-trending highlights, polish & accessibility
    ══════════════════════════════════════════════════════════ */
 

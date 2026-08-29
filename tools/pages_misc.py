@@ -122,14 +122,43 @@ Allow: /
 Sitemap: {SITE_URL}/sitemap.xml
 """)
 
-    urls = ["/", "/products.html", "/freebies.html", "/bundles.html", "/blog.html", "/about.html", "/search.html", "/privacy.html", "/terms.html"]
-    urls += [f"/products/{p['slug']}/" for p in PRODUCTS]
-    urls += [f"/blog/{a['slug']}/" for a in load_articles()]
-    sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    for u in urls:
-        pr = "1.0" if u == "/" else "0.8" if u.endswith("/") else "0.6"
-        freq = "daily" if u == "/" or u.startswith("/products/") else "weekly"
+    static_urls = [
+        ("/", "1.0", "daily"),
+        ("/products.html", "0.9", "daily"),
+        ("/freebies.html", "0.9", "weekly"),
+        ("/bundles.html", "0.8", "weekly"),
+        ("/blog.html", "0.8", "weekly"),
+        ("/about.html", "0.6", "monthly"),
+        ("/search.html", "0.5", "weekly"),
+        ("/privacy.html", "0.3", "monthly"),
+        ("/terms.html", "0.3", "monthly"),
+    ]
+    sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n'
+    for u, pr, freq in static_urls:
         sm += f" <url><loc>{SITE_URL}{u}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>{freq}</changefreq><priority>{pr}</priority></url>\n"
+
+    for cslug in CATEGORY_SLUGS.values():
+        sm += f" <url><loc>{SITE_URL}/category/{cslug}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>\n"
+
+    for p in PRODUCTS:
+        slug = p["slug"]
+        im = p.get("images") or {}
+        img = im.get("card") or im.get("main") or ""
+        img_xml = ""
+        if img:
+            img_loc = img if is_abs(img) else absurl(f"assets/products/{slug}/{img}")
+            img_xml = f"<image:image><image:loc>{img_loc}</image:loc><image:title>{esc(p['name'])}</image:title></image:image>"
+        sm += f" <url><loc>{SITE_URL}/products/{slug}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>daily</changefreq><priority>0.8</priority>{img_xml}</url>\n"
+
+    for a in load_articles():
+        slug = a["slug"]
+        img = a.get("image") or ""
+        img_xml = ""
+        if img:
+            img_loc = img if is_abs(img) else absurl(img)
+            img_xml = f"<image:image><image:loc>{img_loc}</image:loc><image:title>{esc(a['title'])}</image:title></image:image>"
+        sm += f" <url><loc>{SITE_URL}/blog/{slug}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority>{img_xml}</url>\n"
+
     sm += "</urlset>\n"
     write("sitemap.xml", sm)
 
