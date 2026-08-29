@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DigiKitPro — IndexNow submission helper
+DigiKitPro - IndexNow submission helper
 =======================================
 
 Posts your most important URLs to Bing's IndexNow API (Bing feeds Yandex,

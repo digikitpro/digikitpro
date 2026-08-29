@@ -137,6 +137,9 @@ Sitemap: {SITE_URL}/sitemap.xml
     for u, pr, freq in static_urls:
         sm += f" <url><loc>{SITE_URL}{u}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>{freq}</changefreq><priority>{pr}</priority></url>\n"
 
+    for cslug in CATEGORY_SLUGS.values():
+        sm += f" <url><loc>{SITE_URL}/category/{cslug}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>\n"
+
     for p in PRODUCTS:
         slug = p["slug"]
         im = p.get("images") or {}

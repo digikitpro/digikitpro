@@ -1,4 +1,4 @@
-# DigiKitPro — Netlify config
+# DigiKitPro - Netlify config
 # Two ways to deploy:
 #  A) Drag-and-drop the folder at app.netlify.com/drop (no build, works instantly)
 #  B) Connect the GitHub repository: the command below rebuilds the site and

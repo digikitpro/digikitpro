@@ -1,15 +1,15 @@
-/* DigiKitPro — instant in-page translation (Google Translate).
+/* DigiKitPro - instant in-page translation (Google Translate).
  *
  * Why: the store sells digital products worldwide (US, Canada, Europe, North
  * Africa and everywhere else). A visitor whose browser is in Spanish, French,
  * German, Italian, Portuguese or Dutch gets the whole site translated in one
- * click — no separate translated pages to maintain.
+ * click - no separate translated pages to maintain.
  *
  * How it works (and why it is built this way):
  *   1. Choosing a language writes Google's own `googtrans` cookie and reloads.
  *      The Translate script reads that cookie on load and translates the page
- *      itself. The old approach — waiting for the hidden widget's <select> to
- *      appear and firing a change event on it — silently failed whenever the
+ *      itself. The old approach - waiting for the hidden widget's <select> to
+ *      appear and firing a change event on it - silently failed whenever the
  *      widget was slow or the gadget markup changed, which is what produced
  *      the "Translation is still loading" dead end.
  *   2. The script is loaded from translate.googleapis.com (the CDN endpoint
@@ -88,7 +88,7 @@
 
   function isOffline() { return location.protocol === "file:"; }
 
-  /* Same page on Google's public translate.goog proxy — the escape hatch when
+  /* Same page on Google's public translate.goog proxy - the escape hatch when
      the in-page widget cannot run at all. */
   function proxyUrl(code) {
     var host = location.hostname.replace(/-/g, "--").replace(/\./g, "-") + ".translate.goog";
@@ -150,7 +150,7 @@
     if (!code || !toggle) return;
     var cd = toggle.querySelector(".lang-cd");
     if (cd) cd.textContent = code.toUpperCase();
-    toggle.setAttribute("aria-label", "Translate this page — current language: " + (NAMES[code] || code));
+    toggle.setAttribute("aria-label", "Translate this page - current language: " + (NAMES[code] || code));
     $$("[data-lang]").forEach(function (b) {
       b.setAttribute("aria-current", b.getAttribute("data-lang") === code ? "true" : "false");
     });
@@ -223,7 +223,7 @@
       return;
     }
     writeGoogTrans(code);
-    toast("<strong>" + flag(code) + " Translating to " + (name || NAMES[code] || code.toUpperCase()) + "</strong> — one moment…", false);
+    toast("<strong>" + flag(code) + " Translating to " + (name || NAMES[code] || code.toUpperCase()) + "</strong> - one moment…", false);
     // Reload so Google's script picks the cookie up and translates the page.
     setTimeout(function () { location.reload(); }, 250);
   }

@@ -6,19 +6,19 @@ responsive WebP images with alt text, and clean directory URLs.
 
 What this update adds (and how to use it):
 
-1. **Worldwide + 7-language support** — English, Español, Français, Deutsch, Italiano, Português,
+1. **Worldwide + 7-language support** - English, Español, Français, Deutsch, Italiano, Português,
    Nederlands. Visitors see a globe button in the header; visitors whose browser isn't English get
    a one-time “Translate this page?” prompt. Marketing copy on the homepage now calls out worldwide
    instant delivery and no-shipping international checkout.
-2. **Auto-trending highlights** — the homepage builds a daily-rotating “Trending in Procreate &
+2. **Auto-trending highlights** - the homepage builds a daily-rotating “Trending in Procreate &
    Digital Art” section from your own catalog (best-sellers, bundles, freebies) plus internal
    “Trending searches” links. Products page has a **Trending** filter chip.
-3. **Auto-add Payhip products** — `tools/payhip_sync.py` plus the ready-to-install
+3. **Auto-add Payhip products** - `tools/payhip_sync.py` plus the ready-to-install
    `docs/automation/payhip-auto-sync.yml` (move it to `.github/workflows/sync-payhip.yml`).
    It reads your public Payhip store, discovers new product IDs, fetches the product
    details, adds them to `data/products.json`, rebuilds the site, and commits. Products you add on
    Payhip appear on the site automatically. (It never overwrites hand-written SEO copy.)
-4. **IndexNow** — optional free instant indexing for Bing/Yandex/Seznam.
+4. **IndexNow** - optional free instant indexing for Bing/Yandex/Seznam.
 
 ---
 
@@ -94,14 +94,14 @@ python3 tools/build.py            # regenerates product pages, sitemap, search i
 - New products are added as **Trending/featured** so they appear near the top, but they are **not**
   labeled “New”.
 - For full marketing polish (rich description, gallery images, FAQ, related kits), open
-  `data/products.json` and enrich the entry later — the sync never deletes those edits.
+  `data/products.json` and enrich the entry later - the sync never deletes those edits.
 
 ---
 
 ## 4. Keep ranking up: simple editorial cadence
 
 - Add **1 article/quarter minimum** in `content/blog/` (one file = one article, fully generated).
-- After adding a product, **link it from your Payhip store description** — an inbound link from the
+- After adding a product, **link it from your Payhip store description** - an inbound link from the
   store is one of the fastest indexing signals.
 - Keep your Payhip store category names in English (they map to the site’s Trending topics).
 - Share the site on Pinterest/Instagram/TikTok when you add a kit. Add those accounts to

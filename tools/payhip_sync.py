@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DigiKitPro — Payhip auto-sync
+DigiKitPro - Payhip auto-sync
 =============================
 
 Detects products you add on Payhip and adds them to `data/products.json` so the
@@ -22,7 +22,7 @@ Rules
   `"auto": true`, and surfaced in Trending / products listing via `"featured": 1`.
   They are NOT given a "New" badge so the homepage stays clean.
 * If Payhip is unreachable (offline, Cloudflare, rate-limit) the script reports
-  it and exits 0 — CI must never fail the build because Payhip was down.
+  it and exits 0 - CI must never fail the build because Payhip was down.
 """
 import json, os, re, sys, time, html
 import urllib.request, urllib.parse, urllib.error

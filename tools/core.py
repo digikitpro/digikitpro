@@ -58,6 +58,19 @@ GEO_META = {
 CATEGORIES = ["Portrait", "Skin Texture", "Line Art", "Sketching", "Watercolor", "Anime",
               "Hair", "Glitter & Effects", "Traditional", "Figure Drawing", "Bundles", "Guides & eBooks", "Other"]
 
+CATEGORY_SLUGS = {
+    "Portrait": "portrait",
+    "Skin Texture": "skin-texture",
+    "Line Art": "line-art",
+    "Watercolor": "watercolor",
+    "Anime": "anime",
+    "Hair": "hair",
+    "Glitter & Effects": "glitter-effects",
+    "Traditional": "traditional",
+    "Figure Drawing": "figure-drawing",
+    "Sketching": "sketching"
+}
+
 PRODUCTS = json.load(open(os.path.join(ROOT, "data/products.json"), encoding="utf-8"))
 BY_SLUG = {p["slug"]: p for p in PRODUCTS}
 
@@ -305,8 +318,11 @@ def footer(depth):
         <a href="{rel(depth,'freebies.html')}">Free Brushes</a>
         <a href="{rel(depth,'products.html')}">All Products</a>
         <a href="{rel(depth,'bundles.html')}">Bundles</a>
-        <a href="{rel(depth,'products.html#cat-Portrait')}">Portrait Brushes</a>
-        <a href="{rel(depth,'products.html#cat-Line%20Art')}">Line Art</a>
+        <a href="{rel(depth,'category/portrait/')}">Portrait Brushes</a>
+        <a href="{rel(depth,'category/skin-texture/')}">Skin Texture</a>
+        <a href="{rel(depth,'category/line-art/')}">Line Art</a>
+        <a href="{rel(depth,'category/watercolor/')}">Watercolor</a>
+        <a href="{rel(depth,'category/anime/')}">Anime Brushes</a>
       </div>
     </nav>
     <nav aria-label="Footer learn">
@@ -399,13 +415,15 @@ def product_card(p, depth, eager=False):
     ratio = (w / h) if h else 1.5
     ar = min(max(ratio, 0.7), 1.6)
     exact = " exact" if 0.7 <= ratio <= 1.6 else ""
+    cslug = CATEGORY_SLUGS.get(p.get("category"))
+    cat_url = rel(depth, f"category/{cslug}/") if cslug else (rel(depth, "bundles.html") if p.get("category") == "Bundles" else rel(depth, f"products.html#cat-{esc(p['category'].replace(' ','%20'))}"))
     return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}">
   <a class="card-media{exact}" href="{u}" style="--card-ar:{ar:.4f}">
     <img class="fit{fit}" src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
     {badge}
   </a>
   <div class="card-body">
-    <a class="card-cat" href="{rel(depth,'products.html')}#cat-{esc(p['category'].replace(' ','%20'))}">{esc(p['category'])}</a>
+    <a class="card-cat" href="{cat_url}">{esc(p['category'])}</a>
     <h3 class="card-title"><a href="{u}">{esc(p['name'])}</a></h3>
     <p class="card-short">{esc(p['short'])}</p>
     <div class="card-foot">
@@ -428,24 +446,25 @@ cat_slug = lambda c: "cat-" + c.replace(" ", "%20")
 def trust_band(depth=0):
     items = [
         ("Worldwide", "Instant digital delivery in every country"),
-        ("No shipping", "No GST/VAT surprises — Payhip handles payments"),
+        ("No shipping", "No GST/VAT surprises - Payhip handles payments"),
         ("Pay safely", "PayPal, cards, Apple Pay & more"),
         ("7 languages", "Auto-translate the whole site in one click"),
     ]
     cells = "".join(f'<div class="tb-item"><span>{title}</span><p>{sub}</p></div>' for title, sub in items)
     return f'<div class="trust-band" role="region" aria-label="Why artists worldwide choose DigiKitPro"><div class="wrap trust-inner">{cells}</div></div>'
 
-def trend_topics():
+def trend_topics(depth=0):
     topics = [
-        ("Best Procreate brushes", "blog.html"),
-        ("Realistic skin", "products.html#cat-Skin%20Texture"),
-        ("Anime brushes", "products.html#cat-Anime"),
-        ("Watercolor", "products.html#cat-Watercolor"),
-        ("Line art", "products.html#cat-Line%20Art"),
-        ("Tattoo flash", "search.html?q=tattoo"),
-        ("Procreate bundles", "bundles.html"),
-        ("Free brush packs", "freebies.html"),
-        ("Starter guide", "blog/best-procreate-brushes-for-beginners/"),
+        ("Best Procreate brushes", rel(depth, "blog.html")),
+        ("Realistic skin", rel(depth, "category/skin-texture/")),
+        ("Anime brushes", rel(depth, "category/anime/")),
+        ("Watercolor", rel(depth, "category/watercolor/")),
+        ("Line art", rel(depth, "category/line-art/")),
+        ("Portrait brushes", rel(depth, "category/portrait/")),
+        ("Hair brushes", rel(depth, "category/hair/")),
+        ("Procreate bundles", rel(depth, "bundles.html")),
+        ("Free brush packs", rel(depth, "freebies.html")),
+        ("Starter guide", rel(depth, "blog/best-procreate-brushes-for-beginners/")),
     ]
     pills = "".join(f'<a class="trend-pill" href="{u}">{n}</a>' for n, u in topics)
     return f'<p class="trend-label">Trending now in Procreate &amp; digital art</p><div class="trend-pills">{pills}</div>'

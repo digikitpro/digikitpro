@@ -68,7 +68,19 @@ def build_product_pages():
         slug = p["slug"]; depth = 2
         im = p["images"]
         gal, og_img = gallery_html(p)
-        schemas = schema_product(p) + schema_breadcrumb([("Home","/"),("Products","/products.html"),(p["name"], f"/products/{slug}/")])
+        cslug = CATEGORY_SLUGS.get(p.get("category"))
+        crumb_items = [("Home","/"),("Products","/products.html")]
+        visual_crumbs = [("Products","products.html")]
+        if cslug:
+            crumb_items.append((p["category"], f"/category/{cslug}/"))
+            visual_crumbs.append((p["category"], f"category/{cslug}/"))
+        elif p.get("category") == "Bundles":
+            crumb_items.append(("Bundles", "/bundles.html"))
+            visual_crumbs.append(("Bundles", "bundles.html"))
+        crumb_items.append((p["name"], f"/products/{slug}/"))
+        visual_crumbs.append((p["name"], f"products/{slug}/"))
+
+        schemas = schema_product(p) + schema_breadcrumb(crumb_items)
         schemas += [{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":f["q"],"acceptedAnswer":{"@type":"Answer","text":f["a"]}} for f in p.get("faqs",[])]}] if p.get("faqs") else schemas
 
         href_cc = f'https://creativecommons.org'
@@ -128,8 +140,9 @@ def build_product_pages():
                        ('<span class="meta-chip free">Free</span>' if p["free"] else
                         (f'<span class="meta-chip gold">{esc(badge_text(p))}</span>' if badge_text(p) else "")))
         assets_chip = f'<span class="meta-chip">{esc(p["assets"])}</span>' if p.get("assets") else ""
-        cat_chip = (f'<a class="meta-chip cat" href="../../products.html#cat-{p["category"].replace(" ", "%20")}">'
-                    f'{esc(p["category"])}</a>')
+        cslug = CATEGORY_SLUGS.get(p.get("category"))
+        cat_href = f"../../category/{cslug}/" if cslug else (f"../../bundles.html" if p.get("category") == "Bundles" else f"../../products.html#cat-{p['category'].replace(' ', '%20')}")
+        cat_chip = f'<a class="meta-chip cat" href="{cat_href}">{esc(p["category"])}</a>'
         chips_html = status_chip + assets_chip + cat_chip
         caption = ("Launches soon · Newsletter subscribers get it first · Opens the store in a new tab"
                    if coming else "Secure checkout on Payhip · Instant download · Opens in a new tab")
@@ -148,7 +161,7 @@ def build_product_pages():
         html_out += f"""
 <main id="main">
   <div class="wrap">
-    {crumbs(depth, [("Products","products.html"),(p["name"], f"products/{slug}/")])}
+    {crumbs(depth, visual_crumbs)}
     <article class="pdp">
       <div class="pdp-media">{gal}</div>
       <div class="pdp-info">
