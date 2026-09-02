@@ -399,6 +399,20 @@ dialog.gal-light::backdrop{background:rgba(5,5,7,.86)}
 .tb-item span{color:var(--gold);display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.16rem}
 .tb-item p{font-weight:400;font-size:.78rem;color:var(--muted);line-height:1.35}
 
+/* ── seasonal homepage band (date-aware promo strip) ── */
+.season-band{position:relative;overflow:hidden;border-bottom:1px solid var(--border);padding:2rem 0}
+.season-band-inner{display:flex;align-items:center;gap:1.4rem}
+.season-band-copy{max-width:720px}
+.season-band-copy h2{font-size:clamp(1.4rem,3vw,2rem);margin:.1rem 0 .5rem;color:var(--text)}
+.season-band-text{color:var(--muted);font-size:.96rem;max-width:60ch;margin-bottom:1.1rem}
+.season-band-ctas{display:flex;flex-wrap:wrap;gap:.7rem}
+.season-band-glyph{margin-left:auto;font-size:3.4rem;line-height:1;opacity:.22;flex:none}
+.season-band--halloween{background:radial-gradient(60% 120% at 85% 0%,rgba(216,120,60,.16),transparent 60%),radial-gradient(50% 100% at 10% 100%,rgba(120,90,220,.14),transparent 60%),var(--surface)}
+.season-band--halloween .season-band-glyph{color:#E8915B;opacity:.35}
+.season-band--christmas{background:radial-gradient(60% 120% at 85% 0%,rgba(201,168,106,.16),transparent 60%),radial-gradient(50% 100% at 10% 100%,rgba(120,180,140,.12),transparent 60%),var(--surface)}
+.season-band--christmas .season-band-glyph{color:var(--gold);opacity:.4}
+@media(max-width:680px){.season-band{padding:1.7rem 0}.season-band-glyph{display:none}}
+
 /* ── trending highlights (auto-built from product data) ── */
 #trending .sec-head{margin-bottom:1rem}
 .trend-label{font:600 .7rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:.2rem 0 .9rem}

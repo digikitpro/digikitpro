@@ -144,11 +144,39 @@ def schema_breadcrumb(items):
              "itemListElement":[{"@type":"ListItem","position":i+1,"name":n,"item":absurl(u)} for i,(n,u) in enumerate(items)]}]
 
 def schema_article(a):
-    return [{"@context":"https://schema.org","@type":"Article","headline":a["title"],
-             "description":a["description"],"datePublished":a["date"],"dateModified":a["date"],
+    """BlogPosting (richer than the generic Article: eligible for blog/article
+    rich results). Image is always an absolute URL, required by BlogPosting."""
+    img = a.get("image") or "assets/img/og-cover.jpg"
+    img = img if is_abs(img) else absurl(img)
+    return [{"@context":"https://schema.org","@type":"BlogPosting","headline":a["title"],
+             "description":a["description"],"image":[img],
+             "datePublished":a["date"],"dateModified":a.get("modified") or a["date"],
              "author":{"@type":"Organization","name":SITE_NAME,"url":SITE_URL},
              "publisher":{"@id":SITE_URL+"/#org"},
-             "mainEntityOfPage":absurl(f"blog/{a['slug']}/")}]
+             "mainEntityOfPage":absurl(f"blog/{a['slug']}/"),
+             "inLanguage":"en","url":absurl(f"blog/{a['slug']}/")}]
+
+def schema_howto(name, description, steps, total_time=None, tools=None):
+    """HowTo rich result. `steps` = list of (name, text) tuples; each becomes a
+    HowToStep. `tools` is an optional list of Procreate/tool names (HowToTool)."""
+    step_nodes = [{"@type":"HowToStep","position":i+1,"name":n,"text":t}
+                  for i,(n,t) in enumerate(steps)]
+    node = {"@context":"https://schema.org","@type":"HowTo","name":name,
+            "description":description,"inLanguage":"en",
+            "step":step_nodes}
+    if total_time:
+        node["totalTime"] = total_time           # ISO-8601 duration, e.g. "PT30M"
+        node["performTime"] = total_time
+    if tools:
+        node["tool"] = [{"@type":"HowToTool","name":t} for t in tools]
+    return [node]
+
+def schema_faq(faqs):
+    """FAQPage rich result. `faqs` = list of (question, answer) tuples."""
+    return [{"@context":"https://schema.org","@type":"FAQPage",
+             "mainEntity":[{"@type":"Question","name":q,
+                            "acceptedAnswer":{"@type":"Answer","text":a}}
+                           for q,a in faqs]}]
 
 # ── head / header / footer ──────────────────────────────────────────────
 def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None):
@@ -471,6 +499,64 @@ def trend_topics(depth=0):
     ]
     pills = "".join(f'<a class="trend-pill" href="{u}">{n}</a>' for n, u in topics)
     return f'<p class="trend-label">Trending now in Procreate &amp; digital art</p><div class="trend-pills">{pills}</div>'
+
+# ── seasonal homepage band ──────────────────────────────────────────────
+# A date-aware promo strip for the active art season. Each def has an inclusive
+# (start, end) window as (month, day) tuples; outside every window the band is
+# hidden entirely, so the homepage never shows an out-of-date holiday. Kept in
+# the generator (not hand-edited HTML) so every rebuild stays correct.
+SEASON_BANDS = [
+    {
+        "key": "halloween",
+        "window": ((9, 15), (10, 31)),
+        "eyebrow": "Seasonal drop",
+        "title": "Spooky season is here — Halloween Procreate art",
+        "text": "Set the mood with the spooky pumpkin PNG pack plus glow, smoke and sparkle brushes for atmospheric autumn artwork.",
+        "primary": ("Shop Halloween art", "season/halloween/"),
+        "secondary": ("Halloween tutorial", "blog/halloween-procreate-tutorial/"),
+    },
+    {
+        "key": "christmas",
+        "window": ((11, 20), (12, 31)),
+        "eyebrow": "Holiday drop",
+        "title": "Festive season brushes, stamps & washi tapes",
+        "text": "173 Christmas stamps and brushes, 44 hand-drawn washi tapes, glitter papers, frames and chalkboards for cards, tags and journal spreads.",
+        "primary": ("Shop Christmas bundle", "season/christmas/"),
+        "secondary": ("Holiday tutorial", "blog/christmas-procreate-tutorial/"),
+    },
+]
+
+def active_season_band(today=None):
+    """Return the SEASON_BANDS def whose window contains `today` (date), else None."""
+    d = today or date.today()
+    md = (d.month, d.day)
+    for sdef in SEASON_BANDS:
+        (sm, sd), (em, ed) = sdef["window"]
+        if (sm, sd) <= md <= (em, ed):
+            return sdef
+    return None
+
+def season_band(depth=0):
+    """Homepage promo strip for the current art season; '' outside a window."""
+    sdef = active_season_band()
+    if not sdef:
+        return ""
+    phref = rel(depth, sdef["primary"][1])
+    shref = rel(depth, sdef["secondary"][1])
+    return f"""<section class="season-band season-band--{sdef['key']}" aria-label="{esc(sdef['title'])}">
+  <div class="wrap season-band-inner">
+    <div class="season-band-copy">
+      <p class="eyebrow">{esc(sdef['eyebrow'])}</p>
+      <h2>{esc(sdef['title'])}</h2>
+      <p class="season-band-text">{esc(sdef['text'])}</p>
+      <div class="season-band-ctas">
+        <a class="btn btn-gold btn-sm" href="{phref}">{esc(sdef['primary'][0])}</a>
+        <a class="btn btn-line btn-sm" href="{shref}">{esc(sdef['secondary'][0])} →</a>
+      </div>
+    </div>
+    <span class="season-band-glyph" aria-hidden="true">✦</span>
+  </div>
+</section>"""
 
 def write(path, content):
     p = os.path.join(ROOT, path)
