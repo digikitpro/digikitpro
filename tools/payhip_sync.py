@@ -32,6 +32,17 @@ STORE = "https://payhip.com/digikitpro"
 DATA = os.path.join(ROOT, "data", "products.json")
 DEFAULT_CATEGORY = "Other"
 IMG_ASPECT = {"w": 1200, "h": 900}
+JSON_INDENT = 2          # must match the committed data/products.json, otherwise
+                         # every sync rewrites the whole file as a spurious diff
+
+# SEO engine: generates keywords, tags, titles, descriptions and alt text for
+# the products this script adds. Optional by design: if it is missing or raises,
+# the sync still completes with the plain defaults below.
+try:
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import seo_engine
+except Exception:  # pragma: no cover - keeps sync resilient
+    seo_engine = None
 
 CAT_RULES = [
     ("anime|manga|chibi", "Anime"),
@@ -288,6 +299,13 @@ def main():
                     "syncedAt": time.strftime("%Y-%m-%d"),
                 }.items() if v is not None}
             }
+            if seo_engine:
+                try:
+                    _seo = seo_engine.enrich_product(products[-1], force=True)
+                    if _seo:
+                        print(f"    seo: {', '.join(_seo)}")
+                except Exception as e:
+                    print(f"    seo: skipped ({e})")
             report["new"].append({"id": pid, "name": rec.get("name"), "slug": products[-1]["slug"]})
             print(f"  + added [{pid}] {rec.get('name')}")
             by_payhip[pid] = products[-1]
@@ -312,13 +330,26 @@ def main():
         if p.get("auto") and rec.get("descriptionHtml") and len(str(rec["descriptionHtml"])) > len(str(p.get("descriptionHtml") or "")):
             p["descriptionHtml"] = rec["descriptionHtml"]
             changed = True
+        # Auto products are machine owned, so regenerate their SEO copy too when
+        # any live fact moved (a new price should reach the meta description).
+        if changed and seo_engine:
+            try:
+                _seo = seo_engine.enrich_product(p, force=True)
+                if _seo:
+                    print(f"    seo: {', '.join(_seo)}")
+            except Exception as e:
+                print(f"    seo: skipped ({e})")
         if changed:
             report["updated"].append({"id": pid, "name": rec["name"]})
             print(f"  ~ updated [{pid}] {rec['name']} live facts")
 
     # Save only if something actually changed (keeps CI clean when nothing is new).
-    json.dump(products, open(DATA, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
-    json.dump(report, open(os.path.join(ROOT, "data", "payhip_sync_report.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
+    with open(DATA, "w", encoding="utf-8") as fh:
+        json.dump(products, fh, indent=JSON_INDENT, ensure_ascii=False)
+        fh.write("\n")
+    with open(os.path.join(ROOT, "data", "payhip_sync_report.json"), "w", encoding="utf-8") as fh:
+        json.dump(report, fh, indent=JSON_INDENT, ensure_ascii=False)
+        fh.write("\n")
     print(f"  Wrote {len(products)} products. New: {len(report['new'])}. Updated: {len(report['updated'])}.")
     return 0
 
