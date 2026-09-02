@@ -3,12 +3,13 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from core import *
-import pages_blog, pages_main, pages_product, pages_misc, pages_category
+import pages_blog, pages_main, pages_product, pages_misc, pages_category, pages_season
 
 pages_main.load_articles = pages_blog.load_articles # shared loader
 pages_misc.load_articles = pages_blog.load_articles
 pages_product.load_articles = pages_blog.load_articles
 pages_category.load_articles = pages_blog.load_articles
+pages_season.load_articles = pages_blog.load_articles
 
 def main():
     pages_main.build_home()
@@ -16,6 +17,7 @@ def main():
     pages_main.build_freebies()
     pages_main.build_bundles()
     pages_category.build_categories()
+    pages_season.build_seasons()
     pages_product.build_product_pages()
     pages_blog.build_blog()
     pages_misc.build_misc()

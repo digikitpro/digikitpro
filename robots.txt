@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://digikitpro.github.io/digikitpro/sitemap.xml
+Sitemap: https://digikitpro.github.io/digikitpro/sitemap.txt
