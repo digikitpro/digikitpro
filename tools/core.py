@@ -212,6 +212,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}">
+  <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
 {pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}'}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
   <script src="{rel(depth,'js/main.js')}" defer></script>
@@ -318,6 +319,8 @@ def footer(depth):
         <a href="{rel(depth,'freebies.html')}">Free Brushes</a>
         <a href="{rel(depth,'products.html')}">All Products</a>
         <a href="{rel(depth,'bundles.html')}">Bundles</a>
+        <a href="{rel(depth,'season/halloween/')}">Halloween Art</a>
+        <a href="{rel(depth,'season/christmas/')}">Christmas Art</a>
         <a href="{rel(depth,'category/portrait/')}">Portrait Brushes</a>
         <a href="{rel(depth,'category/skin-texture/')}">Skin Texture</a>
         <a href="{rel(depth,'category/line-art/')}">Line Art</a>
