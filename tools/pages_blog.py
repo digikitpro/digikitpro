@@ -60,6 +60,48 @@ def md_to_html(body, depth=2):
         out.append(f"<p>{inline(' '.join(buf), depth)}</p>")
     return "\n".join(out)
 
+def _plain_md(text):
+    """Flatten an inline markdown fragment to plain text for structured data."""
+    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"\1", text)   # [label](url) -> label
+    text = text.replace("**", "").replace("__", "")
+    text = re.sub(r"(?<!\w)\*([^*]+)\*(?!\w)", r"\1", text)  # *emphasis*
+    text = re.sub(r"^\s*[-*]\s+", "", text, flags=re.M)      # bullet markers
+    return " ".join(text.split())
+
+def extract_faq(body):
+    """Pull (question, answer) pairs out of a `## FAQ` section built from
+    `### Question` / following-paragraph blocks. Returns [] when absent."""
+    m = re.search(r"^##\s+FAQ\s*$(.*?)(?=^##\s+|\Z)", body, re.S | re.M)
+    if not m:
+        return []
+    faqs = []
+    for part in re.split(r"^###\s+", m.group(1), flags=re.M)[1:]:
+        lines = [l for l in part.strip().splitlines() if l.strip()]
+        if not lines:
+            continue
+        q = _plain_md(lines[0])
+        if not q.endswith("?"):
+            q = q.rstrip("?.") + "?"
+        a = _plain_md(" ".join(lines[1:]))
+        if q and a:
+            faqs.append((q, a))
+    return faqs
+
+def extract_howto_steps(body):
+    """Pull ordered (name, text) steps from `## Step N: title` sections.
+    Each step's text runs until the next level-2 heading."""
+    steps = []
+    for m in re.finditer(r"^##\s+Step\b[^\n]*\n(.*?)(?=^##\s+|\Z)", body, re.S | re.M):
+        heading = m.group(0).splitlines()[0]
+        title = _plain_md(re.sub(r"^##\s+Step\s*\d*\s*[:.\-]?\s*", "", heading, flags=re.I).strip())
+        text = _plain_md(m.group(1))
+        if title:
+            steps.append((title, text or title))
+    return steps
+
+def _truthy(v):
+    return str(v or "").strip().lower() in ("true", "yes", "1")
+
 _ARTICLES = None
 def load_articles():
     global _ARTICLES
@@ -143,6 +185,19 @@ def build_blog():
             rel_html = """<nav class="article-related" aria-label="Related articles"><p class="eyebrow">Keep reading</p><div class="rel-arts">""" + "".join(
                 f'<a class="text-link" href="../{r["slug"]}/">{esc(r["title"])}</a>' for r in rel_arts) + "</div></nav>"
         schemas = schema_article(a) + schema_breadcrumb([("Home","/"),("Blog","/blog.html"),(a["title"], f"/blog/{a['slug']}/")])
+        # FAQPage: auto-generated from a `## FAQ` / `### Question` block when present.
+        faqs = extract_faq(a["body"])
+        if faqs:
+            schemas += schema_faq(faqs)
+        # HowTo: only for articles flagged `howto: true` with `## Step N:` sections.
+        if _truthy(a.get("howto")):
+            steps = extract_howto_steps(a["body"])
+            if steps:
+                tool_names = [BY_SLUG[s]["name"] for s in (a.get("products") or []) if s in BY_SLUG][:4]
+                tools = ["Procreate (iPad)", "Apple Pencil"] + tool_names
+                schemas += schema_howto(
+                    a["title"], a["description"], steps,
+                    total_time=a.get("totaltime") or None, tools=tools)
         hero_ss = img_srcset(depth, a.get("_pslug",""), a.get("_im") or {}, "(min-width: 860px) 760px, 94vw")
         og_img = (asset_abs(a["products"][0], BY_SLUG[a["products"][0]]["images"]["card"])
                   if a.get("products") and a["products"][0] in BY_SLUG else None)

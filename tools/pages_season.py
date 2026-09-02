@@ -24,7 +24,7 @@ SEASON_DEFS = [
         "effects_intro": "Pair the illustrations with smoke, glow and glitter brushes to build fog, candlelight and magical sparkle around your Halloween scenes.",
         "products_pack": ["halloween-pumpkin-bundle"],
         "products_effects": ["smoke-brushes-12", "glitter-brushes-sparkle-shine-30"],
-        "guides": ["how-to-install-procreate-brushes", "best-procreate-brushes-for-beginners"],
+        "guides": ["halloween-procreate-tutorial", "how-to-install-procreate-brushes", "best-procreate-brushes-for-beginners"],
         "ideas_title": "Ways to use the Halloween pack",
         "ideas": [
             "Import a PNG pumpkin illustration as a layer and paint glow, fog or sparkle behind it.",
@@ -56,7 +56,7 @@ SEASON_DEFS = [
         "effects_intro": "Add shimmer with glitter brushes and a hand-lettered chalkboard look with free chalk brushes for cards, tags and seasonal layouts.",
         "products_pack": ["christmas-brushes-bundle"],
         "products_effects": ["glitter-brushes-sparkle-shine-30", "free-chalkboard-artists-toolkit"],
-        "guides": ["how-to-install-procreate-brushes", "best-procreate-brushes-for-beginners"],
+        "guides": ["christmas-procreate-tutorial", "how-to-install-procreate-brushes", "best-procreate-brushes-for-beginners"],
         "ideas_title": "Ways to use the Christmas bundle",
         "ideas": [
             "Stamp Christmas decor and florals, then layer colors and resize the shapes for cards and tags.",

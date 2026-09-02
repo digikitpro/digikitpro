@@ -136,6 +136,7 @@ def build_home():
     </div>
   </section>
 
+  {season_band(0)}
   {trust_band(0)}
 
   <section class="section" id="free">
