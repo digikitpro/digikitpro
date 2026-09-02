@@ -63,6 +63,23 @@ KEYWORD_MAX = 14
 # Value payhip_sync.py falls back to when Payhip sends no description.
 FALLBACK_BLURB = "Digital download from DigiKitPro."
 
+# payhip_sync.py defaults the `assets` field to one of these when Payhip gives
+# nothing specific. They describe delivery, not contents, so treating them as a
+# real description of the product produces copy like "Instant digital download
+# for Procreate on iPad" and adds junk keywords such as "instant".
+BOILERPLATE_ASSETS = {
+    "instant digital download",
+    "digital download",
+    "instant download",
+    "download",
+}
+
+
+def real_assets(assets):
+    """Return the assets string only when it says something about the contents."""
+    a = clean(assets)
+    return "" if a.lower() in BOILERPLATE_ASSETS else a
+
 STOPWORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "into",
     "is", "it", "its", "of", "on", "or", "pack", "set", "that", "the", "this",
@@ -191,14 +208,15 @@ def gen_keywords(name, category, desc="", assets="", extra=None):
     cat = category if category in CATEGORY_KEYWORDS else "Other"
 
     # 1. Category seeds, but only those genuinely supported by the product text.
-    hay = " ".join([name or "", assets or "", desc or ""]).lower()
+    _assets = real_assets(assets)
+    hay = " ".join([name or "", _assets, desc or ""]).lower()
     matched = [k for k in CATEGORY_KEYWORDS[cat] if k.lower() in hay]
 
     # 2. Meaningful words straight out of the product name.
     name_terms = tokenize(name)[:6]
 
     # 3. Terms from the assets line, e.g. "19 professional brushes".
-    asset_terms = [w for w in tokenize(assets)][:3]
+    asset_terms = tokenize(_assets)[:3]
 
     # 4. A handful of descriptive words from the description body.
     desc_terms = []
@@ -243,9 +261,9 @@ def gen_short(name, category, desc="", assets=""):
     name = clean(name)
     benefit = CATEGORY_BENEFIT[cat]
 
-    lead = f"{name} gives you {clean(assets).lower()}" if clean(assets) else name
-    if clean(assets):
-        text = f"{lead}. {benefit}"
+    _assets = real_assets(assets)
+    if _assets:
+        text = f"{name} gives you {_assets.lower()}. {benefit}"
     else:
         text = f"{name}. {benefit}"
 
@@ -261,7 +279,7 @@ def gen_seo_desc(name, category, desc="", assets="", price_text="", free=False):
     cat = category if category in CATEGORY_KEYWORDS else "Other"
     name = clean(name)
     benefit = CATEGORY_BENEFIT[cat]
-    what = clean(assets) or f"{cat} brushes"
+    what = real_assets(assets) or f"{cat} brushes"
 
     tail = "Free instant download." if free else (
         f"Instant download, {price_text}." if price_text else "Instant digital download."
