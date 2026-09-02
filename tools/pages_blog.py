@@ -110,6 +110,7 @@ def load_articles():
     for path in glob.glob(os.path.join(ROOT, "content/blog/*.md")):
         fm, body = parse_md(path)
         fm["body"] = body
+        fm["_src"] = os.path.basename(path)   # deterministic tiebreaker, see sort below
         # hero image: the primary linked product's artwork
         prods = [s for s in (fm.get("products") or []) if s in BY_SLUG]
         if prods:
@@ -124,6 +125,12 @@ def load_articles():
             fm["image"] = "assets/img/og-cover.jpg"
             fm["imgW"], fm["imgH"] = 1200, 630
         arts.append(fm)
+    # Two-pass stable sort. Articles published on the same date previously fell
+    # back to glob order, which follows the filesystem and differs between runs,
+    # so every rebuild reshuffled the blog list in feed.xml, sitemap and the
+    # homepage. Sorting by filename first makes the date-descending order
+    # reproducible, which keeps the daily auto-sync commit clean.
+    arts.sort(key=lambda a: a.get("_src", ""))
     arts.sort(key=lambda a: a.get("date", ""), reverse=True)
     _ARTICLES = arts
     return arts
