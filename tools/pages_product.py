@@ -189,7 +189,10 @@ def build_product_pages():
     </section>"""
 
         coming = bool(p.get("comingSoon"))
-        cta_label = "View on Store" if coming else ("Download Free" if p["free"] else "Buy Now")
+        # CTA verbs are standardised site-wide: free -> "Get Free",
+        # paid -> "Buy Now" (this page IS the detail page, so the button
+        # goes straight to Payhip).
+        cta_label = "View on Store" if coming else ("Get Free" if p["free"] else "Buy Now")
         price_html = '<span class="price price-free">Free</span>' if p["free"] else f'<span class="price price-lg">{p["priceText"]}</span>'
         if coming:
             price_html += '<span class="price-note muted"> · at launch</span>'
@@ -216,12 +219,16 @@ def build_product_pages():
         cat_chip = f'<a class="meta-chip cat" href="{cat_href}">{esc(p["category"])}</a>'
         chips_html = status_chip + assets_chip + cat_chip
         caption = ("Launches soon · Newsletter subscribers get it first · Opens the store in a new tab"
-                   if coming else "Secure checkout on Payhip · Instant download · Opens in a new tab")
-        cta_label_long = "Get Free Download" if p["free"] and not coming else cta_label
+                   if coming else "Opens the Payhip checkout in a new tab")
+        cta_label_long = cta_label
+        # The trust bridge (checkout + delivery + refund terms, wording taken
+        # from refunds.html) replaces the old generic caption line.
+        bridge = "" if coming else trust_bridge(depth, free=bool(p.get("free")))
         buy_panel = f"""<div class="buy-panel">
           <div class="buy-top"><span class="buy-label">Price</span>{price_html}</div>
           <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'pdp-buy-panel')}>{cta_label_long} <span class="btn-arr">↗</span></a>
           <p class="buy-cap">{caption}</p>
+          {bridge}
         </div>"""
         # The licence question ("can I sell what I make?") is a real purchase
         # objection for working artists. It was only answered inside a collapsed
@@ -267,6 +274,7 @@ def build_product_pages():
       <div>
         <h2 id="p-get">Get This Product</h2>
         <p class="muted">{get_copy}</p>
+        {"" if coming else trust_bridge(depth, free=bool(p.get("free")))}
       </div>
       <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'pdp-bottom')}>{cta_label} <span class="btn-arr">↗</span></a>
     </section>

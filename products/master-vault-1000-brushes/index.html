@@ -66,10 +66,16 @@
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
+  <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
+       are hidden from the very first frame (no flash of visible content).
+       The timeout is a failsafe: if js/motion.js never runs, the class is
+       removed and every element is simply visible, as it is without JS. -->
+  <script>(function(h){h.className+=" js-motion";setTimeout(function(){if(!window.__DKP_MOTION_READY){h.className=h.className.replace(" js-motion","");}},4000);})(document.documentElement);</script>
  <link rel="preload" as="image" href="https://digikitpro.shop/assets/products/master-vault-1000-brushes/master-vault-1000-brushes.webp" fetchpriority="high">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "product", "slug": "master-vault-1000-brushes", "name": "Master Vault Mega Bundle: 1,000+ Procreate Brushes", "tier": "bundle", "category": "Bundles", "price": 15.0, "free": false, "line": "procreate"}};</script>
   <script src="../../js/search-index.js" defer></script>
   <script src="../../js/main.js" defer></script>
+  <script src="../../js/motion.js" defer></script>
   <script src="../../js/analytics.js" defer></script>
   <script src="../../js/feedback.js" defer></script>
   <script src="../../js/translate.js" defer></script>
@@ -135,7 +141,8 @@
         <div class="buy-panel">
           <div class="buy-top"><span class="buy-label">Price</span><span class="price price-lg">$15.00</span></div>
           <a class="btn btn-gold btn-lg" href="https://payhip.com/b/VtnCF" target="_blank" rel="noopener" data-dkp-slug="master-vault-1000-brushes" data-dkp-name="Master Vault Mega Bundle: 1,000+ Procreate Brushes" data-dkp-price="15.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="pdp-buy-panel">Buy Now <span class="btn-arr">↗</span></a>
-          <p class="buy-cap">Secure checkout on Payhip · Instant download · Opens in a new tab</p>
+          <p class="buy-cap">Opens the Payhip checkout in a new tab</p>
+          <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
         </div>
         <p class="licence-line"><b>Can I sell what I make?</b> Yes — finished artwork you create with these files is yours to use personally and commercially. You may not resell or redistribute the brush files themselves. <a href="../../terms.html">Full licence</a>.</p>
         <ul class="pdp-trust"><li>Instant download via Payhip</li><li>Lifetime access</li><li>Procreate on iPad required</li></ul>
@@ -168,12 +175,12 @@
       <p class="muted">The Master Library adds the rest of the catalog on top of it: 2,000+ organized brushes in one organised download.</p>
       <div class="up-cta">
         <span class="price">$19.00</span>
-        <a class="btn btn-line btn-sm" href="https://payhip.com/b/G2N8m" target="_blank" rel="noopener"
+        <a class="btn btn-line btn-sm" href="../../products/master-library-2000-brushes/"
            data-dkp-event="upgrade_clicked" data-dkp-from-product-id="master-vault-1000-brushes"
-           data-dkp-to-product-id="master-library-2000-brushes" data-dkp-price-delta="4.00"
-           data-dkp-slug="master-library-2000-brushes" data-dkp-name="The DigiKitPro Master Library: 2,000+ Procreate Brushes" data-dkp-price="19.00" data-dkp-tier="flagship" data-dkp-free="0" data-dkp-loc="pdp-upgrade">Get the complete collection ↗</a>
-        <a class="text-link" href="../../products/master-library-2000-brushes/">Compare →</a>
+           data-dkp-to-product-id="master-library-2000-brushes" data-dkp-price-delta="4.00">View Product</a>
+        <a class="text-link" href="https://payhip.com/b/G2N8m" target="_blank" rel="noopener" data-dkp-slug="master-library-2000-brushes" data-dkp-name="The DigiKitPro Master Library: 2,000+ Procreate Brushes" data-dkp-price="19.00" data-dkp-tier="flagship" data-dkp-free="0" data-dkp-loc="pdp-upgrade">Buy on Payhip ↗</a>
       </div>
+      <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
     </div>
   </div>
 </section>
@@ -194,6 +201,7 @@
       <div>
         <h2 id="p-get">Get This Product</h2>
         <p class="muted">Secure checkout on Payhip. Instant delivery to your email.</p>
+        <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
       </div>
       <a class="btn btn-gold btn-lg" href="https://payhip.com/b/VtnCF" target="_blank" rel="noopener" data-dkp-slug="master-vault-1000-brushes" data-dkp-name="Master Vault Mega Bundle: 1,000+ Procreate Brushes" data-dkp-price="15.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="pdp-bottom">Buy Now <span class="btn-arr">↗</span></a>
     </section>
@@ -202,8 +210,8 @@
       <div class="sec-head"><div><p class="eyebrow">You may also like</p><h2 id="p-related">Related Products</h2></div></div>
       <div class="grid cards">
 <article class="card" data-category="Bundles" data-name="the digikitpro master library: 2,000+ procreate brushes" data-tags="master library 2000 all brushes complete mega bundle collection" data-free="0" data-featured="1" data-tier="flagship" data-line="procreate" data-dkp-slug="master-library-2000-brushes" data-dkp-name="The DigiKitPro Master Library: 2,000+ Procreate Brushes" data-dkp-price="19.00" data-dkp-tier="flagship" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/master-library-2000-brushes/" style="--card-ar:1.5000">
-    <img class="fit" src="../../assets/products/master-library-2000-brushes/master-library-2000-brushes-card.webp" srcset="../../assets/products/master-library-2000-brushes/master-library-2000-brushes-card.webp 750w, ../../assets/products/master-library-2000-brushes/master-library-2000-brushes.webp 1200w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="The DigiKitPro Master Library: 2,000+ Procreate Brushes: The definitive DigiKitPro collection: 2,000+ professional brushes, organized and optimized, every style, one library, no more tool fatigue." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/master-library-2000-brushes/">
+    <img src="../../assets/products/master-library-2000-brushes/master-library-2000-brushes-card.webp" srcset="../../assets/products/master-library-2000-brushes/master-library-2000-brushes-card.webp 750w, ../../assets/products/master-library-2000-brushes/master-library-2000-brushes.webp 1200w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="The DigiKitPro Master Library: 2,000+ Procreate Brushes: The definitive DigiKitPro collection: 2,000+ professional brushes, organized and optimized, every style, one library, no more tool fatigue." loading="lazy" decoding="async">
     <span class="badge">Complete Library</span>
   </a>
   <div class="card-body">
@@ -212,13 +220,13 @@
     <p class="card-short">The definitive DigiKitPro collection: 2,000+ professional brushes, organized and optimized, every style, one library, no more tool fatigue.</p>
     <div class="card-foot">
       <span class="price">$19.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/master-library-2000-brushes/">View Product</a>
+      <a class="btn btn-line btn-sm" href="../../products/master-library-2000-brushes/" data-dkp-slug="master-library-2000-brushes" data-dkp-name="The DigiKitPro Master Library: 2,000+ Procreate Brushes" data-dkp-price="19.00" data-dkp-tier="flagship" data-dkp-free="0" data-dkp-loc="card">View Product</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Bundles" data-name="650 procreate brushes mega bundle" data-tags="mega bundle 650 all brushes complete library value every style" data-free="0" data-featured="1" data-tier="bundle" data-line="procreate" data-dkp-slug="procreate-mega-bundle-650" data-dkp-name="650 Procreate Brushes Mega Bundle" data-dkp-price="20.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/procreate-mega-bundle-650/" style="--card-ar:1.5000">
-    <img class="fit" src="../../assets/products/procreate-mega-bundle-650/procreate-mega-bundle-650-card.webp" srcset="../../assets/products/procreate-mega-bundle-650/procreate-mega-bundle-650-card.webp 750w, ../../assets/products/procreate-mega-bundle-650/procreate-mega-bundle-650.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="650 Procreate Brushes Mega Bundle: Every DigiKitPro brush in one legendary mega kit: 650+ brushes and paper textures covering every style, at over 80% off separate prices." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/procreate-mega-bundle-650/">
+    <img src="../../assets/products/procreate-mega-bundle-650/procreate-mega-bundle-650-card.webp" srcset="../../assets/products/procreate-mega-bundle-650/procreate-mega-bundle-650-card.webp 750w, ../../assets/products/procreate-mega-bundle-650/procreate-mega-bundle-650.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="650 Procreate Brushes Mega Bundle: Every DigiKitPro brush in one legendary mega kit: 650+ brushes and paper textures covering every style, at over 80% off separate prices." loading="lazy" decoding="async">
     <span class="badge">Save 80%+</span>
   </a>
   <div class="card-body">
@@ -227,13 +235,13 @@
     <p class="card-short">Every DigiKitPro brush in one legendary mega kit: 650+ brushes and paper textures covering every style, at over 80% off separate prices.</p>
     <div class="card-foot">
       <span class="price">$20.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/procreate-mega-bundle-650/">View Product</a>
+      <a class="btn btn-line btn-sm" href="../../products/procreate-mega-bundle-650/" data-dkp-slug="procreate-mega-bundle-650" data-dkp-name="650 Procreate Brushes Mega Bundle" data-dkp-price="20.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="card">View Product</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Bundles" data-name="ultimate portrait mastery bundle: 4 procreate kits" data-tags="bundle portrait skin hair glitter line art workflow value" data-free="0" data-featured="1" data-tier="bundle" data-line="procreate" data-dkp-slug="ultimate-portrait-mastery-bundle" data-dkp-name="Ultimate Portrait Mastery Bundle: 4 Procreate Kits" data-dkp-price="15.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/ultimate-portrait-mastery-bundle/" style="--card-ar:0.8091">
-    <img class="fit contain" src="../../assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp" srcset="../../assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp 750w, ../../assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle.webp 1128w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="927" alt="Ultimate Portrait Mastery Bundle: 4 Procreate Kits: Four professional portrait kits in one workflow: line art (43), skin texture (19), hair stamps (160) and glitter effects (30), 252+ assets." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/ultimate-portrait-mastery-bundle/">
+    <img src="../../assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp" srcset="../../assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp 750w, ../../assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle.webp 1128w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="927" alt="Ultimate Portrait Mastery Bundle: 4 Procreate Kits: Four professional portrait kits in one workflow: line art (43), skin texture (19), hair stamps (160) and glitter effects (30), 252+ assets." loading="lazy" decoding="async">
     <span class="badge">Best Value</span>
   </a>
   <div class="card-body">
@@ -242,13 +250,13 @@
     <p class="card-short">Four professional portrait kits in one workflow: line art (43), skin texture (19), hair stamps (160) and glitter effects (30), 252+ assets.</p>
     <div class="card-foot">
       <span class="price">$15.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/ultimate-portrait-mastery-bundle/">View Product</a>
+      <a class="btn btn-line btn-sm" href="../../products/ultimate-portrait-mastery-bundle/" data-dkp-slug="ultimate-portrait-mastery-bundle" data-dkp-name="Ultimate Portrait Mastery Bundle: 4 Procreate Kits" data-dkp-price="15.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="card">View Product</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Portrait" data-name="artista studio kit: 76 procreate brushes" data-tags="studio kit all in one inking shading graphite charcoal markers illustration comics" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/artista-studio-kit-76-brushes/" style="--card-ar:0.8082">
-    <img class="fit contain" src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Artista Studio Kit: 76 Procreate Brushes: One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/artista-studio-kit-76-brushes/">
+    <img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Artista Studio Kit: 76 Procreate Brushes: One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -257,7 +265,7 @@
     <p class="card-short">One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/artista-studio-kit-76-brushes/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/IjRTk" target="_blank" rel="noopener" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>

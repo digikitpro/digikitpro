@@ -346,10 +346,10 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}">
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
-  <!-- Motion layer: sets `js-motion` on <html> before first paint so scroll-reveal
-       elements are hidden from the very first frame (no flash of visible content).
-       The timeout is a failsafe: if js/motion.js never runs, the class is removed
-       and every element is simply visible, exactly as it is with JavaScript off. -->
+  <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
+       are hidden from the very first frame (no flash of visible content).
+       The timeout is a failsafe: if js/motion.js never runs, the class is
+       removed and every element is simply visible, as it is without JS. -->
   <script>(function(h){{h.className+=" js-motion";setTimeout(function(){{if(!window.__DKP_MOTION_READY){{h.className=h.className.replace(" js-motion","");}}}},4000);}})(document.documentElement);</script>
 {pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}',analytics:{str(ANALYTICS_ENABLED).lower()},feedbackEndpoint:'{FEEDBACK_ENDPOINT}',page:{ctx_json}}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
@@ -551,36 +551,74 @@ def img_srcset(depth, slug, im, sizes):
     return (f' srcset="{rel(depth, f"{base}/{card}")} {im.get("cardW") or 750}w, '
             f'{rel(depth, f"{base}/{main}")} {im.get("fullW") or 1200}w" sizes="{sizes}"')
 
-def product_card(p, depth, eager=False):
+def cta_for(p):
+    """Standard CTA verb + target for a product, by tier.
+
+    Free items            -> "Get Free"
+    Paid single packs <$10 -> "Buy Now", straight to Payhip (no detail-page
+                              detour on a $5 impulse purchase)
+    Bundles / Master Library / education / anything $10+ -> "View Product"
+                              (detail page first: higher-consideration items
+                              benefit from the explanation before checkout)
+    Returns (label, href_kind) where href_kind is "payhip" or "page".
+    """
+    if p.get("comingSoon"):
+        return "Notify Me", "page"
+    if p.get("free"):
+        return "Get Free", "page"
+    if tier_of(p) in ("bundle", "flagship", "education") or (p.get("price") or 0) >= 10:
+        return "View Product", "page"
+    return "Buy Now", "payhip"
+
+def trust_bridge(depth=0, free=False):
+    """The one-line trust bridge that sits beside/below every Payhip CTA.
+
+    Refund wording is taken from refunds.html ("all sales are final once the
+    files have been downloaded" + "technical problems are resolved") so the
+    claim never drifts from the policy page.
+    """
+    terms = ("$0 now and forever, no card needed" if free
+             else "all sales final once downloaded, faulty files always resolved")
+    return (f'<p class="trust-bridge">Secure checkout via Payhip · instant download · '
+            f'{terms} · <a href="{rel(depth, "refunds.html")}">Refund policy</a></p>')
+
+def product_card(p, depth, eager=False, free_direct=False):
     im = p.get("images") or {}
     card = im.get("card", "")
     w, h = im.get("cardW") or 750, im.get("cardH") or 500
     u = rel(depth, f"products/{p['slug']}/")
     coming = bool(p.get("comingSoon"))
+    label, kind = cta_for(p)
+    # Free cards normally keep the product page as their target (it hosts the
+    # email gate + the direct link); the homepage free row and the freebies
+    # page send "Get Free" straight to Payhip instead.
+    if free_direct and p.get("free") and not coming:
+        href, ext = p["payhipUrl"], True
+    elif kind == "payhip":
+        href, ext = p["payhipUrl"], True
+    else:
+        href, ext = u, False
+    ext_attr = ' target="_blank" rel="noopener"' if ext else ""
     if coming:
         badge = '<span class="badge badge-soon">Coming Soon</span>'
     else:
         blabel = badge_text(p)
         badge = f'<span class="badge badge-free">Free</span>' if p["free"] else (f'<span class="badge">{esc(blabel)}</span>' if blabel else "")
     price = "Free" if p["free"] else money(p)
-    cta = "Notify Me" if coming else ("Get Free" if p["free"] else "View Product")
+    cta = label
     loading = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
-    fit = " contain" if (im.get("cardH") or 0) > (im.get("cardW") or 0) else ""
     srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw") if card else ""
     img_src = asset_file(depth, p["slug"], card) if card else rel(depth, "assets/img/coming-soon.svg")
-    # Phones show one card per row, so the media box can take the image's own
-    # aspect ratio: the whole artwork is visible, with no crop and no letterbox
-    # bars. Ratios outside 0.7-1.6 (very tall covers) stay letterboxed instead
-    # of making a single card fill the entire screen.
-    ratio = (w / h) if h else 1.5
-    ar = min(max(ratio, 0.7), 1.6)
-    exact = " exact" if 0.7 <= ratio <= 1.6 else ""
+    # Card media is a uniform square filled edge-to-edge (object-fit: cover),
+    # so every artwork renders at full card width — no letterbox bars, no
+    # shrunken contain-fit thumbnails. Intrinsic width/height stay on the tag
+    # for layout stability before CSS loads.
     cslug = CATEGORY_SLUGS.get(p.get("category"))
     cat_url = rel(depth, f"category/{cslug}/") if cslug else (rel(depth, "bundles.html") if p.get("category") == "Bundles" else rel(depth, f"products.html#cat-{esc(p['category'].replace(' ','%20'))}"))
     _tier = tier_of(p); _line = line_of(p)
     return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}" data-tier="{esc(_tier)}" data-line="{esc(_line)}" data-dkp-slug="{esc(p['slug'])}" data-dkp-name="{esc(p['name'])}" data-dkp-price="{p.get('price',0):.2f}" data-dkp-tier="{esc(_tier)}" data-dkp-free="{1 if p['free'] else 0}" data-dkp-loc="card">
-  <a class="card-media{exact}" href="{u}" style="--card-ar:{ar:.4f}">
-    <img class="fit{fit}" src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
+  <a class="card-media" href="{u}">
+    <img src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
     {badge}
   </a>
   <div class="card-body">
@@ -589,15 +627,15 @@ def product_card(p, depth, eager=False):
     <p class="card-short">{esc(p['short'])}</p>
     <div class="card-foot">
       <span class="price">{price}</span>
-      <a class="btn btn-line btn-sm" href="{u}">{cta}</a>
+      <a class="btn btn-line btn-sm" href="{href}"{ext_attr} {buy_attrs(p, 'card')}>{cta}</a>
     </div>
   </div>
 </article>"""
 
-def product_grid(products, depth, eager_first=0, classes="grid cards"):
+def product_grid(products, depth, eager_first=0, classes="grid cards", free_direct=False):
     out = [f'<div class="{classes}">']
     for i, p in enumerate(products):
-        out.append(product_card(p, depth, eager=i < eager_first))
+        out.append(product_card(p, depth, eager=i < eager_first, free_direct=free_direct))
     out.append("</div>")
     return "\n".join(out)
 
@@ -605,14 +643,24 @@ cat_slug = lambda c: "cat-" + c.replace(" ", "%20")
 
 # ── worldwide trust band + trending topics (homepage / catalog) ─────────
 def trust_band(depth=0):
+    """Proof bar directly under the hero.
+
+    PLACEHOLDER (owner): swap these catalog figures for real performance
+    numbers — total downloads, kits sold, average rating — as soon as they
+    exist. Until then the bar states only counts that are verifiable from
+    data/products.json, never invented social proof.
+    """
+    f = flagship()
+    free_n = sum(1 for p in PRODUCTS if p["free"])
+    brush_count = (f.get("assets") or "2,000+ brushes") if f else "2,000+ brushes"
     items = [
-        ("Worldwide", "Instant digital delivery in every country"),
-        ("No shipping", "No GST/VAT surprises - Payhip handles payments"),
-        ("Pay safely", "PayPal, cards, Apple Pay & more"),
-        ("7 languages", "Auto-translate the whole site in one click"),
+        (f"{len(PRODUCTS)} kits &amp; tools", "Brushes, bundles, palettes, planners and eBooks in one catalog"),
+        (esc(brush_count), "In the Master Library alone — one organised download"),
+        (f"{free_n} free packs", "$0 forever — download now, no email needed"),
+        ("Instant delivery", "Worldwide via Payhip · PayPal, cards &amp; Apple Pay"),
     ]
     cells = "".join(f'<div class="tb-item"><span>{title}</span><p>{sub}</p></div>' for title, sub in items)
-    return f'<div class="trust-band" role="region" aria-label="Why artists worldwide choose DigiKitPro"><div class="wrap trust-inner">{cells}</div></div>'
+    return f'<div class="trust-band" role="region" aria-label="DigiKitPro by the numbers"><div class="wrap trust-inner">{cells}</div></div>'
 
 def trend_topics(depth=0):
     topics = [
@@ -636,20 +684,114 @@ def trend_topics(depth=0):
 # Nothing here invents a claim: copy states only what is already true in
 # data/products.json (asset counts, prices, formats, requirements).
 
-def hero_trust(depth=0):
-    """Four trust points beside the hero. Each one is verifiable from the
-    product data or the store setup — no invented review counts or numbers."""
-    items = [
-        ("Hand-tested on real artwork", "Tuned on actual portrait and illustration work, not bulk-generated."),
-        ("Apple Pencil ready", "Pressure and tilt behaviour set up for iPad + Apple Pencil."),
-        ("Procreate compatible", ".brushset files for Procreate on iPad. Requirements listed on every page."),
-        ("Instant digital delivery", "Payhip checkout, download link in your inbox seconds later, lifetime access."),
-    ]
-    cells = "".join(
-        f'<li class="ht-item"><span class="ht-ic" aria-hidden="true">✓</span>'
-        f'<span><b>{esc(t)}</b><small>{esc(sub)}</small></span></li>'
-        for t, sub in items)
-    return f'<ul class="hero-trust">{cells}</ul>'
+def best_seller():
+    """The single product the homepage feature band is built around:
+    the first live "Best Seller"-badged pack, else the top featured pack."""
+    for p in PRODUCTS:
+        if badge_text(p).lower() == "best seller" and not p.get("comingSoon"):
+            return p
+    feat = sorted([p for p in PRODUCTS if p.get("featured") and not p.get("comingSoon")],
+                  key=lambda x: x["featured"])
+    return feat[0] if feat else None
+
+def feature_band(depth=0):
+    """One featured best-seller, full width, with a testimonial slot beside it
+    and a direct Payhip buy button + trust bridge underneath."""
+    p = best_seller()
+    if not p:
+        return ""
+    im = p.get("images") or {}
+    img = im.get("card") or im.get("main") or ""
+    srcset = img_srcset(depth, p["slug"], im, "(min-width: 960px) 40vw, 92vw")
+    points = "".join(f"<li><b>{esc(x)}</b></li>" for x in (p.get("features") or [])[:3]) \
+        or f"<li><b>{esc(p.get('assets') or 'Professional brush set')}</b></li>"
+    return f"""<section class="section feature-band" id="best-seller" aria-labelledby="bs-title">
+  <div class="wrap fb-inner">
+    <a class="fb-media" href="{rel(depth, 'products/' + p['slug'] + '/')}" tabindex="-1" aria-hidden="true">
+      <img src="{asset_file(depth, p['slug'], img)}"{srcset} width="{im.get('cardW') or im.get('fullW') or 750}" height="{im.get('cardH') or im.get('fullH') or 946}" alt="" loading="lazy" decoding="async">
+    </a>
+    <div class="fb-body">
+      <p class="eyebrow">The studio best-seller</p>
+      <h2 id="bs-title">{esc(p['name'])}</h2>
+      <p class="lead-sm">{esc(p['short'])}</p>
+      <ul class="flag-points">{points}</ul>
+      <!-- TESTIMONIAL PLACEHOLDER (owner): replace this block with a real
+           customer quote (name or handle, with permission). Never publish a
+           fabricated review. -->
+      <blockquote class="fb-quote quote-slot">
+        <p>“A real customer quote about this kit goes here — placeholder slot, not a published review.”</p>
+        <cite>— Customer name / handle (placeholder)</cite>
+      </blockquote>
+      <div class="fb-cta">
+        <span class="price price-lg">{"Free" if p['free'] else esc(p['priceText'])}</span>
+        <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'feature-band')}>{"Get Free" if p['free'] else "Buy Now"} <span class="btn-arr">↗</span></a>
+        <a class="text-link" href="{rel(depth, 'products/' + p['slug'] + '/')}">Full details →</a>
+      </div>
+      {trust_bridge(depth, free=bool(p.get("free")))}
+    </div>
+  </div>
+</section>
+"""
+
+def testimonials_section(depth=0):
+    """Social-proof section. The store has no published reviews yet, so these
+    are clearly-marked placeholder slots: dashed frames labelled as pending,
+    never fabricated quotes. Swap each <figure> for a real quote when one
+    exists (owner: Payhip receipt emails / DMs, with permission)."""
+    slots = ""
+    for i in (1, 2, 3):
+        slots += f"""<figure class="quote-card quote-slot">
+      <blockquote><p>Placeholder slot {i} — a real customer review will appear here once collected.</p></blockquote>
+      <figcaption><b>Customer name / handle</b><span>Awaiting real review · slot {i}</span></figcaption>
+    </figure>"""
+    return f"""<section class="section section-alt" id="artist-voices" aria-labelledby="voices-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Social proof</p><h2 id="voices-title">What Artists Say</h2></div>
+    </div>
+    <p class="sec-note muted">Reviews are added here exactly as they arrive — name, handle and permission first. The frames below are empty slots on purpose, not quotes.</p>
+    <!-- TESTIMONIAL PLACEHOLDER (owner): fill these three slots with real
+         customer quotes before removing the quote-slot styling. -->
+    <div class="grid quotes-grid">{slots}</div>
+  </div>
+</section>
+"""
+
+def freebie_download_row(depth=0):
+    """Primary path on the freebies page: every free pack as a full card with
+    a direct, no-email Payhip download button."""
+    frees = [p for p in PRODUCTS if p.get("free") and not p.get("comingSoon")]
+    cards = ""
+    for p in frees:
+        im = p.get("images") or {}
+        img = im.get("card") or im.get("main") or ""
+        srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 92vw")
+        cards += f"""<article class="dl-card">
+  <a class="dl-media" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-direct')}>
+    <img src="{asset_file(depth, p['slug'], img)}"{srcset} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
+    <span class="badge badge-free">Free</span>
+  </a>
+  <div class="dl-body">
+    <h3>{esc(p['name'])}</h3>
+    <p class="muted">{esc(p.get('assets') or p.get('short') or '')}</p>
+    <div class="dl-foot">
+      <span class="price price-free">Free</span>
+      <a class="btn btn-gold" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-direct')}>Get Free <span class="btn-arr">↗</span></a>
+    </div>
+    <p class="dl-note">No email required · instant download · keep forever</p>
+  </div>
+</article>"""
+    return f"""<section class="section" id="direct" aria-labelledby="direct-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">No email, no wait</p><h2 id="direct-title">Download Them Right Now</h2></div>
+      <a class="text-link" href="#get-free">Or get new drops by email ↓</a>
+    </div>
+    <p class="sec-note muted">Every button goes straight to Payhip's free checkout. Nothing is gated: take the packs first, decide about email later.</p>
+    <div class="grid dl-grid">{cards}</div>
+    {trust_bridge(depth, free=True)}
+  </div>
+</section>"""
 
 
 def craft_grid(depth=0):
@@ -727,7 +869,7 @@ def flagship_band(depth=0):
                    f'{len(prices)} kits. One library, every style, {esc(f["priceText"])}.')
     return f"""<section class="section flagship-band" id="master-library" aria-labelledby="flag-title">
   <div class="wrap flag-inner">
-    <div class="flag-media">
+    <div class="flag-media" data-wipe>
       <img src="{asset_file(depth, f['slug'], img)}"{srcset} width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(f.get('alt') or f['name'])}" loading="lazy" decoding="async">
     </div>
     <div class="flag-body">
@@ -742,9 +884,10 @@ def flagship_band(depth=0):
       <p class="flag-compare muted">{compare}</p>
       <div class="flag-cta">
         <span class="price price-lg">{esc(f['priceText'])}</span>
-        <a class="btn btn-gold" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'flagship-band')}>Get the Master Library <span class="btn-arr">↗</span></a>
-        <a class="text-link" href="{rel(depth, 'products/' + f['slug'] + '/')}">See everything inside →</a>
+        <a class="btn btn-gold" href="{rel(depth, 'products/' + f['slug'] + '/')}">View Product</a>
+        <a class="text-link" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'flagship-band')}>Buy on Payhip ↗</a>
       </div>
+      {trust_bridge(depth)}
     </div>
   </div>
 </section>
@@ -787,12 +930,12 @@ def upgrade_panel(p, depth):
       <p class="muted">{esc(body)}</p>
       <div class="up-cta">
         <span class="price">{esc(f['priceText'])}</span>
-        <a class="btn btn-line btn-sm" href="{f['payhipUrl']}" target="_blank" rel="noopener"
+        <a class="btn btn-line btn-sm" href="{rel(depth, 'products/' + f['slug'] + '/')}"
            data-dkp-event="upgrade_clicked" data-dkp-from-product-id="{esc(p['slug'])}"
-           data-dkp-to-product-id="{esc(f['slug'])}" data-dkp-price-delta="{diff:.2f}"
-           {buy_attrs(f, 'pdp-upgrade')}>Get the complete collection ↗</a>
-        <a class="text-link" href="{rel(depth, 'products/' + f['slug'] + '/')}">Compare →</a>
+           data-dkp-to-product-id="{esc(f['slug'])}" data-dkp-price-delta="{diff:.2f}">View Product</a>
+        <a class="text-link" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'pdp-upgrade')}>Buy on Payhip ↗</a>
       </div>
+      {trust_bridge(depth)}
     </div>
   </div>
 </section>
@@ -829,13 +972,22 @@ def freebie_gate(depth, p=None, source="freebies"):
     we never hold a promised free file hostage — but the email path is the
     primary action and leads to thank-you.html, which makes one starter offer."""
     lead = p["slug"] if p else "free-brushes"
-    heading = f"Get {p['name']}" if p else "Get the free Procreate packs"
-    sub = ("Enter your email and we will send the download link plus new free brush drops. "
-           "No spam, unsubscribe in one click.")
+    if p:
+        heading = f"Get {p['name']}"
+        sub = ("Enter your email and we will send the download link plus new free brush drops. "
+               "No spam, unsubscribe in one click.")
+        eyebrow, btn = "Free download", "Send my free download"
+    else:
+        # Secondary path on freebies.html: the direct Payhip downloads above
+        # are the primary action, so the email module only recruits subscribers.
+        heading = "Want new free drops sent to you?"
+        sub = ("Leave your email and every new free pack lands in your inbox the day it drops. "
+               "The downloads above never need an address — this is only for the next ones.")
+        eyebrow, btn = "Free drops, first", "Send me new freebies"
     return f"""<section class="freebie-gate" id="get-free" aria-labelledby="fg-title">
   <div class="fg-inner">
     <div class="fg-copy">
-      <p class="eyebrow">Free download</p>
+      <p class="eyebrow">{esc(eyebrow)}</p>
       <h2 id="fg-title">{esc(heading)}</h2>
       <p class="muted">{esc(sub)}</p>
       <form class="nl-form fg-form" data-nl-form data-dkp-source="{esc(source)}" data-dkp-lead="{esc(lead)}" data-dkp-thanks="{rel(depth,'thank-you.html')}" action="{EMAIL_ENDPOINT}" method="POST">
@@ -848,10 +1000,10 @@ def freebie_gate(depth, p=None, source="freebies"):
         <input type="hidden" name="lead_magnet" value="{esc(lead)}">
         <label class="sr-only" for="fg-email-{esc(lead)}">Email address</label>
         <input id="fg-email-{esc(lead)}" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send my free download</button>
+        <button class="btn btn-gold" type="submit">{esc(btn)}</button>
         <p class="nl-note" data-nl-note>We email the link straight away.</p>
       </form>
-      <p class="fg-alt muted">In a hurry? <a href="{(p['payhipUrl'] if p else STORE_URL + '/collection/freebies')}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-gate-direct') if p else ''}>Download it directly on Payhip ↗</a> — no email needed.</p>
+      {f'<p class="fg-alt muted">In a hurry? <a href="{p["payhipUrl"]}" target="_blank" rel="noopener" {buy_attrs(p, "freebie-gate-direct")}>Download it directly on Payhip ↗</a> — no email needed.</p>' if p else ''}
     </div>
   </div>
 </section>

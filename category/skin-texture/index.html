@@ -66,9 +66,15 @@
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
+  <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
+       are hidden from the very first frame (no flash of visible content).
+       The timeout is a failsafe: if js/motion.js never runs, the class is
+       removed and every element is simply visible, as it is without JS. -->
+  <script>(function(h){h.className+=" js-motion";setTimeout(function(){if(!window.__DKP_MOTION_READY){h.className=h.className.replace(" js-motion","");}},4000);})(document.documentElement);</script>
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "category", "slug": "skin-texture", "category": "Skin Texture Brushes"}};</script>
   <script src="../../js/search-index.js" defer></script>
   <script src="../../js/main.js" defer></script>
+  <script src="../../js/motion.js" defer></script>
   <script src="../../js/analytics.js" defer></script>
   <script src="../../js/feedback.js" defer></script>
   <script src="../../js/translate.js" defer></script>
@@ -141,8 +147,8 @@
       </div>
       <div class="grid cards">
 <article class="card" data-category="Skin Texture" data-name="portrait skin brushes for procreate" data-tags="skin skin texture pores freckles wrinkles portrait realistic blending blusher highlighter" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/portrait-skin-brushes-procreate/" style="--card-ar:0.7928">
-    <img class="fit contain" src="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, ../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Portrait Skin Brushes for Procreate: 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits." loading="eager" fetchpriority="high" decoding="async">
+  <a class="card-media" href="../../products/portrait-skin-brushes-procreate/">
+    <img src="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, ../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Portrait Skin Brushes for Procreate: 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits." loading="eager" fetchpriority="high" decoding="async">
     <span class="badge">Best Seller</span>
   </a>
   <div class="card-body">
@@ -151,7 +157,7 @@
     <p class="card-short">19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/portrait-skin-brushes-procreate/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/btOrh" target="_blank" rel="noopener" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>

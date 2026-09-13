@@ -117,14 +117,18 @@ h3{font-size:1.15rem}
 /* phones: two larger covers instead of three postage stamps, no stagger overflow */
 @media(max-width:640px){.hero-showcase{grid-template-columns:repeat(2,1fr);gap:12px}.hero-card.h2,.hero-card.h3{transform:none}.hero-card.h3{display:none}}
 
-/* ── sections ── */
-.section{padding:3.4rem 0}
+/* ── sections ──
+   Deliberate vertical rhythm: major sections breathe instead of reading as
+   one continuous block. Spacing only — no colour changes. */
+.section{padding:3.8rem 0}
+@media(min-width:720px){.section{padding:5rem 0}}
 .section-alt{background:var(--surface)}
 .section-alt + .section{border-top:1px solid var(--border)}
 .page-head{padding:2.6rem 0 0}
 .page-head h1{margin:.1rem 0 .8rem}
-.sec-head{display:flex;align-items:end;justify-content:space-between;gap:1.4rem;margin-bottom:1.8rem}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:1.4rem;margin-bottom:2.1rem}
 .sec-head h2{margin-bottom:0}
+.sec-note{margin-bottom:1.4rem}
 
 /* ── grids & cards ── */
 .grid{display:grid;gap:20px}
@@ -134,12 +138,14 @@ h3{font-size:1.15rem}
 @media(min-width:1280px){.cards{grid-template-columns:repeat(4,1fr)}}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s ease,transform .2s ease}
 .card:hover{border-color:rgba(201,168,106,.5);transform:translateY(-3px)}
-.card-media{position:relative;display:block;aspect-ratio:3/2;overflow:hidden;background:var(--surface-2)}
-.card-media img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+/* Card media: one uniform square frame per card, filled edge-to-edge.
+   Previous treatment letterboxed portrait covers (object-fit:contain +
+   12px padding inside a 3:2 frame), which rendered the artwork small and
+   shrunken inside its own card. Cover + centred position + square ratio
+   means every artwork now spans the full card width on every breakpoint. */
+.card-media{position:relative;display:block;width:100%;padding:0;margin:0;aspect-ratio:1/1;overflow:hidden;background:var(--surface-2)}
+.card-media img{width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;object-position:center;display:block;transition:transform .45s ease}
 .card:hover .card-media img{transform:scale(1.05)}
-.card-media img.fit.contain{object-fit:contain;padding:12px;background:#0D0D11}
-@media(max-width:559px){.card-media{aspect-ratio:var(--card-ar,3/2)}.card-media.exact img.fit.contain{object-fit:cover;padding:0;background:transparent}}
-.bundle-media img.fit.contain{object-fit:contain;background:#0D0D11}
 .badge{position:absolute;top:10px;left:10px;background:rgba(12,12,14,.82);backdrop-filter:blur(6px);border:1px solid rgba(201,168,106,.45);color:var(--gold);font:600 .66rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:.42rem .6rem;border-radius:999px}
 .badge-free{border-color:rgba(140,200,140,.5);color:#9FD8A4}
 .badge-soon{border-style:dashed;border-color:rgba(201,168,106,.75);color:var(--gold);background:rgba(201,168,106,.1)}
@@ -161,7 +167,8 @@ h3{font-size:1.15rem}
 .err-bar{position:sticky;top:0;z-index:200;background:#2b1a12;border-bottom:1px solid rgba(216,120,90,.6);color:#eab4a0;text-align:center;font:500 .8rem var(--sans);padding:.55rem 1rem}
 .card .badge-free,.badge-free{position:absolute}
 .pdp-info .badge,.pdp-meta .badge,.bundle-tile .badge,.bundle-panel .badge{position:static;display:inline-block}
-.card-body{padding:1rem 1.05rem 1.15rem;display:flex;flex-direction:column;gap:.45rem;flex:1}
+/* tighter copy under a larger image area */
+.card-body{padding:.95rem 1rem 1.05rem;display:flex;flex-direction:column;gap:.4rem;flex:1}
 .card-cat{font:600 .68rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
 .card-title{font-size:1.02rem;line-height:1.32}
 .card-title a{color:var(--text)}
@@ -201,24 +208,6 @@ h3{font-size:1.15rem}
 .bundle-list{list-style:none;border-top:1px solid var(--border);margin-top:.4rem}
 .bundle-list li{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.92rem}
 .bundle-cta{display:flex;align-items:center;gap:1.1rem;margin-top:.6rem;flex-wrap:wrap}
-
-/* ── category pills (Shop by Category) ── */
-.cat-pills{display:flex;flex-wrap:wrap;gap:10px}
-.cat-pill{display:inline-flex;align-items:center;gap:.5rem;padding:.62rem 1.25rem;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text);font:500 .9rem var(--sans);transition:all .18s ease}
-.cat-pill b{font:600 .8rem var(--sans);color:var(--gold)}
-.cat-pill:hover{border-color:var(--gold);background:var(--gold-soft);transform:translateY(-2px)}
-.cat-pill.pill-free,.cat-pill.pill-free b{color:#9FD8A4}
-.cat-pill.pill-free:hover{border-color:#9FD8A4}
-.cat-pill.pill-all{background:linear-gradient(160deg,#D8BA7E,var(--gold) 55%,var(--gold-deep));border-color:var(--gold);color:#181206}
-.cat-pill.pill-all b{color:#4d3a14}
-/* ── category marquee band (auto-scrolling, pauses on hover) ── */
-.cat-marquee{overflow:hidden;padding:1.05rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(201,168,106,.055),rgba(201,168,106,.015));-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.cat-track{display:flex;width:max-content;animation:catScroll 42s linear infinite}
-.cat-half{display:flex;align-items:center;gap:12px;padding-right:12px}
-.cat-marquee:hover .cat-track{animation-play-state:paused}
-.cat-marquee .cat-pill{flex:0 0 auto;padding:.5rem 1.1rem;font-size:.86rem;white-space:nowrap}
-@keyframes catScroll{to{transform:translate3d(-50%,0,0)}}
-@media (prefers-reduced-motion:reduce){.cat-track{animation:none}}
 
 /* ── article images ── */
 .art-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:calc(var(--radius) - 6px);border:1px solid var(--border);margin-bottom:.4rem}
@@ -451,16 +440,6 @@ body{top:0 !important}
    sections are visually indistinguishable from the original design system.
    Mobile-first: base rules are single-column, widths add columns.
    ══════════════════════════════════════════════════════════════════════ */
-
-/* ── hero: trust points + finder route ────────────────────────────────── */
-.hero-finder{margin-top:1rem;font-size:.92rem;color:var(--muted)}
-.hero-finder a{font-weight:600}
-.hero-trust{list-style:none;display:grid;gap:.65rem;margin-top:1.6rem;padding-top:1.4rem;border-top:1px solid var(--border);grid-template-columns:1fr}
-.ht-item{display:flex;gap:.7rem;align-items:flex-start}
-.ht-ic{flex:none;width:22px;height:22px;border-radius:50%;background:var(--gold-soft);border:1px solid rgba(201,168,106,.4);color:var(--gold);font-size:.72rem;font-weight:700;display:grid;place-items:center;margin-top:.15rem}
-.ht-item b{display:block;font:600 .9rem/1.35 var(--sans);color:var(--text)}
-.ht-item small{display:block;color:var(--muted);font-size:.8rem;line-height:1.45}
-@media(min-width:620px){.hero-trust{grid-template-columns:1fr 1fr;gap:.9rem 1.6rem}}
 
 /* ── "What do you create?" craft grid ─────────────────────────────────── */
 .craft-grid{grid-template-columns:1fr}
@@ -938,3 +917,61 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
   .sticky-cta{transition:opacity .2s linear;transform:none;opacity:0}
   .sticky-cta.is-up{opacity:1;transform:none}
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   REDESIGN 2026-09 — trust bridge, best-seller band, testimonial slots,
+   freebie direct-download row. Appended only; every rule reuses the
+   existing tokens (--gold, --surface, --border, --radius, --muted) so the
+   palette is untouched. Mobile-first.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── trust bridge: the one line under every Payhip CTA ────────────────── */
+.trust-bridge{margin:.7rem 0 0;font-size:.78rem;line-height:1.55;color:#7d7a73;letter-spacing:.01em}
+.trust-bridge a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.trust-bridge a:hover{color:var(--gold)}
+.buy-panel .trust-bridge{width:100%;flex:1 1 100%;margin:.15rem 0 0}
+.flag-body>.trust-bridge{margin-top:.9rem}
+.bundle-body>.trust-bridge{margin-top:.85rem}
+.pdp-cta .trust-bridge{margin-top:.55rem}
+
+/* ── featured best-seller band ────────────────────────────────────────── */
+.feature-band{background:linear-gradient(165deg,#17161b 0%,#0e0e11 60%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.fb-inner{display:grid;gap:2rem;align-items:center}
+@media(min-width:900px){.fb-inner{grid-template-columns:.9fr 1.1fr;gap:3rem}}
+.fb-media{display:block;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--surface-2)}
+.fb-media img{width:100%;height:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;display:block}
+.fb-body h2{margin-bottom:.45em}
+.fb-body .flag-points{margin:.7rem 0 .9rem}
+.fb-quote{font-family:var(--serif);font-style:italic;font-size:1.06rem;line-height:1.5;color:var(--text);border-left:3px solid var(--gold);padding:.35rem 0 .35rem 1.1rem;margin:0 0 1.2rem}
+.fb-quote cite{display:block;margin-top:.5rem;font:500 .8rem/1.4 var(--sans);font-style:normal;color:var(--muted)}
+.fb-cta{display:flex;flex-wrap:wrap;align-items:center;gap:.9rem 1.1rem}
+
+/* ── testimonial slots (placeholders until real reviews exist) ────────── */
+.quotes-grid{grid-template-columns:1fr}
+@media(min-width:700px){.quotes-grid{grid-template-columns:repeat(3,1fr)}}
+.quote-card{display:flex;flex-direction:column;gap:.9rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.3rem;margin:0}
+.section-alt .quote-card{background:var(--surface-2)}
+.quote-card blockquote p{font-family:var(--serif);font-style:italic;font-size:1.02rem;line-height:1.55;color:var(--text)}
+.quote-card figcaption{display:flex;flex-direction:column;gap:.15rem;margin-top:auto}
+.quote-card figcaption b{font:600 .9rem var(--sans);color:var(--text)}
+.quote-card figcaption span{font-size:.76rem;color:#7d7a73;letter-spacing:.04em}
+/* clearly-marked empty slot: dashed frame so nobody mistakes it for a review */
+.quote-slot{border-style:dashed;border-color:var(--border);background:transparent}
+.quote-slot p,.quote-slot cite{color:var(--muted)}
+
+/* ── freebies: direct download row (primary path, no email) ───────────── */
+.dl-grid{grid-template-columns:1fr}
+@media(min-width:640px){.dl-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1080px){.dl-grid{grid-template-columns:repeat(4,1fr)}}
+.dl-card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .2s ease,transform .2s ease}
+.dl-card:hover{border-color:rgba(201,168,106,.5);transform:translateY(-3px)}
+.dl-media{position:relative;display:block;aspect-ratio:1/1;overflow:hidden;background:var(--surface-2)}
+.dl-media img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .45s ease}
+.dl-card:hover .dl-media img{transform:scale(1.05)}
+.dl-body{padding:1.05rem 1.05rem 1.2rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
+.dl-body h3{font-size:1.05rem;line-height:1.3}
+.dl-body p.muted{font-size:.85rem;flex:1}
+.dl-foot{display:flex;align-items:center;justify-content:space-between;gap:.7rem;padding-top:.3rem}
+.dl-note{font-size:.74rem;color:#7d7a73;letter-spacing:.02em}
+/* the email module now sits BELOW the downloads as the secondary path */
+.freebie-gate{border-top:1px solid var(--border)}
