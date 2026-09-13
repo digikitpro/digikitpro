@@ -674,12 +674,35 @@ def flagship_band(depth=0):
     im = f.get("images") or {}
     img = im.get("main") or im.get("card") or ""
     srcset = img_srcset(depth, f["slug"], im, "(min-width: 960px) 42vw, 92vw")
-    # Honest arithmetic: what the equivalent single packs would cost.
-    singles = [p for p in PRODUCTS if tier_of(p) == "entry" and line_of(p) != "lifestyle" and not p["free"]]
-    cheapest = sorted((p["price"] for p in singles))[:4]
+    # Honest arithmetic, without cherry-picking.
+    #
+    # The first version of this summed the FOUR CHEAPEST specialist packs and
+    # printed "Four single packs already total $18" directly beside the $19
+    # price - which undercut the flagship it existed to sell. Choosing the
+    # cheapest possible basket is not a comparison, it is a self-inflicted
+    # objection, and a visitor reading "$18 for four packs" next to "$19 for
+    # everything" draws the wrong conclusion from a number we picked.
+    #
+    # What is actually true and defensible: specialist packs span a real price
+    # range, and which four a given artist would buy is their decision, not
+    # ours. So we state the range and let them do the arithmetic.
+    # Brush packs only. The Master Library is a BRUSH library, so the basket it
+    # is compared against has to be brushes - counting digital planners and a
+    # travel guide in "N kits" would inflate the number with products that are
+    # not substitutes for it. This is comparison accuracy, not catalog
+    # separation: the planners stay mixed into the catalog exactly as the owner
+    # decided, they are simply not claimed as brush packs here.
+    singles = [p for p in PRODUCTS
+               if tier_of(p) == "entry" and not p["free"] and not p.get("comingSoon")
+               and line_of(p) != "lifestyle"]
+    prices = sorted(p["price"] for p in singles if p.get("price"))
     compare = ""
-    if len(cheapest) == 4:
-        compare = f'Four single packs from the catalog already total <b>${sum(cheapest):.0f}</b>.'
+    if len(prices) >= 4:
+        lo, hi = prices[0], prices[-1]
+        lo_s = f"${lo:.0f}" if float(lo).is_integer() else f"${lo:.2f}"
+        hi_s = f"${hi:.0f}" if float(hi).is_integer() else f"${hi:.2f}"
+        compare = (f'Single specialist packs run <b>{lo_s}\u2013{hi_s}</b> each across '
+                   f'{len(prices)} kits. One library, every style, {esc(f["priceText"])}.')
     return f"""<section class="section flagship-band" id="master-library" aria-labelledby="flag-title">
   <div class="wrap flag-inner">
     <div class="flag-media">

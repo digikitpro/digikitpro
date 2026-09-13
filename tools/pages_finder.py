@@ -209,8 +209,8 @@ def build_finder():
          "several styles and would otherwise buy multiple packs separately."),
         ("Are these brushes really only for Procreate?",
          "The .brushset files require Procreate on an iPad. Every product page lists its own requirements and file "
-         "formats, and a few items in the catalog (planners, templates, PNG packs) are for other apps — those are "
-         "labelled separately and are never recommended as a brush solution."),
+         "formats. The catalog also carries a few items for other apps — digital planners, Canva "
+         "templates and PNG packs — and each states its own requirements. Those are never recommended here as a brush solution, because this tool answers a brush question."),
         ("What if nothing matches what I make?",
          "The tool says so plainly instead of forcing a recommendation, and your answer is what tells the studio "
          "which pack to build next."),
