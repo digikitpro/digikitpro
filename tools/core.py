@@ -695,66 +695,56 @@ def best_seller():
     return feat[0] if feat else None
 
 def feature_band(depth=0):
-    """One featured best-seller, full width, with a testimonial slot beside it
-    and a direct Payhip buy button + trust bridge underneath."""
+    """Compact best-seller spotlight: large artwork left, short pitch right.
+
+    Rules (homepage conversion fix):
+    - controlled max-width, natural image aspect — no tall narrow card;
+    - one-line pitch + short topic bullets only (teaser, not a sales page);
+    - no testimonial slot (never publish placeholder quotes),
+    - no checkout / refund copy (that lives on legal pages and product pages).
+    """
     p = best_seller()
     if not p:
         return ""
     im = p.get("images") or {}
     img = im.get("card") or im.get("main") or ""
-    srcset = img_srcset(depth, p["slug"], im, "(min-width: 960px) 40vw, 92vw")
-    points = "".join(f"<li><b>{esc(x)}</b></li>" for x in (p.get("features") or [])[:3]) \
-        or f"<li><b>{esc(p.get('assets') or 'Professional brush set')}</b></li>"
-    return f"""<section class="section feature-band" id="best-seller" aria-labelledby="bs-title">
-  <div class="wrap fb-inner">
-    <a class="fb-media" href="{rel(depth, 'products/' + p['slug'] + '/')}" tabindex="-1" aria-hidden="true">
-      <img src="{asset_file(depth, p['slug'], img)}"{srcset} width="{im.get('cardW') or im.get('fullW') or 750}" height="{im.get('cardH') or im.get('fullH') or 946}" alt="" loading="lazy" decoding="async">
-    </a>
-    <div class="fb-body">
-      <p class="eyebrow">The studio best-seller</p>
-      <h2 id="bs-title">{esc(p['name'])}</h2>
-      <p class="lead-sm">{esc(p['short'])}</p>
-      <ul class="flag-points">{points}</ul>
-      <!-- TESTIMONIAL PLACEHOLDER (owner): replace this block with a real
-           customer quote (name or handle, with permission). Never publish a
-           fabricated review. -->
-      <blockquote class="fb-quote quote-slot">
-        <p>“A real customer quote about this kit goes here — placeholder slot, not a published review.”</p>
-        <cite>— Customer name / handle (placeholder)</cite>
-      </blockquote>
-      <div class="fb-cta">
-        <span class="price price-lg">{"Free" if p['free'] else esc(p['priceText'])}</span>
-        <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'feature-band')}>{"Get Free" if p['free'] else "Buy Now"} <span class="btn-arr">↗</span></a>
-        <a class="text-link" href="{rel(depth, 'products/' + p['slug'] + '/')}">Full details →</a>
+    srcset = img_srcset(depth, p["slug"], im, "(min-width: 900px) 430px, 92vw")
+    # Short topic bullets. Curated per product so they stay teaser-length;
+    # the long feature sentences belong on the product page.
+    spot_points = {
+        "portrait-skin-brushes-procreate":
+            ["Pores", "Freckles", "Wrinkles", "Skin texture", "Natural blending"],
+    }
+    points = spot_points.get(p["slug"])
+    if not points:
+        assets = esc(p.get("assets") or "Professional brush set")
+        points = [a.strip().capitalize() for a in assets.replace(" + ", "+").split("+") if a.strip()][:5] \
+            or ["Hand-tested brushes"]
+    chips = "".join(f"<li>{esc(x)}</li>" for x in points)
+    u = rel(depth, 'products/' + p['slug'] + '/')
+    # Split "X for Procreate" so the qualifier sits on its own muted line.
+    name = p["name"]
+    main_title, sub_title = name, ""
+    if " for " in name:
+        main_title, sub_title = name.split(" for ", 1)
+        sub_title = "for " + sub_title
+    sub_html = f'<span class="bs-sub">{esc(sub_title)}</span>' if sub_title else ""
+    return f"""<div class="bs-inner" id="best-seller">
+      <a class="bs-media" href="{u}" tabindex="-1" aria-hidden="true">
+        <img src="{asset_file(depth, p['slug'], img)}"{srcset} width="{im.get('cardW') or im.get('fullW') or 750}" height="{im.get('cardH') or im.get('fullH') or 946}" alt="" loading="lazy" decoding="async">
+      </a>
+      <div class="bs-body">
+        <p class="bs-kicker"><span class="bs-badge">Best Seller</span></p>
+        <h2 id="bs-title">{esc(main_title)} {sub_html}</h2>
+        <p class="lead-sm">{esc(p.get('spotPitch') or p['short'])}</p>
+        <ul class="bs-points">{chips}</ul>
+        <div class="bs-cta">
+          <span class="price price-lg">{"Free" if p['free'] else esc(p['priceText'])}</span>
+          <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'feature-band')}>{"Get Free" if p['free'] else "Buy Now"} <span class="btn-arr">↗</span></a>
+          <a class="btn btn-line" href="{u}">View Product</a>
+        </div>
       </div>
-      {trust_bridge(depth, free=bool(p.get("free")))}
-    </div>
-  </div>
-</section>
-"""
-
-def testimonials_section(depth=0):
-    """Social-proof section. The store has no published reviews yet, so these
-    are clearly-marked placeholder slots: dashed frames labelled as pending,
-    never fabricated quotes. Swap each <figure> for a real quote when one
-    exists (owner: Payhip receipt emails / DMs, with permission)."""
-    slots = ""
-    for i in (1, 2, 3):
-        slots += f"""<figure class="quote-card quote-slot">
-      <blockquote><p>Placeholder slot {i} — a real customer review will appear here once collected.</p></blockquote>
-      <figcaption><b>Customer name / handle</b><span>Awaiting real review · slot {i}</span></figcaption>
-    </figure>"""
-    return f"""<section class="section section-alt" id="artist-voices" aria-labelledby="voices-title">
-  <div class="wrap">
-    <div class="sec-head">
-      <div><p class="eyebrow">Social proof</p><h2 id="voices-title">What Artists Say</h2></div>
-    </div>
-    <p class="sec-note muted">Reviews are added here exactly as they arrive — name, handle and permission first. The frames below are empty slots on purpose, not quotes.</p>
-    <!-- TESTIMONIAL PLACEHOLDER (owner): fill these three slots with real
-         customer quotes before removing the quote-slot styling. -->
-    <div class="grid quotes-grid">{slots}</div>
-  </div>
-</section>
+</div>
 """
 
 def freebie_download_row(depth=0):
@@ -828,10 +818,11 @@ def craft_grid(depth=0):
 """
 
 
-def flagship_band(depth=0):
+def flagship_band(depth=0, bridge=True):
     """Level 4 — the Master Library, given the prominence its value deserves.
     The comparison is arithmetic on real prices, never a scarcity or
-    popularity claim."""
+    popularity claim. ``bridge=False`` drops the checkout/refund line
+    (the homepage keeps its product bands free of legal copy)."""
     f = flagship()
     if not f:
         return ""
@@ -887,7 +878,7 @@ def flagship_band(depth=0):
         <a class="btn btn-gold" href="{rel(depth, 'products/' + f['slug'] + '/')}">View Product</a>
         <a class="text-link" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'flagship-band')}>Buy on Payhip ↗</a>
       </div>
-      {trust_bridge(depth)}
+      {trust_bridge(depth) if bridge else ""}
     </div>
   </div>
 </section>
