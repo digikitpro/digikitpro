@@ -155,13 +155,15 @@ def build_product_pages():
         href_cc = f'https://creativecommons.org'
         features = li_block("Why You'll Love It", p.get("features"), cls="gold")
         included = li_block("What's Included", p.get("included"))
-        technical = tech_block(p)
+        technical = "" if p["slug"] == "master-library-2000-brushes" else tech_block(p)
         requirements = li_block("Requirements", clean_requirements(p), cls="plain")
         whofor = ""
         if p.get("perfectFor"):
             chips = "".join(f'<span class="tag">{esc(t)}</span>' for t in p["perfectFor"])
             whofor = f"""<section class="psec" aria-labelledby="p-for"><h2 id="p-for">Who It's For</h2><div class="tag-row">{chips}</div></section>"""
         desc = _demote_headings(p.get("descriptionHtml", ""))
+        if p["slug"] == "procreate-mega-bundle-650" and not desc.strip():
+            desc = "<p>650 pro Procreate brushes in one organized mega bundle. Portrait, skin, line art, watercolor and anime — every core style, instant download.</p>"
         desc_sec = f"""<section class="psec richtext" aria-labelledby="p-about"><h2 id="p-about">About This Product</h2><div class="prose">{desc}</div></section>""" if desc.strip() else ""
 
         bundle_block = ""

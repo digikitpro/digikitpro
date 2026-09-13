@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SITE_URL environment variable, the GitHub workflow does this automatically.
 SITE_URL = os.environ.get("SITE_URL", "https://digikitpro.shop").rstrip("/")
 SITE_NAME = "DigiKitPro"
-TAGLINE = "Professional Procreate tools for digital artists."
+TAGLINE = "Procreate brushes for iPad artists."
 STORE_URL = "https://payhip.com/digikitpro"
 EMAIL_TO = "digikitprostudio@gmail.com" # ← subscriber emails are delivered to this inbox
 EMAIL_ENDPOINT = f"https://formsubmit.co/{EMAIL_TO}" # FormSubmit forwards every signup (one-time activation email)
@@ -61,9 +61,7 @@ LANGUAGES = [
 ]
 # Official, worldwide-inclusive meta used by search engines & social crawlers.
 GEO_META = {
-    "geo.region": "US",            # Set: country of the business. Digital products are sold worldwide.
     "geo.placename": "DigiKitPro",
-    "ICBM": "40.7128, -74.0060",   # NYC origin only as a neutral placeholder; update if you want a real HQ.
     "content-language": "en",
 }
 CATEGORIES = ["Portrait", "Skin Texture", "Line Art", "Sketching", "Watercolor", "Anime",
@@ -192,15 +190,19 @@ def card_img(p):
 
 # ── schema ──────────────────────────────────────────────────────────────
 def schema_org_home():
-    im = None
     return [
       {"@context":"https://schema.org","@type":"Organization","@id":SITE_URL+"/#org",
-       "name":SITE_NAME,"url":SITE_URL,"logo":absurl("assets/img/logo.svg"),
+       "name":SITE_NAME,"url":SITE_URL,
+       "logo":{"@type":"ImageObject","url":absurl("assets/img/logo.png"),"width":"512","height":"512"},
+       "image":{"@type":"ImageObject","url":absurl("assets/img/og-cover.jpg"),"width":"1200","height":"630"},
+       "brand":{"@type":"Brand","name":SITE_NAME},
+       "email":"mailto:"+EMAIL_TO,
+       "contactPoint":[{"@type":"ContactPoint","contactType":"customer support","areaServed":{"@type":"Place","name":"Worldwide"},"availableLanguage":["en"]}],
        "description":"DigiKitPro creates premium Procreate brushes and digital art resources for iPad artists. Worldwide instant digital delivery.",
        "areaServed":"Worldwide","knowsLanguage":["en","es","fr","de","it","pt","nl"],
        "sameAs":[STORE_URL]+[v for v in SOCIAL.values() if v]},
       {"@context":"https://schema.org","@type":"WebSite","@id":SITE_URL+"/#website",
-       "url":SITE_URL,"name":SITE_NAME,"publisher":{"@id":SITE_URL+"/#org"},
+       "url":SITE_URL,"name":SITE_NAME,"description":TAGLINE,"publisher":{"@id":SITE_URL+"/#org"},
        "inLanguage":["en","es","fr","de","it","pt","nl"],
        "potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint",
         "urlTemplate":SITE_URL+"/search.html?q={search_term_string}"},"query-input":"required name=search_term_string"}}
@@ -264,6 +266,19 @@ def schema_faq(faqs):
                            for q,a in faqs]}]
 
 # ── head / header / footer ──────────────────────────────────────────────
+_GITHUB_KILL = """<script>
+(function(){
+  try{
+    var d=atob('Z2l0aHViLmlv');
+    if(location.hostname.slice(-d.length)===d){
+      var p=location.pathname.replace(/^\/digikitpro/,'')||'/';
+      document.write('<meta name="robots" content="noindex,follow">');
+      location.replace('https://digikitpro.shop'+p+location.search+location.hash);
+    }
+  }catch(e){}
+})();
+</script>"""
+
 def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None):
     """`ctx` is the analytics page context (see js/analytics.js). It is emitted
     as window.DKP.page and contains ONLY non-personal page facts: page type,
@@ -297,6 +312,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
+{_GITHUB_KILL}
 {ga}  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{esc(title)}</title>
@@ -322,6 +338,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <meta name="twitter:image:alt" content="{esc(title)}">{geo}
   <meta name="format-detection" content="telephone=no">
   <link rel="icon" type="image/svg+xml" href="{rel(depth,'assets/img/favicon.svg')}">
+  <link rel="icon" type="image/png" sizes="48x48" href="{rel(depth,'assets/img/favicon-48.png')}">
   <link rel="apple-touch-icon" href="{rel(depth,'assets/img/apple-touch-icon.png')}">
   <link rel="preconnect" href="https://payhip.com" crossorigin>
   <link rel="dns-prefetch" href="https://pe56d.s3.amazonaws.com">
@@ -374,13 +391,13 @@ def header(depth, active=None):
       <button class="icon-btn" type="button" data-search-open aria-label="Search products and articles">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
-      <a class="btn btn-gold btn-sm" href="{STORE_URL}" target="_blank" rel="noopener">Shop Now</a>
+      <a class="btn btn-gold btn-sm" href="{rel(depth,'products.html')}" rel="noopener">Browse kits</a>
       <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
   </div>
-  <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile">{mlinks}<a class="btn btn-gold" href="{STORE_URL}" target="_blank" rel="noopener">Shop the Store</a></nav>
+  <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile">{mlinks}<a class="btn btn-gold" href="{rel(depth,'products.html')}" rel="noopener">Browse kits</a></nav>
   <div id="google_translate_element" class="gt-holder" aria-hidden="true"></div>
 </header>
 <div class="search-overlay" data-search-overlay hidden>

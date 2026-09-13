@@ -123,8 +123,8 @@ def build_home():
     art_cards = "".join(art_card(a, 0) for a in articles)
 
     html_out = head(
-        "DigiKitPro, Professional Procreate Tools for Artists",
-        "Premium Procreate brushes and digital art resources for iPad artists: portrait, skin, line art, watercolor, anime & more. Create more. Search less.",
+        "DigiKitPro | Procreate Brushes for iPad Artists",
+        "Hand-tested Procreate brushes for portraits, skin, line art, watercolor and anime. Instant download on iPad — free packs included.",
         SITE_URL + "/", 0, schemas=schema_org_home(), ctx=page_ctx("home"),
         preload="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp")
     html_out += header(0, active="index.html")
@@ -133,11 +133,11 @@ def build_home():
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Procreate brush studio</p>
-        <h1>Professional Procreate Brushes &amp; Digital Art Tools</h1>
-        <p class="hero-sub">For portrait artists, illustrators, anime artists and digital creators. Hand-tested tools organized around real creative workflows — sketch, ink, blend, texture, finish — built for the iPad and Apple Pencil.</p>
+        <p class="eyebrow">Procreate brushes for iPad artists</p>
+        <h1>Procreate brushes for <em>iPad artists</em></h1>
+        <p class="hero-sub">Hand-tested Procreate brushes for portraits, skin, line art, watercolor and anime. Instant download on iPad — free packs included.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold" href="products.html">Explore Procreate Tools</a>
+          <a class="btn btn-gold" href="products.html">Browse kits</a>
           <a class="btn btn-line" href="#free">Get Free Brushes</a>
         </div>
         <p class="hero-finder">Not sure what you need? <a href="find-my-brushes.html" data-dkp-event="finder_entry_click" data-dkp-loc="hero">Find my brushes in 4 questions →</a></p>
@@ -276,7 +276,7 @@ def build_products():
         -(p.get("featured") or 0),
         p.get("price") or 0,
         p["name"]))
-    html_out = head("All Procreate Brushes & Digital Art Tools, DigiKitPro",
+    html_out = head("All Procreate Brushes & Digital Art Tools | DigiKitPro",
         f"Browse the complete DigiKitPro catalog: {len(PRODUCTS)} Procreate brush kits, bundles, palettes and digital resources, filter by category.",
         SITE_URL + "/products.html", 0, ctx=page_ctx("catalog"),
         schemas=schema_breadcrumb([("Home","/"),("Products","/products.html")]) + schema_itemlist(PRODUCTS))
@@ -305,7 +305,7 @@ def build_products():
 # ─────────────────────────── FREEBIES ───────────────────────────
 def build_freebies():
     freebies = [p for p in PRODUCTS if p["free"]]
-    html_out = head("Free Procreate Brushes, DigiKitPro Freebies",
+    html_out = head("Free Procreate Brushes | DigiKitPro",
         "Download free professional Procreate resources: 100 fine liner brushes, 20+ chalk brushes and a 1,200-swatch color vault. No cost, instant delivery.",
         SITE_URL + "/freebies.html", 0, ctx=page_ctx("freebies"),
         schemas=schema_breadcrumb([("Home","/"),("Free Brushes","/freebies.html")]))
@@ -363,7 +363,7 @@ def build_bundles():
     </div>
   </div>
 </article>"""
-    html_out = head("Procreate Bundles, Mega Brush Collections | DigiKitPro",
+    html_out = head("Procreate Bundles | DigiKitPro",
         "High-value Procreate bundles: complete brush libraries, portrait workflow bundles and seasonal packs, up to 2,000+ brushes in one download.",
         SITE_URL + "/bundles.html", 0, ctx=page_ctx("bundles"),
         schemas=schema_breadcrumb([("Home","/"),("Bundles","/bundles.html")]))
