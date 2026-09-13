@@ -266,9 +266,16 @@
  j = j || {};
  if (state === "ok" || state === "pending") {
  form.reset();
- note.textContent = state === "ok"
- ? "You’re on the list! Your first free brush drop is on its way; check your inbox."
- : "You’re registered, welcome! Our list is brand new and finishing its one-time email activation; your address is saved and your free brushes arrive with the very first send.";
+ /* Per-form success copy. A contact form is not a newsletter signup, so the
+ hardcoded "you're on the list" wording was wrong there. Any form can set
+ data-dkp-success (and optionally data-dkp-success-pending) to override.
+ Defaults are the original newsletter wording, so existing forms are unchanged. */
+ var okMsg = form.getAttribute("data-dkp-success")
+ || "You’re on the list! Your first free brush drop is on its way; check your inbox.";
+ var pendingMsg = form.getAttribute("data-dkp-success-pending")
+ || form.getAttribute("data-dkp-success")
+ || "You’re registered, welcome! Our list is brand new and finishing its one-time email activation; your address is saved and your free brushes arrive with the very first send.";
+ note.textContent = state === "ok" ? okMsg : pendingMsg;
  note.style.color = "#C9A86A";
  /* Tell the analytics layer a REAL provider response came back (never fired
  optimistically), then continue the funnel: the thank-you page delivers every

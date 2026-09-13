@@ -18,7 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ── CONFIG ──────────────────────────────────────────────────────────────
 # Your final domain (no trailing slash). Can also be injected by CI via the
 # SITE_URL environment variable, the GitHub workflow does this automatically.
-SITE_URL = os.environ.get("SITE_URL", "https://digikitpro.github.io/digikitpro").rstrip("/")
+SITE_URL = os.environ.get("SITE_URL", "https://digikitpro.shop").rstrip("/")
 SITE_NAME = "DigiKitPro"
 TAGLINE = "Professional Procreate tools for digital artists."
 STORE_URL = "https://payhip.com/digikitpro"
@@ -424,6 +424,11 @@ def newsletter(depth, heading="Get Free Procreate Brushes",
         <input type="hidden" name="_subject" value="{esc(subject)}">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
+        <!-- _next must be ABSOLUTE: FormSubmit redirects from its own origin, so a
+             relative value would resolve against formsubmit.co. Without it the
+             no-JS path lands on FormSubmit's generic confirmation page instead of
+             our thank-you page, which is where the free files are actually delivered. -->
+        <input type="hidden" name="_next" value="{absurl('thank-you.html')}">
         <input type="hidden" name="source" value="{esc(source)}">{lead_field}
         <label class="sr-only" for="{uid}-email">Email address</label>
         <input id="{uid}-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
@@ -475,7 +480,9 @@ def footer(depth):
     <nav aria-label="Footer legal">
       <p class="foot-label">Company</p>
       <div class="foot-links">
-        <a href="{rel(depth,'about.html#contact')}">Contact</a>
+        <a href="{rel(depth,'faq.html')}">FAQ</a>
+        <a href="{rel(depth,'contact.html')}">Contact</a>
+        <a href="{rel(depth,'refunds.html')}">Refund Policy</a>
         <a href="{rel(depth,'privacy.html')}">Privacy Policy</a>
         <a href="{rel(depth,'terms.html')}">Terms</a>
       </div>
@@ -820,6 +827,9 @@ def freebie_gate(depth, p=None, source="freebies"):
         <input type="hidden" name="_subject" value="Free download request: {esc(lead)}">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
+        <!-- Absolute _next: see the note in newsletter(). Keeps the no-JS path on
+             thank-you.html, which delivers the promised free file. -->
+        <input type="hidden" name="_next" value="{absurl('thank-you.html')}">
         <input type="hidden" name="source" value="{esc(source)}">
         <input type="hidden" name="lead_magnet" value="{esc(lead)}">
         <label class="sr-only" for="fg-email-{esc(lead)}">Email address</label>

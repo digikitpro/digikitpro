@@ -42,7 +42,159 @@ ABOUT_FAQS = [
 ]
 
 
+# ── FAQ page questions ───────────────────────────────────────────────────
+# Every answer restates a fact the site already commits to elsewhere
+# (terms.html, privacy.html, product pages). No reviews, ratings, customer
+# counts, sales figures, scarcity or deadlines are invented here.
+SITE_FAQS = [
+    ("What do I need to use DigiKitPro brushes?",
+     "The .brushset files require the Procreate app on an iPad. Brushes are calibrated for Apple Pencil pressure and tilt. Some products are PDFs, palettes or PNG files instead; each product page lists its file types under Technical Details."),
+    ("How are the files delivered?",
+     "Checkout is handled by Payhip. As soon as payment completes, Payhip emails you a download link and the files also appear in your Payhip account. Delivery is instant and worldwide; nothing is physically shipped."),
+    ("How do I install a .brushset file on my iPad?",
+     "Get the file onto your iPad, then tap it in the Files app and choose Open in Procreate. The set installs automatically and appears in your Brushes panel. There is a full walkthrough with screenshots in the How to install Procreate brushes guide."),
+    ("Can I sell artwork I make with these brushes?",
+     "Yes. Finished artwork you create with these files is yours to use personally and commercially. What you may not do is resell, redistribute, copy or share the brush, palette or source files themselves, in original or modified form. The full licence is on the Terms page."),
+    ("Can I get a refund?",
+     "Because these are digital downloads, all sales are final once the files have been downloaded. If you hit a technical problem with a file, contact us and we will resolve it. The Refund Policy page explains this in full."),
+    ("What payment methods and currencies are accepted?",
+     "Prices are displayed in USD and Payhip converts the charge to your local currency at checkout. Payhip accepts PayPal, cards, Apple Pay and other supported methods."),
+    ("Are there free brushes I can try first?",
+     "Yes. Free brush packs and a free starter eBook are listed on the Free Brushes page, and the newsletter sends free brush drops. You can start with the free fine liner set and the free chalkboard toolkit."),
+    ("Do the brushes work on Windows, Android or Photoshop?",
+     "The .brushset format is specific to Procreate on iPad, so it will not load in Photoshop or on Windows and Android devices. Products that include PNG, PDF or palette files can be opened in any app that supports those formats; check the product page for what is included."),
+    ("Which file do I download if a product has several ZIP parts?",
+     "Download all of them. Larger libraries are split into several ZIP files purely because of file size limits, and each part contains a different set of brushes. The Technical Details on the product page state how many parts there are and the total size."),
+    ("Is DigiKitPro affiliated with Procreate or Savage Interactive?",
+     "No. DigiKitPro is an independent store. Procreate is a trademark of Savage Interactive Pty Ltd, and DigiKitPro is not affiliated with or endorsed by Savage Interactive."),
+]
+
+
 def build_misc():
+    # ── CONTACT ──
+    # A real, working form. It posts to the same FormSubmit endpoint as the
+    # newsletter, but carries its own success copy via data-dkp-success so the
+    # confirmation does not say "you're on the list" (see js/main.js).
+    # It deliberately states no response time: only promise what is kept.
+    contact_schemas = schema_breadcrumb([("Home", "/"), ("Contact", "/contact.html")])
+    html_out = head("Contact DigiKitPro",
+        "Contact DigiKitPro about a product, an order, a technical problem with a file, or licensing. Email digikitprostudio@gmail.com or use the contact form.",
+        SITE_URL + "/contact.html", 0, schemas=contact_schemas)
+    html_out += header(0)
+    html_out += f"""
+<main id="main">
+  <section class="page-head"><div class="wrap">
+    {crumbs(0, [("Contact","contact.html")])}
+    <p class="eyebrow">Get in touch</p>
+    <h1>Contact DigiKitPro</h1>
+  </div></section>
+  <section class="section"><div class="wrap narrow">
+    <p class="lead">Questions about a product, an order, a file that will not open, or licensing? Send a message below, or email <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> directly.</p>
+    <form class="contact-form" data-nl-form
+          data-dkp-source="contact"
+          data-dkp-success="Thanks, your message has been sent to {EMAIL_TO}."
+          data-dkp-success-pending="Thanks, your message has been recorded and will arrive in our inbox once our email service finishes its one-time activation."
+          action="{EMAIL_ENDPOINT}" method="POST">
+      <input type="hidden" name="_subject" value="DigiKitPro contact form">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="{absurl('thank-you.html')}">
+      <input type="hidden" name="source" value="contact">
+      <div class="field">
+        <label for="contact-name">Your name</label>
+        <input id="contact-name" type="text" name="name" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="contact-email">Your email</label>
+        <input id="contact-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+        <p class="field-hint muted">We reply to this address, so please double-check it.</p>
+      </div>
+      <div class="field">
+        <label for="contact-order">Order number <span class="muted">(optional)</span></label>
+        <input id="contact-order" type="text" name="order_number" autocomplete="off">
+        <p class="field-hint muted">If your question is about a purchase, the Payhip receipt number helps us find it.</p>
+      </div>
+      <div class="field">
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" rows="7" required></textarea>
+      </div>
+      <button class="btn btn-gold btn-lg" type="submit">Send message</button>
+      <p class="nl-note" data-nl-note>Your message goes straight to our inbox. We never share your address.</p>
+    </form>
+    <div class="prose contact-alt">
+      <h2>Before you write</h2>
+      <p>These answer most messages, and you will get an answer instantly:</p>
+      <ul>
+        <li><strong>Where are my files?</strong> Payhip emails the download link the moment payment completes, and the files are also in your Payhip account. Check your spam folder first.</li>
+        <li><strong>How do I install a brushset?</strong> See <a href="blog/how-to-install-procreate-brushes/">How to install Procreate brushes</a>.</li>
+        <li><strong>Can I sell what I make?</strong> Yes, finished artwork is yours to use commercially. See the <a href="terms.html">full licence</a>.</li>
+        <li><strong>Refunds:</strong> see the <a href="refunds.html">Refund Policy</a>.</li>
+        <li><strong>Everything else:</strong> the <a href="faq.html">FAQ</a>.</li>
+      </ul>
+    </div>
+  </div></section>
+</main>
+{footer(0)}"""
+    write("contact.html", html_out)
+
+    # ── REFUND POLICY ──
+    # Restates exactly what terms.html already commits to. No money-back
+    # guarantee, no day count, no "hassle-free": the store does not offer those,
+    # so the site does not claim them.
+    refund_schemas = schema_breadcrumb([("Home", "/"), ("Refund Policy", "/refunds.html")])
+    html_out = head("Refund Policy, DigiKitPro",
+        "DigiKitPro refund policy for digital downloads: all sales are final once files are downloaded, and technical problems with any file are resolved.",
+        SITE_URL + "/refunds.html", 0, schemas=refund_schemas)
+    html_out += header(0)
+    html_out += f"""
+<main id="main"><section class="section"><div class="wrap narrow prose">
+  {crumbs(0, [("Refund Policy","refunds.html")])}
+  <h1>Refund Policy</h1>
+  <p class="article-meta">Last updated: {BUILD_DATE}</p>
+  <p class="lead">Everything sold here is a digital download. This page states the same policy as our <a href="terms.html">Terms of Service</a>, in one place so you can read it before you buy.</p>
+  <h2>All sales are final once files are downloaded</h2>
+  <p>Because digital files cannot be returned, all sales are final once the files have been downloaded. Please check compatibility before buying: .brushset files require the Procreate app on an iPad, and each product page lists exactly what file types are included under Technical Details.</p>
+  <h2>Technical problems are resolved</h2>
+  <p>If you hit a technical problem with any file, for example a download that will not complete, a corrupted file, or a brushset that will not open in Procreate, <a href="contact.html">contact us</a> and we will resolve it. Tell us which product it is and what happens when you try to open it, and include your Payhip order number if you have it.</p>
+  <h2>Not sure yet? Start free</h2>
+  <p>If you want to try the brushes before spending anything, the <a href="freebies.html">free brush packs</a> are genuinely free and install exactly the same way, so you can confirm everything works on your iPad first.</p>
+  <h2>Payments and chargebacks</h2>
+  <p>All payments are processed by Payhip, not by DigiKitPro. Billing questions can also be raised through your Payhip receipt.</p>
+  <h2>Contact</h2>
+  <p>Email <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> or use the <a href="contact.html">contact form</a>.</p>
+</div></section></main>
+{footer(0)}"""
+    write("refunds.html", html_out)
+
+    # ── FAQ ──
+    faq_items = "".join(
+        f'<details class="faq-q"><summary>{esc(q)}</summary><div class="faq-body"><p>{esc(a)}</p></div></details>'
+        for q, a in SITE_FAQS)
+    faq_schemas = schema_breadcrumb([("Home", "/"), ("FAQ", "/faq.html")]) + schema_faq(SITE_FAQS)
+    html_out = head("FAQ, DigiKitPro Procreate Brushes",
+        "Answers to common questions about DigiKitPro Procreate brushes: compatibility, instant delivery, installing a .brushset, the commercial licence and refunds.",
+        SITE_URL + "/faq.html", 0, schemas=faq_schemas)
+    html_out += header(0)
+    html_out += f"""
+<main id="main">
+  <section class="page-head"><div class="wrap">
+    {crumbs(0, [("FAQ","faq.html")])}
+    <p class="eyebrow">Answers</p>
+    <h1>Frequently asked questions</h1>
+  </div></section>
+  <section class="section"><div class="wrap narrow">
+    <p class="lead">Compatibility, delivery, installing, licensing and refunds. If your question is not here, <a href="contact.html">send us a message</a>.</p>
+    <div class="faq-list">{faq_items}</div>
+    <div class="prose">
+      <h2>Still stuck?</h2>
+      <p>Email <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> or use the <a href="contact.html">contact form</a>. For the legal detail, see the <a href="terms.html">Terms</a>, the <a href="refunds.html">Refund Policy</a> and the <a href="privacy.html">Privacy Policy</a>.</p>
+    </div>
+  </div></section>
+  {newsletter(0)}
+</main>
+{footer(0)}"""
+    write("faq.html", html_out)
+
     # ── ABOUT ──
     faq_html = "".join(f"<div class=\"faq-item\"><h3>{esc(q)}</h3><p>{esc(a)}</p></div>" for q, a in ABOUT_FAQS)
     about_schemas = schema_breadcrumb([("Home", "/"), ("About", "/about.html")]) + schema_faq(ABOUT_FAQS)
@@ -189,7 +341,10 @@ Sitemap: {SITE_URL}/sitemap.txt
         ("/bundles.html", "0.8", "weekly"),
         ("/blog.html", "0.8", "weekly"),
         ("/about.html", "0.6", "monthly"),
+        ("/faq.html", "0.6", "monthly"),
+        ("/contact.html", "0.5", "monthly"),
         ("/search.html", "0.5", "weekly"),
+        ("/refunds.html", "0.3", "monthly"),
         ("/privacy.html", "0.3", "monthly"),
         ("/terms.html", "0.3", "monthly"),
     ]
@@ -235,7 +390,10 @@ Sitemap: {SITE_URL}/sitemap.txt
         SITE_URL + "/bundles.html",
         SITE_URL + "/blog.html",
         SITE_URL + "/about.html",
+        SITE_URL + "/faq.html",
+        SITE_URL + "/contact.html",
         SITE_URL + "/search.html",
+        SITE_URL + "/refunds.html",
         SITE_URL + "/privacy.html",
         SITE_URL + "/terms.html",
     ]

@@ -51,6 +51,39 @@ def li_block(title, items, cls="check"):
     tid = re.sub(r"[^a-z0-9]+", "-", title.lower())
     return f"""<section class="psec" aria-labelledby="p-{tid}"><h2 id="p-{tid}">{esc(title)}</h2><ul class="tick-list {cls}">{lis}</ul></section>"""
 
+_ZIP_PART = re.compile(r"ZIP\s*\(\s*([\d.]+)\s*(MB|GB)\s*\)", re.I)
+
+
+def collapse_zip_chain(value):
+    """Summarise a long "ZIP (109MB) + ZIP (181MB) + ..." download chain.
+
+    The Master Library lists its download as 14 chained ZIP parts, which renders
+    as a 201-character unreadable run-on in the spec table. Collapse it to
+    "14 ZIP files (2.2 GB total)".
+
+    The total is SUMMED from the sizes actually listed, never estimated: if the
+    parts cannot all be parsed, the original string is returned untouched.
+    """
+    parts = _ZIP_PART.findall(value or "")
+    # Only collapse a genuine chain; 1-2 parts are perfectly readable as-is.
+    if len(parts) < 3:
+        return value
+    # Every "+"-joined segment must be a parsed ZIP part, otherwise we would be
+    # silently dropping information (e.g. "+ PDF guide") from the spec.
+    segments = [s for s in re.split(r"\s*\+\s*", value.strip()) if s]
+    if len(segments) != len(parts):
+        return value
+    total_mb = 0.0
+    for size, unit in parts:
+        mb = float(size) * (1024.0 if unit.upper() == "GB" else 1.0)
+        total_mb += mb
+    if total_mb >= 1024:
+        total = f"{total_mb / 1024:.1f} GB"
+    else:
+        total = f"{total_mb:.0f} MB"
+    return f"{len(parts)} ZIP files ({total} total)"
+
+
 def tech_block(p):
     """Technical Details as a key/value spec table (colon items become rows)."""
     items = p.get("technical")
@@ -59,6 +92,7 @@ def tech_block(p):
     for i in items:
         k, sep, v = i.partition(":")
         if sep and v.strip():
+            v = collapse_zip_chain(v.strip())
             rows += f"<tr><th>{esc(k.strip())}</th><td>{esc(v.strip())}</td></tr>\n"
         else:
             rows += f'<tr><td colspan="2">{esc(i)}</td></tr>\n'
