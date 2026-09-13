@@ -66,9 +66,15 @@
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
+  <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
+       are hidden from the very first frame (no flash of visible content).
+       The timeout is a failsafe: if js/motion.js never runs, the class is
+       removed and every element is simply visible, as it is without JS. -->
+  <script>(function(h){h.className+=" js-motion";setTimeout(function(){if(!window.__DKP_MOTION_READY){h.className=h.className.replace(" js-motion","");}},4000);})(document.documentElement);</script>
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "article", "slug": "how-to-create-realistic-watercolor-in-procreate", "name": "How to Create Realistic Watercolor in Procreate"}};</script>
   <script src="../../js/search-index.js" defer></script>
   <script src="../../js/main.js" defer></script>
+  <script src="../../js/motion.js" defer></script>
   <script src="../../js/analytics.js" defer></script>
   <script src="../../js/feedback.js" defer></script>
   <script src="../../js/translate.js" defer></script>
@@ -156,8 +162,8 @@
     <h2 id="ap-title">Get the brushes</h2>
     <div class="grid cards cards-sm">
 <article class="card" data-category="Watercolor" data-name="50+ realistic watercolor studio kit for procreate" data-tags="watercolor watercolour washes bleed pigment botanical traditional" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="watercolor-studio-kit-50-brushes" data-dkp-name="50+ Realistic Watercolor Studio Kit for Procreate" data-dkp-price="10.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/watercolor-studio-kit-50-brushes/" style="--card-ar:1.3333">
-    <img class="fit" src="../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes-card.webp" srcset="../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes-card.webp 580w, ../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="435" alt="50+ Realistic Watercolor Studio Kit for Procreate: A real artist&#x27;s watercolor palette simulated for iPad: 50+ brushes with organic bleed, pigment flow and authentic paper grain." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/watercolor-studio-kit-50-brushes/">
+    <img src="../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes-card.webp" srcset="../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes-card.webp 580w, ../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="435" alt="50+ Realistic Watercolor Studio Kit for Procreate: A real artist&#x27;s watercolor palette simulated for iPad: 50+ brushes with organic bleed, pigment flow and authentic paper grain." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -166,13 +172,13 @@
     <p class="card-short">A real artist&#x27;s watercolor palette simulated for iPad: 50+ brushes with organic bleed, pigment flow and authentic paper grain.</p>
     <div class="card-foot">
       <span class="price">$10.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/watercolor-studio-kit-50-brushes/">View Product</a>
+      <a class="btn btn-line btn-sm" href="../../products/watercolor-studio-kit-50-brushes/" data-dkp-slug="watercolor-studio-kit-50-brushes" data-dkp-name="50+ Realistic Watercolor Studio Kit for Procreate" data-dkp-price="10.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">View Product</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Watercolor" data-name="80 organic brushes: watercolor studio kit for procreate" data-tags="watercolor organic washes bleed grain traditional" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="organic-watercolor-80-brushes" data-dkp-name="80 Organic Brushes: Watercolor Studio Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/organic-watercolor-80-brushes/" style="--card-ar:1.3333">
-    <img class="fit" src="../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes-card.webp" srcset="../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes-card.webp 580w, ../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="435" alt="80 Organic Brushes: Watercolor Studio Kit for Procreate: 80 organic watercolor brushes engineered for real bleed, pigment flow and grain, digital watercolor with genuine soul." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/organic-watercolor-80-brushes/">
+    <img src="../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes-card.webp" srcset="../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes-card.webp 580w, ../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="435" alt="80 Organic Brushes: Watercolor Studio Kit for Procreate: 80 organic watercolor brushes engineered for real bleed, pigment flow and grain, digital watercolor with genuine soul." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -181,13 +187,13 @@
     <p class="card-short">80 organic watercolor brushes engineered for real bleed, pigment flow and grain, digital watercolor with genuine soul.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/organic-watercolor-80-brushes/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/PKVXa" target="_blank" rel="noopener" data-dkp-slug="organic-watercolor-80-brushes" data-dkp-name="80 Organic Brushes: Watercolor Studio Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Sketching" data-name="professional digital sketchbook for procreate" data-tags="sketchbook sketching paper texture graphite ink drawing studies" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="professional-digital-sketchbook" data-dkp-name="Professional Digital Sketchbook for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/professional-digital-sketchbook/" style="--card-ar:1.4987">
-    <img class="fit" src="../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp" srcset="../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp 580w, ../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Professional Digital Sketchbook for Procreate: A complete tactile sketchbook environment: sketching tools, seamless paper textures and torn-paper stamps that give digital work real soul." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/professional-digital-sketchbook/">
+    <img src="../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp" srcset="../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp 580w, ../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Professional Digital Sketchbook for Procreate: A complete tactile sketchbook environment: sketching tools, seamless paper textures and torn-paper stamps that give digital work real soul." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -196,13 +202,13 @@
     <p class="card-short">A complete tactile sketchbook environment: sketching tools, seamless paper textures and torn-paper stamps that give digital work real soul.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/professional-digital-sketchbook/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/cxE90" target="_blank" rel="noopener" data-dkp-slug="professional-digital-sketchbook" data-dkp-name="Professional Digital Sketchbook for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Other" data-name="ultimate procreate color vault: 1,200+ swatches (free)" data-tags="free color palettes swatches color vault" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/free-color-vault-1200-swatches/" style="--card-ar:1.5000">
-    <img class="fit" src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp" srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Ultimate Procreate Color Vault: 1,200+ Swatches (Free): 40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/free-color-vault-1200-swatches/">
+    <img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp" srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Ultimate Procreate Color Vault: 1,200+ Swatches (Free): 40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade." loading="lazy" decoding="async">
     <span class="badge badge-free">Free</span>
   </a>
   <div class="card-body">
@@ -211,7 +217,7 @@
     <p class="card-short">40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade.</p>
     <div class="card-foot">
       <span class="price">Free</span>
-      <a class="btn btn-line btn-sm" href="../../products/free-color-vault-1200-swatches/">Get Free</a>
+      <a class="btn btn-line btn-sm" href="../../products/free-color-vault-1200-swatches/" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
     </div>
   </div>
 </article>

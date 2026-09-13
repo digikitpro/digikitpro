@@ -35,8 +35,14 @@ def build_home():
         e_label = badge_text(e)   # "New"/"Masterclass" labels are suppressed site-wide
         e_badge = ('<span class="badge badge-free">Free</span>' if e["free"]
                    else (f'<span class="badge">{esc(e_label)}</span>' if e_label else ""))
-        e_cta = "Get Free ↗" if e["free"] else "Buy Now ↗"
-        ebook_cards += f"""<article class="ebook-card">
+    # CTA verbs: the free guide goes straight to Payhip ("Get Free"); the
+    # paid masterclass is higher-consideration, so it routes to its detail
+    # page first ("View Product").
+    if e["free"]:
+        e_cta, e_href, e_ext = "Get Free ↗", e["payhipUrl"], ' target="_blank" rel="noopener"'
+    else:
+        e_cta, e_href, e_ext = "View Product", f"products/{e['slug']}/", ""
+    ebook_cards += f"""<article class="ebook-card">
   <a class="ebook-cover" href="products/{e['slug']}/">
     <img src="{asset_file(0, e['slug'], im.get('card',''))}" width="{im.get('cardW') or 1200}" height="{im.get('cardH') or 800}" alt="{esc(e['name'])}: cover" loading="lazy" decoding="async">
   </a>
@@ -46,7 +52,7 @@ def build_home():
     <p class="muted">{esc(e['short'])}</p>
     <div class="ebook-foot">
       <span class="price">{"Free" if e["free"] else e["priceText"]}</span>
-      <a class="btn btn-gold btn-sm" href="{e['payhipUrl']}" target="_blank" rel="noopener">{e_cta}</a>
+      <a class="btn btn-gold btn-sm" href="{e_href}"{e_ext}>{e_cta}</a>
       <a class="text-link" href="products/{e['slug']}/">Details →</a>
     </div>
   </div>
@@ -54,27 +60,16 @@ def build_home():
 
     ebook_section = ""
     if ebooks:
-        ebook_section = f"""<section class="section" id="ebooks">
+        ebook_section = f"""<section class="section section-alt" id="ebooks">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Level 5 · Education</p><h2>Learn Procreate Portraits with Our eBooks</h2></div>
+        <div><p class="eyebrow">Learn the craft</p><h2>Learn Procreate Portraits with Our eBooks</h2></div>
         <p class="sec-note muted">Start with the free guide, then go deep with the Masterclass.</p>
       </div>
       <div class="ebook-duo">{ebook_cards}</div>
     </div>
   </section>
 """
-
-    cat_counts = {}
-    for p in PRODUCTS: cat_counts[p["category"]] = cat_counts.get(p["category"], 0) + 1
-    free_n = sum(1 for p in PRODUCTS if p["free"])
-    cat_chips = f'<a class="cat-pill pill-all" href="products.html">All <b>{len(PRODUCTS)}</b></a>'
-    cat_chips += f'<a class="cat-pill pill-free" href="freebies.html">Free <b>{free_n}</b></a>'
-    cat_chips += "".join(
-        f'<a class="cat-pill" href="products.html#{cat_slug(c)}">{esc(c)} <b>{cat_counts[c]}</b></a>'
-        for c in CATEGORIES if cat_counts.get(c))
-    # second, identical half of the marquee track (aria-hidden, no extra tab stops)
-    cat_chips_dup = cat_chips.replace('<a class="cat-pill', '<a tabindex="-1" class="cat-pill')
 
     bundle_cards = ""
     for p in bundles[:4]:
@@ -89,34 +84,17 @@ def build_home():
   </div>
 </a>"""
 
-    # ── Popular starting points ──────────────────────────────────────────
-    # Was: a date-ordinal rotation that showed a different four products every
-    # day. That made the homepage diff on every deploy and handed Google a
-    # different page on every crawl, for no measured benefit. It is now
-    # DETERMINISTIC and ordered by the editorial priority already recorded in
-    # data/discovery.json, so the section only changes when the owner changes
-    # the merchandising. It is also no longer labelled "trending" or
-    # "what artists are searching", because nothing on this static site
-    # measures search demand - and we do not claim data we do not have.
-    # Exclude anything that already has its own dedicated homepage section —
-    # the flagship band (Master Library) and the eBook/Masterclass duo. Showing
-    # the same product twice on one page wastes two of the four slots and reads
-    # as padding rather than curation.
-    _flag = flagship()
-    _edu = {v["slug"] for v in education_products().values() if v}
-    picks = [p for p in PRODUCTS
-             if not p.get("comingSoon")
-             and (not _flag or p["slug"] != _flag["slug"]) and p["slug"] not in _edu]
-    picks.sort(key=lambda p: (-(disc(p["slug"]).get("priority") or 0), p["name"]))
-    trending = picks[:4]
-    trend_cards = product_grid(trending, 0)
-
     # ── Before / After: the result, not the brushes ──────────────────────
     # Interactive comparison slider (js/motion.js + css/style.css "MOTION
     # SYSTEM"). The two images are plain assets: swap assets/img/ba-before.webp
     # and ba-after.webp for real client artwork whenever you like; nothing
     # else has to change. They must stay the same size and the same crop.
-    before_after = """<section class="section ba-section" id="results" aria-labelledby="results-title">
+    before_after = """<!-- ═══ BEFORE / AFTER — sell the RESULT, not the brushes ═══
+         One interactive comparison slider: flat base painting → finished
+         portrait with skin texture, hair strands and final detail.
+         Swap assets/img/ba-before.webp / ba-after.webp for real client
+         artwork any time; nothing else needs to change. -->
+<section class="section ba-section" id="results" aria-labelledby="results-title">
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">See the result</p><h2 id="results-title">Flat Painting \u2192 Finished Portrait</h2></div>
@@ -165,6 +143,7 @@ def build_home():
     html_out += header(0, active="index.html")
     html_out += f"""
 <main id="main">
+  <!-- 1 · HERO: one value proposition, one product visual, one primary CTA. -->
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
@@ -172,20 +151,27 @@ def build_home():
         <h1>Procreate brushes for <em>iPad artists</em></h1>
         <p class="hero-sub">Hand-tested Procreate brushes for portraits, skin, line art, watercolor and anime. Instant download on iPad — free packs included.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold" href="products.html">Browse kits</a>
-          <a class="btn btn-line" href="#free">Get Free Brushes</a>
+          <a class="btn btn-gold btn-lg" href="products.html">Browse kits</a>
         </div>
-        <p class="hero-finder">Browse by what you create — <a href="products.html">explore the full catalog →</a></p>
-        {hero_trust(0)}
       </div>
-      <div class="hero-showcase" aria-hidden="true">{showcase}</div>
+      <div class="hero-showcase" aria-hidden="true" data-parallax="10">{showcase}</div>
     </div>
   </section>
 
-  {season_band(0)}
-  {craft_grid(0)}
+  <!-- 2 · PROOF BAR: concrete catalog numbers (placeholder for real
+       download/sales/rating figures — see trust_band()). -->
   {trust_band(0)}
 
+  {season_band(0)}
+
+  <!-- 3 · ONE FEATURED BEST-SELLER with testimonial slot + direct buy. -->
+  {feature_band(0)}
+
+  <!-- 4 · CATEGORY GRID: the single category navigation on this page
+       (the duplicate "Shop by Category" pill marquee was removed). -->
+  {craft_grid(0)}
+
+  <!-- 5 · FREE BRUSHES ROW: "Get Free" goes straight to Payhip. -->
   <section class="section" id="free">
     <div class="wrap">
       <div class="sec-head">
@@ -193,65 +179,37 @@ def build_home():
         <a class="text-link" href="freebies.html">All freebies →</a>
       </div>
       <p class="sec-note muted">Real kits, not samples — the same pressure tuning and file quality as the paid packs. Take them, use them, and only spend money once you know how they feel.</p>
-      {product_grid(freebies, 0, eager_first=1)}
+      {product_grid(freebies, 0, eager_first=1, free_direct=True)}
+      {trust_bridge(0, free=True)}
     </div>
   </section>
 
-  {flagship_band(0)}
+  <!-- 6 · TESTIMONIALS: placeholder slots until real reviews exist. -->
+  {testimonials_section(0)}
 
-  <section class="section section-alt">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">Level 2 · Specialist packs</p><h2>Featured Brush Kits</h2></div>
-        <a class="text-link" href="products.html">Browse all products →</a>
-      </div>
-      <p class="sec-note muted">Each kit solves one specific problem — skin, hair, line weight, watercolour — so you buy the fix you need, not a pile of brushes you will never open.</p>
-      {product_grid(featured, 0)}
-    </div>
-  </section>
-
+  <!-- Visual proof: the before/after comparison slider. -->
   {before_after}
 
-  <section class="section" id="popular" aria-labelledby="popular-title">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">Chosen by the studio</p><h2 id="popular-title">Popular Starting Points</h2></div>
-        <a class="text-link" href="products.html">Browse the full catalog →</a>
-      </div>
-      <p class="sec-note muted">The four kits we point new artists at first, covering the widest range of workflows.</p>
-      {trend_topics()}
-      {trend_cards}
-    </div>
-  </section>
-
+  <!-- 7 · EBOOKS: free guide → paid masterclass, moved up from the bottom
+       of the page because the pairing is a high-intent upsell. -->
   {ebook_section}
 
+  <!-- 8 · BUNDLES: the single bundle section on this page. -->
   <section class="section">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">Find your tool</p><h2>Shop by Category</h2></div>
-        <a class="text-link" href="products.html">All {len(PRODUCTS)} products →</a>
-      </div>
-    </div>
-    <div class="cat-marquee" aria-label="Browse product categories">
-      <div class="cat-track">
-        <div class="cat-half">{cat_chips}</div>
-        <div class="cat-half" aria-hidden="true">{cat_chips_dup}</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt">
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">Level 3 · High value</p><h2>Procreate Bundles</h2></div>
         <a class="text-link" href="bundles.html">Compare bundles →</a>
       </div>
       <div class="grid bundles-grid">{bundle_cards}</div>
+      {trust_bridge(0)}
     </div>
   </section>
 
-  <section class="section">
+  <!-- 9 · MASTER LIBRARY premium upsell. -->
+  {flagship_band(0)}
+
+  <section class="section section-alt">
     <div class="wrap">
       <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2>Tools that respect your craft</h2></div></div>
       <div class="grid why-grid">
@@ -263,7 +221,11 @@ def build_home():
     </div>
   </section>
 
-  <section class="section section-alt">
+  <!-- 10 · EMAIL CAPTURE: the single instance on this page. -->
+  {newsletter(0)}
+
+  <!-- 11 · BLOG PREVIEW -->
+  <section class="section">
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">The blog</p><h2>Procreate Guides & Techniques</h2></div>
@@ -272,8 +234,6 @@ def build_home():
       <div class="grid arts-grid">{art_cards}</div>
     </div>
   </section>
-
-  {newsletter(0)}
 </main>
 """
     html_out += footer(0)
@@ -341,30 +301,23 @@ def build_products():
 
 # ─────────────────────────── FREEBIES ───────────────────────────
 def build_freebies():
-    freebies = [p for p in PRODUCTS if p["free"]]
     html_out = head("Free Procreate Brushes | DigiKitPro",
         "Download free professional Procreate resources: 100 fine liner brushes, 20+ chalk brushes and a 1,200-swatch color vault. No cost, instant delivery.",
         SITE_URL + "/freebies.html", 0, ctx=page_ctx("freebies"),
         schemas=schema_breadcrumb([("Home","/"),("Free Brushes","/freebies.html")]))
     html_out += header(0, active="freebies.html")
-    cards = product_grid(freebies, 0, eager_first=1)
     html_out += f"""
 <main id="main">
   {page_head(0, "$0, forever", "Free Procreate Brushes & Assets",
     "Professional-grade tools, completely free. Download instantly, keep forever, and judge the quality for yourself before you spend anything.",
     [("Free Brushes","freebies.html")])}
+  {freebie_download_row(0)}
   {freebie_gate(0, source="freebies")}
-  <section class="section"><div class="wrap">
-    <div class="sec-head"><div><p class="eyebrow">Or download straight away</p><h2>Every free pack</h2></div></div>
-    <p class="sec-note muted">Each link below goes directly to Payhip. No email required, no waiting — the gate above is only for artists who want new free drops sent to them.</p>
-    {cards}
-  </div></section>
-  <section class="section section-alt"><div class="wrap narrow">
+  <section class="section"><div class="wrap narrow">
     <h2>Why we give professional tools away</h2>
     <p>Great tools shouldn't be gated. Every freebie in this collection is built to the same standard as our paid kits, hand-tuned pressure curves, real-media texture, and organized .brushset installs. If they become part of your daily workflow (we think they will), the <a href="products.html">full catalog</a> is waiting when you're ready.</p>
     <p>New here? Start with the <a href="products/free-fine-liner-brushes-100/">100-brush Fine Liner set</a>, then grab the <a href="products/free-color-vault-1200-swatches/">1,200-swatch Color Vault</a> so you never stall on color again.</p>
   </div></section>
-  {newsletter(0)}
 </main>
 """
     html_out += footer(0)
@@ -386,7 +339,7 @@ def build_bundles():
             rows = f'<ul class="bundle-list">{rows}</ul>'
         tiles += f"""<article class="bundle-panel">
   <div class="bundle-media">
-    <img class="fit{" contain" if (im.get("fullH") or 0) > (im.get("fullW") or 0) else ""}" src="{asset_file(0, p['slug'], im.get('main',''))}" width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
+    <img src="{asset_file(0, p['slug'], im.get('main',''))}" width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
   </div>
   <div class="bundle-body">
     <span class="badge">{esc(badge_text(p) or 'Bundle')}</span>
@@ -395,9 +348,10 @@ def build_bundles():
     {rows}
     <div class="bundle-cta">
       <span class="price price-lg">{p['priceText']}</span>
-      <a class="btn btn-gold" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'bundles-page')}>Buy on Payhip</a>
-      <a class="text-link" href="products/{p['slug']}/">Full details →</a>
+      <a class="btn btn-gold" href="products/{p['slug']}/">View Product</a>
+      <a class="text-link" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'bundles-page')}>Buy on Payhip ↗</a>
     </div>
+    {trust_bridge(0)}
   </div>
 </article>"""
     html_out = head("Procreate Bundles | DigiKitPro",

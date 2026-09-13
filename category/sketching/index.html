@@ -66,9 +66,15 @@
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
+  <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
+       are hidden from the very first frame (no flash of visible content).
+       The timeout is a failsafe: if js/motion.js never runs, the class is
+       removed and every element is simply visible, as it is without JS. -->
+  <script>(function(h){h.className+=" js-motion";setTimeout(function(){if(!window.__DKP_MOTION_READY){h.className=h.className.replace(" js-motion","");}},4000);})(document.documentElement);</script>
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "category", "slug": "sketching", "category": "Sketching Brushes"}};</script>
   <script src="../../js/search-index.js" defer></script>
   <script src="../../js/main.js" defer></script>
+  <script src="../../js/motion.js" defer></script>
   <script src="../../js/analytics.js" defer></script>
   <script src="../../js/feedback.js" defer></script>
   <script src="../../js/translate.js" defer></script>
@@ -141,8 +147,8 @@
       </div>
       <div class="grid cards">
 <article class="card" data-category="Sketching" data-name="professional digital sketchbook for procreate" data-tags="sketchbook sketching paper texture graphite ink drawing studies" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="professional-digital-sketchbook" data-dkp-name="Professional Digital Sketchbook for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/professional-digital-sketchbook/" style="--card-ar:1.4987">
-    <img class="fit" src="../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp" srcset="../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp 580w, ../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Professional Digital Sketchbook for Procreate: A complete tactile sketchbook environment: sketching tools, seamless paper textures and torn-paper stamps that give digital work real soul." loading="eager" fetchpriority="high" decoding="async">
+  <a class="card-media" href="../../products/professional-digital-sketchbook/">
+    <img src="../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp" srcset="../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp 580w, ../../assets/products/professional-digital-sketchbook/professional-digital-sketchbook.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Professional Digital Sketchbook for Procreate: A complete tactile sketchbook environment: sketching tools, seamless paper textures and torn-paper stamps that give digital work real soul." loading="eager" fetchpriority="high" decoding="async">
     
   </a>
   <div class="card-body">
@@ -151,13 +157,13 @@
     <p class="card-short">A complete tactile sketchbook environment: sketching tools, seamless paper textures and torn-paper stamps that give digital work real soul.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/professional-digital-sketchbook/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/cxE90" target="_blank" rel="noopener" data-dkp-slug="professional-digital-sketchbook" data-dkp-name="Professional Digital Sketchbook for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Sketching" data-name="professional sketchbook procreate brushes: traditional media &amp; drawing kit" data-tags="sketchbook traditional drawing pencil ink paper" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="sketchbook-traditional-media-kit" data-dkp-name="Professional Sketchbook Procreate Brushes: Traditional Media &amp; Drawing Kit" data-dkp-price="10.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/sketchbook-traditional-media-kit/" style="--card-ar:1.4987">
-    <img class="fit" src="../../assets/products/sketchbook-traditional-media-kit/sketchbook-traditional-media-kit-card.webp" srcset="../../assets/products/sketchbook-traditional-media-kit/sketchbook-traditional-media-kit-card.webp 580w, ../../assets/products/sketchbook-traditional-media-kit/sketchbook-traditional-media-kit.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Professional Sketchbook Procreate Brushes: Traditional Media &amp; Drawing Kit: Gritty textures, organic linework and effortless blending, a sketchbook studio that turns your iPad into a high-end paper canvas." loading="eager" fetchpriority="high" decoding="async">
+  <a class="card-media" href="../../products/sketchbook-traditional-media-kit/">
+    <img src="../../assets/products/sketchbook-traditional-media-kit/sketchbook-traditional-media-kit-card.webp" srcset="../../assets/products/sketchbook-traditional-media-kit/sketchbook-traditional-media-kit-card.webp 580w, ../../assets/products/sketchbook-traditional-media-kit/sketchbook-traditional-media-kit.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Professional Sketchbook Procreate Brushes: Traditional Media &amp; Drawing Kit: Gritty textures, organic linework and effortless blending, a sketchbook studio that turns your iPad into a high-end paper canvas." loading="eager" fetchpriority="high" decoding="async">
     
   </a>
   <div class="card-body">
@@ -166,7 +172,7 @@
     <p class="card-short">Gritty textures, organic linework and effortless blending, a sketchbook studio that turns your iPad into a high-end paper canvas.</p>
     <div class="card-foot">
       <span class="price">$10.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/sketchbook-traditional-media-kit/">View Product</a>
+      <a class="btn btn-line btn-sm" href="../../products/sketchbook-traditional-media-kit/" data-dkp-slug="sketchbook-traditional-media-kit" data-dkp-name="Professional Sketchbook Procreate Brushes: Traditional Media &amp; Drawing Kit" data-dkp-price="10.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">View Product</a>
     </div>
   </div>
 </article>

@@ -301,15 +301,17 @@ def main() -> int:
     if not page_locs:
         # compact form: <url><loc>...</loc>
         page_locs = re.findall(r"<url><loc>([^<]+)</loc>", sm_xml)
-    check("sitemap.xml has 94 page URLs",
-          len(page_locs) == 94, str(len(page_locs)))
+    # 93 since the Find-My-Brushes page was removed per owner request
+    # (tools/pages_finder.py build_all); 94 while it existed.
+    check("sitemap.xml has 93 page URLs",
+          len(page_locs) == 93, str(len(page_locs)))
     check("sitemap.xml all locs on digikitpro.shop",
           bool(page_locs) and all(u.startswith(HOST) for u in page_locs)
           and not any("github.io" in u for u in page_locs))
 
     sm_txt = read("sitemap.txt") if exists("sitemap.txt") else ""
     txt_urls = [ln.strip() for ln in sm_txt.splitlines() if ln.strip()]
-    check("sitemap.txt has 94 URLs", len(txt_urls) == 94, str(len(txt_urls)))
+    check("sitemap.txt has 93 URLs", len(txt_urls) == 93, str(len(txt_urls)))
     check("sitemap.txt all on digikitpro.shop",
           bool(txt_urls) and all(u.startswith(HOST) for u in txt_urls)
           and not any("github.io" in u for u in txt_urls))
@@ -398,6 +400,13 @@ def main() -> int:
         p.read_text(encoding="utf-8", errors="replace")
         for p in html_files if not is_verification_page(p)
     )
+    # Empty review slots (class "quote-slot") are deliberate placeholders,
+    # not social-proof claims, and the owner fill-in instructions live in
+    # HTML comments. Strip both so the fabrication guard keeps policing
+    # published copy only — a real quote pasted outside a slot still trips it.
+    html_blob = re.sub(r"<!--.*?-->", " ", html_blob, flags=re.S)
+    html_blob = re.sub(r'<(?:figure|blockquote)\b[^>]*quote-slot[^>]*>.*?</(?:figure|blockquote)>',
+                       " ", html_blob, flags=re.S)
     for label, pat in HONESTY:
         hits = pat.findall(html_blob)
         check(f"honesty: no {label}", len(hits) == 0,

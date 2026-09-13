@@ -66,10 +66,16 @@
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
+  <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
+       are hidden from the very first frame (no flash of visible content).
+       The timeout is a failsafe: if js/motion.js never runs, the class is
+       removed and every element is simply visible, as it is without JS. -->
+  <script>(function(h){h.className+=" js-motion";setTimeout(function(){if(!window.__DKP_MOTION_READY){h.className=h.className.replace(" js-motion","");}},4000);})(document.documentElement);</script>
  <link rel="preload" as="image" href="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" fetchpriority="high">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "product", "slug": "free-fine-liner-brushes-100", "name": "Free Fine Liner Set: 100 Brushes + 13 Paper Textures", "tier": "free", "category": "Line Art", "price": 0.0, "free": true, "line": "procreate"}};</script>
   <script src="../../js/search-index.js" defer></script>
   <script src="../../js/main.js" defer></script>
+  <script src="../../js/motion.js" defer></script>
   <script src="../../js/analytics.js" defer></script>
   <script src="../../js/feedback.js" defer></script>
   <script src="../../js/translate.js" defer></script>
@@ -134,8 +140,9 @@
         <p class="pdp-short">Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download.</p>
         <div class="buy-panel">
           <div class="buy-top"><span class="buy-label">Price</span><span class="price price-free">Free</span></div>
-          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-buy-panel">Get Free Download <span class="btn-arr">↗</span></a>
-          <p class="buy-cap">Secure checkout on Payhip · Instant download · Opens in a new tab</p>
+          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-buy-panel">Get Free <span class="btn-arr">↗</span></a>
+          <p class="buy-cap">Opens the Payhip checkout in a new tab</p>
+          <p class="trust-bridge">Secure checkout via Payhip · instant download · $0 now and forever, no card needed · <a href="../../refunds.html">Refund policy</a></p>
         </div>
         <p class="licence-line"><b>Can I sell what I make?</b> Yes — finished artwork you create with these files is yours to use personally and commercially. You may not resell or redistribute the brush files themselves. <a href="../../terms.html">Full licence</a>.</p>
         <ul class="pdp-trust"><li>Instant download via Payhip</li><li>Lifetime access</li><li>Procreate on iPad required</li></ul>
@@ -175,16 +182,17 @@
       <div>
         <h2 id="p-get">Get This Product</h2>
         <p class="muted">Secure checkout on Payhip. Instant delivery to your email.</p>
+        <p class="trust-bridge">Secure checkout via Payhip · instant download · $0 now and forever, no card needed · <a href="../../refunds.html">Refund policy</a></p>
       </div>
-      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-bottom">Download Free <span class="btn-arr">↗</span></a>
+      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-bottom">Get Free <span class="btn-arr">↗</span></a>
     </section>
 
     <section class="psec" aria-labelledby="p-related">
       <div class="sec-head"><div><p class="eyebrow">You may also like</p><h2 id="p-related">Related Products</h2></div></div>
       <div class="grid cards">
 <article class="card" data-category="Line Art" data-name="essential line art &amp; sketch kit for procreate" data-tags="line art liner inking pencil sketch manga comics graphite" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="essential-line-art-sketch-kit" data-dkp-name="Essential Line Art &amp; Sketch Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/essential-line-art-sketch-kit/" style="--card-ar:0.7928">
-    <img class="fit contain" src="../../assets/products/essential-line-art-sketch-kit/essential-line-art-sketch-kit-card.webp" srcset="../../assets/products/essential-line-art-sketch-kit/essential-line-art-sketch-kit-card.webp 750w, ../../assets/products/essential-line-art-sketch-kit/essential-line-art-sketch-kit.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Essential Line Art &amp; Sketch Kit for Procreate: 43 focused brushes plus a bonus texture brush for clean line art, natural pencil sketches and confident inking, no pack-switching." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/essential-line-art-sketch-kit/">
+    <img src="../../assets/products/essential-line-art-sketch-kit/essential-line-art-sketch-kit-card.webp" srcset="../../assets/products/essential-line-art-sketch-kit/essential-line-art-sketch-kit-card.webp 750w, ../../assets/products/essential-line-art-sketch-kit/essential-line-art-sketch-kit.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Essential Line Art &amp; Sketch Kit for Procreate: 43 focused brushes plus a bonus texture brush for clean line art, natural pencil sketches and confident inking, no pack-switching." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -193,13 +201,13 @@
     <p class="card-short">43 focused brushes plus a bonus texture brush for clean line art, natural pencil sketches and confident inking, no pack-switching.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/essential-line-art-sketch-kit/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/b70QE" target="_blank" rel="noopener" data-dkp-slug="essential-line-art-sketch-kit" data-dkp-name="Essential Line Art &amp; Sketch Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Line Art" data-name="master line-art vault: 300+ fine line brushes" data-tags="line art fine line liner inking vault 300" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="master-line-art-vault-300" data-dkp-name="Master Line-Art Vault: 300+ Fine Line Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/master-line-art-vault-300/" style="--card-ar:1.5000">
-    <img class="fit" src="../../assets/products/master-line-art-vault-300/master-line-art-vault-300-card.webp" srcset="../../assets/products/master-line-art-vault-300/master-line-art-vault-300-card.webp 750w, ../../assets/products/master-line-art-vault-300/master-line-art-vault-300.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Master Line-Art Vault: 300+ Fine Line Brushes: The ultimate all-in-one linework collection: 300+ fine line brushes with the precision, variety and character pro artwork demands." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/master-line-art-vault-300/">
+    <img src="../../assets/products/master-line-art-vault-300/master-line-art-vault-300-card.webp" srcset="../../assets/products/master-line-art-vault-300/master-line-art-vault-300-card.webp 750w, ../../assets/products/master-line-art-vault-300/master-line-art-vault-300.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Master Line-Art Vault: 300+ Fine Line Brushes: The ultimate all-in-one linework collection: 300+ fine line brushes with the precision, variety and character pro artwork demands." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -208,13 +216,13 @@
     <p class="card-short">The ultimate all-in-one linework collection: 300+ fine line brushes with the precision, variety and character pro artwork demands.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/master-line-art-vault-300/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/UQ6pN" target="_blank" rel="noopener" data-dkp-slug="master-line-art-vault-300" data-dkp-name="Master Line-Art Vault: 300+ Fine Line Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Line Art" data-name="professional liner &amp; marker studio: 39 high-fidelity brushes" data-tags="liner marker ink inking manga fine liner pen" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="liner-marker-studio-39-brushes" data-dkp-name="Professional Liner &amp; Marker Studio: 39 High-Fidelity Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/liner-marker-studio-39-brushes/" style="--card-ar:1.4987">
-    <img class="fit" src="../../assets/products/liner-marker-studio-39-brushes/liner-marker-studio-39-brushes-card.webp" srcset="../../assets/products/liner-marker-studio-39-brushes/liner-marker-studio-39-brushes-card.webp 580w, ../../assets/products/liner-marker-studio-39-brushes/liner-marker-studio-39-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Professional Liner &amp; Marker Studio: 39 High-Fidelity Brushes: A curated digital ink station: 39 brushes replicating the saturated flow of alcohol markers and the razor precision of technical liners." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/liner-marker-studio-39-brushes/">
+    <img src="../../assets/products/liner-marker-studio-39-brushes/liner-marker-studio-39-brushes-card.webp" srcset="../../assets/products/liner-marker-studio-39-brushes/liner-marker-studio-39-brushes-card.webp 580w, ../../assets/products/liner-marker-studio-39-brushes/liner-marker-studio-39-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Professional Liner &amp; Marker Studio: 39 High-Fidelity Brushes: A curated digital ink station: 39 brushes replicating the saturated flow of alcohol markers and the razor precision of technical liners." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -223,13 +231,13 @@
     <p class="card-short">A curated digital ink station: 39 brushes replicating the saturated flow of alcohol markers and the razor precision of technical liners.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/liner-marker-studio-39-brushes/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/QrVkj" target="_blank" rel="noopener" data-dkp-slug="liner-marker-studio-39-brushes" data-dkp-name="Professional Liner &amp; Marker Studio: 39 High-Fidelity Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Traditional" data-name="chalkboard artist&#x27;s toolkit: 20+ chalk brushes (free)" data-tags="free chalk chalkboard dusty lettering traditional" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-chalkboard-artists-toolkit" data-dkp-name="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/free-chalkboard-artists-toolkit/" style="--card-ar:1.4987">
-    <img class="fit" src="../../assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp" srcset="../../assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp 580w, ../../assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free): The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/free-chalkboard-artists-toolkit/">
+    <img src="../../assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp" srcset="../../assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp 580w, ../../assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free): The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download." loading="lazy" decoding="async">
     <span class="badge badge-free">Free</span>
   </a>
   <div class="card-body">
@@ -238,7 +246,7 @@
     <p class="card-short">The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download.</p>
     <div class="card-foot">
       <span class="price">Free</span>
-      <a class="btn btn-line btn-sm" href="../../products/free-chalkboard-artists-toolkit/">Get Free</a>
+      <a class="btn btn-line btn-sm" href="../../products/free-chalkboard-artists-toolkit/" data-dkp-slug="free-chalkboard-artists-toolkit" data-dkp-name="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
     </div>
   </div>
 </article>

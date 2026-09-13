@@ -328,7 +328,7 @@ def build_thanks():
     <span class="badge badge-free">Free</span>
     <h2>{esc(p['name'])}</h2>
     <p class="muted">{esc(p.get('assets') or '')}</p>
-    <a class="btn btn-gold btn-sm" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'thanks')}>Download free ↗</a>
+    <a class="btn btn-gold btn-sm" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'thanks')}>Get Free ↗</a>
   </div>
 </article>'''
 
@@ -358,7 +358,7 @@ def build_thanks():
       </ul>
       <div class="starter-cta">
         <span class="price price-lg">{esc(starter['priceText'])}</span>
-        <a class="btn btn-gold" href="{starter['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(starter, 'thanks-starter')}>Get it on Payhip ↗</a>
+        <a class="btn btn-gold" href="{starter['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(starter, 'thanks-starter')}>Buy Now ↗</a>
         <a class="text-link" href="{rel(depth, 'products/' + starter['slug'] + '/')}">See what is inside →</a>
       </div>
       <p class="muted starter-note">Not yet? No pressure at all — the free packs above are yours to keep, and the

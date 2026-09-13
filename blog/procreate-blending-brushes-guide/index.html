@@ -66,9 +66,15 @@
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
+  <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
+       are hidden from the very first frame (no flash of visible content).
+       The timeout is a failsafe: if js/motion.js never runs, the class is
+       removed and every element is simply visible, as it is without JS. -->
+  <script>(function(h){h.className+=" js-motion";setTimeout(function(){if(!window.__DKP_MOTION_READY){h.className=h.className.replace(" js-motion","");}},4000);})(document.documentElement);</script>
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "article", "slug": "procreate-blending-brushes-guide", "name": "Procreate Blending Brushes Explained: How to Blend Without \"Plastic Skin\""}};</script>
   <script src="../../js/search-index.js" defer></script>
   <script src="../../js/main.js" defer></script>
+  <script src="../../js/motion.js" defer></script>
   <script src="../../js/analytics.js" defer></script>
   <script src="../../js/feedback.js" defer></script>
   <script src="../../js/translate.js" defer></script>
@@ -155,8 +161,8 @@
     <h2 id="ap-title">Get the brushes</h2>
     <div class="grid cards cards-sm">
 <article class="card" data-category="Skin Texture" data-name="portrait skin brushes for procreate" data-tags="skin skin texture pores freckles wrinkles portrait realistic blending blusher highlighter" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/portrait-skin-brushes-procreate/" style="--card-ar:0.7928">
-    <img class="fit contain" src="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, ../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Portrait Skin Brushes for Procreate: 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/portrait-skin-brushes-procreate/">
+    <img src="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, ../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Portrait Skin Brushes for Procreate: 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits." loading="lazy" decoding="async">
     <span class="badge">Best Seller</span>
   </a>
   <div class="card-body">
@@ -165,13 +171,13 @@
     <p class="card-short">19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/portrait-skin-brushes-procreate/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/btOrh" target="_blank" rel="noopener" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Watercolor" data-name="50+ realistic watercolor studio kit for procreate" data-tags="watercolor watercolour washes bleed pigment botanical traditional" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="watercolor-studio-kit-50-brushes" data-dkp-name="50+ Realistic Watercolor Studio Kit for Procreate" data-dkp-price="10.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/watercolor-studio-kit-50-brushes/" style="--card-ar:1.3333">
-    <img class="fit" src="../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes-card.webp" srcset="../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes-card.webp 580w, ../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="435" alt="50+ Realistic Watercolor Studio Kit for Procreate: A real artist&#x27;s watercolor palette simulated for iPad: 50+ brushes with organic bleed, pigment flow and authentic paper grain." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/watercolor-studio-kit-50-brushes/">
+    <img src="../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes-card.webp" srcset="../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes-card.webp 580w, ../../assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="435" alt="50+ Realistic Watercolor Studio Kit for Procreate: A real artist&#x27;s watercolor palette simulated for iPad: 50+ brushes with organic bleed, pigment flow and authentic paper grain." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -180,13 +186,13 @@
     <p class="card-short">A real artist&#x27;s watercolor palette simulated for iPad: 50+ brushes with organic bleed, pigment flow and authentic paper grain.</p>
     <div class="card-foot">
       <span class="price">$10.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/watercolor-studio-kit-50-brushes/">View Product</a>
+      <a class="btn btn-line btn-sm" href="../../products/watercolor-studio-kit-50-brushes/" data-dkp-slug="watercolor-studio-kit-50-brushes" data-dkp-name="50+ Realistic Watercolor Studio Kit for Procreate" data-dkp-price="10.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">View Product</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Traditional" data-name="the dreamy pastel art kit for procreate" data-tags="pastel traditional lofi soft grainy dreamy blending" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="dreamy-pastel-art-kit" data-dkp-name="The Dreamy Pastel Art Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/dreamy-pastel-art-kit/" style="--card-ar:1.5000">
-    <img class="fit" src="../../assets/products/dreamy-pastel-art-kit/dreamy-pastel-art-kit-card.webp" srcset="../../assets/products/dreamy-pastel-art-kit/dreamy-pastel-art-kit-card.webp 750w, ../../assets/products/dreamy-pastel-art-kit/dreamy-pastel-art-kit.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="The Dreamy Pastel Art Kit for Procreate: Soft, grainy, nostalgic pastel brushes that bring the organic texture and effortless blending of real pastels to your iPad." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/dreamy-pastel-art-kit/">
+    <img src="../../assets/products/dreamy-pastel-art-kit/dreamy-pastel-art-kit-card.webp" srcset="../../assets/products/dreamy-pastel-art-kit/dreamy-pastel-art-kit-card.webp 750w, ../../assets/products/dreamy-pastel-art-kit/dreamy-pastel-art-kit.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="The Dreamy Pastel Art Kit for Procreate: Soft, grainy, nostalgic pastel brushes that bring the organic texture and effortless blending of real pastels to your iPad." loading="lazy" decoding="async">
     
   </a>
   <div class="card-body">
@@ -195,13 +201,13 @@
     <p class="card-short">Soft, grainy, nostalgic pastel brushes that bring the organic texture and effortless blending of real pastels to your iPad.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/dreamy-pastel-art-kit/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/MChnB" target="_blank" rel="noopener" data-dkp-slug="dreamy-pastel-art-kit" data-dkp-name="The Dreamy Pastel Art Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
 <article class="card" data-category="Portrait" data-name="portrait mastery kit: 46 procreate brushes" data-tags="portrait portrait workflow skin hair blending paper texture face realistic" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <a class="card-media exact" href="../../products/portrait-mastery-kit-46-brushes/" style="--card-ar:0.8082">
-    <img class="fit contain" src="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, ../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Portrait Mastery Kit: 46 Procreate Brushes: A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish." loading="lazy" decoding="async">
+  <a class="card-media" href="../../products/portrait-mastery-kit-46-brushes/">
+    <img src="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, ../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Portrait Mastery Kit: 46 Procreate Brushes: A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish." loading="lazy" decoding="async">
     <span class="badge">Best Seller</span>
   </a>
   <div class="card-body">
@@ -210,7 +216,7 @@
     <p class="card-short">A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish.</p>
     <div class="card-foot">
       <span class="price">$8.00</span>
-      <a class="btn btn-line btn-sm" href="../../products/portrait-mastery-kit-46-brushes/">View Product</a>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/pOG6v" target="_blank" rel="noopener" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
     </div>
   </div>
 </article>
