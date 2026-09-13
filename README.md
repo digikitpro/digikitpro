@@ -55,8 +55,9 @@ The site's look is unchanged; this layer only makes it *move*. It adds: hero ent
 (headline → copy → CTAs → artwork), scroll reveals with a short stagger, hover/press
 feedback on cards, categories, bundles and buttons, cursor parallax on the hero covers and
 bundle tiles, a 2 px scroll-progress thread, a dismissible sticky CTA (homepage only, after
-the hero, never over the footer) and the interactive **before/after slider** in
-`#results`.
+the hero, never over the footer) and the interactive **before/after slider** (currently
+dormant: the homepage section was removed in the 2026-09 conversion pass to stop one $5
+product dominating the page; the slider ships again wherever a `[data-ba]` stage is added).
 
 Rules it keeps:
 

@@ -19,7 +19,6 @@ def build_home():
         showcase += f'<figure class="hero-card h{i+1}" style="--hero-ar:{_hw}/{_hh}"><img src="{asset_file(0, p["slug"], im.get("main",""))}" width="{im.get("fullW") or 1200}" height="{im.get("fullH") or 800}" alt="{esc(p["name"])}" loading="{"eager" if i==0 else "lazy"}" fetchpriority="{"high" if i==0 else "auto"}" decoding="async"><figcaption>{esc(p["name"])}</figcaption></figure>'
 
     freebies = [p for p in PRODUCTS if p["free"] and not p.get("comingSoon") and p["category"] != "Guides & eBooks"]
-    featured = sorted([p for p in PRODUCTS if p.get("featured")], key=lambda x: x["featured"])[:8]
     bundles = [p for p in PRODUCTS if p["category"] == "Bundles"]
     # Value ladder, cheapest-first used to bury the $19 Master Library below
     # the $5 palette bundle and cut it off the homepage entirely. Order by
@@ -27,46 +26,67 @@ def build_home():
     _tier_rank = {t: i for i, t in enumerate(TIER_ORDER)}
     bundles.sort(key=lambda p: (_tier_rank.get(tier_of(p), 9), -(p.get("price") or 0)))
 
-    # studio eBooks, live on Payhip: free starter first, then the masterclass
-    ebooks = sorted([p for p in PRODUCTS if p["category"] == "Guides & eBooks"], key=lambda x: x["price"])
-    ebook_cards = ""
-    for e in ebooks:
-        im = e["images"]
-        e_label = badge_text(e)   # "New"/"Masterclass" labels are suppressed site-wide
-        e_badge = ('<span class="badge badge-free">Free</span>' if e["free"]
-                   else (f'<span class="badge">{esc(e_label)}</span>' if e_label else ""))
-    # CTA verbs: the free guide goes straight to Payhip ("Get Free"); the
-    # paid masterclass is higher-consideration, so it routes to its detail
-    # page first ("View Product").
-    if e["free"]:
-        e_cta, e_href, e_ext = "Get Free ↗", e["payhipUrl"], ' target="_blank" rel="noopener"'
-    else:
-        e_cta, e_href, e_ext = "View Product", f"products/{e['slug']}/", ""
-    ebook_cards += f"""<article class="ebook-card">
-  <a class="ebook-cover" href="products/{e['slug']}/">
-    <img src="{asset_file(0, e['slug'], im.get('card',''))}" width="{im.get('cardW') or 1200}" height="{im.get('cardH') or 800}" alt="{esc(e['name'])}: cover" loading="lazy" decoding="async">
+    # ── Featured Brush Kits: storefront cards, best-seller excluded ──────
+    # The best-seller gets the compact spotlight above the cards; these are
+    # the studio picks that fill out the catalog row. Hand-picked slugs keep
+    # the row curated instead of whichever product edited its flag last.
+    featured_kits = [byslug[s] for s in (
+        "artista-studio-kit-76-brushes",
+        "anime-soft-style-studio-kit",
+        "watercolor-studio-kit-50-brushes",
+    ) if s in byslug]
+
+    # ── Popular Starting Points: the three packs new customers begin with ─
+    starting_points = [byslug[s] for s in (
+        "portrait-mastery-kit-46-brushes",
+        "essential-line-art-sketch-kit",
+        "ultimate-portrait-mastery-bundle",
+    ) if s in byslug]
+
+    # ── LEARN: free starter guide → paid masterclass, side by side ───────
+    # A true two-column editorial pair with equal visual weight: the FREE
+    # guide is the entry point ("start here"), the $19 Masterclass the
+    # premium next step ("go deeper"). The connector between the cards is
+    # the funnel. No third card, no placeholders.
+    starter = byslug.get("procreate-starter-guide-free-ebook")
+    master = byslug.get("procreate-portrait-masterclass-ebook")
+    ebook_section = ""
+    if starter and master:
+        def edu_card(p, level_cls, level_label, desc, meta, cta_label, cta_href, cta_ext):
+            im = p["images"]
+            name = p["name"].split(" (")[0]
+            return f"""<article class="ebook-card edu-card {level_cls}">
+  <a class="ebook-cover" href="products/{p['slug']}/">
+    <img src="{asset_file(0, p['slug'], im.get('card',''))}" width="{im.get('cardW') or 750}" height="{im.get('cardH') or 1000}" alt="{esc(name)}: cover" loading="lazy" decoding="async">
   </a>
   <div class="ebook-body">
-    {e_badge}
-    <h3>{esc(e['name'])}</h3>
-    <p class="muted">{esc(e['short'])}</p>
+    <p class="edu-level">{esc(level_label)}</p>
+    <h3>{esc(name)}</h3>
+    <p class="edu-desc muted">{esc(desc)}</p>
     <div class="ebook-foot">
-      <span class="price">{"Free" if e["free"] else e["priceText"]}</span>
-      <a class="btn btn-gold btn-sm" href="{e_href}"{e_ext}>{e_cta}</a>
-      <a class="text-link" href="products/{e['slug']}/">Details →</a>
+      <span class="price price-lg">{"Free" if p["free"] else esc(p["priceText"])}</span>
+      <a class="btn btn-gold" href="{cta_href}"{cta_ext}>{cta_label}</a>
     </div>
+    <p class="edu-meta">{esc(meta)}</p>
   </div>
 </article>"""
-
-    ebook_section = ""
-    if ebooks:
-        ebook_section = f"""<section class="section section-alt" id="ebooks">
+        starter_card = edu_card(
+            starter, "edu-start", "Start here · Free",
+            "A visual beginner guide from a blank canvas to a structured, well-lit portrait.",
+            "PDF eBook · instant download · $0 forever",
+            "Get Free Guide ↗", starter["payhipUrl"], ' target="_blank" rel="noopener" ' + buy_attrs(starter, "edu-duo"))
+        master_card = edu_card(
+            master, "edu-deep", "Go deeper · Premium",
+            "A complete 15-chapter portrait workflow from a blank canvas to a finished, believable portrait.",
+            "PDF eBook · 107 pages · 15 chapters",
+            "Get the Masterclass", f"products/{master['slug']}/", "")
+        ebook_section = f"""<section class="section section-alt" id="ebooks" aria-labelledby="edu-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Learn the craft</p><h2>Learn Procreate Portraits with Our eBooks</h2></div>
-        <p class="sec-note muted">Start with the free guide, then go deep with the Masterclass.</p>
+        <div><p class="eyebrow">Learn the craft</p><h2 id="edu-title">Learn Procreate Portraits</h2></div>
+        <p class="sec-note muted">Start with the free guide, then go deeper.</p>
       </div>
-      <div class="ebook-duo">{ebook_cards}</div>
+      <div class="ebook-duo">{starter_card}<div class="edu-link" aria-hidden="true"><span class="edu-arrow">→</span><span class="edu-label">then go deeper</span></div>{master_card}</div>
     </div>
   </section>
 """
@@ -83,46 +103,6 @@ def build_home():
     <span class="price">{p['priceText']}</span>
   </div>
 </a>"""
-
-    # ── Before / After: the result, not the brushes ──────────────────────
-    # Interactive comparison slider (js/motion.js + css/style.css "MOTION
-    # SYSTEM"). The two images are plain assets: swap assets/img/ba-before.webp
-    # and ba-after.webp for real client artwork whenever you like; nothing
-    # else has to change. They must stay the same size and the same crop.
-    before_after = """<!-- ═══ BEFORE / AFTER — sell the RESULT, not the brushes ═══
-         One interactive comparison slider: flat base painting → finished
-         portrait with skin texture, hair strands and final detail.
-         Swap assets/img/ba-before.webp / ba-after.webp for real client
-         artwork any time; nothing else needs to change. -->
-<section class="section ba-section" id="results" aria-labelledby="results-title">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">See the result</p><h2 id="results-title">Flat Painting \u2192 Finished Portrait</h2></div>
-        <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit \u2192</a>
-      </div>
-      <p class="sec-note muted">Same drawing, same lighting: the only difference is texture. Drag the divider to see what skin, hair and finish brushes actually add \u2014 pores, freckles, strand detail and the final pass that stops a portrait looking airbrushed.</p>
-      <figure class="ba-figure">
-        <div class="ba-stage" data-ba>
-          <img class="ba-img ba-after" src="assets/img/ba-after.webp" width="1200" height="800" alt="Finished portrait: detailed skin texture, hair strands and final rendering" loading="lazy" decoding="async">
-          <div class="ba-clip">
-            <img class="ba-img ba-before" src="assets/img/ba-before.webp" width="1200" height="800" alt="Unfinished portrait: flat base colour with no skin texture or detail" loading="lazy" decoding="async">
-          </div>
-          <span class="ba-tag ba-tag-b">Before \u00b7 flat base</span>
-          <span class="ba-tag ba-tag-a">After \u00b7 textured finish</span>
-          <div class="ba-divider" role="slider" tabindex="0" aria-label="Reveal the finished portrait" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% finished">
-            <span class="ba-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 4 12l5 6M15 6l5 6-5 6"/></svg></span>
-          </div>
-          <div class="ba-sweep" aria-hidden="true"></div>
-        </div>
-        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use \u2190 \u2192.</span><span>Demonstration artwork.</span></figcaption>
-      </figure>
-      <div class="ba-cta">
-        <a class="btn btn-gold" href="products/portrait-skin-brushes-procreate/" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="before-after">Get the Skin Brushes <span class="btn-arr">\u00b7</span> $5.00</a>
-        <a class="btn btn-line" href="products/ultimate-portrait-mastery-bundle/">Or take the full portrait bundle \u2192</a>
-      </div>
-    </div>
-  </section>
-"""
 
     articles = [a for a in load_articles() if a.get("image")][:3]
     def art_card(a, depth):
@@ -158,20 +138,16 @@ def build_home():
     </div>
   </section>
 
-  <!-- 2 · PROOF BAR: concrete catalog numbers (placeholder for real
-       download/sales/rating figures — see trust_band()). -->
+  <!-- 2 · PROOF BAR: concrete catalog numbers, verifiable from
+       data/products.json — never invented social proof. -->
   {trust_band(0)}
 
   {season_band(0)}
 
-  <!-- 3 · ONE FEATURED BEST-SELLER with testimonial slot + direct buy. -->
-  {feature_band(0)}
-
-  <!-- 4 · CATEGORY GRID: the single category navigation on this page
-       (the duplicate "Shop by Category" pill marquee was removed). -->
+  <!-- 3 · WHAT DO YOU CREATE? routes by intent before the catalog. -->
   {craft_grid(0)}
 
-  <!-- 5 · FREE BRUSHES ROW: "Get Free" goes straight to Payhip. -->
+  <!-- 4 · FREE BRUSHES ROW: "Get Free" goes straight to Payhip. -->
   <section class="section" id="free">
     <div class="wrap">
       <div class="sec-head">
@@ -180,21 +156,41 @@ def build_home():
       </div>
       <p class="sec-note muted">Real kits, not samples — the same pressure tuning and file quality as the paid packs. Take them, use them, and only spend money once you know how they feel.</p>
       {product_grid(freebies, 0, eager_first=1, free_direct=True)}
-      {trust_bridge(0, free=True)}
     </div>
   </section>
 
-  <!-- 6 · TESTIMONIALS: placeholder slots until real reviews exist. -->
-  {testimonials_section(0)}
+  <!-- 5 · MASTER LIBRARY: the premium upsell, before the featured kits. -->
+  {flagship_band(0, bridge=False)}
 
-  <!-- Visual proof: the before/after comparison slider. -->
-  {before_after}
+  <!-- 6 · FEATURED BRUSH KITS: compact storefront — one short best-seller
+       spotlight, then balanced catalog cards. Detail stays on product pages. -->
+  <section class="section section-alt" id="featured" aria-labelledby="feat-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Studio favorites</p><h2 id="feat-title">Featured Brush Kits</h2></div>
+        <a class="text-link" href="products.html">Browse all products →</a>
+      </div>
+      {feature_band(0)}
+      {product_grid(featured_kits, 0, classes="grid cards cards-3")}
+    </div>
+  </section>
 
-  <!-- 7 · EBOOKS: free guide → paid masterclass, moved up from the bottom
-       of the page because the pairing is a high-intent upsell. -->
+  <!-- 7 · POPULAR STARTING POINTS: the packs new customers begin with. -->
+  <section class="section" id="starting-points" aria-labelledby="sp-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Not sure where to start?</p><h2 id="sp-title">Popular Starting Points</h2></div>
+        <a class="text-link" href="products.html">Browse the full catalog →</a>
+      </div>
+      <p class="sec-note muted">Small, focused packs most artists start with — each one an instant download you can use on your next piece.</p>
+      {product_grid(starting_points, 0)}
+    </div>
+  </section>
+
+  <!-- 8 · LEARN: free starter guide → masterclass, side by side. -->
   {ebook_section}
 
-  <!-- 8 · BUNDLES: the single bundle section on this page. -->
+  <!-- 9 · BUNDLES: the single bundle section on this page. -->
   <section class="section">
     <div class="wrap">
       <div class="sec-head">
@@ -202,13 +198,10 @@ def build_home():
         <a class="text-link" href="bundles.html">Compare bundles →</a>
       </div>
       <div class="grid bundles-grid">{bundle_cards}</div>
-      {trust_bridge(0)}
     </div>
   </section>
 
-  <!-- 9 · MASTER LIBRARY premium upsell. -->
-  {flagship_band(0)}
-
+  <!-- 10 · WHY DIGIKITPRO -->
   <section class="section section-alt">
     <div class="wrap">
       <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2>Tools that respect your craft</h2></div></div>
@@ -221,9 +214,6 @@ def build_home():
     </div>
   </section>
 
-  <!-- 10 · EMAIL CAPTURE: the single instance on this page. -->
-  {newsletter(0)}
-
   <!-- 11 · BLOG PREVIEW -->
   <section class="section">
     <div class="wrap">
@@ -234,6 +224,9 @@ def build_home():
       <div class="grid arts-grid">{art_cards}</div>
     </div>
   </section>
+
+  <!-- 12 · EMAIL CAPTURE: the close of the journey, after the articles. -->
+  {newsletter(0)}
 </main>
 """
     html_out += footer(0)
