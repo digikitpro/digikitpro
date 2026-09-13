@@ -118,11 +118,52 @@ def top_for_craft(craft_id, prods, n=3, tiers=("entry", "bundle")):
     # craft by definition, so including them here would make every single craft
     # block recommend the same three big bundles. They get their own flagship
     # band and the bundles page instead.
-    scored = [p for p in prods.values()
-              if not p.get("aggregate")
-              and p["tier"] in tiers and craft_id in (p["craft"] or [])]
-    scored.sort(key=lambda p: (-_score(p, craft=craft_id), -(p["priority"] or 0)))
-    return scored[:n]
+    #
+    # NOTE: _score() cannot rank inside a single craft block. Every product here
+    # already matches `craft_id`, so they all earn the same 40 craft points and the
+    # only remaining differentiator is `priority` — a store-wide merchandising
+    # number. That collapses each block into "global bestseller list filtered by
+    # tag", which made Portraits and Illustration render byte-identical picks and
+    # put Portrait Skin Brushes at the top of Concept Art. So rank on signals that
+    # are actually about THIS craft, and leave priority as the final tiebreak only.
+    out = []
+    for slug, p in prods.items():
+        if p.get("aggregate") or p["tier"] not in tiers:
+            continue
+        crafts = p["craft"] or []
+        if craft_id not in crafts:
+            continue
+        s = 0.0
+        # Built for this work first: the leading craft tag is the pack's primary.
+        # This is the only signal in the data that is genuinely about THIS craft
+        # rather than about the store as a whole.
+        if crafts[0] == craft_id:
+            s += 25.0
+        # Store-wide priority as a light tiebreak, never the driver.
+        s += min(5.0, (p["priority"] or 0) * 0.05)
+        #
+        # Two ideas were tried here and deliberately rejected on measured output:
+        #
+        # 1. A specificity bonus for narrowly-tagged packs. It sounds right, but in
+        #    this catalog the narrowest tags belong disproportionately to seasonal
+        #    and novelty items, so it promoted Halloween PNGs and Koi Fish Tattoo
+        #    into Illustration and put a 10-brush hair pack above the 46-brush
+        #    Portrait Mastery Kit. Narrow is not the same as better.
+        #
+        # 2. A penalty for packs already shown under another craft. It maximises
+        #    variety (27 distinct products across 9 blocks) but it is a cosmetic
+        #    goal, not a relevance one: it demoted the genuinely right answer to
+        #    surface whatever was left over. Glitter brushes for Animation and
+        #    Christmas brushes for Lettering are worse recommendations than an
+        #    honest repeat. Variety is not worth a wrong pick.
+        #
+        # Where a craft has no primary-tagged packs at all (concept, animation,
+        # lettering) this still falls back to priority order. That is a catalog
+        # curation gap for the owner to close, not something ranking tricks should
+        # paper over by inventing a primary craft a pack does not have.
+        out.append((s, p))
+    out.sort(key=lambda t: (-t[0], -(t[1]["priority"] or 0), t[1]["name"]))
+    return [p for _, p in out[:n]]
 
 
 def craft_fallback_section(depth, prods):
