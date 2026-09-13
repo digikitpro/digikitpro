@@ -351,6 +351,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
   <script src="{rel(depth,'js/main.js')}" defer></script>
   <script src="{rel(depth,'js/analytics.js')}" defer></script>
+  <script src="{rel(depth,'js/finder-index.js')}" defer></script>
   <script src="{rel(depth,'js/finder.js')}" defer></script>
   <script src="{rel(depth,'js/feedback.js')}" defer></script>
   <script src="{rel(depth,'js/translate.js')}" defer></script>

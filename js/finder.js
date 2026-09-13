@@ -75,17 +75,6 @@
     return { total: Math.round(s * 10) / 10, hits: hits };
   }
 
-  /* Only real Procreate tools are candidates. Planners and travel guides stay
-     in the catalog and stay buyable, but are never recommended as a solution
-     to a brush question — that would be dishonest and would waste the click.
-
-     `aggregate` products (Master Library, Master Vault, Mega Bundle) are also
-     excluded from RANKING. They cover every craft, every goal, every level and
-     every style, so they would score ~99-100 on all 1,080 possible answer
-     combinations and win every single time — turning a relevance tool into an
-     upsell machine. They are surfaced in their own clearly-labelled slots
-     instead (see flagshipBlock), where choosing them is a decision the visitor
-     makes with the arithmetic in front of them. */
   function candidates(a) {
     return Object.keys(PRODUCTS)
       .map(function (slug) {
@@ -94,12 +83,6 @@
         return { p: p, score: r.total, hits: r.hits };
       })
       .filter(function (c) {
-        /* No hardcoded category exclusion. A product is a candidate iff it
-           actually matches an answer (score > 0) and is not a whole-catalog
-           aggregate. Planners, journals and travel guides carry no craft or
-           goal tags in data/discovery.json, so they score 0 and drop out
-           naturally - and if the owner ever tags one, it becomes recommendable
-           without a code change. */
         return !c.p.aggregate && c.score > 0;
       })
       .sort(function (x, y) {
@@ -118,9 +101,6 @@
     return o ? o.label : val;
   }
 
-  /* The "why" is assembled from the visitor's own answers plus the product's
-     real attributes from products.json. No invented claims, no fake popularity,
-     no review counts. */
   function whyText(c, a) {
     var bits = [];
     if (c.hits.craft) bits.push(labelFor("craft", a.craft).toLowerCase() + " work");
@@ -197,7 +177,6 @@
     var flagship = PRODUCTS[FLAGSHIP];
     if (!flagship || (primary && primary.p.slug === flagship.slug)) return "";
     var delta = (parseFloat(flagship.price) - parseFloat(primary ? primary.p.price : 0)).toFixed(2);
-    var priceNum = String(flagship.priceText || "").replace(/[^0-9.]/g, "");
     return (
       '<div class="finder-slot finder-slot--flagship">' +
       '<p class="finder-slot-label">Want everything?</p>' +
@@ -210,7 +189,7 @@
       " — every style in one organised library for " + esc(flagship.priceText) +
       ", instead of buying single packs one at a time" +
       (parseFloat(delta) > 0 && primary ? " (+$" + delta + " over the pick above)" : "") +
-      ". " + esc(priceNum ? "" : "") + "</p>" +
+      ".</p>" +
       '<div class="finder-foot"><span class="price price-lg">' + esc(flagship.priceText) + "</span>" +
       '<a class="btn btn-gold" href="' + esc(flagship.payhipUrl) + '" target="_blank" rel="noopener"' +
       ' data-dkp-event="upgrade_clicked" data-dkp-from-product-id="' + esc(primary ? primary.p.slug : "") + '"' +
@@ -223,8 +202,7 @@
     );
   }
 
-  var lastPrimary = null;   /* what was actually rendered — the event must
-                               report THIS, not the raw top-of-list */
+  var lastPrimary = null;
   function buildResult() {
     var list = candidates(answers);
     if (!list.length) { lastPrimary = null; return fallbackResult(); }
@@ -234,14 +212,12 @@
     var alternates = buyable.slice(1, 3);
     lastPrimary = primary;
 
-    /* Beginner? Lead with the free pack — earn trust before asking for money. */
     var freePick = null;
     if (answers.level === "beginner") {
       var frees = byTier(list, ["free"]);
       freePick = frees.length ? frees[0] : null;
     }
 
-    /* Education cross-sell only when it is genuinely relevant to the answers. */
     var edu = null;
     var portraitIntent = answers.craft === "portraits" ||
       answers.improve === "skin" || answers.improve === "hair";
@@ -275,14 +251,12 @@
 
     html += '<div class="finder-restart"><button class="btn btn-line btn-sm" type="button" data-finder-restart>' +
       "Start over</button><a class=\"text-link\" href=\"" + esc(rel("products.html")) +
-      '">Browse the full catalog →</a></div>';
+      '\">Browse the full catalog →</a></div>';
     html += "</div>";
     return html;
   }
 
   function fallbackResult() {
-    /* No match: be honest and route to a human path. Never a dead end, never
-       a fabricated "bestseller" to cover the gap. */
     var picks = [PRODUCTS[FLAGSHIP], PRODUCTS[EDUCATION.free]].filter(Boolean);
     return (
       '<div class="finder-result"><p class="eyebrow">No exact match yet</p>' +
@@ -291,7 +265,7 @@
       "Meanwhile these cover most workflows.</p><div class=\"finder-duo\">" +
       picks.map(function (p) { return simpleCard(p, "fallback", ""); }).join("") +
       '</div><p><a class="text-link" href="' + esc(rel("freebies.html#newsletter")) +
-      '">Get new Procreate tool drops by email →</a></p></div>'
+      '\">Get new Procreate tool drops by email →</a></p></div>'
     );
   }
 
@@ -300,10 +274,24 @@
   var steps = $$("[data-finder-step]", root);
   var summary = $("[data-finder-summary]", root);
   var form = $("form[data-finder-form]", root);
+  var submitBtn = form ? form.querySelector('[type="submit"]') : null;
 
   function currentStep() {
     for (var i = 0; i < order.length; i++) if (!answers[order[i]]) return i;
     return order.length;
+  }
+
+  function setAnswer(name, value) {
+    if (!name || !value) return;
+    if (order.indexOf(name) === -1) return;
+    if (!started) { started = true; track("brush_finder_started", {}); }
+    answers[name] = value;
+    paint();
+    syncHash();
+    var next = $(".is-current", root);
+    if (next && window.innerWidth < 900) {
+      next.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   }
 
   function paint() {
@@ -317,7 +305,10 @@
         var on = answers[qid] === r.value;
         if (r.checked !== on) r.checked = on;
         var lbl = r.closest(".f-opt");
-        if (lbl) lbl.classList.toggle("selected", on);
+        if (lbl) {
+          lbl.classList.toggle("selected", on);
+          lbl.setAttribute("aria-pressed", on ? "true" : "false");
+        }
       });
     });
     if (summary) {
@@ -338,6 +329,13 @@
         host.setAttribute("aria-valuetext", idx + " of " + order.length + " answered");
       }
     }
+    if (submitBtn) {
+      var complete = idx >= order.length;
+      submitBtn.disabled = false; // keep enabled but change label for guidance
+      submitBtn.textContent = complete ? "Show my recommendation" : "Answer " + (order.length - idx) + " more to see results";
+      submitBtn.classList.toggle("btn-gold", complete);
+      submitBtn.classList.toggle("btn-line", !complete);
+    }
     if (resultsBox) {
       var complete = idx >= order.length;
       resultsBox.hidden = !complete;
@@ -347,11 +345,6 @@
         if (completedFor !== key) {
           completedFor = key;
           var list = candidates(answers);
-          /* Report the product the visitor was actually shown, with the tier of
-             that product, so the owner can measure which recommendations earn
-             buy-clicks. Reporting the raw top-of-list here would have logged
-             the Master Library for every answer set while the page displayed a
-             specialist pack — i.e. analytics that contradict the UI. */
           var shown = lastPrimary || { p: {}, score: 0 };
           track("brush_finder_completed", {
             craft: answers.craft, improve: answers.improve,
@@ -371,20 +364,28 @@
   }
 
   /* Real radio inputs → the `change` event is the accessible, keyboard- and
-     screen-reader-safe hook. No synthetic click juggling. */
+     screen-reader-safe hook. */
   if (form) {
+    // Change bubbles from radio inputs
     form.addEventListener("change", function (e) {
       var r = e.target;
       if (!r || r.type !== "radio" || !r.name) return;
-      if (!started) { started = true; track("brush_finder_started", {}); }
-      answers[r.name] = r.value;
-      paint();
-      syncHash();
-      var next = $(".is-current", root);
-      if (next && window.innerWidth < 900) {
-        next.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
+      setAnswer(r.name, r.value);
     });
+
+    // Click on the whole .f-opt card ensures dynamic selection even if
+    // the label's default behavior is prevented by other handlers.
+    form.addEventListener("click", function (e) {
+      var opt = e.target.closest ? e.target.closest(".f-opt") : null;
+      if (!opt || !form.contains(opt)) return;
+      var input = opt.querySelector('input[type="radio"]');
+      if (!input) return;
+      if (input.checked && answers[input.name] === input.value) return;
+      // Manually set and fire logic
+      input.checked = true;
+      setAnswer(input.name, input.value);
+    });
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (window.FormData) {
@@ -396,7 +397,11 @@
       syncHash();
       if (resultsBox && !resultsBox.hidden) {
         resultsBox.scrollIntoView({ behavior: "smooth", block: "start" });
-        resultsBox.focus({ preventScroll: true });
+        try { resultsBox.focus({ preventScroll: true }); } catch (err) { resultsBox.focus(); }
+      } else {
+        // Incomplete: scroll to next unanswered step
+        var next = $(".is-current", root);
+        if (next) next.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     });
   }
@@ -430,9 +435,9 @@
       }
     }
   }
+
   function readState() {
     var found = false;
-    /* 1. query string (the no-JS form's own GET submission) */
     if (window.URLSearchParams) {
       var qs = new URLSearchParams(location.search);
       order.forEach(function (k) {
@@ -440,17 +445,64 @@
         if (v && PRODUCTS) { answers[k] = v; found = true; }
       });
     }
-    /* 2. hash: "#craft=animation" from the homepage card, or "a/b/c/d" */
-    var h = (location.hash || "").replace(/^#/, "");
-    if (h) {
-      var parts = h.split("/");
-      if (parts.length === 2 && parts[0] === "craft") {
-        var kv = parts[1].split("=");
-        answers.craft = kv[1] || kv[0];
-        found = true;
-      } else if (parts.length >= order.length) {
-        order.forEach(function (k, i) { if (parts[i]) { answers[k] = parts[i]; found = true; } });
+    var raw = (location.hash || "").replace(/^#/, "");
+    if (!raw) return found;
+    var h = raw;
+
+    // Handle craft=xxx or craft/xxx style from homepage
+    // e.g. #craft=animation , #craft/animation , #animation , #craft=portraits
+    if (h.indexOf("=") !== -1 || h.indexOf("/") === -1) {
+      // Single craft shortcut: #animation or #craft=animation
+      var single = h;
+      if (single.indexOf("craft=") === 0) single = single.split("=")[1] || "";
+      else if (single.indexOf("=") !== -1) {
+        // could be craft=animation&improve=skin etc? handle &
+        var params = {};
+        single.split(/[&;]/).forEach(function (pair) {
+          var kv = pair.split("=");
+          if (kv.length === 2) params[kv[0]] = decodeURIComponent(kv[1] || "");
+        });
+        if (params.craft) { answers.craft = params.craft; found = true; }
+        if (params.improve) { answers.improve = params.improve; found = true; }
+        if (params.level) { answers.level = params.level; found = true; }
+        if (params.style) { answers.style = params.style; found = true; }
+        if (found) return found;
+        // fallback: first token after = is craft
+        var kv2 = h.split("=");
+        if (kv2[0] === "craft" && kv2[1]) { answers.craft = kv2[1].split("&")[0].split("/")[0]; found = true; return found; }
+      } else {
+        // No =, check if it's a known craft id directly (#animation)
+        var knownCrafts = (QUESTIONS[0] && QUESTIONS[0].options || []).map(function (o) { return o.id; });
+        if (knownCrafts.indexOf(single) !== -1) {
+          answers.craft = single;
+          found = true;
+          return found;
+        }
       }
+    }
+
+    // Slash separated: craft/improve/level/style  or craft/animation
+    var parts = h.split("/");
+    if (parts.length === 2 && parts[0] === "craft") {
+      var kv = parts[1].split("=");
+      answers.craft = kv[1] || kv[0];
+      found = true;
+    } else if (parts.length >= 2 && parts[0].indexOf("=") === -1 && parts.length < order.length) {
+      // Might be legacy #craft=animation stored as craft=animation split? already handled
+      // Try to detect if first part is craft=xxx
+      if (parts[0].indexOf("craft=") === 0) {
+        answers.craft = parts[0].split("=")[1];
+        found = true;
+        // if there are more parts after, treat as improve/level/style
+        if (parts[1]) { answers.improve = parts[1]; found = true; }
+        if (parts[2]) { answers.level = parts[2]; found = true; }
+        if (parts[3]) { answers.style = parts[3]; found = true; }
+      }
+    } else if (parts.length >= order.length) {
+      order.forEach(function (k, i) { if (parts[i]) { answers[k] = parts[i]; found = true; } });
+    } else if (parts.length === 1 && parts[0].indexOf("craft=") === 0) {
+      answers.craft = parts[0].split("=")[1] || "";
+      if (answers.craft) found = true;
     }
     return found;
   }
