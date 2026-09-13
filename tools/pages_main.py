@@ -111,6 +111,41 @@ def build_home():
     trending = picks[:4]
     trend_cards = product_grid(trending, 0)
 
+    # ── Before / After: the result, not the brushes ──────────────────────
+    # Interactive comparison slider (js/motion.js + css/style.css "MOTION
+    # SYSTEM"). The two images are plain assets: swap assets/img/ba-before.webp
+    # and ba-after.webp for real client artwork whenever you like; nothing
+    # else has to change. They must stay the same size and the same crop.
+    before_after = """<section class="section ba-section" id="results" aria-labelledby="results-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">See the result</p><h2 id="results-title">Flat Painting \u2192 Finished Portrait</h2></div>
+        <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit \u2192</a>
+      </div>
+      <p class="sec-note muted">Same drawing, same lighting: the only difference is texture. Drag the divider to see what skin, hair and finish brushes actually add \u2014 pores, freckles, strand detail and the final pass that stops a portrait looking airbrushed.</p>
+      <figure class="ba-figure">
+        <div class="ba-stage" data-ba>
+          <img class="ba-img ba-after" src="assets/img/ba-after.webp" width="1200" height="800" alt="Finished portrait: detailed skin texture, hair strands and final rendering" loading="lazy" decoding="async">
+          <div class="ba-clip">
+            <img class="ba-img ba-before" src="assets/img/ba-before.webp" width="1200" height="800" alt="Unfinished portrait: flat base colour with no skin texture or detail" loading="lazy" decoding="async">
+          </div>
+          <span class="ba-tag ba-tag-b">Before \u00b7 flat base</span>
+          <span class="ba-tag ba-tag-a">After \u00b7 textured finish</span>
+          <div class="ba-divider" role="slider" tabindex="0" aria-label="Reveal the finished portrait" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% finished">
+            <span class="ba-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 4 12l5 6M15 6l5 6-5 6"/></svg></span>
+          </div>
+          <div class="ba-sweep" aria-hidden="true"></div>
+        </div>
+        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use \u2190 \u2192.</span><span>Demonstration artwork.</span></figcaption>
+      </figure>
+      <div class="ba-cta">
+        <a class="btn btn-gold" href="products/portrait-skin-brushes-procreate/" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="before-after">Get the Skin Brushes <span class="btn-arr">\u00b7</span> $5.00</a>
+        <a class="btn btn-line" href="products/ultimate-portrait-mastery-bundle/">Or take the full portrait bundle \u2192</a>
+      </div>
+    </div>
+  </section>
+"""
+
     articles = [a for a in load_articles() if a.get("image")][:3]
     def art_card(a, depth):
         ss = img_srcset(depth, a.get("_pslug", ""), a.get("_im") or {}, "(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw")
@@ -174,6 +209,8 @@ def build_home():
       {product_grid(featured, 0)}
     </div>
   </section>
+
+  {before_after}
 
   <section class="section" id="popular" aria-labelledby="popular-title">
     <div class="wrap">

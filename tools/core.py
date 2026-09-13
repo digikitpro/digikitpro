@@ -346,9 +346,15 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}">
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
+  <!-- Motion layer: sets `js-motion` on <html> before first paint so scroll-reveal
+       elements are hidden from the very first frame (no flash of visible content).
+       The timeout is a failsafe: if js/motion.js never runs, the class is removed
+       and every element is simply visible, exactly as it is with JavaScript off. -->
+  <script>(function(h){{h.className+=" js-motion";setTimeout(function(){{if(!window.__DKP_MOTION_READY){{h.className=h.className.replace(" js-motion","");}}}},4000);}})(document.documentElement);</script>
 {pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}',analytics:{str(ANALYTICS_ENABLED).lower()},feedbackEndpoint:'{FEEDBACK_ENDPOINT}',page:{ctx_json}}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
   <script src="{rel(depth,'js/main.js')}" defer></script>
+  <script src="{rel(depth,'js/motion.js')}" defer></script>
   <script src="{rel(depth,'js/analytics.js')}" defer></script>
   <script src="{rel(depth,'js/feedback.js')}" defer></script>
   <script src="{rel(depth,'js/translate.js')}" defer></script>

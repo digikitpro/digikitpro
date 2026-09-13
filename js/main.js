@@ -171,6 +171,9 @@
                 : (f === "__flagship" ? c.getAttribute("data-tier") === "flagship"
                   : c.getAttribute("data-category") === f)))));
       c.classList.toggle("hidden", !match);
+      /* A card that a filter brings back was never scrolled past, so the
+         reveal observer may not have fired for it: show it directly. */
+      if (match) c.classList.add("rv-in");
       if (match) shown++;
     });
     if (emptyNote) emptyNote.hidden = shown !== 0;
@@ -332,15 +335,11 @@
  openExternal(a.getAttribute("href"));
  });
 
- /* ---------- scroll reveal ---------- */
- var els = $$(".card, .why, .art-card, .cat-tile, .bundle-panel, .bundle-tile");
- els.forEach(function (el) { el.classList.add("rv"); });
- if ("IntersectionObserver" in window) {
- var io = new IntersectionObserver(function (entries) {
- entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
- }, { rootMargin: "0px 0px -6% 0px" });
- els.forEach(function (el) { io.observe(el); });
- } else {
- els.forEach(function (el) { el.classList.add("in"); });
- }
+ /* ---------- scroll reveal ----------
+    Handled by js/motion.js, which owns the whole reveal/stagger system
+    (same IntersectionObserver idea, plus hero intro, parallax, before/after
+    and the sticky CTA). Keeping it in one place means one observer pass
+    per page instead of two, and one place to honour reduced motion.
+    Cards that a filter brings back are marked visible in the filter
+    code above, so they never stay faded. */
 })();

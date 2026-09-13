@@ -663,3 +663,278 @@ body{top:0 !important}
 .faq-q summary::-webkit-details-marker{display:none}
 .faq-q summary::after{content:"+";color:var(--gold);font-size:1.25rem;font-weight:400;flex:none}
 .faq-q[open] summary::after{content:"–"}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MOTION SYSTEM — "the same site, alive"
+   ----------------------------------------------------------------------
+   Motion design only: no new colours, no new type, no new layout. Every
+   rule below animates `opacity`, `transform` or `translate` (GPU-friendly)
+   and every one of them is switched off under `prefers-reduced-motion`.
+
+   Contract with js/motion.js
+   • `html.js-motion` is set by an inline head script BEFORE first paint,
+     so pre-hidden elements never flash. Without JS there is no class and
+     nothing is ever hidden (progressive enhancement).
+   • js/motion.js adds `.rv-in` when an element scrolls into view.
+   • Anything animated here degrades to "visible, static" if JS never runs.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── shared timing ───────────────────────────────────────────────────── */
+:root{
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --rv-d:.55s;          /* reveal duration  (mobile shortens this)        */
+  --rv-y:16px;          /* reveal travel                                  */
+  --tap:.18s;           /* hover / press feedback                         */
+}
+
+/* ══ 1. SCROLL REVEAL ═══════════════════════════════════════════════════
+   One rule list, mirrored in js/motion.js (REVEAL_SELECTORS). Keep both in
+   sync when adding a component. */
+html.js-motion .sec-head,
+html.js-motion .sec-note,
+html.js-motion .trend-label,
+html.js-motion .trend-pills,
+html.js-motion .cat-marquee,
+html.js-motion .flag-media,
+html.js-motion .flag-body,
+html.js-motion .nl-card,
+html.js-motion .cards > .card,
+html.js-motion .craft-grid > .craft-card,
+html.js-motion .why-grid > .why,
+html.js-motion .arts-grid > .art-card,
+html.js-motion .bundles-grid > .bundle-tile,
+html.js-motion .bundle-stack > .bundle-panel,
+html.js-motion .ebook-duo > .ebook-card,
+html.js-motion .thanks-grid > .thanks-card,
+html.js-motion .ba-figure,
+html.js-motion .ba-cta{
+  opacity:0;
+  /* `translate` (not `transform`) is used on purpose: hover lifts keep
+     `transform` for themselves, so a revealed card can still rise on
+     hover without the two animations fighting over one property. */
+  translate:0 var(--rv-y);
+  transition:opacity var(--rv-d) var(--ease),translate var(--rv-d) var(--ease);
+  transition-delay:var(--rv-t,0s);
+}
+  /* Shown state. Deliberately the SAME selector list with `.rv-in` appended:
+     `.craft-grid > .craft-card` (0,3,1) would otherwise out-specify a plain
+     `.rv-in` (0,2,1) and keep revealed cards invisible. */
+html.js-motion .sec-head.rv-in,
+html.js-motion .sec-note.rv-in,
+html.js-motion .trend-label.rv-in,
+html.js-motion .trend-pills.rv-in,
+html.js-motion .cat-marquee.rv-in,
+html.js-motion .flag-media.rv-in,
+html.js-motion .flag-body.rv-in,
+html.js-motion .nl-card.rv-in,
+html.js-motion .cards > .card.rv-in,
+html.js-motion .craft-grid > .craft-card.rv-in,
+html.js-motion .why-grid > .why.rv-in,
+html.js-motion .arts-grid > .art-card.rv-in,
+html.js-motion .bundles-grid > .bundle-tile.rv-in,
+html.js-motion .bundle-stack > .bundle-panel.rv-in,
+html.js-motion .ebook-duo > .ebook-card.rv-in,
+html.js-motion .thanks-grid > .thanks-card.rv-in,
+html.js-motion .ba-figure.rv-in,
+html.js-motion .ba-cta.rv-in{opacity:1;translate:0 0}
+
+/* ── brush-stroke wipe: an overlay the colour of the page that is pulled
+      away left→right once, when the artwork scrolls in (never loops) ──── */
+[data-wipe]{position:relative;overflow:hidden}
+[data-wipe]::after{
+  content:"";position:absolute;inset:-1px;z-index:2;pointer-events:none;
+  /* --wipe-bg defaults to the page background; a band with its own
+     background (the flagship gradient) overrides it so the sweep is
+     invisible while it covers the artwork. */
+  background:linear-gradient(100deg,var(--wipe-bg,var(--bg)) 0 62%,rgba(10,10,12,.55) 82%,rgba(10,10,12,0) 100%);
+  transform:scaleX(1);transform-origin:100% 50%;
+  transition:transform .9s var(--ease) .12s;
+}
+html.js-motion [data-wipe]::after{transform:scaleX(1)}
+html.js-motion [data-wipe].rv-in::after{transform:scaleX(0);transform-origin:0 50%}
+
+/* ══ 2. HERO — entrance + ambient + cursor parallax ════════════════════ */
+@keyframes dkpRise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+@keyframes dkpFloat{0%,100%{translate:0 -3px}50%{translate:0 4px}}
+html.js-motion .hero-copy > *{opacity:0}
+html.js-motion .hero-in .hero-copy > *{animation:dkpRise .72s var(--ease) both}
+html.js-motion .hero-in .hero-copy > *:nth-child(1){animation-delay:.06s}
+html.js-motion .hero-in .hero-copy > *:nth-child(2){animation-delay:.14s}
+html.js-motion .hero-in .hero-copy > *:nth-child(3){animation-delay:.24s}
+html.js-motion .hero-in .hero-copy > *:nth-child(4){animation-delay:.34s}
+html.js-motion .hero-in .hero-copy > *:nth-child(5){animation-delay:.42s}
+html.js-motion .hero-in .hero-copy > *:nth-child(6){animation-delay:.5s}
+/* showcase covers: the stagger offsets live in `transform`, the entrance
+   and the ambient float live in `translate` — they compose, nothing fights */
+html.js-motion .hero-showcase .hero-card{opacity:0}
+html.js-motion .hero-in .hero-showcase .hero-card{animation:dkpRise .85s var(--ease) both}
+html.js-motion .hero-in .hero-card.h1{animation-delay:.2s}
+html.js-motion .hero-in .hero-card.h2{animation-delay:.33s}
+html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
+@media(min-width:960px){
+  .hero-in .hero-card.h1 img{animation:dkpFloat 15s ease-in-out infinite}
+  .hero-in .hero-card.h2 img{animation:dkpFloat 19s ease-in-out infinite .6s}
+  .hero-in .hero-card.h3 img{animation:dkpFloat 23s ease-in-out infinite 1.2s}
+}
+/* Cursor parallax. The covers must keep their staggered offsets, so the
+   offset is folded into the same transform (--stagger) instead of being
+   overwritten: cover 1 moves least, cover 3 most, max displacement 14 px.
+   js/motion.js writes --mx/--my (-1 … 1) on .hero-showcase. */
+.hero-card{
+  --depth:6px;--stagger:0px;
+  transform:translate3d(calc(var(--mx,0) * var(--depth)),calc(var(--my,0) * var(--depth) + var(--stagger)),0);
+  transition:transform .45s var(--ease)}
+.hero-card.h2{--depth:10px;--stagger:18px;
+  transform:translate3d(calc(var(--mx,0) * var(--depth)),calc(var(--my,0) * var(--depth) + var(--stagger)),0)}
+.hero-card.h3{--depth:14px;--stagger:36px;
+  transform:translate3d(calc(var(--mx,0) * var(--depth)),calc(var(--my,0) * var(--depth) + var(--stagger)),0)}
+
+/* ══ 3. BUTTONS — lift, arrow nudge, press-down (colours untouched) ════ */
+.btn,.cat-pill,.trend-pill,.chip,.craft-card,.card,.art-card,.cat-tile,.bundle-tile,.ebook-card,.why{transition:transform var(--tap) var(--ease),box-shadow var(--tap) var(--ease),border-color var(--tap) var(--ease),background var(--tap) var(--ease),color var(--tap) var(--ease),opacity var(--rv-d) var(--ease)}
+.btn:hover{transform:translateY(-2px)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 28px -10px rgba(201,168,106,.5)}
+.btn-line:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
+.btn:active{transform:translateY(1px) scale(.985);box-shadow:none}
+.btn .btn-arr{display:inline-block;transition:transform var(--tap) var(--ease)}
+.btn:hover .btn-arr{transform:translateX(3px)}
+.btn-sm:hover{transform:translateY(-1px)}
+
+/* ══ 4. PRODUCT CARDS — "this is something I can click" ════════════════ */
+.card:hover{transform:translateY(-6px);border-color:rgba(201,168,106,.55);box-shadow:0 26px 50px -28px rgba(0,0,0,.85),0 0 0 1px rgba(201,168,106,.08)}
+.card:hover .card-media img{transform:scale(1.06)}
+.card:hover .card-media img.fit.contain{transform:scale(1.05)}
+.card:active{transform:translateY(-2px) scale(.995)}
+.card:hover .card-title a{color:var(--gold)}
+.card:hover .card-foot .btn{border-color:var(--gold);color:var(--gold);background:var(--gold-soft)}
+.card-media .badge{transition:transform var(--tap) var(--ease),border-color var(--tap) var(--ease)}
+.card:hover .badge{transform:translateY(-2px)}
+
+/* ══ 5. CATEGORIES (craft cards + pills) ═══════════════════════════════ */
+.craft-card{position:relative;overflow:hidden}
+.craft-card::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),rgba(201,168,106,0));
+  transform:scaleX(0);transform-origin:0 50%;transition:transform .38s var(--ease)}
+.craft-card:hover::before,.craft-card:focus-visible::before{transform:scaleX(1)}
+.craft-card:hover{transform:translateY(-4px)}
+.craft-card .craft-name,.craft-card .craft-meta{transition:transform var(--tap) var(--ease),color var(--tap) var(--ease)}
+.craft-card:hover .craft-name{transform:translateX(3px)}
+.craft-card:hover .craft-meta{transform:translateX(5px)}
+.cat-tile:hover .cat-n{transform:translateX(2px)}
+.cat-tile .cat-n{transition:transform var(--tap) var(--ease)}
+
+/* ══ 6. BUNDLES — layered depth, feels like a system not a card ════════ */
+.bundle-tile{transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .3s var(--ease)}
+.bundle-tile:hover{transform:translateY(-6px);border-color:rgba(201,168,106,.5);box-shadow:0 30px 60px -30px rgba(0,0,0,.9)}
+.bundle-tile:hover img{transform:scale(1.06) translate(var(--tx,0px),var(--ty,0px))}
+.bundle-tile img{transition:transform .5s var(--ease)}
+.bundle-tile:hover .bundle-tile-body h3{transform:translateX(2px)}
+.bundle-tile-body h3,.bundle-tile-body .price{transition:transform var(--tap) var(--ease)}
+.bundle-tile .badge{transition:transform var(--tap) var(--ease)}
+.bundle-tile:hover .badge{transform:translateY(-2px)}
+.bundle-panel:hover{border-color:rgba(201,168,106,.4);box-shadow:0 24px 54px -30px rgba(0,0,0,.8)}
+
+/* ══ 7. ARTICLES ══════════════════════════════════════════════════════ */
+.art-card:hover{transform:translateY(-5px);box-shadow:0 24px 48px -28px rgba(0,0,0,.85)}
+.art-card .art-img{transition:transform .5s var(--ease)}
+.art-card:hover .art-img{transform:scale(1.04)}
+.art-card:hover .text-link{color:#E0C289}
+.art-card .text-link{transition:transform var(--tap) var(--ease),color var(--tap) var(--ease);display:inline-block}
+.art-card:hover .text-link{transform:translateX(3px)}
+
+/* ══ 8. BEFORE / AFTER — the result, not the brushes ══════════════════ */
+.ba-section{background:linear-gradient(170deg,rgba(201,168,106,.045),rgba(201,168,106,0) 60%),var(--bg)}
+.flagship-band{--wipe-bg:#141318}   /* match the band gradient so the reveal wipe is seamless */
+.ba-figure{margin:0}
+.ba-stage{
+  --pos:50%;
+  position:relative;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius);
+  background:var(--surface-2);aspect-ratio:3/2;box-shadow:var(--shadow);
+  cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;
+}
+/* gliding (tap / keyboard) is transitioned; dragging is 1:1 with the finger */
+.ba-stage.ba-glide .ba-clip{transition:clip-path .45s var(--ease)}
+.ba-stage.ba-glide .ba-divider{transition:left .45s var(--ease)}
+.ba-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.ba-clip{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0);will-change:clip-path}
+.ba-tag{
+  position:absolute;top:.7rem;z-index:3;font:600 .68rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;
+  padding:.45rem .7rem;border-radius:999px;background:rgba(10,10,12,.72);border:1px solid var(--border);color:var(--muted);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:opacity .3s var(--ease),color .3s var(--ease)}
+.ba-tag-b{left:.7rem}
+.ba-tag-a{right:.7rem;color:var(--gold);border-color:rgba(201,168,106,.45)}
+.ba-stage.dragging .ba-tag{opacity:.35}
+.ba-divider{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:2px;z-index:4;
+  background:linear-gradient(180deg,rgba(201,168,106,0),var(--gold) 12%,var(--gold) 88%,rgba(201,168,106,0));
+  transform:translateX(-1px);cursor:ew-resize;touch-action:none}
+.ba-divider:focus-visible{outline:none}
+.ba-divider:focus-visible .ba-grip,.ba-stage.dragging .ba-grip{box-shadow:0 0 0 4px rgba(201,168,106,.22)}
+.ba-grip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(12,12,14,.9);border:1px solid rgba(201,168,106,.6);color:var(--gold);
+  box-shadow:0 10px 26px -12px rgba(0,0,0,.9);transition:transform var(--tap) var(--ease),box-shadow var(--tap) var(--ease)}
+.ba-stage:hover .ba-grip{transform:translate(-50%,-50%) scale(1.06)}
+.ba-stage.dragging .ba-grip{transform:translate(-50%,-50%) scale(.96)}
+.ba-grip svg{width:20px;height:20px}
+/* one-shot "brush stroke" that sweeps across when the section first lands */
+.ba-sweep{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;
+  background:linear-gradient(104deg,rgba(201,168,106,0) 38%,rgba(201,168,106,.16) 50%,rgba(201,168,106,0) 62%)}
+.ba-sweep.on{animation:baSweep 1.15s var(--ease) both}
+@keyframes baSweep{from{opacity:1;transform:translateX(-42%)}to{opacity:0;transform:translateX(42%)}}
+.ba-cap{margin-top:.9rem;font-size:.82rem;color:#7d7a73;display:flex;flex-wrap:wrap;gap:.4rem 1rem}
+.ba-cta{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem 1rem;margin-top:1.3rem}
+
+/* ══ 9. STICKY SMART CTA ══════════════════════════════════════════════ */
+.sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:125;
+  transform:translateY(120%);opacity:0;transition:transform .4s var(--ease),opacity .3s var(--ease);
+  padding:0 .75rem calc(.6rem + env(safe-area-inset-bottom,.0px));pointer-events:none}
+.sticky-cta.is-up{transform:translateY(0);opacity:1;pointer-events:auto}
+.sticky-cta-inner{max-width:var(--wrap);margin:0 auto;display:flex;align-items:center;gap:.9rem;
+  background:rgba(16,16,20,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--border);border-top:1px solid rgba(201,168,106,.45);border-radius:var(--radius);
+  padding:.6rem .7rem .6rem 1.1rem;box-shadow:0 -14px 40px -18px rgba(0,0,0,.9)}
+.sticky-cta-copy{margin:0;font:500 .92rem/1.3 var(--sans);color:var(--text);flex:1;min-width:0}
+.sticky-cta-copy b{color:var(--gold);font-weight:600}
+.sticky-cta .btn{flex:none}
+.sticky-cta-close{flex:none;width:30px;height:30px;border-radius:8px;background:transparent;
+  border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:.75rem;line-height:1}
+.sticky-cta-close:hover{color:var(--gold);border-color:var(--gold)}
+@media(max-width:600px){
+  .sticky-cta-copy{font-size:.84rem}
+  .sticky-cta-inner{padding:.5rem .5rem .5rem .85rem;gap:.55rem}
+}
+
+/* ══ 10. SCROLL PROGRESS ══════════════════════════════════════════════ */
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:130;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(201,168,106,.12))}
+.scroll-progress span{display:block;height:100%;width:0;transform-origin:0 50%;
+  background:linear-gradient(90deg,var(--gold-deep),var(--gold));box-shadow:0 0 10px -2px rgba(201,168,106,.6)}
+
+/* ══ 11. MOBILE — shorter, calmer, no parallax ════════════════════════ */
+@media(max-width:720px){
+  :root{--rv-d:.4s;--rv-y:12px}
+  /* phones: no staggered cover offsets, no cursor parallax (there is no cursor) */
+  .hero-card,.hero-card.h2,.hero-card.h3{--depth:0px;--stagger:0px}
+  .card:hover,.craft-card:hover,.art-card:hover,.bundle-tile:hover{transform:none}
+  .card:active{transform:scale(.995)}
+  .ba-grip{width:40px;height:40px}
+  .ba-stage{aspect-ratio:4/3}
+}
+
+/* ══ 12. REDUCED MOTION — simple fades, no travel, no looping ══════════ */
+@media(prefers-reduced-motion:reduce){
+  html.js-motion .sec-head,html.js-motion .sec-note,html.js-motion .trend-label,
+  html.js-motion .trend-pills,html.js-motion .cat-marquee,html.js-motion .flag-media,
+  html.js-motion .flag-body,html.js-motion .nl-card,html.js-motion .cards > .card,
+  html.js-motion .craft-grid > .craft-card,html.js-motion .why-grid > .why,
+  html.js-motion .arts-grid > .art-card,html.js-motion .bundles-grid > .bundle-tile,
+  html.js-motion .bundle-stack > .bundle-panel,html.js-motion .ebook-duo > .ebook-card,
+  html.js-motion .thanks-grid > .thanks-card,html.js-motion .ba-figure,html.js-motion .ba-cta{
+    translate:none;transform:none;transition:opacity .2s linear}
+  html.js-motion .hero-copy > *,html.js-motion .hero-showcase .hero-card{opacity:1;animation:none}
+  [data-wipe]::after,.hero-card img,.ba-sweep.on,.cat-track{animation:none!important}
+  [data-wipe]::after{transform:scaleX(0)}
+  .hero-card{translate:none}
+  .card:hover,.craft-card:hover,.art-card:hover,.bundle-tile:hover,.btn:hover,.btn:active{transform:none}
+  .sticky-cta{transition:opacity .2s linear;transform:none;opacity:0}
+  .sticky-cta.is-up{opacity:1;transform:none}
+}

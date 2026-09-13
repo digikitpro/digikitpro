@@ -37,6 +37,7 @@ Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 | Blog articles | `content/blog/*.md` (front-matter + markdown) | `python3 tools/build.py` |
 | Design / colors | `css/style.css` (variables at top) | - (no rebuild) |
 | Behavior (search, filters, gallery) | `js/main.js` | - |
+| Motion (reveals, hover states, before/after slider, sticky CTA) | `js/motion.js` + the `MOTION SYSTEM` block at the end of `css/style.css` | - |
 
 `data/products.json` is the single source of truth - 51 products, each with
 `name, slug, price, category, short, descriptionHtml, included[], features[], technical[],
@@ -47,6 +48,36 @@ entry are created.
 **Adding a new product image:** drop WebP/JPG/PNG into `assets/products/<slug>/` and point
 `images.card` / `images.main` in `data/products.json` at it (regenerate variants with any
 image tool; `scraped/images.py` shows the exact pipeline used originally).
+
+### Motion system (`js/motion.js` — 19 KB raw / 5.6 KB gzipped, no libraries)
+
+The site's look is unchanged; this layer only makes it *move*. It adds: hero entrance
+(headline → copy → CTAs → artwork), scroll reveals with a short stagger, hover/press
+feedback on cards, categories, bundles and buttons, cursor parallax on the hero covers and
+bundle tiles, a 2 px scroll-progress thread, a dismissible sticky CTA (homepage only, after
+the hero, never over the footer) and the interactive **before/after slider** in
+`#results`.
+
+Rules it keeps:
+
+- only `opacity`, `transform`/`translate` and `clip-path` are animated, and only while an
+  element is on screen (IntersectionObserver unobserves after firing);
+- one shared `requestAnimationFrame` loop for every scroll-driven effect;
+- `prefers-reduced-motion: reduce` → no parallax, no looping, no travel (a 200 ms fade at
+  most);
+- phones → shorter reveals, no cursor parallax, nothing that needs hover;
+- progressive enhancement: without JS the `js-motion` class is never set, nothing is ever
+  hidden, and the page works exactly as before. A 4 s failsafe removes the class if
+  `js/motion.js` fails to load, and an 8 s failsafe reveals anything not yet revealed.
+
+**Swapping the before/after artwork:** replace `assets/img/ba-before.webp` (flat base) and
+`assets/img/ba-after.webp` (finished) — same size, same crop, ideally 1200×800. The current
+pair is **demonstration artwork** (labelled as such in the caption); real client work with a
+proper before/after will sell harder. Nothing else needs editing.
+
+**Adding a reveal to a new component:** add the selector to *both* the `MOTION SYSTEM →
+SCROLL REVEAL` list in `css/style.css` (hide rule and `.rv-in` rule — both, or specificity
+will keep it invisible) and `REVEAL_SELECTORS` in `js/motion.js`.
 
 ## 3. Email capture ✅ configured
 
