@@ -637,3 +637,29 @@ body{top:0 !important}
 .fb-other input:focus{border-color:var(--gold)}
 .fb-thanks p{font-size:.9rem;color:var(--muted);margin-bottom:.8rem}
 @media(prefers-reduced-motion:reduce){.fb-sheet{transition:none}.f-progress-bar{transition:none}}
+
+/* ── contact form + FAQ page ─────────────────────────────────────────────
+   Used by contact.html and faq.html (tools/pages_misc.py). */
+.contact-form{display:grid;gap:1.1rem;max-width:60ch;margin:1.6rem 0 2.4rem}
+.contact-form .field{display:grid;gap:.35rem}
+.contact-form label{font:600 .82rem/1.4 var(--sans);letter-spacing:.04em;color:var(--text)}
+.contact-form input,.contact-form textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem .95rem;color:var(--text);font:400 .95rem/1.5 var(--sans);outline:none;transition:border-color .15s ease}
+.contact-form input:focus,.contact-form textarea:focus{border-color:var(--gold)}
+.contact-form textarea{resize:vertical;min-height:150px}
+.contact-form .field-hint{font-size:.78rem;margin:0}
+.contact-form button[type=submit]{justify-self:start}
+.contact-form .nl-note{font-size:.8rem;color:var(--muted);margin:0}
+.contact-alt{margin-top:2.4rem;padding-top:1.8rem;border-top:1px solid var(--border)}
+
+/* Confirmation banner: the success/pending state written by js/main.js.
+   Gold = delivered or recorded, never an error. */
+.form-confirm{border:1px solid rgba(201,168,106,.45);background:var(--gold-soft);border-radius:var(--radius-sm);padding:.9rem 1.1rem;color:var(--text);font-size:.92rem;margin:1rem 0}
+.form-confirm b{color:var(--gold)}
+
+/* FAQ page list reuses the accordion look of .faq-item. */
+.faq-list{margin:1.6rem 0 2.4rem}
+.faq-q{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);margin-bottom:.6rem}
+.faq-q summary{cursor:pointer;padding:1rem 1.2rem;font-weight:600;font-size:.95rem;list-style:none;display:flex;justify-content:space-between;gap:1rem;align-items:center}
+.faq-q summary::-webkit-details-marker{display:none}
+.faq-q summary::after{content:"+";color:var(--gold);font-size:1.25rem;font-weight:400;flex:none}
+.faq-q[open] summary::after{content:"–"}
