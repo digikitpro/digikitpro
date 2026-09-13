@@ -33,6 +33,7 @@ Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 | To change… | Edit | Then run |
 |---|---|---|
 | Products (name, price, images, descriptions, Payhip URL, categories…) | `data/products.json` | `python3 tools/build.py` |
+| **Merchandising** (product hierarchy, who each pack is for, Brush Finder answers) | `data/discovery.json` | `python3 tools/build.py` |
 | Blog articles | `content/blog/*.md` (front-matter + markdown) | `python3 tools/build.py` |
 | Design / colors | `css/style.css` (variables at top) | - (no rebuild) |
 | Behavior (search, filters, gallery) | `js/main.js` | - |
@@ -74,14 +75,18 @@ Until then, submits gracefully deep-link to the store's Freebies collection.
 ```
 index.html  products.html  bundles.html  freebies.html  blog.html  about.html
 search.html  privacy.html  terms.html  404.html
+find-my-brushes.html        ← the Brush Finder (Level-1 conversion tool)
+thank-you.html              ← post-signup delivery + first starter offer (noindex)
 products/<slug>/index.html        × 51 product pages
 blog/<slug>/index.html            × 16 articles
 assets/products/<slug>/*.webp     × 174 original product images (3 size variants)
 assets/img/                       brand assets (favicon / OG cover)
 css/style.css  js/main.js  js/search-index.js
 data/products.json                ← master product data (edit me)
+data/discovery.json               ← merchandising model (edit me; see §8)
 content/blog/*.md                 ← article source (edit me)
 tools/build.py  tools/core.py …   ← generator (run: python3 tools/build.py)
+js/analytics.js  js/finder.js  js/feedback.js   ← conversion layer (no build needed)
 robots.txt  sitemap.xml
 scraped/                          ← original scraper + Payhip source data (reference only)
 ```
@@ -114,3 +119,108 @@ Nothing is invented. If a product is added/removed in the store later, update
 
 See `SEO-INDEXING.md` for Google Search Console + Bing Webmaster + IndexNow setup and a content
 cadence that keeps the site visible on search results.
+
+
+## 8. Sales engine (Phase 1) — how the new parts work
+
+Full audit and the phased plan: **`docs/AUDIT-AND-PLAN.md`**.
+
+### The value ladder
+Every product now carries a **tier** in `data/discovery.json`, and the homepage,
+catalog and Brush Finder all read it:
+
+| Level | Tier | What it is | Where it appears |
+|---|---|---|---|
+| 1 | `free` | Free Procreate packs | Homepage §3, `/freebies.html` (email-first), `/thank-you.html` |
+| 2 | `entry` | $4–$10 specialist packs (skin, hair, line art…) | Homepage §5, catalog, finder primary result |
+| 3 | `bundle` | $8–$20 multi-kit bundles | Homepage §9, `/bundles.html` |
+| 4 | `flagship` | **Master Library, 2,000+ brushes, $19** | Homepage §4 (dedicated band) + upgrade panel on 37 product pages |
+| 5 | `education` | Free starter guide + $19 Portrait Masterclass | Homepage §7, finder cross-sell for portrait answers |
+
+### Brush Finder — `find-my-brushes.html`
+Four questions (craft → goal → level → style) produce one recommendation.
+Scoring is **relevance-first, never price-first**: craft +40, goal +30, style +15,
+level +10, editorial priority ≤+5. Verified across all **1,080** answer
+combinations: every one returns a result, and in **zero** of them does a
+whole-catalog bundle become the primary recommendation.
+
+`aggregate: true` in `data/discovery.json` marks the three whole-catalog
+libraries (Master Library, Master Vault, Mega Bundle). They match every answer
+by definition, so they are excluded from ranking and shown only in their own
+labelled "Want everything?" slot — otherwise the finder would recommend the
+most expensive item every single time.
+
+The page is server-rendered first: all four questions are real radio inputs and
+a "Browse by what you create" section below gives the same recommendations as
+plain HTML, so it works with JavaScript off and is fully crawlable.
+
+### Conversion events — `js/analytics.js`
+One entry point, `dkp.track(name, params)`. Forwards to GA4 and keeps a
+first-party count-only summary in `localStorage`. Events: `homepage_view`,
+`product_view`, `category_view`, `bundle_view`, `master_library_view`,
+`masterclass_view`, `free_download_click`, `email_signup`, `product_buy_click`,
+`outbound_payhip_click`, `brush_finder_started`, `brush_finder_completed`,
+`recommendation_clicked`, `upgrade_clicked`, `craft_card_click`, `search_query`,
+`scroll_depth`, `feedback_reason`.
+
+Debug in the browser console: `dkp.report()` · `dkp.clear()`.
+Turn it off entirely: visit any page with `#dkp-analytics=off`, or build with
+`DKP_ANALYTICS=false`. `Do Not Track` is honoured as a full opt-out.
+No PII, no new cookies, no cross-site identifier. Disclosed in `privacy.html`.
+
+### Freebie funnel
+`freebies.html` leads with an email gate; the direct Payhip link stays visible
+underneath so a promised free file is never held hostage. On a real provider
+response `js/main.js` sends the visitor to `thank-you.html?lead=<slug>`, which
+puts the pack they asked for first, links every free download directly, then
+makes **one** starter offer and shows the Master Library.
+
+To wire a real email sequence (MailerLite / Brevo / ConvertKit), set
+`EMAIL_ENDPOINT` in `tools/core.py` to the provider's form-action URL and
+rebuild. The 5-email sequence is specified in `docs/AUDIT-AND-PLAN.md` §9.
+No API key ever goes in frontend code.
+
+### "What stopped you from choosing a brush today?" — `js/feedback.js`
+Product/catalog pages only, after ≥60 % scroll **and** ≥25 s, and never once a
+visitor has clicked a buy link. Once per visit; dismissed means never again.
+Every answer returns something useful to the visitor (Finder, bundles, guides).
+Fires `feedback_reason`. To collect answers in your own store, set the
+`DKP_FEEDBACK_ENDPOINT` build variable — empty by default, so nothing is posted
+anywhere until you point it at a Cloudflare Worker or Vercel function.
+
+### Owner decisions currently in force (2026-09-13)
+
+- **Email:** FormSubmit → `digikitprostudio@gmail.com`. No ESP yet, so there is
+  no automated drip — but `thank-you.html` delivers every free file directly and
+  makes the starter offer, so the funnel works. The `source` and `lead_magnet`
+  fields are already captured on every form, so connecting MailerLite/Brevo later
+  is a one-line `EMAIL_ENDPOINT` swap plus building the sequence in the ESP.
+- **Catalog:** planners, journals, templates and the travel guide stay **mixed
+  into the single catalog**. No separate filter or page. They are excluded from
+  *brush* recommendations only because they carry no craft/goal tags in
+  `data/discovery.json` — tag one and it becomes recommendable, no code change.
+- **Analytics:** GA4 `G-5MFQFHNB6B` stays on, disclosed accurately in
+  `privacy.html`, with `#dkp-analytics=off` and Do Not Track both honoured.
+
+Full rationale and the review point for the catalog decision:
+`docs/AUDIT-AND-PLAN.md` → "OWNER DECISIONS".
+
+### Adding a product
+`tools/payhip_sync.py` still owns `data/products.json` and is untouched. A new
+product with no `discovery.json` entry gets safe defaults (tier from its
+category, `line` inferred from its tags), still builds, still sells, and is
+listed in the build log:
+
+```
+NOTICE: 1 product(s) are missing an entry in data/discovery.json …
+```
+
+Tag it properly when you see that notice so the Brush Finder can recommend it.
+
+### Build determinism
+The homepage used to rotate its "Trending" section by calendar day, so every
+deploy rewrote the homepage and handed Google a different page on each crawl.
+That is gone: two consecutive builds of all 108 generated files are now
+**byte-identical**. The section is now "Popular Starting Points", ordered by
+the editorial priority you set in `data/discovery.json` — and it no longer
+claims to reflect search demand, because nothing on a static site measures that.

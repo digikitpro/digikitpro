@@ -179,7 +179,8 @@ def build_categories():
             cdef["seo_desc"],
             canonical,
             depth,
-            schemas=schemas
+            schemas=schemas,
+            ctx=page_ctx("category", slug=cdef["slug"], category=cdef["name"])
         )
         html_out += header(depth, active="products.html")
         html_out += f"""

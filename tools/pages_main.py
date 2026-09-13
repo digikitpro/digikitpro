@@ -21,7 +21,11 @@ def build_home():
     freebies = [p for p in PRODUCTS if p["free"] and not p.get("comingSoon") and p["category"] != "Guides & eBooks"]
     featured = sorted([p for p in PRODUCTS if p.get("featured")], key=lambda x: x["featured"])[:8]
     bundles = [p for p in PRODUCTS if p["category"] == "Bundles"]
-    bundles.sort(key=lambda p: p["price"])
+    # Value ladder, cheapest-first used to bury the $19 Master Library below
+    # the $5 palette bundle and cut it off the homepage entirely. Order by
+    # tier level then by how much catalog each bundle actually contains.
+    _tier_rank = {t: i for i, t in enumerate(TIER_ORDER)}
+    bundles.sort(key=lambda p: (_tier_rank.get(tier_of(p), 9), -(p.get("price") or 0)))
 
     # studio eBooks, live on Payhip: free starter first, then the masterclass
     ebooks = sorted([p for p in PRODUCTS if p["category"] == "Guides & eBooks"], key=lambda x: x["price"])
@@ -53,7 +57,7 @@ def build_home():
         ebook_section = f"""<section class="section" id="ebooks">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">From the studio</p><h2>Learn Procreate Portraits with Our eBooks</h2></div>
+        <div><p class="eyebrow">Level 5 · Education</p><h2>Learn Procreate Portraits with Our eBooks</h2></div>
         <p class="sec-note muted">Start with the free guide, then go deep with the Masterclass.</p>
       </div>
       <div class="ebook-duo">{ebook_cards}</div>
@@ -85,21 +89,26 @@ def build_home():
   </div>
 </a>"""
 
-    # ── Trending in Procreate & digital art ──────────────────────────────
-    # Auto-rotating daily: keeps the homepage fresh for returning visitors and
-    # crawlers while always pointing at best-sellers, bundles and freebies.
-    featured_all = sorted([p for p in PRODUCTS if p.get("featured")], key=lambda x: (x["featured"], x["name"]))
-    trending_pool = (featured_all + [p for p in PRODUCTS if p.get("badge")]
-                     + [p for p in PRODUCTS if p["category"] == "Bundles"] + [p for p in PRODUCTS if p["free"]])
-    seen, trending = set(), []
-    for p in trending_pool:
-        if p["slug"] not in seen:
-            seen.add(p["slug"]); trending.append(p)
-    if len(trending) < 4:
-        trending += [p for p in PRODUCTS if p["slug"] not in seen]
-    day = date.today().toordinal()
-    trending = trending[day % len(trending):] + trending[:day % len(trending)]
-    trending = trending[:4]
+    # ── Popular starting points ──────────────────────────────────────────
+    # Was: a date-ordinal rotation that showed a different four products every
+    # day. That made the homepage diff on every deploy and handed Google a
+    # different page on every crawl, for no measured benefit. It is now
+    # DETERMINISTIC and ordered by the editorial priority already recorded in
+    # data/discovery.json, so the section only changes when the owner changes
+    # the merchandising. It is also no longer labelled "trending" or
+    # "what artists are searching", because nothing on this static site
+    # measures search demand - and we do not claim data we do not have.
+    # Exclude anything that already has its own dedicated homepage section —
+    # the flagship band (Master Library) and the eBook/Masterclass duo. Showing
+    # the same product twice on one page wastes two of the four slots and reads
+    # as padding rather than curation.
+    _flag = flagship()
+    _edu = {v["slug"] for v in education_products().values() if v}
+    picks = [p for p in PRODUCTS
+             if not p.get("comingSoon")
+             and (not _flag or p["slug"] != _flag["slug"]) and p["slug"] not in _edu]
+    picks.sort(key=lambda p: (-(disc(p["slug"]).get("priority") or 0), p["name"]))
+    trending = picks[:4]
     trend_cards = product_grid(trending, 0)
 
     articles = [a for a in load_articles() if a.get("image")][:3]
@@ -116,7 +125,8 @@ def build_home():
     html_out = head(
         "DigiKitPro, Professional Procreate Tools for Artists",
         "Premium Procreate brushes and digital art resources for iPad artists: portrait, skin, line art, watercolor, anime & more. Create more. Search less.",
-        SITE_URL + "/", 0, schemas=schema_org_home(), preload="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp")
+        SITE_URL + "/", 0, schemas=schema_org_home(), ctx=page_ctx("home"),
+        preload="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp")
     html_out += header(0, active="index.html")
     html_out += f"""
 <main id="main">
@@ -124,52 +134,60 @@ def build_home():
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="eyebrow">Procreate brush studio</p>
-        <h1>Professional Procreate Tools for Artists</h1>
-        <p class="hero-sub">Create more. Search less. Hand-tested brushes for portraits, illustration and storytelling, built for the iPad and Apple Pencil.</p>
+        <h1>Professional Procreate Brushes &amp; Digital Art Tools</h1>
+        <p class="hero-sub">For portrait artists, illustrators, anime artists and digital creators. Hand-tested tools organized around real creative workflows — sketch, ink, blend, texture, finish — built for the iPad and Apple Pencil.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold" href="products.html">Explore Brushes</a>
+          <a class="btn btn-gold" href="products.html">Explore Procreate Tools</a>
           <a class="btn btn-line" href="#free">Get Free Brushes</a>
         </div>
-        <p class="hero-meta">Instant download · Procreate 5+ · Apple Pencil ready</p>
+        <p class="hero-finder">Not sure what you need? <a href="find-my-brushes.html" data-dkp-event="finder_entry_click" data-dkp-loc="hero">Find my brushes in 4 questions →</a></p>
+        {hero_trust(0)}
       </div>
       <div class="hero-showcase" aria-hidden="true">{showcase}</div>
     </div>
   </section>
 
   {season_band(0)}
+  {craft_grid(0)}
   {trust_band(0)}
 
   <section class="section" id="free">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Completely free</p><h2>Free Procreate Brushes</h2></div>
+        <div><p class="eyebrow">Level 1 · Completely free</p><h2>Free Procreate Brushes</h2></div>
         <a class="text-link" href="freebies.html">All freebies →</a>
       </div>
+      <p class="sec-note muted">Real kits, not samples — the same pressure tuning and file quality as the paid packs. Take them, use them, and only spend money once you know how they feel.</p>
       {product_grid(freebies, 0, eager_first=1)}
     </div>
   </section>
 
-  {ebook_section}
+  {flagship_band(0)}
+
   <section class="section section-alt">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Most loved</p><h2>Featured Brush Kits</h2></div>
-        <a class="text-link" href="products.html">Browse all {len(PRODUCTS)} products →</a>
+        <div><p class="eyebrow">Level 2 · Specialist packs</p><h2>Featured Brush Kits</h2></div>
+        <a class="text-link" href="find-my-brushes.html">Not sure which one? Find my brushes →</a>
       </div>
+      <p class="sec-note muted">Each kit solves one specific problem — skin, hair, line weight, watercolour — so you buy the fix you need, not a pile of brushes you will never open.</p>
       {product_grid(featured, 0)}
     </div>
   </section>
 
-  <section class="section section-alt" id="trending" aria-labelledby="trending-title">
+  <section class="section" id="popular" aria-labelledby="popular-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">What artists are searching</p><h2 id="trending-title">Trending in Procreate &amp; Digital Art</h2></div>
+        <div><p class="eyebrow">Chosen by the studio</p><h2 id="popular-title">Popular Starting Points</h2></div>
         <a class="text-link" href="products.html">Browse the full catalog →</a>
       </div>
+      <p class="sec-note muted">The four kits we point new artists at first, covering the widest range of workflows.</p>
       {trend_topics()}
       {trend_cards}
     </div>
   </section>
+
+  {ebook_section}
 
   <section class="section">
     <div class="wrap">
@@ -189,7 +207,7 @@ def build_home():
   <section class="section section-alt">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">High value</p><h2>Procreate Bundles</h2></div>
+        <div><p class="eyebrow">Level 3 · High value</p><h2>Procreate Bundles</h2></div>
         <a class="text-link" href="bundles.html">Compare bundles →</a>
       </div>
       <div class="grid bundles-grid">{bundle_cards}</div>
@@ -228,28 +246,50 @@ def build_home():
 def build_products():
     counts = {}
     for p in PRODUCTS: counts[p["category"]] = counts.get(p["category"], 0) + 1
+    # Owner decision (2026-09-13): planners, journals, templates and the travel
+    # guide stay mixed into the single catalog. No separate filter, no separate
+    # page, no note calling them out. The __procreate / __lifestyle filters are
+    # still supported by js/main.js and cards still carry data-line, so adding
+    # the chips back later is a one-line change here - nothing is hard to undo.
     featured_count = sum(1 for p in PRODUCTS if p.get("featured") or p.get("badge"))
+    n_flagship = sum(1 for p in PRODUCTS if tier_of(p) == "flagship")
     chips = f'<button class="chip active" type="button" data-filter="all">All ({len(PRODUCTS)})</button>'
-    chips += f'<button class="chip" type="button" data-filter="__featured">Trending ({featured_count})</button>'
+    chips += f'<button class="chip" type="button" data-filter="__featured">Featured ({featured_count})</button>'
+    if n_flagship:
+        chips += f'<button class="chip chip-gold" type="button" data-filter="__flagship">Master Library ({n_flagship})</button>'
     chips += f'<button class="chip chip-free" type="button" data-filter="__free">Free ({sum(1 for p in PRODUCTS if p["free"])})</button>'
     for c in CATEGORIES:
         if counts.get(c):
             chips += f'<button class="chip" type="button" data-filter="{esc(c)}" id="{ "cat-"+c.replace(" ","%20") }">{esc(c)} ({counts[c]})</button>'
 
-    ordered = sorted(PRODUCTS, key=lambda p: (0 if p["free"] else 1, -(p.get("featured") or 0), p["name"]))
+    # VALUE LADDER ORDER. Was: free first, then "featured", then alphabetical —
+    # which put 28 identically-priced $5 packs in one undifferentiated wall and
+    # buried the flagship. Now: free (Level 1) → flagship (Level 4) → bundles
+    # (Level 3) → specialist packs (Level 2) → education (Level 5) → everything
+    # else, each group ordered by editorial priority then price. Same products,
+    # nothing hidden, nothing removed — just an order that answers "what first?".
+    _tier_rank = {t: i for i, t in enumerate(TIER_ORDER)}
+    _group_rank = {"free": 0, "flagship": 1, "bundle": 2, "entry": 3, "education": 4}
+    ordered = sorted(PRODUCTS, key=lambda p: (
+        _group_rank.get(tier_of(p), 9),
+        -(disc(p["slug"]).get("priority") or 0),
+        -(p.get("featured") or 0),
+        p.get("price") or 0,
+        p["name"]))
     html_out = head("All Procreate Brushes & Digital Art Tools, DigiKitPro",
         f"Browse the complete DigiKitPro catalog: {len(PRODUCTS)} Procreate brush kits, bundles, palettes and digital resources, filter by category.",
-        SITE_URL + "/products.html", 0,
+        SITE_URL + "/products.html", 0, ctx=page_ctx("catalog"),
         schemas=schema_breadcrumb([("Home","/"),("Products","/products.html")]) + schema_itemlist(PRODUCTS))
     html_out += header(0, active="products.html")
     html_out += f"""
 <main id="main">
   {page_head(0, "The complete catalog", "Every Brush. Every Kit. One Store.", 
-    f"All {len(PRODUCTS)} DigiKitPro products, hand-tested for Procreate on iPad. Filter by craft, or hit the free section first.",
+    f"All {len(PRODUCTS)} DigiKitPro products, hand-tested for Procreate on iPad. Ordered as a value ladder: free packs first, then the Master Library, bundles and specialist kits.",
     [("Products","products.html")])}
   {trust_band(0)}
   <section class="section">
     <div class="wrap">
+      <p class="catalog-cta">Not sure what to pick? <a href="find-my-brushes.html">Answer 4 questions and get one recommendation →</a></p>
       {trend_topics()}
       <div class="filter-bar" role="toolbar" aria-label="Filter products by category">{chips}</div>
       {product_grid(ordered, 0, eager_first=4)}
@@ -267,18 +307,24 @@ def build_freebies():
     freebies = [p for p in PRODUCTS if p["free"]]
     html_out = head("Free Procreate Brushes, DigiKitPro Freebies",
         "Download free professional Procreate resources: 100 fine liner brushes, 20+ chalk brushes and a 1,200-swatch color vault. No cost, instant delivery.",
-        SITE_URL + "/freebies.html", 0, schemas=schema_breadcrumb([("Home","/"),("Free Brushes","/freebies.html")]))
+        SITE_URL + "/freebies.html", 0, ctx=page_ctx("freebies"),
+        schemas=schema_breadcrumb([("Home","/"),("Free Brushes","/freebies.html")]))
     html_out += header(0, active="freebies.html")
     cards = product_grid(freebies, 0, eager_first=1)
     html_out += f"""
 <main id="main">
   {page_head(0, "$0, forever", "Free Procreate Brushes & Assets",
-    "Professional-grade tools, completely free. Download instantly, keep forever, and see why thousands of artists trust DigiKitPro brushes in their daily work.",
+    "Professional-grade tools, completely free. Download instantly, keep forever, and judge the quality for yourself before you spend anything.",
     [("Free Brushes","freebies.html")])}
-  <section class="section"><div class="wrap">{cards}</div></section>
+  {freebie_gate(0, source="freebies")}
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">Or download straight away</p><h2>Every free pack</h2></div></div>
+    <p class="sec-note muted">Each link below goes directly to Payhip. No email required, no waiting — the gate above is only for artists who want new free drops sent to them.</p>
+    {cards}
+  </div></section>
   <section class="section section-alt"><div class="wrap narrow">
     <h2>Why we give professional tools away</h2>
-    <p>Great tools shouldn't be gated. Every freebie in this collection is built to the same standard as our paid kits, hand-tuned pressure curves, real-media texture, and organized .brushset installs. If they become part of your daily workflow (we think they will), the <a href="products.html">full catalog</a> is waiting when you're ready.</p>
+    <p>Great tools shouldn't be gated. Every freebie in this collection is built to the same standard as our paid kits, hand-tuned pressure curves, real-media texture, and organized .brushset installs. If they become part of your daily workflow (we think they will), the <a href="products.html">full catalog</a> is waiting when you're ready — and the <a href="find-my-brushes.html">Brush Finder</a> will tell you which part of it actually fits your work.</p>
     <p>New here? Start with the <a href="products/free-fine-liner-brushes-100/">100-brush Fine Liner set</a>, then grab the <a href="products/free-color-vault-1200-swatches/">1,200-swatch Color Vault</a> so you never stall on color again.</p>
   </div></section>
   {newsletter(0)}
@@ -312,14 +358,15 @@ def build_bundles():
     {rows}
     <div class="bundle-cta">
       <span class="price price-lg">{p['priceText']}</span>
-      <a class="btn btn-gold" href="{p['payhipUrl']}" target="_blank" rel="noopener">Buy on Payhip</a>
+      <a class="btn btn-gold" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'bundles-page')}>Buy on Payhip</a>
       <a class="text-link" href="products/{p['slug']}/">Full details →</a>
     </div>
   </div>
 </article>"""
     html_out = head("Procreate Bundles, Mega Brush Collections | DigiKitPro",
         "High-value Procreate bundles: complete brush libraries, portrait workflow bundles and seasonal packs, up to 2,000+ brushes in one download.",
-        SITE_URL + "/bundles.html", 0, schemas=schema_breadcrumb([("Home","/"),("Bundles","/bundles.html")]))
+        SITE_URL + "/bundles.html", 0, ctx=page_ctx("bundles"),
+        schemas=schema_breadcrumb([("Home","/"),("Bundles","/bundles.html")]))
     html_out += header(0, active="bundles.html")
     html_out += f"""
 <main id="main">

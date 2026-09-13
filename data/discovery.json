@@ -1,0 +1,193 @@
+{
+  "_readme": [
+    "DigiKitPro MERCHANDISING MODEL — read this before editing.",
+    "",
+    "This file is separate from data/products.json ON PURPOSE: tools/payhip_sync.py writes to",
+    "products.json every day, and it must never be able to overwrite the merchandising decisions",
+    "below. Products, prices, images and Payhip URLs stay in products.json. This file only says",
+    "HOW each product is positioned and WHO it is for.",
+    "",
+    "Every mapping here was derived from that product's real category, tags, perfectFor and",
+    "description in data/products.json. Nothing is invented.",
+    "",
+    "EDITING:",
+    "  tier     free | entry | bundle | flagship | education   (the Level 1-5 product hierarchy)",
+    "  line     procreate | assets | lifestyle",
+    "             'procreate'  = Procreate brush/tool kit  -> shown in the Brush Finder",
+    "             'assets'     = art assets that are not brushes (PNG/pattern packs)",
+    "             'lifestyle'  = planners, journals, travel, KDP  -> kept in the catalog, kept",
+    "                            sellable, but grouped separately so the Procreate positioning",
+    "                            stays clean. NOTHING IS DELETED.",
+    "  craft    which of the 9 'what do you create?' answers this product serves",
+    "  improve  which of the 8 'what are you trying to improve?' answers it serves",
+    "  level    beginner | intermediate | advanced",
+    "  style    realistic | painterly | clean | textured | stylized",
+    "  aggregate  true for whole-catalog libraries (Master Library, Master Vault,",
+    "             Mega Bundle). These match EVERY finder answer by definition, so",
+    "             they are excluded from relevance ranking and shown only in their",
+    "             own labelled slots. Without this the finder would recommend the",
+    "             biggest, most expensive bundle for every possible answer, which",
+    "             is exactly the price-first behaviour this tool exists to avoid.",
+    "  stage    where it sits in a real workflow: layout, sketch, ink, paint, value, color,",
+    "           blend, texture, detail, finish, atmosphere, library, learn, seasonal, pattern",
+    "  priority 0-100 EDITORIAL weight used only to break ties between equally-matching",
+    "           products. It is NOT a sales figure, NOT a rating, and is never shown to",
+    "           visitors or described as popularity.",
+    "",
+    "A new product added by the Payhip sync and missing here gets safe defaults automatically",
+    "(tier from its category, line 'procreate', craft/improve inferred from its tags) and is",
+    "reported in the build log so the owner can tag it properly. The build never fails.",
+    "",
+    "After editing: python3 tools/build.py"
+  ],
+  "version": 1,
+
+  "tiers": [
+    { "id": "free",      "level": 1, "label": "Free",                 "priceLabel": "$0",     "purpose": "Prove the quality, earn the email", "cta": "Get Free Procreate Brushes" },
+    { "id": "entry",     "level": 2, "label": "Specialist Packs",     "priceLabel": "$4–$10", "purpose": "First purchase, one specific problem solved", "cta": "Browse specialist packs" },
+    { "id": "bundle",    "level": 3, "label": "Bundles",              "priceLabel": "$8–$20", "purpose": "Related kits together for less than buying separately", "cta": "Compare bundles" },
+    { "id": "flagship",  "level": 4, "label": "Master Library",       "priceLabel": "$19",    "purpose": "One organised library instead of tool fatigue", "cta": "Get the Master Library" },
+    { "id": "education", "level": 5, "label": "Masterclass & Guides", "priceLabel": "Free–$19", "purpose": "Teach the workflow the tools exist for", "cta": "Learn the workflow" }
+  ],
+
+  "questions": [
+    {
+      "id": "craft",
+      "step": 1,
+      "question": "What do you create?",
+      "hint": "Pick the work you spend most of your time on.",
+      "options": [
+        { "id": "portraits",    "label": "Portraits",              "note": "Faces, skin, likeness" },
+        { "id": "anime",        "label": "Anime & Manga",          "note": "Soft style, clean lines, cel shading" },
+        { "id": "illustration", "label": "Illustration",           "note": "Characters, scenes, books, commissions" },
+        { "id": "concept",      "label": "Concept Art",            "note": "Design, environments, props, pitches" },
+        { "id": "sketching",    "label": "Sketching",              "note": "Studies, sketchbook, thumbnails" },
+        { "id": "painting",     "label": "Digital Painting",       "note": "Painterly renders, traditional media feel" },
+        { "id": "texture",      "label": "Texture & Surface",      "note": "Paper, grain, traditional finish" },
+        { "id": "lettering",    "label": "Lettering",              "note": "Hand lettering, signage, chalk" },
+        { "id": "animation",    "label": "Animation / Procreate Dreams", "note": "Frame-by-frame, motion, loops" }
+      ]
+    },
+    {
+      "id": "improve",
+      "step": 2,
+      "question": "What are you trying to improve?",
+      "hint": "The part of the process that slows you down or disappoints you.",
+      "options": [
+        { "id": "skin",     "label": "Skin",      "note": "Pores, blending, no plastic look" },
+        { "id": "hair",     "label": "Hair",      "note": "Volume, strands, believable flow" },
+        { "id": "line-art", "label": "Line art",  "note": "Clean, confident, tapered lines" },
+        { "id": "texture",  "label": "Texture",   "note": "Paper grain, traditional surface" },
+        { "id": "color",    "label": "Color",     "note": "Palettes, harmony, swatches" },
+        { "id": "lighting", "label": "Lighting",  "note": "Glow, atmosphere, highlights" },
+        { "id": "shading",  "label": "Shading",   "note": "Values, form, smooth transitions" },
+        { "id": "sketching","label": "Sketching", "note": "Loose construction, fast studies" }
+      ]
+    },
+    {
+      "id": "level",
+      "step": 3,
+      "question": "What's your experience level?",
+      "hint": "Be honest — it changes what we recommend first.",
+      "options": [
+        { "id": "beginner",     "label": "Beginner",     "note": "New to Procreate or returning after a break" },
+        { "id": "intermediate", "label": "Intermediate", "note": "Comfortable, but results are inconsistent" },
+        { "id": "advanced",     "label": "Advanced",     "note": "Working artist, commissions or client work" }
+      ]
+    },
+    {
+      "id": "style",
+      "step": 4,
+      "question": "What style are you going for?",
+      "hint": "The finished look you keep chasing.",
+      "options": [
+        { "id": "realistic", "label": "Realistic",  "note": "Believable, photographic, accurate" },
+        { "id": "painterly", "label": "Painterly",  "note": "Visible strokes, traditional media feel" },
+        { "id": "clean",     "label": "Clean",      "note": "Crisp edges, flat or cel colour" },
+        { "id": "textured",  "label": "Textured",   "note": "Grain, tooth, analog surface" },
+        { "id": "stylized",  "label": "Stylized",   "note": "Graphic, exaggerated, decorative" }
+      ]
+    }
+  ],
+
+  "craftCards": [
+    { "id": "portraits",    "label": "Portraits",                        "blurb": "Skin, hair, likeness and the full portrait workflow.", "href": "category/portrait/" },
+    { "id": "anime",        "label": "Anime & Manga",                    "blurb": "Soft-style shading, clean liners and cel colour.",       "href": "category/anime/" },
+    { "id": "illustration", "label": "Illustration",                     "blurb": "Characters, scenes, books and commission work.",         "href": "category/line-art/" },
+    { "id": "sketching",    "label": "Sketching",                        "blurb": "Studies, sketchbooks and fast traditional-feel drawing.","href": "category/sketching/" },
+    { "id": "painting",     "label": "Digital Painting",                 "blurb": "Watercolour, pastel, charcoal and painterly renders.",   "href": "category/watercolor/" },
+    { "id": "texture",      "label": "Texture & Traditional",            "blurb": "Paper grain, chalk, fur, smoke and analog surface.",     "href": "category/traditional/" },
+    { "id": "animation",    "label": "Animation / Procreate Dreams",     "blurb": "Line, glow and texture tools animation artists reach for.","href": "find-my-brushes.html#craft=animation" }
+  ],
+
+  "flagship": "master-library-2000-brushes",
+  "education": {
+    "paid": "procreate-portrait-masterclass-ebook",
+    "free": "procreate-starter-guide-free-ebook"
+  },
+  "animationNotice": {
+    "title": "Animation & Procreate Dreams",
+    "body": "We do not sell a Procreate Dreams-specific brush pack yet, and we are not going to pretend otherwise. These are the tools animation and frame-by-frame artists actually use from the catalog — clean liners for readable silhouettes at small sizes, glow and smoke for atmosphere, and palettes that stay consistent across frames. Tell us what you need and it decides what we build next.",
+    "cta": { "label": "Get new Procreate tool drops by email", "href": "freebies.html#newsletter" }
+  },
+
+  "catalog": {
+    "portrait-skin-brushes-procreate": { "tier": "entry", "line": "procreate", "craft": ["portraits", "illustration", "painting", "concept"], "improve": ["skin", "texture", "shading"], "level": ["beginner", "intermediate", "advanced"], "style": ["realistic", "painterly", "textured"], "stage": "texture", "priority": 95 },
+    "portrait-mastery-kit-46-brushes": { "tier": "entry", "line": "procreate", "craft": ["portraits", "illustration", "concept"], "improve": ["skin", "hair", "shading", "line-art"], "level": ["intermediate", "advanced"], "style": ["realistic", "painterly"], "stage": "workflow", "priority": 93 },
+    "artista-studio-kit-76-brushes": { "tier": "entry", "line": "procreate", "craft": ["portraits", "illustration", "sketching", "concept"], "improve": ["line-art", "shading", "sketching"], "level": ["beginner", "intermediate"], "style": ["clean", "painterly", "textured"], "stage": "library", "priority": 88 },
+    "essential-line-art-sketch-kit": { "tier": "entry", "line": "procreate", "craft": ["anime", "illustration", "sketching", "concept", "animation"], "improve": ["line-art", "sketching"], "level": ["beginner", "intermediate"], "style": ["clean"], "stage": "ink", "priority": 86 },
+    "master-line-art-vault-300": { "tier": "entry", "line": "procreate", "craft": ["anime", "illustration", "sketching", "lettering", "animation"], "improve": ["line-art"], "level": ["beginner", "intermediate", "advanced"], "style": ["clean"], "stage": "ink", "priority": 87 },
+    "anime-soft-style-studio-kit": { "tier": "entry", "line": "procreate", "craft": ["anime", "illustration", "animation"], "improve": ["shading", "color", "line-art"], "level": ["beginner", "intermediate"], "style": ["stylized", "painterly", "clean"], "stage": "library", "priority": 89 },
+    "anime-soft-style-brushes-100": { "tier": "entry", "line": "procreate", "craft": ["anime", "illustration", "animation"], "improve": ["shading", "color", "line-art", "texture"], "level": ["beginner", "intermediate"], "style": ["stylized", "painterly"], "stage": "paint", "priority": 85 },
+    "professional-hair-brushes": { "tier": "entry", "line": "procreate", "craft": ["portraits", "illustration", "concept"], "improve": ["hair", "shading"], "level": ["intermediate", "advanced"], "style": ["realistic", "painterly"], "stage": "detail", "priority": 81 },
+    "hair-hairstyle-stamp-kit": { "tier": "entry", "line": "procreate", "craft": ["portraits", "anime", "illustration"], "improve": ["hair"], "level": ["beginner", "intermediate"], "style": ["stylized", "clean"], "stage": "layout", "priority": 76 },
+    "premium-hair-brushes-10": { "tier": "entry", "line": "procreate", "craft": ["portraits", "illustration"], "improve": ["hair"], "level": ["intermediate", "advanced"], "style": ["realistic"], "stage": "detail", "priority": 72 },
+    "watercolor-studio-kit-50-brushes": { "tier": "entry", "line": "procreate", "craft": ["painting", "illustration", "texture"], "improve": ["texture", "color", "shading"], "level": ["intermediate", "advanced"], "style": ["painterly", "textured"], "stage": "paint", "priority": 84 },
+    "organic-watercolor-80-brushes": { "tier": "entry", "line": "procreate", "craft": ["painting", "illustration", "texture"], "improve": ["texture", "color"], "level": ["beginner", "intermediate", "advanced"], "style": ["painterly", "textured"], "stage": "paint", "priority": 79 },
+    "professional-digital-sketchbook": { "tier": "entry", "line": "procreate", "craft": ["sketching", "illustration", "concept"], "improve": ["sketching", "texture"], "level": ["beginner", "intermediate"], "style": ["textured", "painterly"], "stage": "sketch", "priority": 80 },
+    "sketchbook-traditional-media-kit": { "tier": "entry", "line": "procreate", "craft": ["sketching", "painting", "concept", "texture"], "improve": ["sketching", "texture", "shading"], "level": ["intermediate", "advanced"], "style": ["textured", "realistic"], "stage": "sketch", "priority": 73 },
+    "pro-sketch-traditional-art-kit": { "tier": "entry", "line": "procreate", "craft": ["sketching", "painting", "texture"], "improve": ["texture", "shading", "sketching"], "level": ["beginner", "intermediate"], "style": ["textured", "realistic"], "stage": "sketch", "priority": 72 },
+    "professional-charcoal-studio": { "tier": "entry", "line": "procreate", "craft": ["sketching", "painting", "portraits", "concept"], "improve": ["shading", "texture", "sketching"], "level": ["intermediate", "advanced"], "style": ["realistic", "textured"], "stage": "value", "priority": 74 },
+    "dreamy-pastel-art-kit": { "tier": "entry", "line": "procreate", "craft": ["painting", "illustration", "portraits"], "improve": ["shading", "texture", "color"], "level": ["beginner", "intermediate"], "style": ["painterly", "textured", "stylized"], "stage": "paint", "priority": 70 },
+    "liner-marker-studio-39-brushes": { "tier": "entry", "line": "procreate", "craft": ["anime", "illustration", "sketching", "lettering", "animation"], "improve": ["line-art", "color"], "level": ["beginner", "intermediate", "advanced"], "style": ["clean"], "stage": "ink", "priority": 78 },
+    "tattoo-artist-studio-kit-200": { "tier": "entry", "line": "procreate", "craft": ["illustration", "sketching", "concept", "lettering"], "improve": ["line-art", "texture", "shading"], "level": ["intermediate", "advanced"], "style": ["clean", "textured"], "stage": "ink", "priority": 71 },
+    "koi-fish-tattoo-brushes": { "tier": "entry", "line": "procreate", "craft": ["illustration", "lettering"], "improve": ["line-art", "texture"], "level": ["intermediate", "advanced"], "style": ["stylized", "textured"], "stage": "ink", "priority": 58 },
+    "animal-fur-brushes-2": { "tier": "entry", "line": "procreate", "craft": ["illustration", "painting", "texture", "concept"], "improve": ["texture", "hair", "shading"], "level": ["intermediate", "advanced"], "style": ["realistic", "textured"], "stage": "texture", "priority": 68 },
+    "illustration-brushes-2": { "tier": "entry", "line": "procreate", "craft": ["illustration", "texture", "lettering"], "improve": ["texture", "color"], "level": ["beginner", "intermediate"], "style": ["textured", "stylized"], "stage": "texture", "priority": 63 },
+    "premium-texture-effects-10-brushes": { "tier": "entry", "line": "procreate", "craft": ["texture", "illustration", "painting", "animation"], "improve": ["texture"], "level": ["beginner", "intermediate", "advanced"], "style": ["textured"], "stage": "texture", "priority": 64 },
+    "glitter-brushes-sparkle-shine-30": { "tier": "entry", "line": "procreate", "craft": ["illustration", "texture", "lettering", "animation"], "improve": ["lighting", "texture"], "level": ["beginner", "intermediate", "advanced"], "style": ["stylized"], "stage": "finish", "priority": 62 },
+    "smoke-brushes-12": { "tier": "entry", "line": "procreate", "craft": ["texture", "illustration", "concept", "animation"], "improve": ["texture", "lighting"], "level": ["intermediate", "advanced"], "style": ["realistic", "textured"], "stage": "atmosphere", "priority": 59 },
+    "tie-dye-brushes-studio": { "tier": "entry", "line": "procreate", "craft": ["texture", "illustration"], "improve": ["color", "texture"], "level": ["beginner", "intermediate"], "style": ["stylized", "textured"], "stage": "pattern", "priority": 52 },
+    "male-pose-brushes-figure-drawing": { "tier": "entry", "line": "procreate", "craft": ["illustration", "sketching", "concept", "anime"], "improve": ["sketching"], "level": ["beginner", "intermediate", "advanced"], "style": ["clean", "realistic"], "stage": "layout", "priority": 66 },
+    "female-pose-brushes-figure-drawing": { "tier": "entry", "line": "procreate", "craft": ["illustration", "sketching", "concept", "anime"], "improve": ["sketching"], "level": ["beginner", "intermediate", "advanced"], "style": ["clean", "realistic"], "stage": "layout", "priority": 66 },
+    "procreate-palettes-bundle-50": { "tier": "entry", "line": "procreate", "craft": ["painting", "illustration", "animation"], "improve": ["color"], "level": ["beginner", "intermediate", "advanced"], "style": ["painterly", "clean"], "stage": "color", "priority": 67 },
+
+    "free-fine-liner-brushes-100": { "tier": "free", "line": "procreate", "craft": ["sketching", "anime", "illustration", "lettering", "animation"], "improve": ["line-art", "sketching"], "level": ["beginner", "intermediate", "advanced"], "style": ["clean"], "stage": "ink", "priority": 90 },
+    "free-color-vault-1200-swatches": { "tier": "free", "line": "procreate", "craft": ["painting", "illustration", "anime", "animation"], "improve": ["color"], "level": ["beginner", "intermediate", "advanced"], "style": ["realistic", "painterly", "clean", "textured", "stylized"], "stage": "color", "priority": 88 },
+    "free-chalkboard-artists-toolkit": { "tier": "free", "line": "procreate", "craft": ["lettering", "texture", "illustration"], "improve": ["texture"], "level": ["beginner", "intermediate"], "style": ["textured"], "stage": "texture", "priority": 65 },
+
+    "ultimate-portrait-mastery-bundle": { "tier": "bundle", "line": "procreate", "craft": ["portraits", "illustration"], "improve": ["skin", "hair", "line-art", "texture"], "level": ["intermediate", "advanced"], "style": ["realistic", "painterly"], "stage": "workflow", "priority": 90 },
+    "master-vault-1000-brushes": { "tier": "bundle", "line": "procreate", "craft": ["portraits", "anime", "illustration", "concept", "sketching", "painting", "texture", "lettering", "animation"], "improve": ["skin", "hair", "line-art", "texture", "color", "lighting", "shading", "sketching"], "level": ["intermediate", "advanced"], "style": ["realistic", "painterly", "clean", "textured", "stylized"], "stage": "library", "aggregate": true, "priority": 83 },
+    "procreate-mega-bundle-650": { "tier": "bundle", "line": "procreate", "craft": ["portraits", "anime", "illustration", "concept", "sketching", "painting", "texture", "lettering", "animation"], "improve": ["skin", "hair", "line-art", "texture", "color", "lighting", "shading", "sketching"], "level": ["intermediate", "advanced"], "style": ["realistic", "painterly", "clean", "textured", "stylized"], "stage": "library", "aggregate": true, "priority": 82 },
+    "brush-palette-bundle-160": { "tier": "bundle", "line": "procreate", "craft": ["illustration", "texture"], "improve": ["color", "texture"], "level": ["beginner", "intermediate"], "style": ["stylized", "clean"], "stage": "pattern", "priority": 60 },
+    "christmas-brushes-bundle": { "tier": "bundle", "line": "procreate", "craft": ["illustration", "texture", "lettering"], "improve": ["texture", "color"], "level": ["beginner", "intermediate"], "style": ["stylized"], "stage": "seasonal", "priority": 55 },
+
+    "master-library-2000-brushes": { "tier": "flagship", "line": "procreate", "craft": ["portraits", "anime", "illustration", "concept", "sketching", "painting", "texture", "lettering", "animation"], "improve": ["skin", "hair", "line-art", "texture", "color", "lighting", "shading", "sketching"], "level": ["beginner", "intermediate", "advanced"], "style": ["realistic", "painterly", "clean", "textured", "stylized"], "stage": "library", "aggregate": true, "priority": 100 },
+
+    "procreate-starter-guide-free-ebook": { "tier": "education", "line": "procreate", "free": true, "craft": ["portraits", "sketching", "illustration"], "improve": ["sketching", "shading", "skin"], "level": ["beginner"], "style": ["realistic"], "stage": "learn", "priority": 91 },
+    "procreate-portrait-masterclass-ebook": { "tier": "education", "line": "procreate", "craft": ["portraits", "illustration"], "improve": ["skin", "hair", "shading", "lighting"], "level": ["intermediate", "advanced"], "style": ["realistic", "painterly"], "stage": "learn", "priority": 94 },
+
+    "japanese-watercolour-collection": { "tier": "entry", "line": "assets", "craft": ["illustration", "texture", "painting"], "improve": ["texture", "color"], "level": ["beginner", "intermediate"], "style": ["stylized", "textured"], "stage": "pattern", "priority": 48 },
+    "halloween-pumpkin-bundle": { "tier": "entry", "line": "assets", "craft": ["illustration", "texture"], "improve": ["texture"], "level": ["beginner"], "style": ["stylized"], "stage": "seasonal", "priority": 45 },
+
+    "mindfulness-system-planner": { "tier": "entry", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "planner", "priority": 0 },
+    "wellness-journal-2026": { "tier": "entry", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "planner", "priority": 0 },
+    "wellness-fitness-planner-goodnotes": { "tier": "entry", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "planner", "priority": 0 },
+    "adhd-planner-2026": { "tier": "entry", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "planner", "priority": 0 },
+    "wellness-journal-365": { "tier": "entry", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "planner", "priority": 0 },
+    "undated-planner-dark-mode": { "tier": "entry", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "planner", "priority": 0 },
+    "ultimate-fitness-planner": { "tier": "entry", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "planner", "priority": 0 },
+    "kdp-templates-bundle-100": { "tier": "bundle", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "templates", "priority": 0 },
+    "morocco-7-day-itinerary": { "tier": "entry", "line": "lifestyle", "craft": [], "improve": [], "level": [], "style": [], "stage": "travel", "priority": 0 }
+  }
+}

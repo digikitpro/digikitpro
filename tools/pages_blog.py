@@ -159,7 +159,8 @@ def build_blog():
     </a>"""
     html_out = head("Procreate Tutorials & Digital Art Guides, DigiKitPro Blog",
         "Technique-first guides for iPad artists: realistic skin, hair, watercolor, line art and how to choose the right Procreate brushes.",
-        SITE_URL + "/blog.html", 0, schemas=schema_breadcrumb([("Home","/"),("Blog","/blog.html")]))
+        SITE_URL + "/blog.html", 0, ctx=page_ctx("blog_index"),
+        schemas=schema_breadcrumb([("Home","/"),("Blog","/blog.html")]))
     html_out += header(0, active="blog.html")
     html_out += f"""
 <main id="main">
@@ -221,7 +222,8 @@ def build_blog():
         else:
             seo_t = f"{raw_title} | {SITE_NAME}"
         html_out = head(seo_t, a["description"], absurl(f"blog/{a['slug']}/"), depth,
-                        schemas=schemas, page_type="article", og_image=og_img)
+                        schemas=schemas, page_type="article", og_image=og_img,
+                        ctx=page_ctx("article", slug=a["slug"], name=a["title"]))
         html_out += header(depth, active="blog.html")
         html_out += f"""
 <main id="main">

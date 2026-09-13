@@ -66,6 +66,38 @@ def tech_block(p):
             """<h2 id="p-tech">Technical Details</h2>"""
             f'<table class="spec-table">{rows}</table></section>')
 
+# ── data hygiene ────────────────────────────────────────────────────────
+# Some scraped `requirements` lists have marketing lines mixed in with the
+# actual requirements, which rendered on the live product page as requirements
+# reading "Bring Your Portraits to Life" and "Instant Download". Filter them
+# out here rather than editing data/products.json, because payhip_sync.py
+# rewrites that file and any hand fix would be lost on the next sync.
+_REQ_NOISE = re.compile(
+    r"^(bring your|create artwork|download today|instant download|lifetime access|"
+    r"\d+ premium|download today and start|start painting)", re.I)
+
+def clean_requirements(p):
+    """Keep only lines that are genuinely a requirement or a compatibility fact."""
+    out, seen = [], set()
+    for r in (p.get("requirements") or []):
+        t = str(r).strip()
+        if not t or len(t) > 140:
+            continue
+        if _REQ_NOISE.match(t):
+            continue
+        low = t.lower().rstrip(".")
+        if low in seen:
+            continue
+        seen.add(low)
+        out.append(t)
+    # A product with nothing left still needs to state its platform honestly.
+    if not out:
+        cat = p.get("category", "")
+        out = ["See the technical details below"] if cat in ("Other", "Guides & eBooks") \
+              else ["iPad", "Procreate app"]
+    return out
+
+
 def build_product_pages():
     for p in PRODUCTS:
         slug = p["slug"]; depth = 2
@@ -90,7 +122,7 @@ def build_product_pages():
         features = li_block("Why You'll Love It", p.get("features"), cls="gold")
         included = li_block("What's Included", p.get("included"))
         technical = tech_block(p)
-        requirements = li_block("Requirements", p.get("requirements"), cls="plain")
+        requirements = li_block("Requirements", clean_requirements(p), cls="plain")
         whofor = ""
         if p.get("perfectFor"):
             chips = "".join(f'<span class="tag">{esc(t)}</span>' for t in p["perfectFor"])
@@ -152,14 +184,20 @@ def build_product_pages():
         cta_label_long = "Get Free Download" if p["free"] and not coming else cta_label
         buy_panel = f"""<div class="buy-panel">
           <div class="buy-top"><span class="buy-label">Price</span>{price_html}</div>
-          <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener">{cta_label_long} <span class="btn-arr">↗</span></a>
+          <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'pdp-buy-panel')}>{cta_label_long} <span class="btn-arr">↗</span></a>
           <p class="buy-cap">{caption}</p>
         </div>"""
+        # The licence question ("can I sell what I make?") is a real purchase
+        # objection for working artists. It was only answered inside a collapsed
+        # FAQ and on terms.html, i.e. below the fold and hidden. Now it sits
+        # under the buy panel, stating exactly what terms.html already says.
+        licence = "" if coming else licence_line()
 
         _og_img = asset_abs(slug, im.get("card", "")) if im.get("card", "") else absurl("assets/img/og-cover.jpg")
         _preload = asset_abs(slug, im.get("main", "")) if im.get("main", "") else None
         html_out = head(p["seoTitle"], p["seoDesc"], absurl(f"products/{slug}/"), depth,
-                        schemas=schemas, og_image=_og_img, page_type="product", preload=_preload)
+                        schemas=schemas, og_image=_og_img, page_type="product", preload=_preload,
+                        ctx=page_ctx("product", p))
         html_out += header(depth, active="products.html")
         html_out += f"""
 <main id="main">
@@ -172,6 +210,7 @@ def build_product_pages():
         <h1>{esc(p['name'])}</h1>
         <p class="pdp-short">{esc(p['short'])}</p>
         {buy_panel}
+        {licence}
         <ul class="pdp-trust">{trust}</ul>
       </div>
     </article>
@@ -182,7 +221,9 @@ def build_product_pages():
     {desc_sec}
     {technical}
     {requirements}
+    {install_steps() if not coming and not p.get("free") else ""}
     {whofor}
+    {upgrade_panel(p, depth)}
     {faq_html(p)}
     {rel_arts}
 
@@ -191,7 +232,7 @@ def build_product_pages():
         <h2 id="p-get">Get This Product</h2>
         <p class="muted">{get_copy}</p>
       </div>
-      <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener">{cta_label} <span class="btn-arr">↗</span></a>
+      <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'pdp-bottom')}>{cta_label} <span class="btn-arr">↗</span></a>
     </section>
 
     <section class="psec" aria-labelledby="p-related">
