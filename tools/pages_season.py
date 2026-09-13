@@ -165,6 +165,7 @@ def build_seasons():
             canonical,
             depth,
             schemas=schemas,
+            ctx=page_ctx("season", slug=sdef["slug"], category=sdef.get("name") or sdef["slug"]),
         )
         html_out += header(depth, active="products.html")
         html_out += f"""

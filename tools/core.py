@@ -32,6 +32,17 @@ BING_VERIFY = os.environ.get("BING_VERIFY", "52B8ABC07828BE6CE77B297D3F2E50A3") 
 YANDEX_VERIFY = os.environ.get("YANDEX_VERIFY", "48977a1d04865b21") # content of the <meta name="yandex-verification"> token
 INDEXNOW_KEY = os.environ.get("INDEXNOW_KEY", "") # IndexNow API key file name (no extension); see tools/submit_index.py
 GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "G-5MFQFHNB6B") # Google Analytics 4 Measurement ID
+# ── Conversion event layer (js/analytics.js) ─────────────────────────────
+# ANALYTICS_ENABLED=false emits window.DKP.analytics=false, which makes the
+# event module completely inert (no GA4 forwarding, no local counting).
+# Kill-switch for the owner; nothing else on the site depends on it.
+ANALYTICS_ENABLED = os.environ.get("DKP_ANALYTICS", "true").strip().lower() not in ("0", "false", "no")
+# Optional collector for the "What stopped you from choosing a brush today?"
+# answers. EMPTY BY DEFAULT = nothing is posted anywhere; answers are only
+# counted as an analytics event. Point it at a Cloudflare Worker / Vercel
+# function when (and only when) the owner wants them in their own store.
+# Never put a secret in this value: it is printed into public HTML.
+FEEDBACK_ENDPOINT = os.environ.get("DKP_FEEDBACK_ENDPOINT", "")
 BUILD_DATE = date.today().isoformat()
 SOCIAL = { # ← add your profiles; hidden while empty
     "Pinterest": "",
@@ -73,6 +84,80 @@ CATEGORY_SLUGS = {
 
 PRODUCTS = json.load(open(os.path.join(ROOT, "data/products.json"), encoding="utf-8"))
 BY_SLUG = {p["slug"]: p for p in PRODUCTS}
+
+# ── MERCHANDISING MODEL ─────────────────────────────────────────────────
+# data/discovery.json is deliberately SEPARATE from data/products.json:
+# tools/payhip_sync.py rewrites products.json every day and must never be
+# able to clobber the tier / audience decisions below. Products missing
+# from discovery.json get safe defaults derived from their real category,
+# so a newly synced product still builds, still appears, and is reported in
+# the build log for the owner to tag properly. The build never fails.
+_DISCOVERY_PATH = os.path.join(ROOT, "data/discovery.json")
+DISCOVERY = json.load(open(_DISCOVERY_PATH, encoding="utf-8")) if os.path.exists(_DISCOVERY_PATH) else {"catalog": {}}
+DISC = DISCOVERY.get("catalog") or {}
+TIERS = {t["id"]: t for t in DISCOVERY.get("tiers", [])}
+TIER_ORDER = [t["id"] for t in sorted(DISCOVERY.get("tiers", []), key=lambda t: t.get("level", 9))]
+
+# Default tier from the real catalog data when discovery.json has no entry.
+_DEFAULT_TIER_BY_CATEGORY = {"Bundles": "bundle", "Guides & eBooks": "education"}
+
+def disc(slug):
+    """Discovery record for a slug, with safe defaults for untagged products."""
+    if slug in DISC:
+        return DISC[slug]
+    p = BY_SLUG.get(slug) or {}
+    tier = "free" if p.get("free") else _DEFAULT_TIER_BY_CATEGORY.get(p.get("category"), "entry")
+    tags = " ".join((p.get("tags") or []) + [p.get("category") or ""]).lower()
+    line = "lifestyle" if any(k in tags for k in ("planner", "journal", "goodnotes", "travel", "kdp", "canva", "wellness", "fitness", "adhd")) else "procreate"
+    return {"tier": tier, "line": line, "craft": [], "improve": [], "level": [],
+            "style": [], "stage": "", "priority": 0, "aggregate": False, "_defaulted": True}
+
+def tier_of(p):
+    return disc(p["slug"]).get("tier", "entry")
+
+def line_of(p):
+    return disc(p["slug"]).get("line", "procreate")
+
+def tier_label(p):
+    t = TIERS.get(tier_of(p)) or {}
+    return t.get("label") or tier_of(p).title()
+
+def flagship():
+    """The Level-4 flagship (Master Library). Returns the real product or None."""
+    slug = DISCOVERY.get("flagship")
+    return BY_SLUG.get(slug) if slug else None
+
+def education_products():
+    ed = DISCOVERY.get("education") or {}
+    return {"paid": BY_SLUG.get(ed.get("paid")), "free": BY_SLUG.get(ed.get("free"))}
+
+def untagged_products():
+    """Reported at build time so the owner can tag newly synced products."""
+    return sorted(p["slug"] for p in PRODUCTS if disc(p["slug"]).get("_defaulted"))
+
+
+def page_ctx(ptype, p=None, **extra):
+    """Analytics page context. Page facts only — never visitor data."""
+    ctx = {"type": ptype}
+    if p:
+        ctx.update({
+            "slug": p["slug"], "name": p["name"], "tier": tier_of(p),
+            "category": p.get("category", ""), "price": p.get("price", 0),
+            "free": bool(p.get("free")), "line": line_of(p),
+        })
+    ctx.update({k: v for k, v in extra.items() if v is not None})
+    return ctx
+
+
+def buy_attrs(p, loc, event=None):
+    """data-dkp-* attributes for any Payhip CTA so js/analytics.js can
+    attribute the click to a product, a tier and a page location."""
+    a = (f'data-dkp-slug="{esc(p["slug"])}" data-dkp-name="{esc(p["name"])}" '
+         f'data-dkp-price="{p.get("price", 0):.2f}" data-dkp-tier="{esc(tier_of(p))}" '
+         f'data-dkp-free="{1 if p.get("free") else 0}" data-dkp-loc="{esc(loc)}"')
+    if event:
+        a += f' data-dkp-event="{esc(event)}"'
+    return a
 
 # ── helpers ─────────────────────────────────────────────────────────────
 def esc(t): return html.escape(str(t), quote=True)
@@ -179,7 +264,10 @@ def schema_faq(faqs):
                            for q,a in faqs]}]
 
 # ── head / header / footer ──────────────────────────────────────────────
-def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None):
+def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None):
+    """`ctx` is the analytics page context (see js/analytics.js). It is emitted
+    as window.DKP.page and contains ONLY non-personal page facts: page type,
+    product slug/name/tier/category/price. No visitor data, ever."""
     s = ""
     if schemas:
         for sc in schemas:
@@ -205,6 +293,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     gtag('config', '{esc(GA_MEASUREMENT_ID)}');
   </script>
 """
+    ctx_json = json.dumps(ctx or {}, ensure_ascii=False)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -241,16 +330,19 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}">
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
-{pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}'}};</script>
+{pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}',analytics:{str(ANALYTICS_ENABLED).lower()},feedbackEndpoint:'{FEEDBACK_ENDPOINT}',page:{ctx_json}}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
   <script src="{rel(depth,'js/main.js')}" defer></script>
+  <script src="{rel(depth,'js/analytics.js')}" defer></script>
+  <script src="{rel(depth,'js/finder.js')}" defer></script>
+  <script src="{rel(depth,'js/feedback.js')}" defer></script>
   <script src="{rel(depth,'js/translate.js')}" defer></script>
 {s}</head>
 <body>
-<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled.</div></noscript>
+<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search, category filters and the Brush Finder need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
 """
 
-NAV = [("Free Brushes","freebies.html"),("Products","products.html"),("Bundles","bundles.html"),
+NAV = [("Find My Brushes","find-my-brushes.html"),("Free Brushes","freebies.html"),("Products","products.html"),("Bundles","bundles.html"),
        ("Articles","blog.html"),("About","about.html")]
 
 def header(depth, active=None):
@@ -303,24 +395,39 @@ def header(depth, active=None):
 </div>
 """
 
-def newsletter(depth, heading="Get Free Procreate Brushes", sub="Join the DigiKitPro list for free brush drops, new kit releases and iPad art tips. No spam, unsubscribe any time."):
+def newsletter(depth, heading="Get Free Procreate Brushes",
+               sub="Join the DigiKitPro list for free brush drops, new kit releases and iPad art tips. No spam, unsubscribe any time.",
+               source="site", lead="", uid="nl", cta="Send me brushes", eyebrow="Free download"):
+    """Email capture block.
+
+    `source` and `lead` are sent to the inbox alongside the address (and to the
+    analytics layer) so a future email provider can trigger the right sequence:
+    an address collected for the free fine-liner set gets Email 1 about that
+    pack, not a generic welcome. `uid` keeps element ids unique when a page
+    carries more than one form.
+    """
+    subject = f"New DigiKitPro subscriber ({lead})" if lead else "New DigiKitPro subscriber"
+    lead_field = f'\n        <input type="hidden" name="lead_magnet" value="{esc(lead)}">' if lead else ""
     return f"""<section class="newsletter" id="newsletter">
   <div class="wrap">
     <div class="nl-card">
-      <p class="eyebrow">Free download</p>
+      <p class="eyebrow">{esc(eyebrow)}</p>
       <h2>{esc(heading)}</h2>
       <p class="muted nl-sub">{esc(sub)}</p>
       <!-- REAL CAPTURE: submissions are emailed to {EMAIL_TO} via FormSubmit
            (main.js posts with AJAX; without JS the form does a normal POST).
            One-time activation: FormSubmit emails {EMAIL_TO}, click "Activate" once
-           and every signup afterwards lands directly in that inbox. -->
-      <form class="nl-form" data-nl-form action="{EMAIL_ENDPOINT}" method="POST">
-        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
+           and every signup afterwards lands directly in that inbox.
+           The source/lead_magnet fields exist so an email provider can later
+           trigger the right sequence per lead magnet (see docs/AUDIT-AND-PLAN.md §9). -->
+      <form class="nl-form" data-nl-form data-dkp-source="{esc(source)}" data-dkp-lead="{esc(lead)}" data-dkp-thanks="{rel(depth,'thank-you.html')}" action="{EMAIL_ENDPOINT}" method="POST">
+        <input type="hidden" name="_subject" value="{esc(subject)}">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
-        <label class="sr-only" for="nl-email">Email address</label>
-        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me brushes</button>
+        <input type="hidden" name="source" value="{esc(source)}">{lead_field}
+        <label class="sr-only" for="{uid}-email">Email address</label>
+        <input id="{uid}-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <button class="btn btn-gold" type="submit">{esc(cta)}</button>
         <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
       </form>
       <p class="nl-caption">Prefer to grab them now? <a href="{rel(depth,'freebies.html')}">Browse the free brush packs</a>.</p>
@@ -448,7 +555,8 @@ def product_card(p, depth, eager=False):
     exact = " exact" if 0.7 <= ratio <= 1.6 else ""
     cslug = CATEGORY_SLUGS.get(p.get("category"))
     cat_url = rel(depth, f"category/{cslug}/") if cslug else (rel(depth, "bundles.html") if p.get("category") == "Bundles" else rel(depth, f"products.html#cat-{esc(p['category'].replace(' ','%20'))}"))
-    return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}">
+    _tier = tier_of(p); _line = line_of(p)
+    return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}" data-tier="{esc(_tier)}" data-line="{esc(_line)}" data-dkp-slug="{esc(p['slug'])}" data-dkp-name="{esc(p['name'])}" data-dkp-price="{p.get('price',0):.2f}" data-dkp-tier="{esc(_tier)}" data-dkp-free="{1 if p['free'] else 0}" data-dkp-loc="card">
   <a class="card-media{exact}" href="{u}" style="--card-ar:{ar:.4f}">
     <img class="fit{fit}" src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
     {badge}
@@ -499,6 +607,209 @@ def trend_topics(depth=0):
     ]
     pills = "".join(f'<a class="trend-pill" href="{u}">{n}</a>' for n, u in topics)
     return f'<p class="trend-label">Trending now in Procreate &amp; digital art</p><div class="trend-pills">{pills}</div>'
+
+# ── CONVERSION COMPONENTS (Phase 1 sales foundation) ────────────────────
+# Every component below reuses the existing design tokens (.btn, .badge,
+# .eyebrow, .price, .grid) so nothing new has to be learned visually.
+# Nothing here invents a claim: copy states only what is already true in
+# data/products.json (asset counts, prices, formats, requirements).
+
+def hero_trust(depth=0):
+    """Four trust points beside the hero. Each one is verifiable from the
+    product data or the store setup — no invented review counts or numbers."""
+    items = [
+        ("Hand-tested on real artwork", "Tuned on actual portrait and illustration work, not bulk-generated."),
+        ("Apple Pencil ready", "Pressure and tilt behaviour set up for iPad + Apple Pencil."),
+        ("Procreate compatible", ".brushset files for Procreate on iPad. Requirements listed on every page."),
+        ("Instant digital delivery", "Payhip checkout, download link in your inbox seconds later, lifetime access."),
+    ]
+    cells = "".join(
+        f'<li class="ht-item"><span class="ht-ic" aria-hidden="true">✓</span>'
+        f'<span><b>{esc(t)}</b><small>{esc(sub)}</small></span></li>'
+        for t, sub in items)
+    return f'<ul class="hero-trust">{cells}</ul>'
+
+
+def craft_grid(depth=0):
+    """"WHAT DO YOU CREATE?" — routes intent before the catalog.
+    Each card links to the matching category page (or the Brush Finder for
+    animation, where we honestly do not have a dedicated pack yet)."""
+    cards = DISCOVERY.get("craftCards") or []
+    counts = {}
+    for pr in PRODUCTS:
+        d = disc(pr["slug"])
+        if d.get("line") == "lifestyle":
+            continue
+        for c in d.get("craft") or []:
+            counts[c] = counts.get(c, 0) + 1
+    tiles = ""
+    for c in cards:
+        n = counts.get(c["id"], 0)
+        href = rel(depth, c["href"])
+        tiles += (
+            f'<a class="craft-card" href="{esc(href)}" data-dkp-event="craft_card_click" '
+            f'data-dkp-craft="{esc(c["id"])}" data-dkp-count="{n}">'
+            f'<span class="craft-name">{esc(c["label"])}</span>'
+            f'<span class="craft-blurb">{esc(c["blurb"])}</span>'
+            f'<span class="craft-meta">{n} {"pack" if n == 1 else "packs"} →</span></a>')
+    return f"""<section class="section" id="craft" aria-labelledby="craft-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Start with your work, not our catalog</p><h2 id="craft-title">What Do You Create?</h2></div>
+      <a class="text-link" href="{rel(depth,'find-my-brushes.html')}">Not sure? Find my brushes →</a>
+    </div>
+    <div class="grid craft-grid">{tiles}</div>
+  </div>
+</section>
+"""
+
+
+def flagship_band(depth=0):
+    """Level 4 — the Master Library, given the prominence its value deserves.
+    The comparison is arithmetic on real prices, never a scarcity or
+    popularity claim."""
+    f = flagship()
+    if not f:
+        return ""
+    im = f.get("images") or {}
+    img = im.get("main") or im.get("card") or ""
+    srcset = img_srcset(depth, f["slug"], im, "(min-width: 960px) 42vw, 92vw")
+    # Honest arithmetic: what the equivalent single packs would cost.
+    singles = [p for p in PRODUCTS if tier_of(p) == "entry" and line_of(p) != "lifestyle" and not p["free"]]
+    cheapest = sorted((p["price"] for p in singles))[:4]
+    compare = ""
+    if len(cheapest) == 4:
+        compare = f'Four single packs from the catalog already total <b>${sum(cheapest):.0f}</b>.'
+    return f"""<section class="section flagship-band" id="master-library" aria-labelledby="flag-title">
+  <div class="wrap flag-inner">
+    <div class="flag-media">
+      <img src="{asset_file(depth, f['slug'], img)}"{srcset} width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(f.get('alt') or f['name'])}" loading="lazy" decoding="async">
+    </div>
+    <div class="flag-body">
+      <p class="eyebrow">The complete library</p>
+      <h2 id="flag-title">{esc(f['name'])}</h2>
+      <p class="lead-sm">{esc(f['short'])}</p>
+      <ul class="flag-points">
+        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> in organised category folders</li>
+        <li>Linework, traditional media, watercolour, character &amp; anatomy, texture and effects</li>
+        <li>One .brushset download, lifetime access, no more tool hunting</li>
+      </ul>
+      <p class="flag-compare muted">{compare}</p>
+      <div class="flag-cta">
+        <span class="price price-lg">{esc(f['priceText'])}</span>
+        <a class="btn btn-gold" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'flagship-band')}>Get the Master Library <span class="btn-arr">↗</span></a>
+        <a class="text-link" href="{rel(depth, 'products/' + f['slug'] + '/')}">See everything inside →</a>
+      </div>
+    </div>
+  </div>
+</section>
+"""
+
+
+def upgrade_panel(p, depth):
+    """Level 2/3 → Level 4 ladder on a product page.
+    Shown only where an upgrade is genuinely logical: never on the flagship
+    itself, never on free products (a free visitor gets the starter path
+    instead), and never on lifestyle products."""
+    f = flagship()
+    if not f or p["slug"] == f["slug"] or p.get("free") or line_of(p) == "lifestyle":
+        return ""
+    tier = tier_of(p)
+    if tier == "flagship":
+        return ""
+    diff = f["price"] - p.get("price", 0)
+    if tier == "bundle":
+        head_txt = "Already looking at a bundle?"
+        body = (f"The Master Library adds the rest of the catalog on top of it: "
+                f"{esc(f.get('assets') or '2,000+ brushes')} in one organised download.")
+    else:
+        head_txt = "Looking for more than one pack?"
+        body = (f"This pack solves one problem well for {esc(p['priceText'])}. "
+                f"If you paint across several styles, the Master Library covers all of them "
+                f"for {esc(f['priceText'])} — +${diff:.2f} over this pack.")
+    im = f.get("images") or {}
+    thumb = im.get("card") or im.get("main") or ""
+    return f"""<section class="psec upgrade-panel" aria-labelledby="p-upgrade">
+  <h2 id="p-upgrade">{esc(head_txt)}</h2>
+  <div class="up-inner">
+    <a class="up-media" href="{rel(depth, 'products/' + f['slug'] + '/')}">
+      <img src="{asset_file(depth, f['slug'], thumb)}" width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(f['name'])}" loading="lazy" decoding="async">
+    </a>
+    <div class="up-body">
+      <p class="up-this"><b>This pack</b> — {esc(p['name'])}, {esc(p['priceText'])}</p>
+      <p class="up-or muted">or</p>
+      <h3>{esc(f['name'])}</h3>
+      <p class="muted">{esc(body)}</p>
+      <div class="up-cta">
+        <span class="price">{esc(f['priceText'])}</span>
+        <a class="btn btn-line btn-sm" href="{f['payhipUrl']}" target="_blank" rel="noopener"
+           data-dkp-event="upgrade_clicked" data-dkp-from-product-id="{esc(p['slug'])}"
+           data-dkp-to-product-id="{esc(f['slug'])}" data-dkp-price-delta="{diff:.2f}"
+           {buy_attrs(f, 'pdp-upgrade')}>Get the complete collection ↗</a>
+        <a class="text-link" href="{rel(depth, 'products/' + f['slug'] + '/')}">Compare →</a>
+      </div>
+    </div>
+  </div>
+</section>
+"""
+
+
+def licence_line():
+    """The commercial-usage objection, answered above the fold instead of
+    buried in a collapsed FAQ. States exactly what terms.html already says."""
+    return ('<p class="licence-line"><b>Can I sell what I make?</b> Yes — finished artwork you '
+            'create with these files is yours to use personally and commercially. You may not '
+            'resell or redistribute the brush files themselves. '
+            '<a href="../../terms.html">Full licence</a>.</p>')
+
+
+def install_steps():
+    """How do I install it? A real question that blocks purchase for anyone
+    new to iPad. Same steps already documented in the install guide article."""
+    steps = [
+        "Buy or download on Payhip — the .brushset file arrives by email instantly.",
+        "Get the file onto your iPad (AirDrop from a Mac, or any file transfer on Windows).",
+        "Tap the .brushset file in the Files app and choose <b>Open in Procreate</b>.",
+        "The set installs automatically and appears in your Brushes panel, ready to use.",
+    ]
+    lis = "".join(f"<li>{s}</li>" for s in steps)
+    return (f'<section class="psec install-steps" aria-labelledby="p-install">'
+            f'<h2 id="p-install">How to install it</h2><ol class="steps-list">{lis}</ol>'
+            f'<p class="muted install-note">Full walkthrough with screenshots: '
+            f'<a href="../../blog/how-to-install-procreate-brushes/">How to install Procreate brushes</a>.</p></section>')
+
+
+def freebie_gate(depth, p=None, source="freebies"):
+    """Email-first free download. The direct Payhip link stays visible —
+    we never hold a promised free file hostage — but the email path is the
+    primary action and leads to thank-you.html, which makes one starter offer."""
+    lead = p["slug"] if p else "free-brushes"
+    heading = f"Get {p['name']}" if p else "Get the free Procreate packs"
+    sub = ("Enter your email and we will send the download link plus new free brush drops. "
+           "No spam, unsubscribe in one click.")
+    return f"""<section class="freebie-gate" id="get-free" aria-labelledby="fg-title">
+  <div class="fg-inner">
+    <div class="fg-copy">
+      <p class="eyebrow">Free download</p>
+      <h2 id="fg-title">{esc(heading)}</h2>
+      <p class="muted">{esc(sub)}</p>
+      <form class="nl-form fg-form" data-nl-form data-dkp-source="{esc(source)}" data-dkp-lead="{esc(lead)}" data-dkp-thanks="{rel(depth,'thank-you.html')}" action="{EMAIL_ENDPOINT}" method="POST">
+        <input type="hidden" name="_subject" value="Free download request: {esc(lead)}">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="source" value="{esc(source)}">
+        <input type="hidden" name="lead_magnet" value="{esc(lead)}">
+        <label class="sr-only" for="fg-email-{esc(lead)}">Email address</label>
+        <input id="fg-email-{esc(lead)}" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <button class="btn btn-gold" type="submit">Send my free download</button>
+        <p class="nl-note" data-nl-note>We email the link straight away.</p>
+      </form>
+      <p class="fg-alt muted">In a hurry? <a href="{(p['payhipUrl'] if p else STORE_URL + '/collection/freebies')}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-gate-direct') if p else ''}>Download it directly on Payhip ↗</a> — no email needed.</p>
+    </div>
+  </div>
+</section>
+"""
+
 
 # ── seasonal homepage band ──────────────────────────────────────────────
 # A date-aware promo strip for the active art season. Each def has an inclusive

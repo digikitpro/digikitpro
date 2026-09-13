@@ -166,7 +166,10 @@
       var match = f === "all"
         || (f === "__free" ? c.getAttribute("data-free") === "1"
           : (f === "__featured" ? c.getAttribute("data-featured") === "1"
-            : c.getAttribute("data-category") === f));
+            : (f === "__procreate" ? c.getAttribute("data-line") !== "lifestyle"
+              : (f === "__lifestyle" ? c.getAttribute("data-line") === "lifestyle"
+                : (f === "__flagship" ? c.getAttribute("data-tier") === "flagship"
+                  : c.getAttribute("data-category") === f)))));
       c.classList.toggle("hidden", !match);
       if (match) shown++;
     });
@@ -267,6 +270,19 @@
  ? "You’re on the list! Your first free brush drop is on its way; check your inbox."
  : "You’re registered, welcome! Our list is brand new and finishing its one-time email activation; your address is saved and your free brushes arrive with the very first send.";
  note.style.color = "#C9A86A";
+ /* Tell the analytics layer a REAL provider response came back (never fired
+ optimistically), then continue the funnel: the thank-you page delivers every
+ free file directly, so the promise is kept even if the email is delayed. */
+ var source = form.getAttribute("data-dkp-source") || "";
+ var lead = form.getAttribute("data-dkp-lead") || "";
+ var thanks = form.getAttribute("data-dkp-thanks") || "";
+ try {
+ document.dispatchEvent(new CustomEvent("dkp:signup", { detail: { source: source, lead: lead, state: state } }));
+ } catch (_) {}
+ if (thanks) {
+ var url = thanks + (lead ? "?lead=" + encodeURIComponent(lead) + "&src=" + encodeURIComponent(source) : "");
+ setTimeout(function () { location.href = fixLocal(url); }, state === "ok" ? 700 : 1600);
+ }
  } else if (/web server|open this page/i.test(j.message || "")) {
  // mail service refused this origin (offline file or unapproved domain)
  note.innerHTML = 'This preview can’t send signups (they only work on the live hosted site). Free brushes meanwhile: <a href="' + window.DKP.store + '/collection/freebies" target="_blank" rel="noopener">open the Freebies ↗</a>';

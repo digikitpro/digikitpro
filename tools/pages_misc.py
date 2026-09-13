@@ -94,10 +94,20 @@ def build_misc():
     <li><strong>Email address (optional):</strong> only if you subscribe to the newsletter. Used solely for product news, free asset drops and Procreate tips. Unsubscribe anytime via the link in every email.</li>
     <li><strong>Purchase data:</strong> all payments and order data are processed by Payhip on their secure checkout. We never see or store your payment card details. See Payhip's own privacy policy for how they process order data.</li>
   </ul>
-  <h2>Analytics & cookies</h2>
-  <p>This website is a static site. It sets no tracking cookies and includes no third-party analytics by default. If we ever add privacy-respecting analytics, this page will be updated first.</p>
+  <h2>Analytics &amp; cookies</h2>
+  <p>This is a static website with no server of our own, but it is not analytics-free, and we would rather tell you plainly than imply otherwise.</p>
+  <ul>
+    <li><strong>Google Analytics 4</strong> is loaded on every page to measure which products and guides are useful. Google may set cookies and process your IP address for this. You can block it with any tracker blocker, by enabling your browser's <em>Do Not Track</em> setting (this site honours it and stops sending), or by using Google's own <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener" target="_blank">opt-out add-on</a>.</li>
+    <li><strong>What we measure:</strong> page and product views, clicks on "buy" and "download" links, which Brush Finder answers lead to a recommendation, and the answer you give to the optional "what stopped you from choosing a brush today?" prompt. <strong>We do not record your name, your email address, or anything you type</strong> — search queries are measured by length only.</li>
+    <li><strong>DigiKitPro sets no advertising cookies and no cross-site identifier.</strong> There is no retargeting, no ad pixel and no data broker sharing.</li>
+    <li><strong>A first-party summary</strong> of your visit (counts only) is kept in your browser's <code>localStorage</code> so the site can avoid asking you the same optional question twice. It never leaves your device unless you send a form. Clearing your browser data removes it.</li>
+    <li><strong>Google Translate</strong> (the globe button in the header) is loaded from Google only when you choose a language. Google sets its own <code>googtrans</code> cookie to remember that choice. Do not use the button if you prefer not to contact Google.</li>
+    <li><strong>FormSubmit</strong> delivers newsletter and free-download requests to our inbox. It sees the email address you type and the page you sent it from.</li>
+    <li><strong>Payhip</strong> handles all payments. Checkout happens on payhip.com under <a href="https://payhip.com/privacy" rel="noopener" target="_blank">Payhip's own privacy policy</a>; we never see or store your card details.</li>
+  </ul>
+  <p>You can switch our own measurement off completely by visiting any page with <code>#dkp-analytics=off</code> in the address, which sets an opt-out in your browser.</p>
   <h2>Your rights</h2>
-  <p>You can request access, correction or deletion of your newsletter data at any time by contacting us via the <a href="{STORE_URL}" target="_blank" rel="noopener">store contact form</a>.</p>
+  <p>You can request access, correction or deletion of your newsletter data at any time by emailing <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> or using the <a href="{STORE_URL}" target="_blank" rel="noopener">store contact form</a>. Every email we send contains a one-click unsubscribe link.</p>
 </div></section></main>
 {footer(0)}"""
     write("privacy.html", html_out)
@@ -173,6 +183,7 @@ Sitemap: {SITE_URL}/sitemap.txt
 
     static_urls = [
         ("/", "1.0", "daily"),
+        ("/find-my-brushes.html", "0.9", "weekly"),
         ("/products.html", "0.9", "daily"),
         ("/freebies.html", "0.9", "weekly"),
         ("/bundles.html", "0.8", "weekly"),
@@ -218,6 +229,7 @@ Sitemap: {SITE_URL}/sitemap.txt
     # ── Plain-text sitemap (one URL per line) ──────────────────────────────
     txt_urls = [
         SITE_URL + "/",
+        SITE_URL + "/find-my-brushes.html",
         SITE_URL + "/products.html",
         SITE_URL + "/freebies.html",
         SITE_URL + "/bundles.html",
