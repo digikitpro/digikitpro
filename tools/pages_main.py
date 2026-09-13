@@ -140,7 +140,7 @@ def build_home():
           <a class="btn btn-gold" href="products.html">Browse kits</a>
           <a class="btn btn-line" href="#free">Get Free Brushes</a>
         </div>
-        <p class="hero-finder">Not sure what you need? <a href="find-my-brushes.html" data-dkp-event="finder_entry_click" data-dkp-loc="hero">Find my brushes in 4 questions →</a></p>
+        <p class="hero-finder">Browse by what you create — <a href="products.html">explore the full catalog →</a></p>
         {hero_trust(0)}
       </div>
       <div class="hero-showcase" aria-hidden="true">{showcase}</div>
@@ -168,7 +168,7 @@ def build_home():
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">Level 2 · Specialist packs</p><h2>Featured Brush Kits</h2></div>
-        <a class="text-link" href="find-my-brushes.html">Not sure which one? Find my brushes →</a>
+        <a class="text-link" href="products.html">Browse all products →</a>
       </div>
       <p class="sec-note muted">Each kit solves one specific problem — skin, hair, line weight, watercolour — so you buy the fix you need, not a pile of brushes you will never open.</p>
       {product_grid(featured, 0)}
@@ -289,7 +289,7 @@ def build_products():
   {trust_band(0)}
   <section class="section">
     <div class="wrap">
-      <p class="catalog-cta">Not sure what to pick? <a href="find-my-brushes.html">Answer 4 questions and get one recommendation →</a></p>
+      <p class="catalog-cta">Browse every kit — <a href="products.html">filter by category to find your workflow →</a></p>
       {trend_topics()}
       <div class="filter-bar" role="toolbar" aria-label="Filter products by category">{chips}</div>
       {product_grid(ordered, 0, eager_first=4)}
@@ -324,7 +324,7 @@ def build_freebies():
   </div></section>
   <section class="section section-alt"><div class="wrap narrow">
     <h2>Why we give professional tools away</h2>
-    <p>Great tools shouldn't be gated. Every freebie in this collection is built to the same standard as our paid kits, hand-tuned pressure curves, real-media texture, and organized .brushset installs. If they become part of your daily workflow (we think they will), the <a href="products.html">full catalog</a> is waiting when you're ready — and the <a href="find-my-brushes.html">Brush Finder</a> will tell you which part of it actually fits your work.</p>
+    <p>Great tools shouldn't be gated. Every freebie in this collection is built to the same standard as our paid kits, hand-tuned pressure curves, real-media texture, and organized .brushset installs. If they become part of your daily workflow (we think they will), the <a href="products.html">full catalog</a> is waiting when you're ready.</p>
     <p>New here? Start with the <a href="products/free-fine-liner-brushes-100/">100-brush Fine Liner set</a>, then grab the <a href="products/free-color-vault-1200-swatches/">1,200-swatch Color Vault</a> so you never stall on color again.</p>
   </div></section>
   {newsletter(0)}

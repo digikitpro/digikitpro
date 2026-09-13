@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://digikitpro.github.io/digikitpro/sitemap.xml
-Sitemap: https://digikitpro.github.io/digikitpro/sitemap.txt
+Sitemap: https://digikitpro.shop/sitemap.xml
+Sitemap: https://digikitpro.shop/sitemap.txt
+Sitemap: https://digikitpro.shop/sitemap-images.xml
