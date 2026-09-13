@@ -16,7 +16,7 @@ on:
   workflow_dispatch:            # "Run workflow" button for a manual rebuild
 
 permissions:
-  contents: read
+  contents: write          # IndexNow state manifest (data/indexnow-state.json) is committed after a successful ping
   pages: write
   id-token: write
 
@@ -47,6 +47,9 @@ jobs:
           # Optional: paste verification tokens here once Search Console issues them
           GOOGLE_VERIFY: ${{ vars.GOOGLE_VERIFY }}
           BING_VERIFY: ${{ vars.BING_VERIFY }}
+          # Writes <key>.txt at the site root so IndexNow can verify the ping.
+          # Harmless when unset: tools/build.py skips the key file.
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
         run: python3 tools/build.py
 
       - uses: actions/configure-pages@v5
@@ -57,3 +60,31 @@ jobs:
 
       - id: deployment
         uses: actions/deploy-pages@v4
+
+      # AFTER the site is live, so crawlers are never sent to content that is
+      # not yet deployed. Gated on INDEXNOW_KEY: with the variable unset the
+      # step is skipped and the ping stays dormant. continue-on-error so a
+      # ping failure can never fail a deploy. Does not call the retired
+      # Google/Bing sitemap-ping endpoints (both have been dead for years).
+      - name: Ping IndexNow for URLs whose HTML actually changed
+        if: ${{ vars.INDEXNOW_KEY != '' }}
+        continue-on-error: true
+        env:
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+          SITE_URL: https://digikitpro.shop
+        run: python3 tools/submit_index.py
+
+      - name: Commit IndexNow state manifest
+        if: ${{ vars.INDEXNOW_KEY != '' }}
+        continue-on-error: true
+        run: |
+          git config user.name "digikitpro-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/indexnow-state.json
+          if git diff --cached --quiet; then
+            echo "IndexNow state unchanged."
+            exit 0
+          fi
+          git commit -m "chore: update IndexNow state manifest"
+          git pull --rebase --autostash origin ${{ github.ref_name }}
+          git push

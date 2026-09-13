@@ -14,6 +14,41 @@ def _rfc822(d):
         return format_datetime(datetime.utcnow())
 
 
+def _is_card_or_thumb(filename):
+    """True for the downscaled card/thumb crop of a product image."""
+    name = (filename or "").rsplit("/", 1)[-1].lower()
+    return "-card." in name or "-thumb." in name
+
+
+def _fullsize_product_images(p):
+    """(abs_url, title) pairs for the full-size artwork on a product page.
+
+    Cards are deliberately excluded: they are downscaled crops of the same
+    files, and submitting both offers Google duplicates. Titles come from
+    the alt text already used on the page (p['alt'], then 'preview N' for
+    gallery frames — same strings gallery_html() emits).
+    """
+    im = p.get("images") or {}
+    slug = p["slug"]
+    alt_main = p.get("alt") or p["name"]
+    out = []
+
+    def _loc(filename):
+        if not filename or _is_card_or_thumb(filename):
+            return None
+        return filename if is_abs(filename) else absurl(f"assets/products/{slug}/{filename}")
+
+    main = im.get("main") or ""
+    loc = _loc(main)
+    if loc:
+        out.append((loc, alt_main))
+    for i, g in enumerate(im.get("gallery") or [], start=1):
+        loc = _loc(g.get("file") or "")
+        if loc:
+            out.append((loc, f"{alt_main}: preview {i}"))
+    return out
+
+
 def schema_faq(faqs):
     return [{"@context": "https://schema.org", "@type": "FAQPage",
              "mainEntity": [{"@type": "Question", "name": q,
@@ -326,11 +361,14 @@ def build_misc():
     write(".nojekyll", "")
 
     # ── robots + sitemap ──
+    # Three sitemaps: URL xml, URL txt, and the dedicated image sitemap
+    # (full-size product artwork only — see sitemap-images.xml below).
     write("robots.txt", f"""User-agent: *
 Allow: /
 
 Sitemap: {SITE_URL}/sitemap.xml
 Sitemap: {SITE_URL}/sitemap.txt
+Sitemap: {SITE_URL}/sitemap-images.xml
 """)
 
     static_urls = [
@@ -402,6 +440,30 @@ Sitemap: {SITE_URL}/sitemap.txt
     txt_urls += [f"{SITE_URL}/products/{p['slug']}/" for p in PRODUCTS]
     txt_urls += [f"{SITE_URL}/blog/{a['slug']}/" for a in load_articles()]
     write("sitemap.txt", "\n".join(txt_urls) + "\n")
+
+    # ── Image sitemap (full-size product artwork only) ───────────────────
+    # Cards and thumbs are downscaled crops of the same artwork; submitting
+    # both would offer Google duplicates. Titles reuse the alt text already
+    # rendered on the product page (hand-written or from seo_engine.py).
+    img_sm = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+              'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n')
+    n_img_pages = 0
+    n_img_locs = 0
+    for p in PRODUCTS:
+        entries = _fullsize_product_images(p)
+        if not entries:
+            continue
+        img_sm += f" <url><loc>{SITE_URL}/products/{p['slug']}/</loc>"
+        for loc, title in entries:
+            img_sm += (f"<image:image><image:loc>{esc(loc)}</image:loc>"
+                       f"<image:title>{esc(title)}</image:title></image:image>")
+            n_img_locs += 1
+        img_sm += "</url>\n"
+        n_img_pages += 1
+    img_sm += "</urlset>\n"
+    write("sitemap-images.xml", img_sm)
+    print(f"image sitemap: {n_img_pages} pages, {n_img_locs} full-size images")
 
     # ── RSS 2.0 feed of the blog articles ──────────────────────────────────
     articles = load_articles()
