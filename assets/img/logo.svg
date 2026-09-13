@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <rect width="320" height="80" rx="14" fill="#0A0A0C"/>
+  <circle cx="48" cy="40" r="20" stroke="#C9A86A" stroke-width="2.5" fill="none"/>
+  <path d="M38 52V26h14c10 0 18 6 19 14 0 9-8 15-19 15h-14Zm8-6h7c6 0 10-4 10-9 0-5-3-9-10-9h-7v18Z" fill="#C9A86A"/>
+  <text x="72" y="50" font-family="Georgia, 'Times New Roman', serif" font-size="28" font-weight="bold" fill="#C9A86A" letter-spacing="2">DigiKitPro</text>
+</svg>
