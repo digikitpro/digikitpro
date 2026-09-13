@@ -94,7 +94,13 @@
         return { p: p, score: r.total, hits: r.hits };
       })
       .filter(function (c) {
-        return c.p.line !== "lifestyle" && !c.p.aggregate && c.score > 0;
+        /* No hardcoded category exclusion. A product is a candidate iff it
+           actually matches an answer (score > 0) and is not a whole-catalog
+           aggregate. Planners, journals and travel guides carry no craft or
+           goal tags in data/discovery.json, so they score 0 and drop out
+           naturally - and if the owner ever tags one, it becomes recommendable
+           without a code change. */
+        return !c.p.aggregate && c.score > 0;
       })
       .sort(function (x, y) {
         return y.score - x.score || (y.p.priority || 0) - (x.p.priority || 0);

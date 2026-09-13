@@ -188,6 +188,23 @@ Fires `feedback_reason`. To collect answers in your own store, set the
 `DKP_FEEDBACK_ENDPOINT` build variable — empty by default, so nothing is posted
 anywhere until you point it at a Cloudflare Worker or Vercel function.
 
+### Owner decisions currently in force (2026-09-13)
+
+- **Email:** FormSubmit → `digikitprostudio@gmail.com`. No ESP yet, so there is
+  no automated drip — but `thank-you.html` delivers every free file directly and
+  makes the starter offer, so the funnel works. The `source` and `lead_magnet`
+  fields are already captured on every form, so connecting MailerLite/Brevo later
+  is a one-line `EMAIL_ENDPOINT` swap plus building the sequence in the ESP.
+- **Catalog:** planners, journals, templates and the travel guide stay **mixed
+  into the single catalog**. No separate filter or page. They are excluded from
+  *brush* recommendations only because they carry no craft/goal tags in
+  `data/discovery.json` — tag one and it becomes recommendable, no code change.
+- **Analytics:** GA4 `G-5MFQFHNB6B` stays on, disclosed accurately in
+  `privacy.html`, with `#dkp-analytics=off` and Do Not Track both honoured.
+
+Full rationale and the review point for the catalog decision:
+`docs/AUDIT-AND-PLAN.md` → "OWNER DECISIONS".
+
 ### Adding a product
 `tools/payhip_sync.py` still owns `data/products.json` and is untouched. A new
 product with no `discovery.json` entry gets safe defaults (tier from its

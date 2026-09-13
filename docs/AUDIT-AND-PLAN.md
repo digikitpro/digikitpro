@@ -534,6 +534,36 @@ recommendations from finder history.
 
 ---
 
+## OWNER DECISIONS (recorded 2026-09-13)
+
+These three were put to the owner and answered. They are recorded here because
+each one changes what Phase 2 should build, and because two of them reverse
+work that was already shipped in this changeset.
+
+| # | Decision | Answer | Consequence |
+|---|---|---|---|
+| 1 | **Email provider** for the 5-email sequence | **Keep FormSubmit for now** | Signups keep landing in `digikitprostudio@gmail.com`. `thank-you.html` already delivers the files directly and makes the starter offer, so the funnel works end-to-end without a provider — it simply has no automated follow-up yet. `EMAIL_ENDPOINT` in `tools/core.py` stays a one-line swap whenever the owner is ready. **The `source` and `lead_magnet` fields added in this changeset are what make that swap worthwhile: they are already being captured, so the moment an ESP is connected the sequence can trigger per lead magnet with no further code change.** |
+| 2 | **Non-Procreate products** (5 planners/journals, Morocco itinerary, KDP templates, fitness planner) | **Leave them mixed in** | **Reverted in this changeset.** The `Procreate tools` / `Planners & Journals` filter chips and the catalog callout note were removed, the line-based sort key was dropped, and the `Featured` chip was restored. All 9 products sit in the single catalog grid exactly as before. The finder's exclusion was also changed from a hardcoded category rule to **data-driven**: those products carry no craft/goal tags in `data/discovery.json`, so they score 0 and drop out of *brush* recommendations naturally. If the owner ever tags one with a craft, it becomes recommendable with no code change. `data-line` is still emitted on cards and `js/main.js` still supports the filters, so re-separating later is a one-line change. |
+| 3 | **Analytics** | **Keep GA4** (`G-5MFQFHNB6B`) | No change needed — events already fire correctly. `privacy.html` now discloses GA4, Google Translate, FormSubmit and Payhip accurately, and both opt-outs work: `#dkp-analytics=off` (persisted) and the browser's Do Not Track flag. |
+
+### What decision #2 means for the audit
+
+Problem C4 in Part 1 (positioning dilution) and Opportunity #10 in Part 3 are
+**accepted risk, not fixed**. That is a legitimate owner call — those nine
+products are real inventory and they sell — but it should be a measured one
+rather than an assumed one. Two things now make it measurable:
+
+- `product_view` carries `line` and `category`, so GA4 will show whether the
+  planner/travel pages attract Procreate-art traffic or convert it away.
+- `outbound_payhip_click` shows whether they generate revenue at all.
+
+**Suggested review point:** after ~30 days of event data, compare
+(a) sessions that view a lifestyle product and then leave, against
+(b) `outbound_payhip_click` revenue from those same products. If (a) is high
+and (b) is near zero, the dilution is costing more than the inventory earns and
+decision #2 is worth revisiting. If (b) is real, leave it alone permanently.
+This is a data question now, not an opinion question.
+
 ## APPENDIX — What testing found and fixed before this shipped
 
 Phase 1 was verified by executing the real generated artifacts, not by reading

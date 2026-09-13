@@ -105,7 +105,7 @@ def build_home():
     _flag = flagship()
     _edu = {v["slug"] for v in education_products().values() if v}
     picks = [p for p in PRODUCTS
-             if line_of(p) != "lifestyle" and not p.get("comingSoon")
+             if not p.get("comingSoon")
              and (not _flag or p["slug"] != _flag["slug"]) and p["slug"] not in _edu]
     picks.sort(key=lambda p: (-(disc(p["slug"]).get("priority") or 0), p["name"]))
     trending = picks[:4]
@@ -246,16 +246,18 @@ def build_home():
 def build_products():
     counts = {}
     for p in PRODUCTS: counts[p["category"]] = counts.get(p["category"], 0) + 1
-    n_lifestyle = sum(1 for p in PRODUCTS if line_of(p) == "lifestyle")
-    n_procreate = len(PRODUCTS) - n_lifestyle
+    # Owner decision (2026-09-13): planners, journals, templates and the travel
+    # guide stay mixed into the single catalog. No separate filter, no separate
+    # page, no note calling them out. The __procreate / __lifestyle filters are
+    # still supported by js/main.js and cards still carry data-line, so adding
+    # the chips back later is a one-line change here - nothing is hard to undo.
+    featured_count = sum(1 for p in PRODUCTS if p.get("featured") or p.get("badge"))
     n_flagship = sum(1 for p in PRODUCTS if tier_of(p) == "flagship")
     chips = f'<button class="chip active" type="button" data-filter="all">All ({len(PRODUCTS)})</button>'
-    chips += f'<button class="chip" type="button" data-filter="__procreate">Procreate tools ({n_procreate})</button>'
+    chips += f'<button class="chip" type="button" data-filter="__featured">Featured ({featured_count})</button>'
     if n_flagship:
         chips += f'<button class="chip chip-gold" type="button" data-filter="__flagship">Master Library ({n_flagship})</button>'
     chips += f'<button class="chip chip-free" type="button" data-filter="__free">Free ({sum(1 for p in PRODUCTS if p["free"])})</button>'
-    if n_lifestyle:
-        chips += f'<button class="chip" type="button" data-filter="__lifestyle">Planners &amp; Journals ({n_lifestyle})</button>'
     for c in CATEGORIES:
         if counts.get(c):
             chips += f'<button class="chip" type="button" data-filter="{esc(c)}" id="{ "cat-"+c.replace(" ","%20") }">{esc(c)} ({counts[c]})</button>'
@@ -270,17 +272,10 @@ def build_products():
     _group_rank = {"free": 0, "flagship": 1, "bundle": 2, "entry": 3, "education": 4}
     ordered = sorted(PRODUCTS, key=lambda p: (
         _group_rank.get(tier_of(p), 9),
-        0 if line_of(p) != "lifestyle" else 1,
         -(disc(p["slug"]).get("priority") or 0),
         -(p.get("featured") or 0),
         p.get("price") or 0,
         p["name"]))
-    ladder_note = ""
-    if n_lifestyle:
-        ladder_note = (f'<p class="muted catalog-note">The catalog also carries {n_lifestyle} non-Procreate items '
-                       f'(digital planners, journals and templates). They are real products and stay fully buyable — '
-                       f'use the <b>Planners &amp; Journals</b> filter to see only those, or <b>Procreate tools</b> '
-                       f'to see only the brush kits.</p>')
     html_out = head("All Procreate Brushes & Digital Art Tools, DigiKitPro",
         f"Browse the complete DigiKitPro catalog: {len(PRODUCTS)} Procreate brush kits, bundles, palettes and digital resources, filter by category.",
         SITE_URL + "/products.html", 0, ctx=page_ctx("catalog"),
@@ -297,7 +292,6 @@ def build_products():
       <p class="catalog-cta">Not sure what to pick? <a href="find-my-brushes.html">Answer 4 questions and get one recommendation →</a></p>
       {trend_topics()}
       <div class="filter-bar" role="toolbar" aria-label="Filter products by category">{chips}</div>
-      {ladder_note}
       {product_grid(ordered, 0, eager_first=4)}
       <p class="muted empty-note" data-empty-note hidden>No products match this filter yet, try another category.</p>
     </div>

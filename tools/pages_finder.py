@@ -119,7 +119,7 @@ def top_for_craft(craft_id, prods, n=3, tiers=("entry", "bundle")):
     # block recommend the same three big bundles. They get their own flagship
     # band and the bundles page instead.
     scored = [p for p in prods.values()
-              if p["line"] != "lifestyle" and not p.get("aggregate")
+              if not p.get("aggregate")
               and p["tier"] in tiers and craft_id in (p["craft"] or [])]
     scored.sort(key=lambda p: (-_score(p, craft=craft_id), -(p["priority"] or 0)))
     return scored[:n]
