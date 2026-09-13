@@ -837,9 +837,11 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 .art-card:hover .text-link{transform:translateX(3px)}
 
 /* ══ 8. BEFORE / AFTER — the result, not the brushes ══════════════════ */
-.ba-section{background:linear-gradient(170deg,rgba(201,168,106,.045),rgba(201,168,106,0) 60%),var(--bg)}
+.ba-section{background:linear-gradient(170deg,rgba(201,168,106,.045),rgba(201,168,106,0) 60%),var(--bg);padding:2.8rem 0}
+@media(min-width:720px){.ba-section{padding:3.4rem 0}}
 .flagship-band{--wipe-bg:#141318}   /* match the band gradient so the reveal wipe is seamless */
-.ba-figure{margin:0}
+.ba-figure{margin:0 auto;max-width:720px}
+.ba-cta{max-width:720px;margin-left:auto;margin-right:auto}
 .ba-stage{
   --pos:50%;
   position:relative;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius);

@@ -104,6 +104,53 @@ def build_home():
   </div>
 </a>"""
 
+    # ── Before / After: the result, not the brushes ──────────────────────
+    # Interactive comparison slider (js/motion.js + css/style.css "MOTION
+    # SYSTEM"). Medium-width on purpose: it demonstrates texture, it does
+    # not become another full-bleed product band. Swap
+    # assets/img/ba-before.webp and ba-after.webp for real client artwork
+    # whenever you like; they must stay the same size and the same crop.
+    skin = byslug.get("portrait-skin-brushes-procreate")
+    portrait_bundle = byslug.get("ultimate-portrait-mastery-bundle")
+    skin_cta = ""
+    bundle_cta = ""
+    if skin:
+        skin_cta = (
+            f'<a class="btn btn-gold" href="products/{skin["slug"]}/" {buy_attrs(skin, "before-after")}>'
+            f'Get the Skin Brushes <span class="btn-arr">·</span> {esc(skin["priceText"])}</a>'
+        )
+    if portrait_bundle:
+        bundle_cta = (
+            f'<a class="btn btn-line" href="products/{portrait_bundle["slug"]}/">'
+            f'Or take the full portrait bundle →</a>'
+        )
+    before_after = f"""<section class="section ba-section" id="results" aria-labelledby="results-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">See the result</p><h2 id="results-title">Flat Painting → Finished Portrait</h2></div>
+        <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit →</a>
+      </div>
+      <p class="sec-note muted">Same drawing, same lighting: the only difference is texture. Drag the divider to see what skin, hair and finish brushes actually add — pores, freckles, strand detail and the final pass that stops a portrait looking airbrushed.</p>
+      <figure class="ba-figure">
+        <div class="ba-stage" data-ba>
+          <img class="ba-img ba-after" src="assets/img/ba-after.webp" width="1200" height="800" alt="Finished portrait: detailed skin texture, hair strands and final rendering" loading="lazy" decoding="async">
+          <div class="ba-clip">
+            <img class="ba-img ba-before" src="assets/img/ba-before.webp" width="1200" height="800" alt="Unfinished portrait: flat base colour with no skin texture or detail" loading="lazy" decoding="async">
+          </div>
+          <span class="ba-tag ba-tag-b">Before · flat base</span>
+          <span class="ba-tag ba-tag-a">After · textured finish</span>
+          <div class="ba-divider" role="slider" tabindex="0" aria-label="Reveal the finished portrait" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% finished">
+            <span class="ba-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 4 12l5 6M15 6l5 6-5 6"/></svg></span>
+          </div>
+          <div class="ba-sweep" aria-hidden="true"></div>
+        </div>
+        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use ← →.</span><span>Demonstration artwork.</span></figcaption>
+      </figure>
+      <div class="ba-cta">{skin_cta}{bundle_cta}</div>
+    </div>
+  </section>
+"""
+
     articles = [a for a in load_articles() if a.get("image")][:3]
     def art_card(a, depth):
         ss = img_srcset(depth, a.get("_pslug", ""), a.get("_im") or {}, "(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw")
@@ -159,10 +206,13 @@ def build_home():
     </div>
   </section>
 
-  <!-- 5 · MASTER LIBRARY: the premium upsell, before the featured kits. -->
+  <!-- 5 · BEFORE / AFTER: medium result slider, after the free row. -->
+  {before_after}
+
+  <!-- 6 · MASTER LIBRARY: the premium upsell, before the featured kits. -->
   {flagship_band(0, bridge=False)}
 
-  <!-- 6 · FEATURED BRUSH KITS: compact storefront — one short best-seller
+  <!-- 7 · FEATURED BRUSH KITS: compact storefront — one short best-seller
        spotlight, then balanced catalog cards. Detail stays on product pages. -->
   <section class="section section-alt" id="featured" aria-labelledby="feat-title">
     <div class="wrap">
@@ -175,7 +225,7 @@ def build_home():
     </div>
   </section>
 
-  <!-- 7 · POPULAR STARTING POINTS: the packs new customers begin with. -->
+  <!-- 8 · POPULAR STARTING POINTS: the packs new customers begin with. -->
   <section class="section" id="starting-points" aria-labelledby="sp-title">
     <div class="wrap">
       <div class="sec-head">
@@ -187,10 +237,10 @@ def build_home():
     </div>
   </section>
 
-  <!-- 8 · LEARN: free starter guide → masterclass, side by side. -->
+  <!-- 9 · LEARN: free starter guide → masterclass, side by side. -->
   {ebook_section}
 
-  <!-- 9 · BUNDLES: the single bundle section on this page. -->
+  <!-- 10 · BUNDLES: the single bundle section on this page. -->
   <section class="section">
     <div class="wrap">
       <div class="sec-head">
@@ -201,7 +251,7 @@ def build_home():
     </div>
   </section>
 
-  <!-- 10 · WHY DIGIKITPRO -->
+  <!-- 11 · WHY DIGIKITPRO -->
   <section class="section section-alt">
     <div class="wrap">
       <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2>Tools that respect your craft</h2></div></div>
@@ -214,7 +264,7 @@ def build_home():
     </div>
   </section>
 
-  <!-- 11 · BLOG PREVIEW -->
+  <!-- 12 · BLOG PREVIEW -->
   <section class="section">
     <div class="wrap">
       <div class="sec-head">
