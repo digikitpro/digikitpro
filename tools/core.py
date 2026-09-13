@@ -22,8 +22,8 @@ SITE_URL = os.environ.get("SITE_URL", "https://digikitpro.shop").rstrip("/")
 SITE_NAME = "DigiKitPro"
 TAGLINE = "Procreate brushes for iPad artists."
 STORE_URL = "https://payhip.com/digikitpro"
-EMAIL_TO = "digikitprostudio@gmail.com" # ← subscriber emails are delivered to this inbox
-EMAIL_ENDPOINT = f"https://formsubmit.co/{EMAIL_TO}" # FormSubmit forwards every signup (one-time activation email)
+EMAIL_TO = "" # email hidden, contact via Payhip store only
+EMAIL_ENDPOINT = "" # no direct email endpoint, newsletter falls back to Payhip freebies collection
 # To switch providers later (Brevo/MailerLite/ConvertKit), paste their form-action URL here
 # and the same form keeps working.
 # ── Search Console verification tokens (paste once Google/Bing give them to you) ──
@@ -196,7 +196,6 @@ def schema_org_home():
        "logo":{"@type":"ImageObject","url":absurl("assets/img/logo.png"),"width":"512","height":"512"},
        "image":{"@type":"ImageObject","url":absurl("assets/img/og-cover.jpg"),"width":"1200","height":"630"},
        "brand":{"@type":"Brand","name":SITE_NAME},
-       "email":"mailto:"+EMAIL_TO,
        "contactPoint":[{"@type":"ContactPoint","contactType":"customer support","areaServed":{"@type":"Place","name":"Worldwide"},"availableLanguage":["en"]}],
        "description":"DigiKitPro creates premium Procreate brushes and digital art resources for iPad artists. Worldwide instant digital delivery.",
        "areaServed":"Worldwide","knowsLanguage":["en","es","fr","de","it","pt","nl"],
@@ -351,16 +350,14 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
   <script src="{rel(depth,'js/main.js')}" defer></script>
   <script src="{rel(depth,'js/analytics.js')}" defer></script>
-  <script src="{rel(depth,'js/finder-index.js')}" defer></script>
-  <script src="{rel(depth,'js/finder.js')}" defer></script>
   <script src="{rel(depth,'js/feedback.js')}" defer></script>
   <script src="{rel(depth,'js/translate.js')}" defer></script>
 {s}</head>
 <body>
-<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search, category filters and the Brush Finder need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
+<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
 """
 
-NAV = [("Find My Brushes","find-my-brushes.html"),("Free Brushes","freebies.html"),("Products","products.html"),("Bundles","bundles.html"),
+NAV = [("Free Brushes","freebies.html"),("Products","products.html"),("Bundles","bundles.html"),
        ("Articles","blog.html"),("About","about.html")]
 
 def header(depth, active=None):
@@ -432,20 +429,14 @@ def newsletter(depth, heading="Get Free Procreate Brushes",
       <p class="eyebrow">{esc(eyebrow)}</p>
       <h2>{esc(heading)}</h2>
       <p class="muted nl-sub">{esc(sub)}</p>
-      <!-- REAL CAPTURE: submissions are emailed to {EMAIL_TO} via FormSubmit
-           (main.js posts with AJAX; without JS the form does a normal POST).
-           One-time activation: FormSubmit emails {EMAIL_TO}, click "Activate" once
-           and every signup afterwards lands directly in that inbox.
-           The source/lead_magnet fields exist so an email provider can later
-           trigger the right sequence per lead magnet (see docs/AUDIT-AND-PLAN.md §9). -->
+      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
+           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
+           Source/lead fields allow future email provider to trigger the right sequence. -->
       <form class="nl-form" data-nl-form data-dkp-source="{esc(source)}" data-dkp-lead="{esc(lead)}" data-dkp-thanks="{rel(depth,'thank-you.html')}" action="{EMAIL_ENDPOINT}" method="POST">
         <input type="hidden" name="_subject" value="{esc(subject)}">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE: FormSubmit redirects from its own origin, so a
-             relative value would resolve against formsubmit.co. Without it the
-             no-JS path lands on FormSubmit's generic confirmation page instead of
-             our thank-you page, which is where the free files are actually delivered. -->
+        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
         <input type="hidden" name="_next" value="{absurl('thank-you.html')}">
         <input type="hidden" name="source" value="{esc(source)}">{lead_field}
         <label class="sr-only" for="{uid}-email">Email address</label>
@@ -681,7 +672,7 @@ def craft_grid(depth=0):
   <div class="wrap">
     <div class="sec-head">
       <div><p class="eyebrow">Start with your work, not our catalog</p><h2 id="craft-title">What Do You Create?</h2></div>
-      <a class="text-link" href="{rel(depth,'find-my-brushes.html')}">Not sure? Find my brushes →</a>
+      <a class="text-link" href="{rel(depth,'products.html')}">Browse all products →</a>
     </div>
     <div class="grid craft-grid">{tiles}</div>
   </div>
@@ -845,8 +836,7 @@ def freebie_gate(depth, p=None, source="freebies"):
         <input type="hidden" name="_subject" value="Free download request: {esc(lead)}">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
-        <!-- Absolute _next: see the note in newsletter(). Keeps the no-JS path on
-             thank-you.html, which delivers the promised free file. -->
+        <!-- Absolute _next keeps the no-JS path on thank-you.html, which delivers the promised free file. -->
         <input type="hidden" name="_next" value="{absurl('thank-you.html')}">
         <input type="hidden" name="source" value="{esc(source)}">
         <input type="hidden" name="lead_magnet" value="{esc(lead)}">

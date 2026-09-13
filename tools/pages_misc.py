@@ -73,7 +73,7 @@ ABOUT_FAQS = [
     ("Is DigiKitPro affiliated with Procreate or Savage Interactive?",
      "No. DigiKitPro is an independent store. Procreate is a trademark of Savage Interactive Pty Ltd, and DigiKitPro is not affiliated with or endorsed by Savage Interactive."),
     ("How do I contact DigiKitPro?",
-     "Email digikitprostudio@gmail.com or use the contact form on the Payhip store. Questions about products, orders and licensing are all read and answered directly."),
+     "Use the contact form on the Payhip store. Questions about products, orders and licensing are all read and answered directly."),
 ]
 
 
@@ -113,7 +113,7 @@ def build_misc():
     # It deliberately states no response time: only promise what is kept.
     contact_schemas = schema_breadcrumb([("Home", "/"), ("Contact", "/contact.html")])
     html_out = head("Contact DigiKitPro",
-        "Contact DigiKitPro about a product, an order, a technical problem with a file, or licensing. Email digikitprostudio@gmail.com or use the contact form.",
+        "Contact DigiKitPro about a product, an order, a technical problem with a file, or licensing via the Payhip store.",
         SITE_URL + "/contact.html", 0, schemas=contact_schemas)
     html_out += header(0)
     html_out += f"""
@@ -124,38 +124,11 @@ def build_misc():
     <h1>Contact DigiKitPro</h1>
   </div></section>
   <section class="section"><div class="wrap narrow">
-    <p class="lead">Questions about a product, an order, a file that will not open, or licensing? Send a message below, or email <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> directly.</p>
-    <form class="contact-form" data-nl-form
-          data-dkp-source="contact"
-          data-dkp-success="Thanks, your message has been sent to {EMAIL_TO}."
-          data-dkp-success-pending="Thanks, your message has been recorded and will arrive in our inbox once our email service finishes its one-time activation."
-          action="{EMAIL_ENDPOINT}" method="POST">
-      <input type="hidden" name="_subject" value="DigiKitPro contact form">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_next" value="{absurl('thank-you.html')}">
-      <input type="hidden" name="source" value="contact">
-      <div class="field">
-        <label for="contact-name">Your name</label>
-        <input id="contact-name" type="text" name="name" autocomplete="name" required>
-      </div>
-      <div class="field">
-        <label for="contact-email">Your email</label>
-        <input id="contact-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
-        <p class="field-hint muted">We reply to this address, so please double-check it.</p>
-      </div>
-      <div class="field">
-        <label for="contact-order">Order number <span class="muted">(optional)</span></label>
-        <input id="contact-order" type="text" name="order_number" autocomplete="off">
-        <p class="field-hint muted">If your question is about a purchase, the Payhip receipt number helps us find it.</p>
-      </div>
-      <div class="field">
-        <label for="contact-message">Message</label>
-        <textarea id="contact-message" name="message" rows="7" required></textarea>
-      </div>
-      <button class="btn btn-gold btn-lg" type="submit">Send message</button>
-      <p class="nl-note" data-nl-note>Your message goes straight to our inbox. We never share your address.</p>
-    </form>
+    <p class="lead">Questions about a product, an order, a file that will not open, or licensing? Contact us directly via our Payhip store — we read and reply to every message.</p>
+    <div class="contact-card">
+      <a class="btn btn-gold btn-lg" href="{STORE_URL}" target="_blank" rel="noopener">Contact on Payhip ↗</a>
+      <p class="muted" style="margin-top:1rem">Payhip handles all orders and messaging securely. Click above to open the store contact form.</p>
+    </div>
     <div class="prose contact-alt">
       <h2>Before you write</h2>
       <p>These answer most messages, and you will get an answer instantly:</p>
@@ -196,7 +169,7 @@ def build_misc():
   <h2>Payments and chargebacks</h2>
   <p>All payments are processed by Payhip, not by DigiKitPro. Billing questions can also be raised through your Payhip receipt.</p>
   <h2>Contact</h2>
-  <p>Email <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> or use the <a href="contact.html">contact form</a>.</p>
+  <p>Use the <a href="contact.html">contact page</a> or the contact form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a>.</p>
 </div></section></main>
 {footer(0)}"""
     write("refunds.html", html_out)
@@ -222,7 +195,7 @@ def build_misc():
     <div class="faq-list">{faq_items}</div>
     <div class="prose">
       <h2>Still stuck?</h2>
-      <p>Email <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> or use the <a href="contact.html">contact form</a>. For the legal detail, see the <a href="terms.html">Terms</a>, the <a href="refunds.html">Refund Policy</a> and the <a href="privacy.html">Privacy Policy</a>.</p>
+      <p>Use the <a href="contact.html">contact page</a> or the contact form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a>. For the legal detail, see the <a href="terms.html">Terms</a>, the <a href="refunds.html">Refund Policy</a> and the <a href="privacy.html">Privacy Policy</a>.</p>
     </div>
   </div></section>
   {newsletter(0)}
@@ -256,9 +229,9 @@ def build_misc():
     <h2>Worldwide, instant, in your language</h2>
     <p>Everything here is a digital download delivered instantly through Payhip, so artists in the <strong>United States, Canada, Europe and every other country</strong> get the same files at the same moment. There is no shipping and no physical product. Prices display in USD, and Payhip automatically converts the charge to your local currency at checkout. Use the globe button in the header to translate the whole site into English, Español, Français, Deutsch, Italiano, Português or Nederlands.</p>
     <h2 id="contact">Contact</h2>
-    <p>Questions about a product, an order, or a collaboration? Email us directly at <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> or use the contact form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a>, we read everything.</p>
+    <p>Questions about a product, an order, or a collaboration? Contact us via the form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a> or visit our <a href="contact.html">contact page</a>, we read everything.</p>
     <h2 id="faq">Quick answers</h2>
-    <p>Short, direct answers to the questions artists ask most. For anything else, email us at <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a>.</p>
+    <p>Short, direct answers to the questions artists ask most. For anything else, use the contact form on <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip</a>.</p>
     {faq_html}
   </div></section>
   {newsletter(0)}
@@ -285,7 +258,7 @@ def build_misc():
   <p>This is a static website with no server of our own, but it is not analytics-free, and we would rather tell you plainly than imply otherwise.</p>
   <ul>
     <li><strong>Google Analytics 4</strong> is loaded on every page to measure which products and guides are useful. Google may set cookies and process your IP address for this. You can block it with any tracker blocker, by enabling your browser's <em>Do Not Track</em> setting (this site honours it and stops sending), or by using Google's own <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener" target="_blank">opt-out add-on</a>.</li>
-    <li><strong>What we measure:</strong> page and product views, clicks on "buy" and "download" links, which Brush Finder answers lead to a recommendation, and the answer you give to the optional "what stopped you from choosing a brush today?" prompt. <strong>We do not record your name, your email address, or anything you type</strong> — search queries are measured by length only.</li>
+    <li><strong>What we measure:</strong> page and product views, clicks on "buy" and "download" links, and the answer you give to the optional "what stopped you from choosing a brush today?" prompt. <strong>We do not record your name, your email address, or anything you type</strong> — search queries are measured by length only.</li>
     <li><strong>DigiKitPro sets no advertising cookies and no cross-site identifier.</strong> There is no retargeting, no ad pixel and no data broker sharing.</li>
     <li><strong>A first-party summary</strong> of your visit (counts only) is kept in your browser's <code>localStorage</code> so the site can avoid asking you the same optional question twice. It never leaves your device unless you send a form. Clearing your browser data removes it.</li>
     <li><strong>Google Translate</strong> (the globe button in the header) is loaded from Google only when you choose a language. Google sets its own <code>googtrans</code> cookie to remember that choice. Do not use the button if you prefer not to contact Google.</li>
@@ -294,7 +267,7 @@ def build_misc():
   </ul>
   <p>You can switch our own measurement off completely by visiting any page with <code>#dkp-analytics=off</code> in the address, which sets an opt-out in your browser.</p>
   <h2>Your rights</h2>
-  <p>You can request access, correction or deletion of your newsletter data at any time by emailing <a href="mailto:{EMAIL_TO}">{EMAIL_TO}</a> or using the <a href="{STORE_URL}" target="_blank" rel="noopener">store contact form</a>. Every email we send contains a one-click unsubscribe link.</p>
+  <p>You can request access, correction or deletion of your newsletter data at any time via the contact form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a>. Every email we send contains a one-click unsubscribe link.</p>
 </div></section></main>
 {footer(0)}"""
     write("privacy.html", html_out)
@@ -373,7 +346,6 @@ Sitemap: {SITE_URL}/sitemap-images.xml
 
     static_urls = [
         ("/", "1.0", "daily"),
-        ("/find-my-brushes.html", "0.9", "weekly"),
         ("/products.html", "0.9", "daily"),
         ("/freebies.html", "0.9", "weekly"),
         ("/bundles.html", "0.8", "weekly"),
@@ -422,7 +394,6 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     # ── Plain-text sitemap (one URL per line) ──────────────────────────────
     txt_urls = [
         SITE_URL + "/",
-        SITE_URL + "/find-my-brushes.html",
         SITE_URL + "/products.html",
         SITE_URL + "/freebies.html",
         SITE_URL + "/bundles.html",

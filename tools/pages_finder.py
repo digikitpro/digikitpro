@@ -362,7 +362,7 @@ def build_thanks():
         <a class="text-link" href="{rel(depth, 'products/' + starter['slug'] + '/')}">See what is inside →</a>
       </div>
       <p class="muted starter-note">Not yet? No pressure at all — the free packs above are yours to keep, and the
-        <a href="{rel(depth, FINDER_PAGE)}">Brush Finder</a> will point you somewhere better when you are ready.</p>
+        <a href="{rel(depth, 'products.html')}">full catalog</a> is waiting when you are ready.</p>
     </div>
   </div>
 </section>'''
@@ -433,5 +433,6 @@ def build_thanks():
 
 
 def build_all():
-    build_finder()
+    # Find My Brushes removed per owner request - keep only thank-you page
+    # build_finder()
     build_thanks()
