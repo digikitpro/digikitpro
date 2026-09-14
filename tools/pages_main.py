@@ -250,17 +250,7 @@ def build_home():
     </div>
   </section>
 
-  <!-- 11 · FREE BRUSH EMAIL CTA: the one low-commitment exit for a visitor who
-       is not buying — it closes the pitch, and the blog follows as free value.
-
-       REAL REVIEWS would slot in here, between "why" and the email CTA, the
-       moment verifiable quotes exist. It is deliberately NOT built: this site
-       publishes no placeholder quotes and no star ratings (tools/verify.py
-       fails the build on any invented social proof), so an empty slot is worse
-       than no slot. See docs/AUDIT-AND-PLAN.md Part 10. -->
-  {newsletter(0)}
-
-  <!-- 12 · ARTICLES -->
+  <!-- 11 · ARTICLES -->
   <section class="section">
     <div class="wrap">
       <div class="sec-head">
@@ -270,6 +260,19 @@ def build_home():
       <div class="grid arts-grid">{art_cards}</div>
     </div>
   </section>
+
+  <!-- 12 · FREE BRUSH EMAIL CTA: last on the page on purpose — it is the
+       low-commitment exit for a visitor who has read the pitch and still is not
+       buying, and nothing competes with it after. The articles sit above it as
+       free value, so the page ends on "take this" rather than "read more".
+
+       REAL REVIEWS belongs between WHY DIGIKITPRO (10) and this block, the
+       moment verifiable quotes exist. It is deliberately NOT built: no
+       placeholder quotes, no star ratings, no review counts — tools/verify.py
+       fails the build on invented social proof, and an empty "Reviews" heading
+       is a worse signal than no heading. Add plain attributed text here when
+       you have it. See README → "Social proof", docs/AUDIT-AND-PLAN.md Part 13. -->
+  {newsletter(0)}
 
 </main>
 """

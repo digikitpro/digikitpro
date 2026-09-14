@@ -179,11 +179,12 @@ HEADER → HERO → TRUST / VALUE STRIP → WHAT DO YOU CREATE? → FREE PROCREA
 → BEFORE → AFTER ("what do the brushes actually change")
 → NOT SURE WHERE TO START? (popular starting points + studio favorites, one block)
 → PROCREATE BUNDLES (ladder) → MASTER LIBRARY (the ladder's top rung)
-→ WHY DIGIKITPRO → FREE BRUSH EMAIL CTA → ARTICLES → FOOTER
+→ WHY DIGIKITPRO → ARTICLES → FREE BRUSH EMAIL CTA → FOOTER
 ```
 
 Section order is generated from `build_home()` in `tools/pages_main.py` and is checked
-after every build by `tools/verify.py` (`homepage section order matches the IA brief`).
+after every build by `tools/verify.py` (`homepage section order matches the IA brief` +
+`homepage closes: master library → why → articles → email CTA`).
 The bundle row is a **ladder**, not a tile grid: its rungs live in
 `data/discovery.json → bundleLadder.rungs` (`Starter → Advanced → Ultimate →
 Master Library`), while every number on a rung (price, asset count, kit list,

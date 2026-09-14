@@ -6,8 +6,8 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 61 CHECKS PASSED.
-(57 baseline + 4 from the 2026-09-14 homepage IA rework: section order,
+Expects: ALL 62 CHECKS PASSED.
+(57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
 ladder completeness x2, no fake-strikethrough pricing.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 61
+EXPECTED = 62
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -231,7 +231,7 @@ def source_blob() -> str:
 
 
 def main() -> int:
-    print("DigiKitPro verify — 61 checks\n")
+    print("DigiKitPro verify — 62 checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -417,11 +417,13 @@ def main() -> int:
     # ── 43–46 information architecture ────────────────────────────────
     home_html = read("index.html")
     ids = homepage_section_ids(home_html)
-    check(
-        "homepage section order matches the IA brief",
-        ids == ["craft", "free", "ebooks", "results", "starting-points", "bundles",
-                "master-library", "newsletter"],
-        ", ".join(ids) or "no sections found")
+    IA = ["craft", "free", "ebooks", "results", "starting-points", "bundles", "master-library"]
+    check("homepage section order matches the IA brief", ids[:len(IA)] == IA,
+          ", ".join(ids) or "no sections found")
+    # The page must close on free value and end with the one low-commitment CTA:
+    # … master-library → (Why) → Articles → newsletter as the last <section>.
+    check("homepage closes: master library → why → articles → email CTA",
+          ids == IA + ["newsletter"], "final section: " + (ids[-1] if ids else "-"))
 
     products = {p["slug"]: p for p in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))}
     want, kept = ladder_state()
