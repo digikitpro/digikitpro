@@ -6,7 +6,9 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 57 CHECKS PASSED.
+Expects: ALL 61 CHECKS PASSED.
+(57 baseline + 4 from the 2026-09-14 homepage IA rework: section order,
+ladder completeness x2, no fake-strikethrough pricing.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -28,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 57
+EXPECTED = 61
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -182,6 +184,23 @@ def finder_combo_stats():
     return n, empty, aggregate, lifestyle
 
 
+
+def homepage_section_ids(html_text: str) -> list[str]:
+    """Ordered ids of the homepage <main> sections — the information
+    architecture itself. Cheap string scan (no parser, no new dependency):
+    the page is machine-generated, so this is a stable read."""
+    body = html_text.split('<main id="main">', 1)[-1].split("</main>", 1)[0]
+    return re.findall(r"<section class=\"[^\"]*\" id=\"([a-z0-9-]+)\"", body)
+
+
+def ladder_state() -> tuple[list[str], list[str]]:
+    """(configured ladder slugs from discovery.json, slugs whose page exists)."""
+    cfg = json.loads((ROOT / "data" / "discovery.json").read_text(encoding="utf-8"))
+    rungs = (cfg.get("bundleLadder") or {}).get("rungs") or []
+    want = [r.get("slug") for r in rungs if r.get("slug")]
+    return want, [s for s in want if (ROOT / "products" / s / "index.html").is_file()]
+
+
 DEAD_GOOGLE = re.compile(r"google\.com/ping\?sitemap=", re.I)
 DEAD_BING = re.compile(r"bing\.com/ping", re.I)
 DEAD_BING2 = re.compile(r"www\.bing\.com/webmaster/ping\.aspx", re.I)
@@ -212,7 +231,7 @@ def source_blob() -> str:
 
 
 def main() -> int:
-    print("DigiKitPro verify — 57 checks\n")
+    print("DigiKitPro verify — 61 checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -395,7 +414,28 @@ def main() -> int:
     check("finder 1080 combos: 0 aggregate primary", n_agg == 0, str(n_agg))
     check("finder 1080 combos: 0 lifestyle primary", n_life == 0, str(n_life))
 
-    # ── 43–49 honesty + dead ping endpoints ───────────────────────────
+    # ── 43–46 information architecture ────────────────────────────────
+    home_html = read("index.html")
+    ids = homepage_section_ids(home_html)
+    check(
+        "homepage section order matches the IA brief",
+        ids == ["craft", "free", "ebooks", "results", "starting-points", "bundles",
+                "master-library", "newsletter"],
+        ", ".join(ids) or "no sections found")
+
+    products = {p["slug"]: p for p in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))}
+    want, kept = ladder_state()
+    check("homepage ladder: every rung renders a card", len(kept) == len(want) and len(kept) >= 3,
+          f"{len(kept)}/{len(want)} rung(s) rendered")
+    check("homepage ladder: no bundle is missing a price or an asset line",
+          all(p.get("priceText") and p.get("assets")
+              for p in (products.get(s) or {} for s in kept) if p),
+          "every rung needs priceText + assets from products.json")
+    check("homepage: no 'was' / strikethrough pricing on the ladder",
+          "was:" not in home_html.lower() and "<del>" not in home_html.lower(),
+          "ladder prices are live store prices only")
+
+    # ── 47–53 honesty + dead ping endpoints ───────────────────────────
     html_blob = "\n".join(
         p.read_text(encoding="utf-8", errors="replace")
         for p in html_files if not is_verification_page(p)

@@ -666,3 +666,38 @@ purchases, and whether the Master Library band moves AOV.*
 **Baseline to record on day 1 (before/after comparison):** GA4 sessions, `product_view` by
 product, `outbound_payhip_click` by product, `brush_finder_completed` by answer set,
 `email_signup` by source, `feedback_reason` distribution.
+
+---
+
+## PART 13 — CHANGE LOG
+
+### 2026-09-14 · Homepage information architecture rework + bundle ladder
+
+The owner supplied the target section order for `/`. Implemented in the generator
+(so it survives a rebuild), not by hand-editing HTML.
+
+| Change | Was | Now | Where |
+|---|---|---|---|
+| Section order | hero → trust → season strip → craft → free → before/after → master library → featured → starting points → learn → bundles → why → blog → email | hero → trust → craft → free → **learn** → **before→after** → **one "Not sure where to start?" block** → **bundles (ladder)** → **master library** → why → **email → articles** | `pages_main.build_home()` |
+| Learn Procreate Portraits | 9th, after the storefronts | 5th, before the before/after proof | moved as-is; the free guide / $19 masterclass duo was already the two-column shape asked for |
+| "Popular Starting Points" + "Featured Brush Kits" | two rival h2 storefronts | one section, one question as the h2, two labelled rows (`.sub-head`) | `#starting-points` |
+| Procreate Bundles | 4 tiles, price-sorted, Christmas mixed in, Master Library excluded from the row entirely | explicit 4-rung ladder **Starter → Advanced → Ultimate → Master Library**, config in `data/discovery.json → bundleLadder` | `core.bundle_ladder()` |
+| Master Library band | standalone upsell above the storefront | ladder's top rung + dedicated band, cross-linked (`#bundles`) | `core.flagship_band(ladder_href=…)` |
+| Seasonal promo strip | injected after the trust band when a date window was open | removed from the homepage (season landing pages + product cards untouched) | `season_band()` no longer called by the home page |
+| Real reviews | absent | **still absent, on purpose** | see README "Social proof" |
+
+**Why the ladder replaces the tile grid:** a tile shows artwork, a bundle decision
+needs *what's inside*. Every number on a rung is read from the product record
+(`assets`, `priceText`, `bundleContents`, `features[0]`) plus one arithmetic line
+("`$0.01` per brush" = that product's price ÷ that product's brush count), so a
+Payhip sync keeps it true and no rung has to be re-edited by hand.
+
+**Guardrails added** (`tools/verify.py`, 57 → **61** checks): homepage section order
+matches this list · every configured rung renders a card · no ladder rung is missing a
+price or an asset line · no "was:" / `<del>` strikethrough pricing in generated HTML.
+
+**Deliberately not done:** no `data/reviews.json`, no empty review section, no
+placeholder quotes. The brief said "REAL REVIEWS — only when you have them", and the
+site's honesty rule (no invented social proof, enforced by `verify.py`) means the
+correct implementation of that instruction today is a comment marking the slot in
+`build_home()` and nothing on the page.

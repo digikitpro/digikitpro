@@ -129,6 +129,14 @@ h3{font-size:1.15rem}
 .sec-head{display:flex;align-items:end;justify-content:space-between;gap:1.4rem;margin-bottom:2.1rem}
 .sec-head h2{margin-bottom:0}
 .sec-note{margin-bottom:1.4rem}
+/* sub-head: a labelled row INSIDE a section. The homepage middle uses these so
+   "Popular Starting Points" and "Studio favorites" read as two answers to one
+   question instead of two rival storefronts. No new type, no new colour. */
+.sub-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem 1.4rem;flex-wrap:wrap;margin:2.6rem 0 1.15rem}
+.sub-head:first-of-type{margin-top:0}
+.sub-head h3{font-size:1.16rem;margin:0}
+.sub-head p{font-size:.88rem;margin:.2rem 0 0;max-width:60ch}
+@media(min-width:720px){.sub-head{margin-top:3.2rem}}
 
 /* ── grids & cards ── */
 .grid{display:grid;gap:20px}
@@ -700,6 +708,7 @@ html.js-motion .arts-grid > .art-card,
 html.js-motion .bundles-grid > .bundle-tile,
 html.js-motion .bundle-stack > .bundle-panel,
 html.js-motion .ebook-duo > .ebook-card,
+html.js-motion .ladder > .ladder-step,
 html.js-motion .thanks-grid > .thanks-card,
 html.js-motion .ba-figure,
 html.js-motion .ba-cta{
@@ -729,6 +738,7 @@ html.js-motion .arts-grid > .art-card.rv-in,
 html.js-motion .bundles-grid > .bundle-tile.rv-in,
 html.js-motion .bundle-stack > .bundle-panel.rv-in,
 html.js-motion .ebook-duo > .ebook-card.rv-in,
+html.js-motion .ladder > .ladder-step.rv-in,
 html.js-motion .thanks-grid > .thanks-card.rv-in,
 html.js-motion .ba-figure.rv-in,
 html.js-motion .ba-cta.rv-in{opacity:1;translate:0 0}
@@ -925,6 +935,7 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
   html.js-motion .craft-grid > .craft-card,html.js-motion .why-grid > .why,
   html.js-motion .arts-grid > .art-card,html.js-motion .bundles-grid > .bundle-tile,
   html.js-motion .bundle-stack > .bundle-panel,html.js-motion .ebook-duo > .ebook-card,
+  html.js-motion .ladder > .ladder-step,
   html.js-motion .thanks-grid > .thanks-card,html.js-motion .ba-figure,html.js-motion .ba-cta{
     translate:none;transform:none;transition:opacity .2s linear}
   html.js-motion .hero-copy > *,html.js-motion .hero-showcase .hero-card{opacity:1;animation:none}
@@ -994,3 +1005,57 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 .dl-note{font-size:.74rem;color:#7d7a73;letter-spacing:.02em}
 /* the email module now sits BELOW the downloads as the secondary path */
 .freebie-gate{border-top:1px solid var(--border)}
+
+/* ── THE BUNDLE LADDER (homepage) ───────────────────────────────────────
+   Starter → Advanced → Ultimate → Master Library as one climb, replacing the
+   old .bundles-grid tile row (tiles show artwork; a ladder step has to show
+   what you get). Same tokens only: --gold, --surface, --border, --radius.
+   Mobile-first — the "↑" is a text arrow on narrow screens, so it can never
+   overlap a neighbour when the row wraps from 1 → 4 columns. */
+.ladder{list-style:none;display:grid;gap:16px;grid-template-columns:1fr;margin:0;padding:0;counter-reset:none}
+@media(min-width:620px){.ladder{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1080px){.ladder{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}}
+.ladder-step{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
+.ladder-step:hover{transform:translateY(-5px);border-color:rgba(201,168,106,.45);box-shadow:0 26px 54px -30px rgba(0,0,0,.9)}
+.ladder-step--top{background:linear-gradient(155deg,#17161b,#101013);border-color:rgba(201,168,106,.4)}
+.ladder-rung{display:flex;align-items:center;gap:.5rem;padding:.9rem 1.15rem 0;font:700 .66rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.ladder-rung i{display:grid;place-items:center;width:1.45rem;height:1.45rem;border-radius:50%;border:1px solid rgba(201,168,106,.45);font:600 .68rem/1 var(--sans);font-style:normal;color:var(--muted);flex:none}
+.ladder-step--top .ladder-rung i{background:var(--gold);border-color:var(--gold);color:#181206}
+.ladder-media{display:block;aspect-ratio:3/2;overflow:hidden;background:var(--surface-2);margin-top:.9rem}
+.ladder-media img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+.ladder-step:hover .ladder-media img{transform:scale(1.05)}
+/* the climb, drawn: a small arrow in the gutter between rungs (desktop only;
+   under 1080px the row wraps, so the mark would land on a neighbour) */
+@media(min-width:1080px){
+  .ladder-step + .ladder-step::before{content:"\2191";position:absolute;left:-1.7rem;top:1.25rem;
+    font-size:1.05rem;line-height:1;color:rgba(201,168,106,.65)}
+}
+.ladder-body{display:flex;flex-direction:column;gap:.5rem;padding:1.05rem 1.15rem 1.2rem;flex:1}
+.ladder-body h3{font-size:1.05rem;line-height:1.3}
+.ladder-body h3 a{color:var(--text)}
+.ladder-body h3 a:hover{color:var(--gold)}
+.ladder-who{font-size:.85rem;line-height:1.55;margin:0}
+.ladder-assets{font-size:.8rem;color:var(--text);margin:.15rem 0 0}
+.ladder-assets b{font-weight:600;letter-spacing:.01em}
+/* "Inside: N kits" + the real kit list — only rendered when products.json
+   carries bundleContents, so the count is never estimated */
+.ladder-incl{margin:.55rem 0 0;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.ladder-incl-list{list-style:none;margin:.5rem 0 0;padding:.55rem 0 0;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.3rem}
+.ladder-incl-list li{display:flex;justify-content:space-between;gap:.8rem;font-size:.8rem;line-height:1.4;color:var(--muted)}
+.ladder-incl-list li b{color:var(--text);font-weight:600;white-space:nowrap;font-size:.76rem}
+.ladder-for{font-size:.8rem;margin:.2rem 0 0}
+.ladder-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:.85rem;flex-wrap:wrap;padding-top:.7rem}
+.ladder-lead{margin:-.6rem 0 1.5rem;font-size:.92rem}
+.ladder-lead b{color:var(--gold);font-weight:600}
+.ladder-note{margin:1.35rem 0 0;font-size:.79rem}
+.ladder-note a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.ladder-note a:hover{color:var(--gold)}
+/* the flagship band is the ladder's last rung: it says so, and links back up */
+.flag-ladder{margin:.85rem 0 0;font-size:.8rem}
+.flag-ladder a{color:var(--gold)}
+/* the ladder keeps the same calm rules as the rest of the storefront */
+@media(prefers-reduced-motion:reduce){
+  .ladder{transition:none}
+  .ladder-step:hover{transform:none}
+  .ladder-step:hover .ladder-media img{transform:none}
+}
