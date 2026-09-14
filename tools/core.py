@@ -818,11 +818,129 @@ def craft_grid(depth=0):
 """
 
 
-def flagship_band(depth=0, bridge=True):
+def ladder_rungs():
+    """The homepage bundle ladder, as configured in data/discovery.json.
+
+    Returns [(rung_dict, product)] for every rung whose slug still resolves to
+    a live product. A deleted or renamed product drops that rung at build time
+    instead of leaving an empty card on the homepage — and a ladder with no
+    valid rungs returns [], so the caller renders nothing at all.
+    """
+    cfg = (DISCOVERY.get("bundleLadder") or {}).get("rungs") or []
+    out = []
+    for r in cfg:
+        p = BY_SLUG.get(r.get("slug") or "")
+        if not p or p.get("comingSoon"):
+            continue
+        out.append((r, p))
+    return out
+
+
+def clip(text, n=96):
+    """Truncate to `n` chars at a word boundary — keeps generated teaser copy
+    honest (it is a prefix of the real sentence) instead of rewriting it."""
+    t = " ".join(str(text or "").split())
+    if len(t) <= n:
+        return t
+    cut = t[:n].rsplit(" ", 1)[0].rstrip(",;:")
+    return cut + "\u2026"
+
+
+def bundle_ladder(depth=0):
+    """PROCREATE BUNDLES, drawn as a ladder instead of a tile grid.
+
+    Starter -> Advanced -> Ultimate -> Master Library: one row, four rungs, the
+    last rung being the flagship so the ladder and the Master Library band read
+    as one argument rather than two competing ones (homepage IA, 2026-09-14).
+
+    Deliberately not the image-overlay .bundle-tile: a tile shows artwork, a
+    ladder step has to show WHAT YOU GET. So every line of a step is generated
+    from the product's own record — features[0] as the pitch, `assets` as the
+    count, `bundleContents` as the kit list, priceText as the price — and
+    data/discovery.json supplies only the rung label. A Payhip sync therefore
+    moves the ladder's numbers by itself, and no savings claim is invented
+    here. The only maths on the page is "$x per brush", derived from this
+    product's own price and brush count.
+    """
+    rungs = ladder_rungs()
+    if len(rungs) < 2:
+        return ""
+    steps = ""
+    for i, (r, p) in enumerate(rungs):
+        im = p.get("images") or {}
+        card = im.get("card") or im.get("main") or ""
+        flag = bool(r.get("ladder_flagship"))
+        u = rel(depth, f"products/{p['slug']}/")
+        feats = [f for f in (p.get("features") or []) if str(f).strip()]
+        who = clip(feats[0]) if feats else clip(p.get("short") or r.get("rung") or "")
+        # "What's inside" comes from the product's own bundleContents, so the
+        # kit count is real, and no second place has to remember a price.
+        # Two more honest numbers, both arithmetic on this product's own data.
+        # They only appear when the data actually supports them, which also
+        # keeps the four steps visually balanced without padding them.
+        extras = []
+        m_brushes = re.search(r"([\d,]{3,})\+?\s*(?:professional\s+)?(?:organized\s+)?brushes",
+                              str(p.get("assets") or ""), re.I)
+        if m_brushes and (p.get("price") or 0) >= 5:
+            n_brushes = int(m_brushes.group(1).replace(",", ""))
+            if n_brushes >= 100:
+                extras.append(f"${p['price'] / n_brushes:.2f} per brush")
+        m_files = re.search(r"\nin\s+(\d+)\s+ZIP", " ".join(feats))
+        if m_files:
+            extras.append(f"{m_files.group(1)} ZIP downloads")
+        who_more = ", ".join(x for x in (p.get("perfectFor") or [])[:2] if str(x).strip())
+        rows = p.get("bundleContents") or []
+        if rows:  # only the portrait bundle has verified kit lists today
+            contents = f'<p class="ladder-incl">Inside: {len(rows)} kits</p><ul class="ladder-incl-list">'
+            contents += "".join(f'<li><span>{clip(b.get("name"))}</span><b>{esc(b.get("count") or "")}</b></li>'
+                               for b in rows if b.get("name"))
+            contents += "</ul>"
+        else:
+            # No bundleContents field = we do not claim to know the kit list.
+            # `assets` above already states what you get; `included` is a spec
+            # sheet of bullets, not a kit list, so it is deliberately not used
+            # to print a count here.
+            contents = ""
+        steps += f"""<li class="ladder-step{' ladder-step--top' if flag else ''}" id="ladder-{esc(r.get('id') or (i + 1))}">
+  <span class="ladder-rung"><i aria-hidden="true">{i + 1}</i>{esc(r.get('role') or '')}</span>
+  <a class="ladder-media" href="{u}" tabindex="-1" aria-hidden="true">
+    <img src="{asset_file(depth, p['slug'], card)}"{img_srcset(depth, p['slug'], im, "(min-width: 1100px) 280px, 90vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="" loading="lazy" decoding="async">
+  </a>
+  <div class="ladder-body">
+    <h3><a href="{u}">{esc(p['name'])}</a></h3>
+    <p class="ladder-who muted">{esc(who)}</p>
+    <p class="ladder-assets"><b>{esc(p.get('assets') or '')}</b>{" · " + esc("; ".join(extras)) if extras else ""}</p>
+    {contents}
+    {f'<p class="ladder-for muted">For {esc(who_more)}</p>' if who_more and not contents else ""}
+    <div class="ladder-foot">
+      <span class="price price-lg">{esc(p['priceText'])}</span>
+      <a class="btn {"btn-gold" if flag else "btn-line"} btn-sm" href="{u}">{"Get the Library" if flag else "View Product"}</a>
+    </div>
+  </div>
+</li>"""
+    lead = " \u2192 ".join(f'<b>{esc(r.get("role") or p["name"])}</b>' if r.get("ladder_flagship")
+                           else esc(r.get("role") or p["name"]) for r, p in rungs)
+    return f"""<section class="section section-alt" id="bundles" aria-labelledby="lad-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Pick your rung</p><h2 id="lad-title">Procreate Bundles</h2></div>
+      <a class="text-link" href="{rel(depth, 'bundles.html')}">Compare every bundle \u2192</a>
+    </div>
+    <p class="ladder-lead muted">{lead} \u2014 each rung is more of the studio in one checkout. Prices below are live store prices, so no rung advertises a "was" figure it does not have.</p>
+    <ol class="ladder">{steps}</ol>
+    <p class="ladder-note muted">Seasonal packs (Christmas, Halloween) are not part of the ladder \u2014 they live on <a href="{rel(depth, 'bundles.html')}">bundles</a> and in the <a href="{rel(depth, 'products.html')}">catalog</a>.</p>
+  </div>
+</section>
+"""
+
+
+def flagship_band(depth=0, bridge=True, ladder_href=None):
     """Level 4 — the Master Library, given the prominence its value deserves.
     The comparison is arithmetic on real prices, never a scarcity or
     popularity claim. ``bridge=False`` drops the checkout/refund line
-    (the homepage keeps its product bands free of legal copy)."""
+    (the homepage keeps its product bands free of legal copy).
+    ``ladder_href`` adds the "top rung of the bundle ladder" link back to the
+    bundle ladder, so the two sections read as one climb instead of two."""
     f = flagship()
     if not f:
         return ""
@@ -879,6 +997,7 @@ def flagship_band(depth=0, bridge=True):
         <a class="text-link" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'flagship-band')}>Buy on Payhip ↗</a>
       </div>
       {trust_bridge(depth) if bridge else ""}
+      {f'<p class="flag-ladder muted">Top rung of the bundle ladder — <a href="{esc(ladder_href)}">see Starter → Advanced → Ultimate → Master Library</a>.</p>' if ladder_href else ""}
     </div>
   </div>
 </section>

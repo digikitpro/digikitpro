@@ -163,11 +163,33 @@ catalog and Brush Finder all read it:
 
 | Level | Tier | What it is | Where it appears |
 |---|---|---|---|
-| 1 | `free` | Free Procreate packs | Homepage §3, `/freebies.html` (email-first), `/thank-you.html` |
-| 2 | `entry` | $4–$10 specialist packs (skin, hair, line art…) | Homepage §5, catalog, finder primary result |
-| 3 | `bundle` | $8–$20 multi-kit bundles | Homepage §9, `/bundles.html` |
-| 4 | `flagship` | **Master Library, 2,000+ brushes, $19** | Homepage §4 (dedicated band) + upgrade panel on 37 product pages |
-| 5 | `education` | Free starter guide + $19 Portrait Masterclass | Homepage §7, finder cross-sell for portrait answers |
+| 1 | `free` | Free Procreate packs | Homepage §4, `/freebies.html` (email-first), `/thank-you.html` |
+| 2 | `entry` | $4–$10 specialist packs (skin, hair, line art…) | Homepage §7, catalog, finder primary result |
+| 3 | `bundle` | $8–$20 multi-kit bundles | Homepage §8 — the **bundle ladder**, `/bundles.html` |
+| 4 | `flagship` | **Master Library, 2,000+ brushes, $19** | Homepage §8 (top rung) + §9 (dedicated band) + upgrade panel on 37 product pages |
+| 5 | `education` | Free starter guide + $19 Portrait Masterclass | Homepage §5, finder cross-sell for portrait answers |
+
+### Homepage information architecture
+
+The order below is the merchandising decision — each section answers the one before it:
+
+```
+HEADER → HERO → TRUST / VALUE STRIP → WHAT DO YOU CREATE? → FREE PROCREATE BRUSHES
+→ LEARN PROCREATE PORTRAITS (free guide | masterclass $19, side by side)
+→ BEFORE → AFTER ("what do the brushes actually change")
+→ NOT SURE WHERE TO START? (popular starting points + studio favorites, one block)
+→ PROCREATE BUNDLES (ladder) → MASTER LIBRARY (the ladder's top rung)
+→ WHY DIGIKITPRO → ARTICLES → FREE BRUSH EMAIL CTA → FOOTER
+```
+
+Section order is generated from `build_home()` in `tools/pages_main.py` and is checked
+after every build by `tools/verify.py` (`homepage section order matches the IA brief` +
+`homepage closes: master library → why → articles → email CTA`).
+The bundle row is a **ladder**, not a tile grid: its rungs live in
+`data/discovery.json → bundleLadder.rungs` (`Starter → Advanced → Ultimate →
+Master Library`), while every number on a rung (price, asset count, kit list,
+"$x per brush") is read from `data/products.json`, so a Payhip sync updates it.
+The homepage deliberately carries **no review section** — see "Social proof" below.
 
 ### Brush Finder — `find-my-brushes.html`
 Four questions (craft → goal → level → style) produce one recommendation.
@@ -236,6 +258,20 @@ anywhere until you point it at a Cloudflare Worker or Vercel function.
 
 Full rationale and the review point for the catalog decision:
 `docs/AUDIT-AND-PLAN.md` → "OWNER DECISIONS".
+
+### Social proof — why there is still no "Real reviews" section
+The homepage IA reserves a slot for real reviews between "Why DigiKitPro" and the
+email CTA. It is **deliberately not built**: this site publishes no placeholder
+quotes, no star ratings and no review counts, and `tools/verify.py` fails the build
+if any appear in generated HTML. An empty "Reviews" heading with nothing under it is
+a worse signal to a buyer than no heading at all.
+
+When you have verifiable quotes (a Payhip review, a direct message, an email reply —
+with permission), add them under `REAL REVIEWS` in `build_home()` in
+`tools/pages_main.py` as plain attributed text: name or handle, what they bought,
+their words. Do **not** add an aggregate star rating unless the rating is hosted and
+verifiable by Google, and expect `python3 tools/verify.py` to fail any check that
+looks manufactured — that is the guard doing its job, not a bug to switch off.
 
 ### Adding a product
 `tools/payhip_sync.py` still owns `data/products.json` and is untouched. A new

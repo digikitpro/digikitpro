@@ -299,6 +299,54 @@
       "href": "freebies.html#newsletter"
     }
   },
+  "bundleLadder": {
+    "_readme": [
+      "The homepage bundle section: a value LADDER, not a pile of tiles.",
+      "",
+      "One rung per row, in the order an artist climbs it. `role` is the rung label",
+      "printed above the product name; `rung` is the one-line answer to \"who is this",
+      "for?\". Both are merchandising copy — they live here, never in products.json,",
+      "because tools/payhip_sync.py rewrites that file daily.",
+      "",
+      "Rules:",
+      "  - `slug` must exist in data/products.json, or the rung is skipped at build",
+      "    time (the homepage never renders a hole).",
+      "  - `ladder_flagship: true` marks the rung that IS the Master Library: the",
+      "    flagship band below then links back to this row instead of the product",
+      "    being shown twice.",
+      "  - Counts and prices are never written here. They are read from the product",
+      "    record, so a price change in Payhip reaches this section on the next sync.",
+      "  - Seasonal packs belong on bundles.html and in the catalog, not on the ladder."
+    ],
+    "ladder_flagship": true,
+    "rungs": [
+      {
+        "slug": "brush-palette-bundle-160",
+        "id": "starter",
+        "role": "Starter",
+        "rung": "One checkout for the two things every new library needs: pattern brushes and colour."
+      },
+      {
+        "slug": "ultimate-portrait-mastery-bundle",
+        "id": "advanced",
+        "role": "Advanced",
+        "rung": "Four portrait kits wired into a single line → skin → hair → finish workflow."
+      },
+      {
+        "slug": "procreate-mega-bundle-650",
+        "id": "ultimate",
+        "role": "Ultimate",
+        "rung": "Every brush in the shop in one kit, plus paper textures."
+      },
+      {
+        "slug": "master-library-2000-brushes",
+        "id": "master",
+        "role": "Master Library",
+        "rung": "Not a bigger bundle: one organised library in category folders, so you stop hunting.",
+        "ladder_flagship": true
+      }
+    ]
+  },
   "catalog": {
     "portrait-skin-brushes-procreate": {
       "tier": "entry",

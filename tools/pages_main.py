@@ -19,12 +19,12 @@ def build_home():
         showcase += f'<figure class="hero-card h{i+1}" style="--hero-ar:{_hw}/{_hh}"><img src="{asset_file(0, p["slug"], im.get("main",""))}" width="{im.get("fullW") or 1200}" height="{im.get("fullH") or 800}" alt="{esc(p["name"])}" loading="{"eager" if i==0 else "lazy"}" fetchpriority="{"high" if i==0 else "auto"}" decoding="async"><figcaption>{esc(p["name"])}</figcaption></figure>'
 
     freebies = [p for p in PRODUCTS if p["free"] and not p.get("comingSoon") and p["category"] != "Guides & eBooks"]
-    bundles = [p for p in PRODUCTS if p["category"] == "Bundles"]
-    # Value ladder, cheapest-first used to bury the $19 Master Library below
-    # the $5 palette bundle and cut it off the homepage entirely. Order by
-    # tier level then by how much catalog each bundle actually contains.
-    _tier_rank = {t: i for i, t in enumerate(TIER_ORDER)}
-    bundles.sort(key=lambda p: (_tier_rank.get(tier_of(p), 9), -(p.get("price") or 0)))
+    # The homepage bundle row used to be "all Bundles-category packs, cheapest
+    # first", which buried the $19 Master Library under a $5 palette bundle and
+    # cut it off the page entirely. It is now an explicit value ladder authored
+    # in data/discovery.json -> bundleLadder.rungs (see core.bundle_ladder),
+    # with the flagship library as its top rung. Seasonal packs stay in the
+    # catalog and on bundles.html — nothing was deleted, only re-sequenced.
 
     # ── Featured Brush Kits: storefront cards, best-seller excluded ──────
     # The best-seller gets the compact spotlight above the cards; these are
@@ -91,18 +91,7 @@ def build_home():
   </section>
 """
 
-    bundle_cards = ""
-    for p in bundles[:4]:
-        im = p["images"]
-        bundle_cards += f"""<a class="bundle-tile" href="products/{p['slug']}/">
-  <img src="{asset_file(0, p['slug'], im.get('card',''))}"{img_srcset(0, p['slug'], im, "(min-width: 1100px) 300px, 90vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
-  <div class="bundle-tile-body">
-    <span class="badge">{esc(badge_text(p) or 'Bundle')}</span>
-    <h3>{esc(p['name'])}</h3>
-    <p class="muted">{esc(p['assets'] or '')}</p>
-    <span class="price">{p['priceText']}</span>
-  </div>
-</a>"""
+    bundle_ladder_section = bundle_ladder(0)
 
     # ── Before / After: the result, not the brushes ──────────────────────
     # Interactive comparison slider (js/motion.js + css/style.css "MOTION
@@ -127,7 +116,7 @@ def build_home():
     before_after = f"""<section class="section ba-section" id="results" aria-labelledby="results-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">See the result</p><h2 id="results-title">Flat Painting → Finished Portrait</h2></div>
+        <div><p class="eyebrow">See what the brushes actually change</p><h2 id="results-title">Flat Painting → Finished Portrait</h2></div>
         <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit →</a>
       </div>
       <p class="sec-note muted">Same drawing, same lighting: the only difference is texture. Drag the divider to see what skin, hair and finish brushes actually add — pores, freckles, strand detail and the final pass that stops a portrait looking airbrushed.</p>
@@ -185,16 +174,14 @@ def build_home():
     </div>
   </section>
 
-  <!-- 2 · PROOF BAR: concrete catalog numbers, verifiable from
+  <!-- 2 · TRUST / VALUE STRIP: concrete catalog numbers, verifiable from
        data/products.json — never invented social proof. -->
   {trust_band(0)}
-
-  {season_band(0)}
 
   <!-- 3 · WHAT DO YOU CREATE? routes by intent before the catalog. -->
   {craft_grid(0)}
 
-  <!-- 4 · FREE BRUSHES ROW: "Get Free" goes straight to Payhip. -->
+  <!-- 4 · FREE PROCREATE BRUSHES: "Get Free" goes straight to Payhip. -->
   <section class="section" id="free">
     <div class="wrap">
       <div class="sec-head">
@@ -206,18 +193,34 @@ def build_home():
     </div>
   </section>
 
-  <!-- 5 · BEFORE / AFTER: medium result slider, after the free row. -->
+  <!-- 5 · LEARN PROCREATE PORTRAITS: free starter guide → masterclass, side by
+       side. It sits BEFORE the proof of result so a visitor reads "this can be
+       learned" before "this is what it looks like when learned". -->
+  {ebook_section}
+
+  <!-- 6 · BEFORE → AFTER: the answer to "what do the brushes actually change".
+       Medium-width slider, not another full-bleed product band. -->
   {before_after}
 
-  <!-- 6 · MASTER LIBRARY: the premium upsell, before the featured kits. -->
-  {flagship_band(0, bridge=False)}
-
-  <!-- 7 · FEATURED BRUSH KITS: compact storefront — one short best-seller
-       spotlight, then balanced catalog cards. Detail stays on product pages. -->
-  <section class="section section-alt" id="featured" aria-labelledby="feat-title">
+  <!-- 7 · ONE "WHERE DO I GO NEXT?" BLOCK: the two curated rows share a single
+       question as their heading, so the middle of the page reads as one decision
+       point instead of two rival storefronts. "Popular starting points" = the
+       packs people begin with; "Studio favorites" = what we keep reaching for.
+       The old "Not sure where to start?" eyebrow and the identical h2 said the
+       same thing twice — the question is now the h2, the two rows answer it. -->
+  <section class="section" id="starting-points" aria-labelledby="sp-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Studio favorites</p><h2 id="feat-title">Featured Brush Kits</h2></div>
+        <div><p class="eyebrow">Two ways in</p><h2 id="sp-title">Not sure where to start?</h2></div>
+        <a class="text-link" href="products.html">Browse the full catalog →</a>
+      </div>
+      <p class="sec-note muted">Pick a small, focused pack — or pick one we keep reaching for ourselves. Both rows are instant downloads you can use on your next piece.</p>
+      <div class="sub-head">
+        <h3>Popular starting points</h3>
+      </div>
+      {product_grid(starting_points, 0)}
+      <div class="sub-head sub-head--row">
+        <h3>Studio favorites</h3>
         <a class="text-link" href="products.html">Browse all products →</a>
       </div>
       {feature_band(0)}
@@ -225,33 +228,16 @@ def build_home():
     </div>
   </section>
 
-  <!-- 8 · POPULAR STARTING POINTS: the packs new customers begin with. -->
-  <section class="section" id="starting-points" aria-labelledby="sp-title">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">Not sure where to start?</p><h2 id="sp-title">Popular Starting Points</h2></div>
-        <a class="text-link" href="products.html">Browse the full catalog →</a>
-      </div>
-      <p class="sec-note muted">Small, focused packs most artists start with — each one an instant download you can use on your next piece.</p>
-      {product_grid(starting_points, 0)}
-    </div>
-  </section>
+  <!-- 8 · PROCREATE BUNDLES: a value ladder (Starter → Advanced → Ultimate →
+       Master Library), not a tile grid ordered by price.
+       data/discovery.json → bundleLadder owns the rungs. -->
+  {bundle_ladder_section}
 
-  <!-- 9 · LEARN: free starter guide → masterclass, side by side. -->
-  {ebook_section}
+  <!-- 9 · MASTER LIBRARY: Level 4 — the ladder's top rung, broken out so the
+       library gets a real argument instead of a fourth card. -->
+  {flagship_band(0, bridge=True, ladder_href="#bundles")}
 
-  <!-- 10 · BUNDLES: the single bundle section on this page. -->
-  <section class="section">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">Level 3 · High value</p><h2>Procreate Bundles</h2></div>
-        <a class="text-link" href="bundles.html">Compare bundles →</a>
-      </div>
-      <div class="grid bundles-grid">{bundle_cards}</div>
-    </div>
-  </section>
-
-  <!-- 11 · WHY DIGIKITPRO -->
+  <!-- 10 · WHY DIGIKITPRO -->
   <section class="section section-alt">
     <div class="wrap">
       <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2>Tools that respect your craft</h2></div></div>
@@ -264,7 +250,7 @@ def build_home():
     </div>
   </section>
 
-  <!-- 12 · BLOG PREVIEW -->
+  <!-- 11 · ARTICLES -->
   <section class="section">
     <div class="wrap">
       <div class="sec-head">
@@ -275,8 +261,19 @@ def build_home():
     </div>
   </section>
 
-  <!-- 12 · EMAIL CAPTURE: the close of the journey, after the articles. -->
+  <!-- 12 · FREE BRUSH EMAIL CTA: last on the page on purpose — it is the
+       low-commitment exit for a visitor who has read the pitch and still is not
+       buying, and nothing competes with it after. The articles sit above it as
+       free value, so the page ends on "take this" rather than "read more".
+
+       REAL REVIEWS belongs between WHY DIGIKITPRO (10) and this block, the
+       moment verifiable quotes exist. It is deliberately NOT built: no
+       placeholder quotes, no star ratings, no review counts — tools/verify.py
+       fails the build on invented social proof, and an empty "Reviews" heading
+       is a worse signal than no heading. Add plain attributed text here when
+       you have it. See README → "Social proof", docs/AUDIT-AND-PLAN.md Part 13. -->
   {newsletter(0)}
+
 </main>
 """
     html_out += footer(0)
