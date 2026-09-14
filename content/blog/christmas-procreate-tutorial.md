@@ -1,65 +1,106 @@
 ---
-title: Christmas Procreate Tutorial: Make a Holiday Card with Stamps & Washi Tape
+title: Christmas Procreate Tutorial: Design a Holiday Card with Brushes
 slug: christmas-procreate-tutorial
-description: A step-by-step Christmas Procreate tutorial: design a festive greeting card with 173 holiday stamps, washi tape brushes, glitter papers and chalk lettering in under an hour.
-date: 2026-09-02
+description: Follow this Christmas Procreate tutorial to build a printable holiday card with stamps, washi tape, chalk lettering, paper, and controlled sparkle.
+date: 2026-09-14
+modified: 2026-09-14
 category: Tutorials
 howto: true
 totaltime: PT50M
+primary_keyword: Christmas Procreate tutorial
+secondary_keywords: [Christmas card Procreate, holiday Procreate brushes, digital Christmas card, Procreate washi tape brushes]
+search_intent: Informational with commercial investigation
+target_audience: Procreate beginners, card makers, digital scrapbookers, illustrators, and artists creating seasonal graphics
+tags: [Christmas, Procreate tutorial, greeting cards, seasonal art, brushes]
 products: [christmas-brushes-bundle, glitter-brushes-sparkle-shine-30, free-chalkboard-artists-toolkit]
 related: [halloween-procreate-tutorial, how-to-install-procreate-brushes, best-procreate-brushes-for-beginners]
 ---
 
-Hand-made holiday cards are one of the most rewarding things to draw on an iPad. This Christmas Procreate tutorial builds a complete festive greeting card using the [Christmas Procreate Brushes Bundle](/products/christmas-brushes-bundle/): 173 holiday stamps and brushes, 44 washi tape brushes, glitter papers, frames and chalkboards, with a little extra shimmer from the [Glitter Procreate Brushes](/products/glitter-brushes-sparkle-shine-30/) and the free [Chalkboard Artist's Toolkit](/products/free-chalkboard-artists-toolkit/).
+A holiday card becomes easier to revise when the paper, decorations, message, and sparkle live on separate layers. This Christmas Procreate tutorial builds a simple card composition with the current [Christmas Procreate Brushes Bundle](/products/christmas-brushes-bundle/), then shows how to keep the design printable and readable.
 
-New to installing .brushset files? The [installation guide](/blog/how-to-install-procreate-brushes/) gets every pack onto your iPad in about a minute.
+The product catalogue lists 173 Christmas stamps and brushes, 44 hand-drawn washi tape brushes, five glitter papers, two photo frames, four Christmas photo frames in PNG and AI format, five chalkboards, and an installation guide. Confirm current included files on the product page before starting.
 
-## Step 1: Create a card-sized canvas
+## What you need
 
-Start with a portrait canvas sized **1800 x 2400 px at 300 DPI**, the classic 3:4 greeting-card ratio that also crops cleanly for social posts. Set up layers in working order from bottom to top: a **Paper** layer, a **Decor** layer for stamps and florals, a **Washi** layer, a **Lettering** layer, and a top **Sparkle** layer. Working on separate layers means you can recolor or move every element independently.
+- Procreate on iPad and an Apple Pencil if you want pressure-sensitive marks.
+- A card size that matches your printer or delivery format.
+- The Christmas bundle, or any comparable stamps, paper, and lettering tools.
+- Optional sparkle brushes and the free [Chalkboard Artist’s Toolkit](/products/free-chalkboard-artists-toolkit/).
 
-## Step 2: Pick a paper or chalkboard background
+If you need help with the download, follow the [Procreate brush installation guide](/blog/how-to-install-procreate-brushes/) first.
 
-Choose a base from the bundle: a [glitter paper](/products/christmas-brushes-bundle/) for a shimmering foil look, a plain warm cream for a traditional card, or one of the five included **chalkboards** for a hand-lettered sign feel. Fill the Paper layer with your choice, then drop in one of the photo frames or border stamps if you want a framed layout.
+## Step 1: Create a card canvas
 
-## Step 3: Stamp your holiday decorations
+Create a portrait or landscape document based on the final card. As a suggested starting point, a 3:4 canvas such as 1,800 × 2,400 pixels at 300 DPI can work for a small print study, but use the printer’s exact size, bleed, and colour requirements when available.
 
-On the Decor layer, pick from the Christmas stamps, decor shapes, cookie-cutter shapes, embellishments and floral stamps included in the bundle. Stamp your main motif (a wreath, tree or bauble cluster) near the center, then resize and rotate with the Transform tool. Because every stamp lands as a shape on its own layer initially, stamp on fresh layers, merge only when you are happy with placement, and recolor each element from the layer menu.
+Set up layers named **Paper**, **Decor**, **Washi**, **Lettering**, and **Sparkle**. Add a **Guide** layer if you need margins or a centre line; hide it before export.
 
-## Step 4: Tape down notes with the washi tape brushes
+## Step 2: Choose a quiet background
 
-Select one of the **44 hand-drawn washi tape brushes** and, on the Washi layer, paint a short strip across the corners of photos, notes or framed sections just like real washi tape in a scrapbook. Lower the layer opacity slightly and add a subtle shadow underneath so the tape looks physically stuck down. This is the trick that turns a flat card into a layered journal-style design.
+Use a cream, muted red, deep green, or chalkboard surface. If the bundle’s paper or chalkboard files suit the format, place one on the Paper layer and keep it at full size. Leave enough contrast for the greeting to remain readable.
 
-## Step 5: Add chalk or brush lettering
+Do not add glitter before checking the background value. Sparkle cannot rescue a message that disappears into the paper.
 
-On the Lettering layer, add your greeting. For a chalkboard card, use the free [Chalkboard Artist's Toolkit](/products/free-chalkboard-artists-toolkit/) brushes to hand-letter a phrase in soft, dusty white, it pairs perfectly with the dark chalkboard background. On a cream or glitter card, use any favorite liner brush for clean ink lettering. Keep the message short and centered so the decorative stamps stay the focus.
+## Step 3: Build the main decoration
 
-## Step 6: Add shimmer and export
+On the Decor layer, place a wreath, tree, bauble group, floral motif, or another central shape from the bundle. Use a new layer for each major stamp while experimenting. Transform, rotate, and recolour the elements to create a composition rather than a single untouched stamp.
 
-Finish on the Sparkle layer: scatter a few [glitter brushes](/products/glitter-brushes-sparkle-shine-30/) around lights, snowflakes and the edges of the frame, then set the layer to **Add** blend mode so the highlights glint. Zoom out to check the composition, add a light vignette if the edges feel too bright, then export at 300 DPI as a PNG or PDF ready to print or send digitally.
+Leave a clear area for the greeting. View the card at the size it will be printed or shared, not only zoomed in on the iPad.
 
-## Ideas to take it further
+## Step 4: Add washi tape and supporting shapes
 
-- Make a matching set: card, gift tag and social post by reusing the same stamps on smaller canvases.
-- Use the bonus PNG and AI photo frames in Canva or Photoshop if you finish the layout elsewhere.
-- Recolor the same stamp layout in two palettes (classic red-green and modern blush-gold) for two cards from one design.
+Use the 44 listed washi tape brushes to anchor corners, frames, or small notes. Keep the strips aligned with the card’s structure and vary the lengths. A little overlap can suggest a scrapbook feel, but repeated tape at equal angles quickly becomes a pattern.
+
+If you add a shadow, paint it on a separate layer at a suggested low opacity. Check that the shadow does not muddy the paper.
+
+## Step 5: Add the message
+
+Create the greeting on its own Lettering layer. Use a liner, chalk brush, or a text tool depending on the style. Keep the phrase short and test readability at the final output size. A decorative border should not compete with the words.
+
+The free [Chalkboard Artist’s Toolkit](/products/free-chalkboard-artists-toolkit/) is a relevant option for hand-lettered chalkboard work, but built-in Procreate brushes can work just as well for a simple message.
+
+## Step 6: Add controlled sparkle and export
+
+Place sparkle on the top layer only where light would naturally catch: around a star, ornament, border, or snow highlight. The [Glitter Procreate Brushes](/products/glitter-brushes-sparkle-shine-30/) are optional. Reduce the layer opacity if the effect overwhelms the message.
+
+Hide guides, inspect the edges, and export the file type required by your printer or recipient. Save the layered Procreate file separately in case you need to change the wording or palette.
 
 {{products}}
 
+## Common mistakes
+
+- Designing at a size that does not match the final card.
+- Letting decorative stamps cover the message area.
+- Using one layer for every element, which makes revision difficult.
+- Applying glitter across the whole card instead of using it as an accent.
+- Assuming a digital preview proves print colour; make a proof when colour accuracy matters.
+
 ## FAQ
 
-### What app do I need for the Christmas bundle?
+### What canvas size should I use for a Christmas card in Procreate?
 
-The brushes, stamps and washi tape brushes are made for Procreate on iPad (Procreate 5 or later is recommended). The bonus PNG and AI files, including photo frames and glitter papers, can also open in other apps that support those formats, such as Canva, Photoshop or Affinity.
+Use the printer’s physical dimensions, bleed, and DPI requirements. If you have no specification, a 3:4 document at a print-oriented resolution is a reasonable starting study, but confirm before production.
 
-### What is inside the Christmas Procreate Brushes Bundle?
+### What is included in the Christmas Procreate Brushes Bundle?
 
-The bundle includes 173 Christmas stamps and brushes (decor, shapes, cookie-cutter shapes, embellishments, brushes and floral stamps), 44 hand-drawn washi tape brushes, plus bonuses: 2 photo frames, 5 glitter papers, 4 Christmas photo frames in PNG and AI format, 5 chalkboards, an installation guide and brush-setting instructions.
+The current catalogue lists 173 Christmas stamps and brushes, 44 washi tape brushes, paper and frame bonuses, five chalkboards, and installation and brush-setting instructions. Verify the live product page for the current contents.
+
+### Do I need Procreate to use every file?
+
+The brushset requires Procreate on iPad. Bonus PNG and AI files may require compatible software; check the product requirements and the software you plan to use.
+
+### Can I sell cards made with the Christmas resources?
+
+DigiKitPro’s current terms permit personal and commercial artwork unless a product page states otherwise. They prohibit reselling or redistributing the brush, paper, or source files. Read the [Terms of Service](https://digikitpro.shop/terms.html) before selling templates or editable assets.
 
 ### How do I install the Christmas brushes?
 
-Unzip the download, send the .brushset file to your iPad (AirDrop on a Mac, or a file transfer service such as Dropbox on Windows), then tap the .brushset file in the Files app and choose to open it in Procreate. The pack installs automatically; a full installation guide is included.
+Extract the ZIP in Files, then import the `.brushset` through Procreate’s Brushes panel using **Import from Files**. The [installation guide](/blog/how-to-install-procreate-brushes/) has the full process.
 
-### Can I sell the cards I make?
+## Sources and update note
 
-Yes. DigiKitPro products include a license for personal and commercial artwork under the Terms page, so finished cards, tags and designs you create are yours to sell. You may not resell or redistribute the brush, stamp or paper files themselves.
+- [Procreate Help: Importing your brushes](https://help.procreate.com/articles/daaqbd-importing-your-brushes) — official import steps.
+- DigiKitPro product pages linked above — current seasonal resource contents.
+- [DigiKitPro Terms of Service](https://digikitpro.shop/terms.html) — current licence language.
+
+Keep the message readable, the layers editable, and the sparkle intentional. A seasonal card is finished when the recipient notices the greeting before the brush pack.

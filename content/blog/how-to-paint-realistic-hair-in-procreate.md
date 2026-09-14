@@ -1,62 +1,110 @@
 ---
-title: How to Paint Realistic Hair in Procreate (Without Drawing Every Strand)
+title: How to Paint Realistic Hair in Procreate Without Drawing Every Strand
 slug: how-to-paint-realistic-hair-in-procreate
-description: The mass-first hair workflow for Procreate: block volume, carve light, then add directional strands and flyaways with the right brushes.
-date: 2026-08-11
+description: Learn how to paint realistic hair in Procreate with a mass-first process for silhouette, clumps, highlights, strands, and flyaways.
+date: 2026-09-14
+modified: 2026-09-14
 category: Tutorials
-products: [professional-hair-brushes, hair-hairstyle-stamp-kit, premium-hair-brushes-10, portrait-mastery-kit-46-brushes]
-related: [best-procreate-brushes-for-portraits, procreate-portrait-workflow, how-to-create-realistic-skin-in-procreate]
+howto: true
+totaltime: PT90M
+primary_keyword: how to paint realistic hair in Procreate
+secondary_keywords: [Procreate hair tutorial, realistic digital hair, hair brushes for Procreate, paint hair on iPad]
+search_intent: Informational
+target_audience: Procreate portrait artists, character illustrators, and digital painters who struggle with stiff or stringy hair
+tags: [hair, portraits, digital painting, Procreate tutorial, character art]
+products: [professional-hair-brushes, premium-hair-brushes-10, hair-hairstyle-stamp-kit, portrait-mastery-kit-46-brushes]
+related: [best-procreate-brushes-for-portraits, procreate-portrait-workflow, stamp-brushes-vs-painting-brushes]
 ---
 
-Hair intimidates more portrait artists than any other subject, because the instinctive approach, painting strand by strand from the roots out, produces stiff, stringy results that take hours. Professional portraitists do the opposite: they work from the biggest shape to the smallest detail, and strands come almost last.
+The fastest way to make digital hair look stiff is to draw every strand too early. Realistic hair is read first as a silhouette and a set of large clumps, then as directional ribbons, and only at the end as selected strands and flyaways.
 
-Here is the workflow that makes hair fast and believable.
+This tutorial follows that mass-first order. The brush sizes and opacity ranges are suggested starting points, not fixed Procreate settings. Change them for the canvas, hair texture, lighting, and style in your reference.
 
-## Step 1: Block the mass, not the strands
+## What you need
 
-Hair is a solid sculptural form before it is fibers. On a new layer, block the entire hair silhouette as one shape with a flat base brush. Decide the big direction of flow now, where the hair sweeps, where it parts, where it tucks. If the mass reads well as a solid shape, the portrait is already 70% convincing.
+- A clear reference showing the hair’s overall shape and light direction.
+- A sketch or painting brush for the mass.
+- A directional hair brush for clumps and strands.
+- An eraser or opaque brush for carving edges.
+- Optional stamp brushes for exploring hairstyles quickly.
 
-If establishing that volume is your bottleneck, hair stamp sets like the [160-stamp Hair & Hairstyle Stamp Kit](/products/hair-hairstyle-stamp-kit/) give you a professional anatomical base in one tap, volume, flow and hairstyle already solved, ready to paint over.
+The [Professional Hair Brushes](/products/professional-hair-brushes/) are suited to a hand-painted approach. The [Hair & Hairstyle Stamp Kit](/products/hair-hairstyle-stamp-kit/) is catalogued as 160 hairstyle stamps and can help you explore a silhouette before repainting it.
 
-## Step 2: Carve the light across the whole mass
+## Step 1: Draw the head and hairline first
 
-Forget strands entirely. Take a soft brush and establish where light travels across the hair: a broad highlight band that follows the head's curve, darker occlusion near the part, at the nape, and where hair tucks behind itself. Hair shine works like a ribbon wrapped around a sphere, find that ribbon first.
+Before touching hair texture, establish the skull, face angle, ears, neck, and hairline. Hair grows from a form; it does not sit on top of a flat oval. Keep a construction layer beneath the painting and mark the direction of the part, fringe, and major growth areas.
 
-## Step 3: Break the silhouette with clumps
+## Step 2: Block the entire mass
 
-Real hair groups into clumps, and those clumps are visible in the outline. With a strand-textured brush, the dedicated strand brushes in the [Professional Hair Brushes kit](/products/professional-hair-brushes/) are tuned for this, pull directional strokes along the flow, breaking the edge of your silhouette into varied clumps. Follow the flow you decided in step 1; direction consistency matters more than stroke count.
+Choose a brush large enough to fill the main shape in broad strokes. Paint the base colour as one connected mass, including the shadowed interior. Ignore individual strands.
 
-## Step 4: Add mid-tone strand texture inside the mass
+Check the silhouette at thumbnail size. Hair can have beautiful texture and still feel wrong if the outer contour does not describe the reference or character design.
 
-Still not individual hairs, strands. Work over the mid-tones with a multi-strand brush at low opacity, always pulling in the direction of growth. Let strokes overlap; the overlap is what creates natural density.
+## Step 3: Divide the mass into large clumps
 
-## Step 5: Reserve bright strands for the highlight band
+On a new layer or with an opaque brush, separate the hair into a few directional groups: fringe, crown, side sections, ponytail, curls, or loose ends. Each group should follow a clear flow from root to tip.
 
-Your lightest, sharpest strand work should live almost exclusively inside the highlight ribbon. A few dozen confident strokes here outperform a thousand strokes spread everywhere, this is the single biggest realism multiplier in hair painting.
+Use a darker value between clumps rather than outlining every section. The gaps create rhythm and depth without turning the hair into a collection of strings.
 
-## Step 6: Finish with flyaways and softness
+## Step 4: Paint the major light ribbons
 
-The last pass is personality: a handful of stray flyaways at the edge (they catch light beautifully), a soft blur or low-opacity smudge where hair meets the background, and a check that the hairline transitions softly into the forehead, a hard hairline is an instant realism killer.
+Observe where the light catches the form. Add broad, soft-to-firm ribbons that travel with the clumps. Keep them irregular: repeated identical highlights look like stripes.
 
-## Mistakes that make digital hair look fake
+Use a suggested low-to-medium opacity and build the light gradually. A highlight brush can speed up the mark, but it should follow the volume rather than flatten it.
 
-- **Painting every strand**, masses first, strands second, singles last
-- **Same stroke weight everywhere**, vary thick clumps and fine wisps
-- **Straight-line flow**, hair has rhythm; let it bend and break
-- **Ignor­ing the skull**, hair wraps a ball; the highlight ribbon must follow the head's curve
+## Step 5: Add selected strands
+
+Now switch to a smaller directional brush. Place strands near the part, around the silhouette, across a few clumps, and in places where the hair overlaps the face. Vary length, pressure, and value. Leave large areas without individual strands so the hierarchy stays clear.
+
+For curls, describe the ribbon or spiral movement first. For straight hair, keep strands grouped and directional instead of drawing a parallel barcode.
+
+## Step 6: Refine the edge and flyaways
+
+Use a light background colour or eraser to carve a few gaps in the silhouette. Add flyaways sparingly, especially against a contrasting background. Some stray hairs should disappear; a complete halo of equal lines looks intentional in the wrong way.
+
+Return to the large mass if the edge becomes too noisy. Realistic hair needs both lost edges and crisp accents.
+
+## Step 7: Check the value and face relationship
+
+Hide the texture layer and compare the hair mass to the face. The hair should frame the features without competing with the eyes unless the reference calls for that emphasis. At thumbnail size, you should still see the main light direction and shape.
+
+The [Portrait Mastery Kit](/products/portrait-mastery-kit-46-brushes/) includes hair, detail, texture, and finish categories according to its current product description, which can support keeping the stages separate.
+
+## Common mistakes
+
+- Drawing strands before the head and hair mass are placed.
+- Using one line weight for every strand.
+- Making every highlight equally bright.
+- Filling the silhouette with identical stamp shapes.
+- Forgetting the hairline, part, or shadow between clumps.
+
+{{products}}
 
 ## FAQ
 
-### What is the best Procreate brush for hair strands?
+### What is the best Procreate hair brush?
 
-A multi-strand brush with slight texture and pressure taper. Single-hair brushes look stringy; multi-strand brushes build density naturally with each stroke.
+The best choice depends on whether you need to block a mass, paint clumps, draw strands, or add flyaways. A versatile directional brush is more useful for final painting than a stamp used without repainting.
 
-### How do I paint curly or coily hair?
+### How do I make hair look less stringy?
 
-The same mass-first workflow, block the clump pattern as a shape (curls read as interlocking S-curves), keep texture in the mid-tones, and use flyaways to sell softness.
+Return to the large mass and clumps. Reduce the number of individual strands, vary their length and value, and let broad ribbons carry most of the lighting.
 
-### Should hair be on one layer or many?
+### Are hair stamp brushes useful?
 
-Several: base mass, shadow carve, highlight ribbon, strand texture, flyaways. Separate layers let you adjust flow and lighting without repainting.
+Yes, for hairstyle exploration, silhouette blocking, and speed. Keep the stamp editable, repaint the important shapes, and vary the result so the final illustration does not look like an untouched stamp.
 
-{{products}}
+### Should hair be painted on a separate layer from the face?
+
+Usually. Separate hair layers make it easier to adjust the silhouette, place overlaps, and protect the face. Consolidate only after the main decisions are settled.
+
+### Can I use these brushes for anime hair?
+
+Yes. Simplify the clumps, exaggerate the silhouette, and reduce strand detail to match the character style. The mass-first order still applies.
+
+## Sources and update note
+
+- [Procreate Handbook: Brush Studio](https://help.procreate.com/procreate/handbook/brushes/brush-studio) — official brush customisation reference.
+- DigiKitPro product pages linked above — current hair brush and stamp descriptions.
+
+Paint the hair as a form first. The individual strands are the accents that explain the form, not the form itself.
