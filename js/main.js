@@ -63,8 +63,38 @@
  menuBtn.addEventListener("click", function () {
  var open = mobileNav.classList.toggle("open");
  menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+ if (open) {
+ /* the group submenus are native <details>; collapse them when the menu
+    reopens so it never opens with a half-expanded state */
+ $$(".mobile-nav .nav-drop[open]").forEach(function (d) { d.removeAttribute("open"); });
+ }
  });
  }
+
+ /* ---------- nav dropdowns (Shop / Learn) ---------- */
+ // The dropdowns are native <details>/<summary>: keyboard (Space/Enter) and
+ // screen-reader support come from the browser, no JS required. The browser
+ // just does not close them on outside click or Escape, so we add that —
+ // the menus stay fully usable with JS off.
+ $$(".nav-drop[data-nav-drop]").forEach(function (d) {
+ /* after the user picks a destination, collapse the menu (mobile groups
+    must also collapse; on desktop the page is navigating away anyway) */
+ $$("a", d).forEach(function (a) {
+ a.addEventListener("click", function () { d.removeAttribute("open"); });
+ });
+ });
+ document.addEventListener("click", function (e) {
+ if (e.target && e.target.closest && e.target.closest("[data-nav-drop]")) return;
+ $$(".nav-drop[data-nav-drop][open]").forEach(function (d) { d.removeAttribute("open"); });
+ });
+ document.addEventListener("keydown", function (e) {
+ if (e.key !== "Escape") return;
+ $$(".nav-drop[data-nav-drop][open]").forEach(function (d) {
+ d.removeAttribute("open");
+ var s = d.querySelector("summary");
+ if (s) s.focus();
+ });
+ });
 
  /* ---------- search ---------- */
   function relTo(path) {
@@ -238,7 +268,7 @@
  if (!email.value || email.value.indexOf("@") < 1 || email.value.indexOf(".") < 0) {
  e.preventDefault();
  note.textContent = "Please enter a valid email address.";
- note.style.color = "#D88";
+ note.style.color = "#A63D24";
  email.focus();
  return;
  }
@@ -279,7 +309,7 @@
  || form.getAttribute("data-dkp-success")
  || "You’re registered, welcome! Our list is brand new and finishing its one-time email activation; your address is saved and your free brushes arrive with the very first send.";
  note.textContent = state === "ok" ? okMsg : pendingMsg;
- note.style.color = "#C9A86A";
+ note.style.color = "#B04A1D";
  /* Tell the analytics layer a REAL provider response came back (never fired
  optimistically), then continue the funnel: the thank-you page delivers every
  free file directly, so the promise is kept even if the email is delayed. */
@@ -299,7 +329,7 @@
  note.style.color = "";
  } else {
  note.textContent = "Something went wrong on the server. Please try again in a moment.";
- note.style.color = "#D88";
+ note.style.color = "#A63D24";
  }
  };
  fetch(ajax, { method: "POST", headers: { "Accept": "application/json" }, body: new FormData(form) })

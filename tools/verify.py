@@ -6,9 +6,10 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 62 CHECKS PASSED.
-(57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
-ladder completeness x2, no fake-strikethrough pricing.)
+Expects: ALL 73 CHECKS PASSED.
+(57 baseline + 5 homepage IA (section order, ladder x2, no fake pricing)
++ 11 from the 2026-09-14 UI/UX redesign: nav structure x6, portrait
+learning path, PDP purchase questions x2, PDP sticky CTA, theme tokens.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -30,7 +31,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 62
+EXPECTED = 73
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -230,8 +231,27 @@ def source_blob() -> str:
     return "\n".join(parts)
 
 
+def nav_block(home_html: str, which: int) -> str:
+    """The `which`-th <details data-nav-drop> block inside the primary nav
+    (0 = Shop, 1 = Learn). String-based: the header is machine-generated
+    markup, so a stable read is safe."""
+    nav = home_html.split('<nav class="main-nav"', 1)[-1].split("</nav>", 1)[0]
+    parts = nav.split('data-nav-drop', 2)
+    return parts[1 + which] if len(parts) > 1 + which else ""
+
+
+def section_text(html_text: str, section_id: str) -> str:
+    """Rough extract of <section id="...">…</section> (sections never nest
+    in generated pages)."""
+    m = re.search(r'<section[^>]*id="' + re.escape(section_id) + r'"[^>]*>', html_text)
+    if not m:
+        return ""
+    end = html_text.find("</section>", m.start())
+    return html_text[m.start():end if end != -1 else m.start() + 40000]
+
+
 def main() -> int:
-    print("DigiKitPro verify — 62 checks\n")
+    print("DigiKitPro verify — 73 checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -417,13 +437,75 @@ def main() -> int:
     # ── 43–46 information architecture ────────────────────────────────
     home_html = read("index.html")
     ids = homepage_section_ids(home_html)
-    IA = ["craft", "free", "ebooks", "results", "starting-points", "bundles", "master-library"]
+    IA = ["craft", "free", "portrait-path", "results", "starting-points", "bundles", "master-library"]
     check("homepage section order matches the IA brief", ids[:len(IA)] == IA,
           ", ".join(ids) or "no sections found")
     # The page must close on free value and end with the one low-commitment CTA:
     # … master-library → (Why) → Articles → newsletter as the last <section>.
     check("homepage closes: master library → why → articles → email CTA",
           ids == IA + ["newsletter"], "final section: " + (ids[-1] if ids else "-"))
+
+    # ── 46a–46j UI/UX redesign (2026-09-14) ───────────────────────────
+    # Desktop nav: Shop ▾ · Brushes · Bundles · Free · Learn ▾ · Masterclass · About
+    shop_block = nav_block(home_html, 0)
+    learn_block = nav_block(home_html, 1)
+    nav_html = home_html.split('<nav class="main-nav"', 1)[-1].split("</nav>", 1)[0]
+    check("nav: Shop dropdown has All Products + 4 categories",
+          all(f'href="{w}"' in shop_block for w in (
+              "products.html", "category/portrait/", "category/line-art/",
+              "category/anime/", "category/watercolor/")),
+          "Shop menu: " + (", ".join(w for w in ("products.html", "category/portrait/",
+              "category/line-art/", "category/anime/", "category/watercolor/")
+              if f'href="{w}"' not in shop_block) or "ok"))
+    check("nav: Learn dropdown has All Articles + 3 guides",
+          all(f'href="{w}"' in learn_block for w in (
+              "blog.html", "blog/procreate-portrait-workflow/",
+              "blog/how-to-create-realistic-skin-in-procreate/",
+              "blog/how-to-install-procreate-brushes/")),
+          "Learn menu: " + (", ".join(w for w in ("blog.html", "blog/procreate-portrait-workflow/",
+              "blog/how-to-create-realistic-skin-in-procreate/", "blog/how-to-install-procreate-brushes/")
+              if f'href="{w}"' not in learn_block) or "ok"))
+    check("nav: top level has Brushes, Bundles, Free, Masterclass, About",
+          all(f'href="{w}"' in nav_html for w in (
+              "products.html", "bundles.html", "freebies.html",
+              "products/procreate-portrait-masterclass-ebook/", "about.html")))
+    mobile_nav = home_html.split('<nav class="mobile-nav"', 1)[-1].split("</nav>", 1)[0]
+    header_html = home_html.split('<header class="site-header"', 1)[-1].split("</header>", 1)[0]
+    check("nav: primary 'Shop Brushes' CTA (desktop + mobile)",
+          "Shop Brushes" in header_html and "Shop Brushes" in mobile_nav)
+    check("nav: search + language controls present",
+          'data-search-open' in home_html and 'data-lang-toggle' in home_html)
+    check("nav: mobile menu grouped Shop / Learn / Bundles / About",
+          'm-nav-link">Shop' in mobile_nav and 'm-nav-link">Learn' in mobile_nav
+          and 'href="bundles.html"' in mobile_nav and 'href="about.html"' in mobile_nav)
+    # Portrait learning path: the five real products, in learning order.
+    path_html = section_text(home_html, "portrait-path")
+    path_slugs = ["procreate-starter-guide-free-ebook", "portrait-skin-brushes-procreate",
+                  "portrait-mastery-kit-46-brushes", "ultimate-portrait-mastery-bundle",
+                  "procreate-portrait-masterclass-ebook"]
+    pos = [path_html.find(f"products/{s}/") for s in path_slugs]
+    check("home: portrait path has all 5 steps in order",
+          path_html != "" and all(p != -1 for p in pos) and pos == sorted(pos),
+          "missing: " + (", ".join(s for s, p in zip(path_slugs, pos) if p == -1) or "ok"))
+    # A product page must answer the purchase questions.
+    pdp = read("products/portrait-skin-brushes-procreate/index.html")
+    check("pdp: purchase questions answered (about/who/features/tech/requirements/faq/related)",
+          all(m in pdp for m in ("p-about", "p-for", "Why You&#x27;ll Love It",
+                                 "Technical Details", "Requirements", "FAQ", "Related Products")))
+    check("pdp: licence line + install steps + Payhip buy panel",
+          all(m in pdp for m in ("licence-line", "install-steps", "buy-panel",
+                                 "data-dkp-loc=\"pdp-buy-panel\"")))
+    # Mobile sticky purchase CTA (generated by js/motion.js, styled in CSS).
+    motion_js = read("js/motion.js")
+    style_css = read("css/style.css")
+    check("js: sticky purchase bar for product pages (mobile)",
+          "initPdpSticky" in motion_js and "data-pdp-sticky" in motion_js
+          and ".sticky-cta[data-pdp-sticky]" in style_css)
+    # Theme: warm cream editorial — light base, charcoal type, burnt-orange accent.
+    css_norm = re.sub(r"\s+", "", style_css)
+    check("theme: warm cream / charcoal / burnt-orange tokens",
+          "--bg:#F6F1E8" in css_norm and "--text:#2A241E" in css_norm
+          and "--accent:#B04A1D" in css_norm and "#0A0A0C" not in css_norm)
 
     products = {p["slug"]: p for p in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))}
     want, kept = ladder_state()
