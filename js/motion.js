@@ -307,6 +307,53 @@
   }
 
   /* ══════════════════════════════════════════════════════════════════
+     5b. STICKY PURCHASE BAR — product pages, mobile only (CSS hides it
+     above 900px, where the buy panel stays in view). The buy panel is the
+     page's primary CTA; this bar keeps it one thumb away for the rest of
+     the page. Appears the moment the panel scrolls out of view and hides
+     again near the newsletter/footer, so it never covers the closing CTA.
+     Safe-area padding comes from .sticky-cta in CSS (viewport-fit=cover).
+     ══════════════════════════════════════════════════════════════════ */
+  function initPdpSticky() {
+    var page = window.DKP && window.DKP.page;
+    if (!page || page.type !== "product") return;
+    var panel = $(".buy-panel");
+    if (!panel) return;
+    var buy = document.querySelector('a[data-dkp-loc="pdp-buy-panel"]');
+    var href = (buy && buy.getAttribute("href")) || (window.DKP && window.DKP.store) || "#";
+    function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+    var name = page.name || "This product";
+    if (name.length > 44) name = name.slice(0, 44).replace(/\s+\S*$/, "") + "…";
+    var price = page.free ? "Free" : "$" + (Number(page.price) || 0).toFixed(2);
+    var label = page.free ? "Get Free ↗" : "Buy on Payhip ↗";
+    var bar = document.createElement("div");
+    bar.className = "sticky-cta";
+    bar.setAttribute("data-pdp-sticky", "");
+    bar.innerHTML =
+      '<div class="sticky-cta-inner">' +
+      '<p class="sticky-cta-copy"><b>' + esc(name) + '</b> · ' + esc(price) + '</p>' +
+      '<a class="btn btn-gold btn-sm" href="' + esc(href) + '" target="_blank" rel="noopener" ' +
+      'data-dkp-slug="' + esc(page.slug || "") + '" data-dkp-name="' + esc(name) + '" ' +
+      'data-dkp-price="' + (Number(page.price) || 0).toFixed(2) + '" data-dkp-tier="' + esc(page.tier || "") + '" ' +
+      'data-dkp-free="' + (page.free ? 1 : 0) + '" data-dkp-loc="pdp-sticky">' + label + '</a>' +
+      '</div>';
+    document.body.appendChild(bar);
+    void bar.offsetWidth; /* force a style pass so the first toggle animates */
+    var stop = $(".newsletter") || $(".site-footer");
+    addTask(function () {
+      var vh = window.innerHeight || 800;
+      var r = panel.getBoundingClientRect();
+      var atEnd = false;
+      if (stop) {
+        var sr = stop.getBoundingClientRect();
+        atEnd = sr.top < vh * 0.9;   /* closing CTA in sight → get out of the way */
+      }
+      bar.classList.toggle("is-up", r.bottom < 0 && !atEnd);
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
      6. SCROLL PROGRESS — a 2 px thread so the page feels finite
      ══════════════════════════════════════════════════════════════════ */
   function initProgress() {
@@ -370,6 +417,7 @@
     initBundleDepth();
     initProgress();
     if (PAGE_HOME) initStickyCta();                  /* a homepage nudge, per the brief */
+    initPdpSticky();                                 /* product pages: sticky buy bar (mobile) */
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     onScroll();

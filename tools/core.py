@@ -318,7 +318,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(desc)}">
   <link rel="canonical" href="{esc(canonical)}">{vmeta}
-  <meta name="theme-color" content="#0A0A0C">
+  <meta name="theme-color" content="#F6F1E8">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta property="og:type" content="{page_type}">
@@ -364,24 +364,78 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
 """
 
-NAV = [("Free Brushes","freebies.html"),("Products","products.html"),("Bundles","bundles.html"),
-       ("Articles","blog.html"),("About","about.html")]
+# ── navigation model ────────────────────────────────────────────────────
+# Desktop: Shop ▾ · Brushes · Bundles · Free · Learn ▾ · Masterclass · About
+#          + search, language selector, and the primary "Shop Brushes" CTA.
+# Mobile:  four groups — Shop, Learn, Bundles, About — with the CTA.
+# Dropdowns are NATIVE <details>/<summary>: keyboard (Space/Enter) and
+# screen-reader support with zero JS; js/main.js only adds outside-click
+# and Escape-to-close, so without JS the menus still open and every link
+# is reachable. No role="menu": these are link lists, and the disclosure
+# pattern is the accessible native choice.
+SHOP_MENU = [
+    ("All Products", "products.html"),
+    ("Portrait", "category/portrait/"),
+    ("Line Art", "category/line-art/"),
+    ("Anime & Manga", "category/anime/"),
+    ("Watercolor & Texture", "category/watercolor/"),
+]
+LEARN_MENU = [
+    ("All Articles", "blog.html"),
+    ("Portrait Workflow", "blog/procreate-portrait-workflow/"),
+    ("Skin & Hair", "blog/how-to-create-realistic-skin-in-procreate/"),
+    ("Install Brushes", "blog/how-to-install-procreate-brushes/"),
+]
+MASTERCLASS_URL = "products/procreate-portrait-masterclass-ebook/"
+
+_CHEVRON = ('<svg class="nav-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" '
+            'stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" '
+            'aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>')
 
 def header(depth, active=None):
-    links = ""
-    for n, u in NAV:
-        cls = ' class="active"' if active == u else ""
-        links += f'<a href="{rel(depth,u)}"{cls}>{n}</a>' 
-    mlinks = "".join(f'<a href="{rel(depth,u)}">{n}</a>' for n,u in NAV)
+    active = active or ""
+    def is_on(u):
+        """True when the current page IS u or lives under it: product pages
+        (products/…) and category pages count as the shop, articles as Learn."""
+        if active == u:
+            return True
+        if u == "products.html" and (active.startswith("products/") or active.startswith("category/")):
+            return True
+        if u == "blog.html" and active.startswith("blog/"):
+            return True
+        return False
+    def nav_cls(u):
+        return ' class="nav-link active"' if is_on(u) else ' class="nav-link"'
+    def mcls(u):
+        return ' class="active"' if is_on(u) else ""
+    def drop_cls(children):
+        return ' class="nav-link active"' if any(is_on(c) for _, c in children) else ' class="nav-link"'
+    shop_items = "".join(f'<a href="{rel(depth,u)}"{mcls(u)}>{esc(n)}</a>' for n, u in SHOP_MENU)
+    learn_items = "".join(f'<a href="{rel(depth,u)}"{mcls(u)}>{esc(n)}</a>' for n, u in LEARN_MENU)
+    learn_children = LEARN_MENU + [("Portrait Masterclass", MASTERCLASS_URL)]
     lang_items = "".join(f'<button class="lang-opt" type="button" data-lang="{code}" data-lang-name="{name}">{name}<span class="lang-code">{code.upper()}</span></button>' for code,name in LANGUAGES)
     return f"""<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-inner">
     <a class="brand" href="{rel(depth,'index.html')}" aria-label="{SITE_NAME} home">
-      <svg class="brand-mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="15" stroke="#C9A86A" stroke-width="1.4"/><path d="M11 22.5V9.5h4.4c3.9 0 6.6 2.7 6.6 6.5s-2.7 6.5-6.6 6.5H11Zm2.5-2.2h1.8c2.6 0 4.1-1.8 4.1-4.3s-1.5-4.3-4.1-4.3h-1.8v8.6Z" fill="#C9A86A"/></svg>
+      <svg class="brand-mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="15" stroke="#B04A1D" stroke-width="1.4"/><path d="M11 22.5V9.5h4.4c3.9 0 6.6 2.7 6.6 6.5s-2.7 6.5-6.6 6.5H11Zm2.5-2.2h1.8c2.6 0 4.1-1.8 4.1-4.3s-1.5-4.3-4.1-4.3h-1.8v8.6Z" fill="#B04A1D"/></svg>
       <span class="brand-name">DigiKit<em>Pro</em></span>
     </a>
-    <nav class="main-nav" aria-label="Primary">{links}</nav>
+    <nav class="main-nav" aria-label="Primary">
+      <details class="nav-drop" data-nav-drop>
+        <summary{drop_cls(SHOP_MENU)} aria-haspopup="true">Shop {_CHEVRON}</summary>
+        <div class="nav-menu">{shop_items}</div>
+      </details>
+      <a{nav_cls('products.html')} href="{rel(depth,'products.html')}">Brushes</a>
+      <a{nav_cls('bundles.html')} href="{rel(depth,'bundles.html')}">Bundles</a>
+      <a{nav_cls('freebies.html')} href="{rel(depth,'freebies.html')}">Free</a>
+      <details class="nav-drop" data-nav-drop>
+        <summary{drop_cls(learn_children)} aria-haspopup="true">Learn {_CHEVRON}</summary>
+        <div class="nav-menu">{learn_items}</div>
+      </details>
+      <a{nav_cls(MASTERCLASS_URL)} href="{rel(depth,MASTERCLASS_URL)}">Masterclass</a>
+      <a{nav_cls('about.html')} href="{rel(depth,'about.html')}">About</a>
+    </nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
         <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
@@ -396,13 +450,25 @@ def header(depth, active=None):
       <button class="icon-btn" type="button" data-search-open aria-label="Search products and articles">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
-      <a class="btn btn-gold btn-sm" href="{rel(depth,'products.html')}" rel="noopener">Browse kits</a>
+      <a class="btn btn-gold btn-sm btn-cta" href="{rel(depth,'products.html')}">Shop Brushes</a>
       <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
   </div>
-  <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile">{mlinks}<a class="btn btn-gold" href="{rel(depth,'products.html')}" rel="noopener">Browse kits</a></nav>
+  <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile">
+    <details class="nav-drop m-nav-group" data-nav-drop>
+      <summary class="m-nav-link">Shop {_CHEVRON}</summary>
+      <div class="m-nav-menu">{shop_items}<a href="{rel(depth,'freebies.html')}"{mcls('freebies.html')}>Free Brushes</a></div>
+    </details>
+    <details class="nav-drop m-nav-group" data-nav-drop>
+      <summary class="m-nav-link">Learn {_CHEVRON}</summary>
+      <div class="m-nav-menu">{learn_items}<a href="{rel(depth,MASTERCLASS_URL)}"{mcls(MASTERCLASS_URL)}>Portrait Masterclass</a></div>
+    </details>
+    <a href="{rel(depth,'bundles.html')}"{mcls('bundles.html')}>Bundles</a>
+    <a href="{rel(depth,'about.html')}"{mcls('about.html')}>About</a>
+    <a class="btn btn-gold m-nav-cta" href="{rel(depth,'products.html')}">Shop Brushes</a>
+  </nav>
   <div id="google_translate_element" class="gt-holder" aria-hidden="true"></div>
 </header>
 <div class="search-overlay" data-search-overlay hidden>
@@ -475,22 +541,21 @@ def footer(depth):
         <a href="{rel(depth,'freebies.html')}">Free Brushes</a>
         <a href="{rel(depth,'products.html')}">All Products</a>
         <a href="{rel(depth,'bundles.html')}">Bundles</a>
-        <a href="{rel(depth,'season/halloween/')}">Halloween Art</a>
-        <a href="{rel(depth,'season/christmas/')}">Christmas Art</a>
-        <a href="{rel(depth,'category/portrait/')}">Portrait Brushes</a>
-        <a href="{rel(depth,'category/skin-texture/')}">Skin Texture</a>
+        <a href="{rel(depth,'category/portrait/')}">Portrait</a>
         <a href="{rel(depth,'category/line-art/')}">Line Art</a>
-        <a href="{rel(depth,'category/watercolor/')}">Watercolor</a>
-        <a href="{rel(depth,'category/anime/')}">Anime Brushes</a>
+        <a href="{rel(depth,'category/anime/')}">Anime &amp; Manga</a>
+        <a href="{rel(depth,'category/watercolor/')}">Watercolor &amp; Texture</a>
+        <a href="{rel(depth,'category/skin-texture/')}">Skin Texture</a>
       </div>
     </nav>
     <nav aria-label="Footer learn">
       <p class="foot-label">Learn</p>
       <div class="foot-links">
-        <a href="{rel(depth,'blog.html')}">Articles</a>
-        <a href="{rel(depth,'blog/best-procreate-brushes-for-portraits/')}">Best Portrait Brushes</a>
-        <a href="{rel(depth,'blog/how-to-create-realistic-skin-in-procreate/')}">Realistic Skin Guide</a>
-        <a href="{rel(depth,'about.html')}">About</a>
+        <a href="{rel(depth,'blog.html')}">All Articles</a>
+        <a href="{rel(depth,'blog/procreate-portrait-workflow/')}">Portrait Workflow</a>
+        <a href="{rel(depth,'blog/how-to-create-realistic-skin-in-procreate/')}">Skin &amp; Hair</a>
+        <a href="{rel(depth,'blog/how-to-install-procreate-brushes/')}">Install Brushes</a>
+        <a href="{rel(depth,MASTERCLASS_URL)}">Portrait Masterclass</a>
       </div>
     </nav>
     <nav aria-label="Footer legal">

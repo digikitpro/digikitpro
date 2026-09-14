@@ -258,14 +258,20 @@ def build_product_pages():
       </div>
     </article>
 
+    <!-- Narrative order = Goal → Problem → Solution → Tool → Result:
+         what this is (About) → who it's for → what you can create with it
+         (features) → what's inside → is it compatible (tech + requirements)
+         → how it's delivered (install) → upgrade path → FAQs → next steps.
+         The buy panel, licence line and trust items already sit in the
+         first viewport. -->
+    {desc_sec}
+    {whofor}
     {features}
     {bundle_block}
     {included}
-    {desc_sec}
     {technical}
     {requirements}
     {install_steps() if not coming and not p.get("free") else ""}
-    {whofor}
     {upgrade_panel(p, depth)}
     {faq_html(p)}
     {rel_arts}

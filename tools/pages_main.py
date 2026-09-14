@@ -43,50 +43,65 @@ def build_home():
         "ultimate-portrait-mastery-bundle",
     ) if s in byslug]
 
-    # ── LEARN: free starter guide → paid masterclass, side by side ───────
-    # A true two-column editorial pair with equal visual weight: the FREE
-    # guide is the entry point ("start here"), the $19 Masterclass the
-    # premium next step ("go deeper"). The connector between the cards is
-    # the funnel. No third card, no placeholders.
-    starter = byslug.get("procreate-starter-guide-free-ebook")
-    master = byslug.get("procreate-portrait-masterclass-ebook")
-    ebook_section = ""
-    if starter and master:
-        def edu_card(p, level_cls, level_label, desc, meta, cta_label, cta_href, cta_ext):
-            im = p["images"]
-            name = p["name"].split(" (")[0]
-            return f"""<article class="ebook-card edu-card {level_cls}">
-  <a class="ebook-cover" href="products/{p['slug']}/">
-    <img src="{asset_file(0, p['slug'], im.get('card',''))}" width="{im.get('cardW') or 750}" height="{im.get('cardH') or 1000}" alt="{esc(name)}: cover" loading="lazy" decoding="async">
+    # ── THE PORTRAIT LEARNING PATH ──────────────────────────────────────
+    # Five steps, in the order a portrait painter actually learns them:
+    #   Free Portrait Guide → Skin Brushes → Portrait Mastery Kit →
+    #   Portrait Bundle → Portrait Masterclass
+    # Every step is a real, live product (slugs resolved at build time; a
+    # deleted product simply drops its step). CTA rule: the free step goes
+    # straight to Payhip (zero friction, no email gate); paid steps go to
+    # their product page, because the path's job is "understand what this
+    # helps me do" before any checkout.
+    path_steps = [
+        ("procreate-starter-guide-free-ebook", "Step 1 · Free",
+         "A visual beginner guide from a blank canvas to a structured, well-lit portrait."),
+        ("portrait-skin-brushes-procreate", "Step 2 · Add texture",
+         "Pores, freckles and wrinkles — the skin brushes that stop a face looking flat."),
+        ("portrait-mastery-kit-46-brushes", "Step 3 · The full kit",
+         "46 brushes wired into a complete portrait workflow: sketch, block, blend, texture, finish."),
+        ("ultimate-portrait-mastery-bundle", "Step 4 · One checkout",
+         "Four portrait kits as one workflow — skin, hair, finish and more, bought together."),
+        ("procreate-portrait-masterclass-ebook", "Step 5 · The curriculum",
+         "107 pages and 15 chapters: the complete portrait method, canvas to final render."),
+    ]
+    path_items = ""
+    for i, (slug, tag, desc) in enumerate(path_steps, start=1):
+        p = byslug.get(slug)
+        if not p or p.get("comingSoon"):
+            continue
+        im = p.get("images") or {}
+        img = im.get("card") or im.get("main") or ""
+        if not img:
+            continue
+        name = p["name"].split(" (")[0]
+        u = rel(0, f"products/{p['slug']}/")
+        final = (i == len(path_steps))
+        if p.get("free"):
+            cta = f'<a class="btn btn-gold btn-sm" href="{p["payhipUrl"]}" target="_blank" rel="noopener" {buy_attrs(p, "portrait-path")}>Get Free <span class="btn-arr">↗</span></a>'
+        else:
+            cta = f'<a class="btn btn-line btn-sm" href="{u}" {buy_attrs(p, "portrait-path")}>View Product</a>'
+        path_items += f"""<li class="path-step{' path-step--final' if final else ''}">
+  <a class="path-media" href="{u}" tabindex="-1" aria-hidden="true">
+    <span class="path-num">{i}</span>
+    <img src="{asset_file(0, p['slug'], img)}" width="{im.get('cardW') or im.get('fullW') or 750}" height="{im.get('cardH') or im.get('fullH') or 500}" alt="" loading="lazy" decoding="async">
   </a>
-  <div class="ebook-body">
-    <p class="edu-level">{esc(level_label)}</p>
-    <h3>{esc(name)}</h3>
-    <p class="edu-desc muted">{esc(desc)}</p>
-    <div class="ebook-foot">
-      <span class="price price-lg">{"Free" if p["free"] else esc(p["priceText"])}</span>
-      <a class="btn btn-gold" href="{cta_href}"{cta_ext}>{cta_label}</a>
-    </div>
-    <p class="edu-meta">{esc(meta)}</p>
+  <div class="path-body">
+    <p class="path-tag">{esc(tag)}</p>
+    <h3><a href="{u}">{esc(name)}</a></h3>
+    <p class="path-desc">{esc(desc)}</p>
+    <div class="path-foot"><span class="price">{"Free" if p["free"] else esc(p["priceText"])}</span>{cta}</div>
   </div>
-</article>"""
-        starter_card = edu_card(
-            starter, "edu-start", "Start here · Free",
-            "A visual beginner guide from a blank canvas to a structured, well-lit portrait.",
-            "PDF eBook · instant download · $0 forever",
-            "Get Free Guide ↗", starter["payhipUrl"], ' target="_blank" rel="noopener" ' + buy_attrs(starter, "edu-duo"))
-        master_card = edu_card(
-            master, "edu-deep", "Go deeper · Premium",
-            "A complete 15-chapter portrait workflow from a blank canvas to a finished, believable portrait.",
-            "PDF eBook · 107 pages · 15 chapters",
-            "Get the Masterclass", f"products/{master['slug']}/", "")
-        ebook_section = f"""<section class="section section-alt" id="ebooks" aria-labelledby="edu-title">
+</li>"""
+    portrait_path_section = ""
+    if path_items:
+        portrait_path_section = f"""<section class="section section-alt" id="portrait-path" aria-labelledby="path-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Learn the craft</p><h2 id="edu-title">Learn Procreate Portraits</h2></div>
-        <p class="sec-note muted">Start with the free guide, then go deeper.</p>
+        <div><p class="eyebrow">The portrait learning path</p><h2 id="path-title">From First Portrait to Masterclass</h2></div>
+        <a class="text-link" href="category/portrait/">All portrait brushes →</a>
       </div>
-      <div class="ebook-duo">{starter_card}<div class="edu-link" aria-hidden="true"><span class="edu-arrow">→</span><span class="edu-label">then go deeper</span></div>{master_card}</div>
+      <p class="sec-note muted">Five steps, in the order a portrait painter actually learns them — start free, add the tools for each stage, then take the full curriculum.</p>
+      <ol class="path">{path_items}</ol>
     </div>
   </section>
 """
@@ -159,16 +174,19 @@ def build_home():
     html_out += header(0, active="index.html")
     html_out += f"""
 <main id="main">
-  <!-- 1 · HERO: one value proposition, one product visual, one primary CTA. -->
+  <!-- 1 · ARTIST-GOAL HERO: what DigiKitPro is + what YOU want to create,
+       in one line. The artwork does the rest. -->
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Procreate brushes for iPad artists</p>
-        <h1>Procreate brushes for <em>iPad artists</em></h1>
-        <p class="hero-sub">Hand-tested Procreate brushes for portraits, skin, line art, watercolor and anime. Instant download on iPad — free packs included.</p>
+        <p class="eyebrow">DigiKitPro — a premium Procreate brush studio</p>
+        <h1>Procreate brushes for the work you <em>want to create</em></h1>
+        <p class="hero-sub">Portraits, skin &amp; hair, line art, anime, watercolor — hand-tested kits for every stage, from the free starter guide to the Complete Portrait Masterclass.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold btn-lg" href="products.html">Browse kits</a>
+          <a class="btn btn-gold btn-lg" href="products.html">Shop Brushes</a>
+          <a class="btn btn-line btn-lg" href="freebies.html">Start Free</a>
         </div>
+        <p class="hero-meta">Instant download via Payhip · Procreate 5 or newer on iPad · Free packs included</p>
       </div>
       <div class="hero-showcase" aria-hidden="true" data-parallax="10">{showcase}</div>
     </div>
@@ -193,10 +211,12 @@ def build_home():
     </div>
   </section>
 
-  <!-- 5 · LEARN PROCREATE PORTRAITS: free starter guide → masterclass, side by
-       side. It sits BEFORE the proof of result so a visitor reads "this can be
-       learned" before "this is what it looks like when learned". -->
-  {ebook_section}
+  <!-- 5 · THE PORTRAIT LEARNING PATH: Free Portrait Guide → Skin Brushes →
+       Portrait Mastery Kit → Portrait Bundle → Portrait Masterclass.
+       It sits BEFORE the proof of result so a visitor reads "this can be
+       learned, step by step" before "this is what it looks like when
+       learned". -->
+  {portrait_path_section}
 
   <!-- 6 · BEFORE → AFTER: the answer to "what do the brushes actually change".
        Medium-width slider, not another full-bleed product band. -->
