@@ -350,6 +350,11 @@ h3{font-size:1.15rem}
 .prose li{margin:.4rem 0}
 .prose strong{color:var(--text)}
 .prose blockquote{font-style:italic;font-family:var(--serif);border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;margin:1.4rem 0;color:var(--text);font-family:var(--serif);font-size:1.1rem}
+.table-wrap{overflow-x:auto;margin:1.25rem 0 1.6rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface)}
+.prose table{width:100%;min-width:620px;border-collapse:collapse;font-size:.92rem}
+.prose th,.prose td{padding:.8rem .9rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
+.prose th{color:var(--text);font-weight:650;background:rgba(201,168,106,.08)}
+.prose tr:last-child td{border-bottom:0}
 .article{padding-bottom:1rem}
 .article-head{max-width:760px;margin:1.4rem 0 1.6rem}
 .article-head h1{margin:.6rem 0}

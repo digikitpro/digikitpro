@@ -33,6 +33,25 @@ def md_to_html(body, depth=2):
             i += 1; continue
         if ln.startswith("{{products}}"):
             out.append("__PRODUCTS__"); i += 1; continue
+        # Small pipe-table parser for article comparisons. It intentionally
+        # requires a Markdown separator row so ordinary prose containing a
+        # vertical bar is not turned into a table.
+        if "|" in ln and i + 1 < len(lines) and re.match(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$", lines[i + 1]):
+            def table_cells(row):
+                row = row.strip().strip("|")
+                return [cell.strip() for cell in row.split("|")]
+            headers = table_cells(ln)
+            i += 2  # skip header and Markdown separator
+            rows = []
+            while i < len(lines) and lines[i].strip() and "|" in lines[i] and not lines[i].startswith("#"):
+                rows.append(table_cells(lines[i])); i += 1
+            head_html = "".join(f"<th scope=\"col\">{inline(c, depth)}</th>" for c in headers)
+            row_html = []
+            for row in rows:
+                cells = row + [""] * max(0, len(headers) - len(row))
+                row_html.append("<tr>" + "".join(f"<td>{inline(c, depth)}</td>" for c in cells[:len(headers)]) + "</tr>")
+            out.append(f'<div class="table-wrap"><table><thead><tr>{head_html}</tr></thead><tbody>{"".join(row_html)}</tbody></table></div>')
+            continue
         if ln.startswith("### "):
             out.append(f"<h3>{inline(ln[4:], depth)}</h3>"); i += 1; continue
         if ln.startswith("## "):
@@ -168,7 +187,7 @@ def build_blog():
     {crumbs(0, [("Articles","blog.html")])}
     <p class="eyebrow">Learn the craft</p>
     <h1>Procreate Tutorials & Brush Guides</h1>
-    <p class="lead">Original, technique-first articles for iPad artists, every guide tested against real artwork, every recommendation a tool we make and use.</p>
+    <p class="lead">Original, technique-first articles for iPad artists, with transparent recommendations and practical workflows.</p>
   </div></section>
   <section class="section"><div class="wrap"><div class="grid arts-grid">{cards}</div></div></section>
   {newsletter(0)}
@@ -232,7 +251,7 @@ def build_blog():
     <header class="article-head">
       <span class="art-cat">{esc(a.get('category','Guide'))}</span>
       <h1>{esc(a['title'])}</h1>
-      <p class="article-meta">By the {SITE_NAME} studio · <time datetime="{a['date']}">{a['date']}</time></p>
+      <p class="article-meta">By the {SITE_NAME} studio · Published <time datetime="{a['date']}">{a['date']}</time>{f' · Updated <time datetime="{a["modified"]}">{a["modified"]}</time>' if a.get('modified') and a.get('modified') != a.get('date') else ''}</p>
     </header>
     {f'<figure class="article-hero"><img src="{a["hero"] if is_abs(a["hero"]) else rel(depth, a["hero"])}"{hero_ss} width="{a.get("heroW",1200)}" height="{a.get("heroH",800)}" alt="{esc(a["title"])}" fetchpriority="high" decoding="async"><figcaption>Artwork shown: {esc(BY_SLUG[a["products"][0]]["name"]) if a.get("products") else SITE_NAME}</figcaption></figure>' if a.get('hero') else ''}
     <div class="prose article-body">{body_html}</div>

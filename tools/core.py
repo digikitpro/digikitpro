@@ -237,6 +237,7 @@ def schema_article(a):
     return [{"@context":"https://schema.org","@type":"BlogPosting","headline":a["title"],
              "description":a["description"],"image":[img],
              "datePublished":a["date"],"dateModified":a.get("modified") or a["date"],
+             "keywords":", ".join([a.get("primary_keyword", "")] + (a.get("secondary_keywords") or [])),
              "author":{"@type":"Organization","name":SITE_NAME,"url":SITE_URL},
              "publisher":{"@id":SITE_URL+"/#org"},
              "mainEntityOfPage":absurl(f"blog/{a['slug']}/"),
