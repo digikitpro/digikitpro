@@ -1080,9 +1080,10 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
    link of its own. Links are never nested, so both targets work:
    the artwork opens the product page, the button opens Pinterest. */
 .card-img{position:relative;display:block}
-.pin-btn{position:absolute;top:10px;right:10px;z-index:3;display:inline-flex;align-items:center;gap:.34rem;
+.pin-btn{position:absolute;top:10px;right:10px;left:auto;z-index:3;display:inline-flex;align-items:center;gap:.34rem;
   background:var(--pin);color:#fff;font:700 .72rem/1 var(--sans);letter-spacing:.03em;
   padding:.5rem .74rem;border-radius:999px;box-shadow:0 8px 20px -10px rgba(0,0,0,.9);
+  width:max-content;max-width:calc(100% - 20px);white-space:nowrap;
   opacity:0;transform:translateY(-3px);
   transition:opacity .2s ease,transform .2s ease,background .2s ease}
 .pin-btn:hover,.pin-btn:focus-visible{background:var(--pin-dark);color:#fff}
