@@ -10,7 +10,7 @@
 ║ • Email → set EMAIL_ENDPOINT below (or data-endpoint in HTML) ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
-import json, os, re, shutil, html, urllib.parse
+import json, os, re, shutil, html, urllib.parse, hashlib
 from datetime import date
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -184,6 +184,22 @@ def rel(depth, path):
     """Relative url from a page at `depth` dirs deep."""
     prefix = "../" * depth
     return prefix + path.lstrip("/")
+
+def _css_fingerprint():
+    """MD5 of css/style.css so stylesheet URLs change whenever the file does.
+
+    Appended as ?v=<hash> on every <link rel="stylesheet">. Browsers and CDNs
+    that cached the previous CSS then fetch the new one automatically — no
+    manual cache-bust, no far-future Cache-Control fight.
+    """
+    path = os.path.join(ROOT, "css/style.css")
+    try:
+        with open(path, "rb") as f:
+            return hashlib.md5(f.read(), usedforsecurity=False).hexdigest()
+    except OSError:
+        return "0"
+
+CSS_VERSION = _css_fingerprint()
 
 def money(p): return p["priceText"]
 
@@ -462,7 +478,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="dns-prefetch" href="https://translate.google.com">
 {pin_dns}  <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="{rel(depth,'css/style.css')}">
+  <link rel="stylesheet" href="{rel(depth,'css/style.css')}?v={CSS_VERSION}">
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
   <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
        are hidden from the very first frame (no flash of visible content).
