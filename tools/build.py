@@ -23,6 +23,7 @@ def main():
     pages_product.build_product_pages()
     pages_blog.build_blog()
     pages_misc.build_misc()
+    pages_misc.build_pinterest_feed()
     untagged = untagged_products()
     if untagged:
         print("\nNOTICE: %d product(s) are missing an entry in data/discovery.json and used safe"
