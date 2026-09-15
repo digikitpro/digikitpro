@@ -47,6 +47,15 @@ jobs:
           # Optional: paste verification tokens here once Search Console issues them
           GOOGLE_VERIFY: ${{ vars.GOOGLE_VERIFY }}
           BING_VERIFY: ${{ vars.BING_VERIFY }}
+          # Pinterest. The profile URL and the domain-claim token have working
+          # defaults in tools/core.py, so the site is Pinterest-ready with NO
+          # variable set — an empty value here falls back to those defaults
+          # (override them only to change accounts/profiles).
+          PINTEREST_URL: ${{ vars.PINTEREST_URL }}
+          PINTEREST_VERIFY: ${{ vars.PINTEREST_VERIFY }}
+          # Opt-in: the Pinterest Tag loads ONLY when this has a value. Unset =
+          # no third-party Pinterest script beyond the save button.
+          PINTEREST_TAG_ID: ${{ vars.PINTEREST_TAG_ID }}
           # Writes <key>.txt at the site root so IndexNow can verify the ping.
           # Harmless when unset: tools/build.py skips the key file.
           INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}

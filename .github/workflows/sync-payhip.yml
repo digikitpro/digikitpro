@@ -48,6 +48,10 @@ jobs:
           SITE_URL: https://digikitpro.shop
           GOOGLE_VERIFY: ${{ vars.GOOGLE_VERIFY }}
           BING_VERIFY: ${{ vars.BING_VERIFY }}
+          # Pinterest: empty values fall back to the defaults in tools/core.py.
+          PINTEREST_URL: ${{ vars.PINTEREST_URL }}
+          PINTEREST_VERIFY: ${{ vars.PINTEREST_VERIFY }}
+          PINTEREST_TAG_ID: ${{ vars.PINTEREST_TAG_ID }}
           INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
         run: python3 tools/build.py
 

@@ -10,7 +10,7 @@
 ║ • Email → set EMAIL_ENDPOINT below (or data-endpoint in HTML) ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
-import json, os, re, shutil, html
+import json, os, re, shutil, html, urllib.parse
 from datetime import date
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,11 +44,25 @@ ANALYTICS_ENABLED = os.environ.get("DKP_ANALYTICS", "true").strip().lower() not 
 # Never put a secret in this value: it is printed into public HTML.
 FEEDBACK_ENDPOINT = os.environ.get("DKP_FEEDBACK_ENDPOINT", "")
 BUILD_DATE = date.today().isoformat()
+# ── Pinterest ───────────────────────────────────────────────────────────
+# The live profile. Non-empty env var wins; an EMPTY env var falls back to
+# the default below, so an unset CI variable can never silently strip the
+# follow links, the pin buttons or the domain-verify tag off the site.
+# To turn Pinterest off completely: blank the two defaults here.
+PINTEREST_PROFILE = "https://www.pinterest.com/DigiKitProStudio/"
 SOCIAL = { # ← add your profiles; hidden while empty
-    "Pinterest": "",
+    "Pinterest": (os.environ.get("PINTEREST_URL") or PINTEREST_PROFILE).strip(),
     "Instagram": "",
     "TikTok": "",
 }
+PINTEREST_URL = (SOCIAL.get("Pinterest") or "").strip()
+# Domain claim token ("Claim your website" in Pinterest settings → the value
+# it hands out belongs here). Verified once, then every pin of a
+# digikitpro.shop URL attributes to the account.
+PINTEREST_VERIFY = (os.environ.get("PINTEREST_VERIFY") or "990d08b5349bfcbb0171eab3d6f8f2d2").strip()
+# Pinterest Tag (ads / conversion measurement). DORMANT unless set: with no
+# PINTEREST_TAG_ID nothing is loaded and no Pinterest request is made.
+PINTEREST_TAG_ID = os.environ.get("PINTEREST_TAG_ID", "").strip()
 # Languages offered by the in-page translation switcher (Google Translate).
 LANGUAGES = [
     ("en", "English"),
@@ -188,6 +202,76 @@ def card_img(p):
     im = p.get("images") or {}
     return im.get("card", ""), im.get("cardW"), im.get("cardH")
 
+# ── Pinterest helpers ───────────────────────────────────────────────────
+# One pin-worthy description per product, built from the record itself
+# (name + the real one-line summary). No invented wording, no keywords
+# stuffed behind the visitor's back.
+def pin_desc(p):
+    short = (p.get("short") or p.get("category") or "").strip()
+    return f"{p['name']} - {short} | {SITE_NAME}" if short else f"{p['name']} | {SITE_NAME}"
+
+def pin_create_url(url, media="", description=""):
+    """Official Pinterest 'create pin' endpoint: opens the pin composer with
+    the page URL, the artwork and the description pre-filled."""
+    q = {"url": url}
+    if media:
+        q["media"] = media
+    if description:
+        q["description"] = description
+    return "https://www.pinterest.com/pin/create/button/?" + urllib.parse.urlencode(q)
+
+def pin_page_url(p):
+    """Canonical page a pin of this product must point at."""
+    return absurl("products/" + p["slug"] + "/")
+
+def pin_media_url(p):
+    """Absolute URL of the artwork Pinterest should capture."""
+    im = p.get("images") or {}
+    return asset_abs(p["slug"], im.get("card") or im.get("main") or "assets/img/og-cover.jpg")
+
+def pin_attrs(p, media=""):
+    """data-pin-* trio for a product image link: description, page, artwork.
+    Pinterest's own save button uses these, so a pin saved from anywhere on
+    the site lands on the product page instead of a bare image."""
+    return (' data-pin-description="' + esc(pin_desc(p)) + '"'
+            ' data-pin-url="' + esc(pin_page_url(p)) + '"'
+            ' data-pin-media="' + esc(media or pin_media_url(p)) + '"')
+
+def pin_button(p, cls="pin-btn", media="", label="Save"):
+    """Visible Save button. It is positioned by whichever container it is
+    placed in (every container that uses it is position:relative) and it is a
+    real link into Pinterest's pin composer — never a dead decoration."""
+    if not PINTEREST_URL:
+        return ""
+    name = esc(p["name"])
+    href = esc(pin_create_url(pin_page_url(p), media or pin_media_url(p), pin_desc(p)))
+    return (f'<a class="{cls}" href="{href}" target="_blank" rel="noopener"'
+            f' aria-label="Save {name} on Pinterest"><span aria-hidden="true">📌</span> {label}</a>')
+
+def share_buttons(url, title, media="", description="", heading="Share this"):
+    """Share row (Pinterest Pin + Facebook + X + WhatsApp) for a page with a
+    real image and a real title. Every link is a plain share endpoint — no
+    trackers, no widgets, no third-party script beyond the pinit.js already
+    loaded for the pin buttons."""
+    if not url:
+        return ""
+    text = description or title
+    btns = []
+    if PINTEREST_URL:
+        btns.append(f'<a class="share-btn share-pin" href="{esc(pin_create_url(url, media, text))}"'
+                    f' target="_blank" rel="noopener" aria-label="Pin this to Pinterest">📌 <span>Pin it</span></a>')
+    btns.append(f'<a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={urllib.parse.quote(url, safe="")}"'
+                f' target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>')
+    btns.append(f'<a class="share-btn" href="https://twitter.com/intent/tweet?url={urllib.parse.quote(url, safe="")}'
+                f'&amp;text={urllib.parse.quote(title, safe="")}" target="_blank" rel="noopener"'
+                f' aria-label="Share on X">X</a>')
+    btns.append(f'<a class="share-btn" href="https://wa.me/?text={urllib.parse.quote(text + " " + url, safe="")}"'
+                f' target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a>')
+    return f"""<section class="psec share-sec" aria-label="Share">
+      <p class="share-heading">{esc(heading)}</p>
+      <div class="share-row">{"".join(btns)}</div>
+    </section>"""
+
 # ── schema ──────────────────────────────────────────────────────────────
 def schema_org_home():
     return [
@@ -294,6 +378,21 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     if GOOGLE_VERIFY: vmeta += f'\n  <meta name="google-site-verification" content="{esc(GOOGLE_VERIFY)}">'
     if BING_VERIFY: vmeta += f'\n  <meta name="msvalidate.01" content="{esc(BING_VERIFY)}">'
     if YANDEX_VERIFY: vmeta += f'\n  <meta name="yandex-verification" content="{esc(YANDEX_VERIFY)}">'
+    if PINTEREST_VERIFY: vmeta += f'\n  <meta name="p:domain_verify" content="{esc(PINTEREST_VERIFY)}"/>'
+    if PINTEREST_URL:
+        vmeta += f'\n  <meta property="og:see_also" content="{esc(PINTEREST_URL)}">'
+        vmeta += '\n  <meta name="pinterest-rich-pin" content="true">'
+    # ── Product Rich Pins ───────────────────────────────────────────────
+    # Only paid products on a product page carry the product:* namespace.
+    # Price, currency and availability are read from the product record, so
+    # what a pin shows is what checkout charges — nothing is estimated.
+    rich_pin = bool(ctx) and ctx.get("type") == "product" and not ctx.get("free")
+    if rich_pin:
+        vmeta += f'\n  <meta property="product:price:amount" content="{float(ctx.get("price") or 0):.2f}">'
+        vmeta += '\n  <meta property="product:price:currency" content="USD">'
+        vmeta += '\n  <meta property="product:availability" content="instock">'
+        vmeta += f'\n  <meta property="product:brand" content="{SITE_NAME}">'
+    og_type = "product" if rich_pin else page_type
     geo = "".join(f'\n  <meta name="{esc(k)}" content="{esc(v)}">' for k, v in GEO_META.items())
     locales = "".join(f'\n  <meta property="og:locale:alternate" content="{loc}">' for loc in
                       ["es_ES", "fr_FR", "de_DE", "it_IT", "pt_BR", "nl_NL"])
@@ -308,12 +407,30 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     gtag('config', '{esc(GA_MEASUREMENT_ID)}');
   </script>
 """
+    # ── Pinterest Tag: ONLY rendered when PINTEREST_TAG_ID is set ────────
+    pin_tag = ""
+    if PINTEREST_TAG_ID:
+        tid = esc(PINTEREST_TAG_ID)
+        pin_tag = f"""  <!-- Pinterest Tag -->
+  <script>
+  !function(e){{if(!window.pintrk){{window.pintrk=function(){{window.pintrk.queue.push(Array.prototype.slice.call(arguments))}};var n=window.pintrk;n.queue=[],n.version="3.0";var t=document.createElement("script");t.async=!0,t.src=e;var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r)}}}}("https://s.pinimg.com/ct/core.js");
+  pintrk('load', '{tid}');
+  pintrk('page');
+  </script>
+  <noscript>
+  <img height="1" width="1" style="display:none;" alt="" src="https://ct.pinterest.com/v3/?event=init&amp;tid={tid}&amp;noscript=1"/>
+  </noscript>
+"""
+    # The official save/hover script. Deferred and protocol-relative like the
+    # Pinterest snippet itself, so nothing blocks first paint.
+    pin_js = '  <script async defer src="//assets.pinterest.com/js/pinit.js"></script>\n' if PINTEREST_URL else ""
+    pin_dns = '  <link rel="dns-prefetch" href="https://assets.pinterest.com">\n' if PINTEREST_URL else ""
     ctx_json = json.dumps(ctx or {}, ensure_ascii=False)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 {_GITHUB_KILL}
-{ga}  <meta charset="UTF-8">
+{ga}{pin_tag}  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(desc)}">
@@ -321,7 +438,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <meta name="theme-color" content="#0A0A0C">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <meta property="og:type" content="{page_type}">
+  <meta property="og:type" content="{og_type}">
   <meta property="og:site_name" content="{SITE_NAME}">
   <meta property="og:title" content="{esc(title)}">
   <meta property="og:description" content="{esc(desc)}">
@@ -343,7 +460,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preconnect" href="https://payhip.com" crossorigin>
   <link rel="dns-prefetch" href="https://pe56d.s3.amazonaws.com">
   <link rel="dns-prefetch" href="https://translate.google.com">
-  <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
+{pin_dns}  <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}">
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
@@ -359,7 +476,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <script src="{rel(depth,'js/analytics.js')}" defer></script>
   <script src="{rel(depth,'js/feedback.js')}" defer></script>
   <script src="{rel(depth,'js/translate.js')}" defer></script>
-{s}</head>
+{pin_js}{s}</head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
 """
@@ -458,8 +575,29 @@ def newsletter(depth, heading="Get Free Procreate Brushes",
 """
 
 def footer(depth):
-    social = "".join(f'<a href="{v}" target="_blank" rel="noopener">{k}</a>' for k, v in SOCIAL.items() if v)
+    social = "".join(f'<a href="{esc(v)}" target="_blank" rel="noopener">{esc(k)}</a>' for k, v in SOCIAL.items() if v)
     social_block = f'<p class="foot-label">Follow</p><div class="foot-links">{social}</div>' if social else ""
+    # ── Pinterest CTA band ──────────────────────────────────────────────
+    # Rendered only while a Pinterest profile is configured. No follower
+    # counts, no "join 10k artists" — just what the account actually posts.
+    pin_band = ""
+    if PINTEREST_URL:
+        other_socials = "".join(f'<a href="{esc(v)}" target="_blank" rel="noopener">{esc(k)}</a>'
+                                for k, v in SOCIAL.items() if v and k != "Pinterest")
+        other_links = f'<div class="foot-pin-links">{other_socials}</div>' if other_socials else ""
+        pin_band = f"""
+  <div class="wrap">
+    <div class="foot-pinterest">
+      <div class="foot-pin-copy">
+        <p class="foot-label">Pinterest</p>
+        <p class="foot-pin-title">Daily Procreate inspiration</p>
+        <p class="muted">Brush previews, artwork breakdowns and new free packs — pinned as they go live. Follow along to catch them in your feed.</p>
+      </div>
+      <div class="foot-pin-act">
+        <a class="btn btn-pin" href="{esc(PINTEREST_URL)}" target="_blank" rel="noopener">Follow on Pinterest <span class="btn-arr" aria-hidden="true">↗</span></a>{other_links}
+      </div>
+    </div>
+  </div>"""
     return f"""
 <footer class="site-footer">
   <div class="wrap footer-grid">
@@ -504,7 +642,7 @@ def footer(depth):
       </div>
       {social_block}
     </nav>
-  </div>
+  </div>{pin_band}
   <div class="wrap foot-bottom">
     <p>© {date.today().year} {SITE_NAME}. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
@@ -617,11 +755,21 @@ def product_card(p, depth, eager=False, free_direct=False):
     cslug = CATEGORY_SLUGS.get(p.get("category"))
     cat_url = rel(depth, f"category/{cslug}/") if cslug else (rel(depth, "bundles.html") if p.get("category") == "Bundles" else rel(depth, f"products.html#cat-{esc(p['category'].replace(' ','%20'))}"))
     _tier = tier_of(p); _line = line_of(p)
+    # ── Pinterest: every product image on the site is pinnable ──────────
+    # The data-pin-* trio tells Pinterest's own save button which page, which
+    # artwork and which description to use, so a pin always points at the
+    # product page and never at a bare image. The visible Save button opens
+    # Pinterest's pin composer pre-filled with the same three values.
+    _pin_ok = bool(card) and not coming
+    _pin_attrs = pin_attrs(p) if _pin_ok else ""
+    _pin_btn = ("\n    " + pin_button(p)) if _pin_ok and PINTEREST_URL else ""
     return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}" data-tier="{esc(_tier)}" data-line="{esc(_line)}" data-dkp-slug="{esc(p['slug'])}" data-dkp-name="{esc(p['name'])}" data-dkp-price="{p.get('price',0):.2f}" data-dkp-tier="{esc(_tier)}" data-dkp-free="{1 if p['free'] else 0}" data-dkp-loc="card">
-  <a class="card-media" href="{u}">
+  <div class="card-img">
+  <a class="card-media" href="{u}"{_pin_attrs}>
     <img src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
     {badge}
-  </a>
+  </a>{_pin_btn}
+  </div>
   <div class="card-body">
     <a class="card-cat" href="{cat_url}">{esc(p['category'])}</a>
     <h3 class="card-title"><a href="{u}">{esc(p['name'])}</a></h3>
@@ -731,9 +879,11 @@ def feature_band(depth=0):
         sub_title = "for " + sub_title
     sub_html = f'<span class="bs-sub">{esc(sub_title)}</span>' if sub_title else ""
     return f"""<div class="bs-inner" id="best-seller">
-      <a class="bs-media" href="{u}" tabindex="-1" aria-hidden="true">
+      <div class="card-img">
+      <a class="bs-media" href="{u}" tabindex="-1" aria-hidden="true"{pin_attrs(p)}>
         <img src="{asset_file(depth, p['slug'], img)}"{srcset} width="{im.get('cardW') or im.get('fullW') or 750}" height="{im.get('cardH') or im.get('fullH') or 946}" alt="" loading="lazy" decoding="async">
-      </a>
+      </a>{pin_button(p)}
+      </div>
       <div class="bs-body">
         <p class="bs-kicker"><span class="bs-badge">Best Seller</span></p>
         <h2 id="bs-title">{esc(main_title)} {sub_html}</h2>
@@ -758,10 +908,12 @@ def freebie_download_row(depth=0):
         img = im.get("card") or im.get("main") or ""
         srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 92vw")
         cards += f"""<article class="dl-card">
-  <a class="dl-media" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-direct')}>
+  <div class="card-img">
+  <a class="dl-media" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-direct')}{pin_attrs(p)}>
     <img src="{asset_file(depth, p['slug'], img)}"{srcset} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
     <span class="badge badge-free">Free</span>
-  </a>
+  </a>{pin_button(p)}
+  </div>
   <div class="dl-body">
     <h3>{esc(p['name'])}</h3>
     <p class="muted">{esc(p.get('assets') or p.get('short') or '')}</p>
@@ -904,9 +1056,11 @@ def bundle_ladder(depth=0):
             contents = ""
         steps += f"""<li class="ladder-step{' ladder-step--top' if flag else ''}" id="ladder-{esc(r.get('id') or (i + 1))}">
   <span class="ladder-rung"><i aria-hidden="true">{i + 1}</i>{esc(r.get('role') or '')}</span>
-  <a class="ladder-media" href="{u}" tabindex="-1" aria-hidden="true">
+  <div class="card-img">
+  <a class="ladder-media" href="{u}" tabindex="-1" aria-hidden="true"{pin_attrs(p)}>
     <img src="{asset_file(depth, p['slug'], card)}"{img_srcset(depth, p['slug'], im, "(min-width: 1100px) 280px, 90vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="" loading="lazy" decoding="async">
-  </a>
+  </a>{pin_button(p)}
+  </div>
   <div class="ladder-body">
     <h3><a href="{u}">{esc(p['name'])}</a></h3>
     <p class="ladder-who muted">{esc(who)}</p>
@@ -979,8 +1133,8 @@ def flagship_band(depth=0, bridge=True, ladder_href=None):
                    f'{len(prices)} kits. One library, every style, {esc(f["priceText"])}.')
     return f"""<section class="section flagship-band" id="master-library" aria-labelledby="flag-title">
   <div class="wrap flag-inner">
-    <div class="flag-media" data-wipe>
-      <img src="{asset_file(depth, f['slug'], img)}"{srcset} width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(f.get('alt') or f['name'])}" loading="lazy" decoding="async">
+    <div class="flag-media" data-wipe{pin_attrs(f)}>
+      <img src="{asset_file(depth, f['slug'], img)}"{srcset} width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(f.get('alt') or f['name'])}" loading="lazy" decoding="async">{pin_button(f)}
     </div>
     <div class="flag-body">
       <p class="eyebrow">The complete library</p>
@@ -1031,9 +1185,11 @@ def upgrade_panel(p, depth):
     return f"""<section class="psec upgrade-panel" aria-labelledby="p-upgrade">
   <h2 id="p-upgrade">{esc(head_txt)}</h2>
   <div class="up-inner">
-    <a class="up-media" href="{rel(depth, 'products/' + f['slug'] + '/')}">
+    <div class="card-img">
+    <a class="up-media" href="{rel(depth, 'products/' + f['slug'] + '/')}"{pin_attrs(f)}>
       <img src="{asset_file(depth, f['slug'], thumb)}" width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(f['name'])}" loading="lazy" decoding="async">
-    </a>
+    </a>{pin_button(f)}
+    </div>
     <div class="up-body">
       <p class="up-this"><b>This pack</b> — {esc(p['name'])}, {esc(p['priceText'])}</p>
       <p class="up-or muted">or</p>

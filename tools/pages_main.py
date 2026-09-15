@@ -56,9 +56,9 @@ def build_home():
             im = p["images"]
             name = p["name"].split(" (")[0]
             return f"""<article class="ebook-card edu-card {level_cls}">
-  <a class="ebook-cover" href="products/{p['slug']}/">
+  <a class="ebook-cover" href="products/{p['slug']}/"{pin_attrs(p)}>
     <img src="{asset_file(0, p['slug'], im.get('card',''))}" width="{im.get('cardW') or 750}" height="{im.get('cardH') or 1000}" alt="{esc(name)}: cover" loading="lazy" decoding="async">
-  </a>
+  </a>{pin_button(p, cls="pin-btn pin-btn-cover")}
   <div class="ebook-body">
     <p class="edu-level">{esc(level_label)}</p>
     <h3>{esc(name)}</h3>
@@ -378,8 +378,8 @@ def build_bundles():
                 rows += f"<li><span>{esc(b['name'])}</span><span class=\"muted\">{esc(b['count'])}</span></li>"
             rows = f'<ul class="bundle-list">{rows}</ul>'
         tiles += f"""<article class="bundle-panel">
-  <div class="bundle-media">
-    <img src="{asset_file(0, p['slug'], im.get('main',''))}" width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(p['name'])}" loading="lazy" decoding="async">
+  <div class="bundle-media"{pin_attrs(p)}>
+    <img src="{asset_file(0, p['slug'], im.get('main',''))}" width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(p['name'])}" loading="lazy" decoding="async">{pin_button(p)}
   </div>
   <div class="bundle-body">
     <span class="badge">{esc(badge_text(p) or 'Bundle')}</span>
