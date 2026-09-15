@@ -205,6 +205,11 @@ def build_blog():
             body_html = body_html.replace(f"<p>{marker}</p>", tools).replace(marker, tools)
         else:
             body_html += tools
+        # Share row: guides are the most-pinned kind of content here, and the
+        # hero image is the right artwork for the pin.
+        share_row = share_buttons(absurl(f"blog/{a['slug']}/"), a["title"],
+                                  (a.get("hero") if is_abs(a.get("hero")) else absurl(a.get("hero") or "assets/img/og-cover.jpg")),
+                                  a.get("description", ""), heading="Save or share this guide")
         related = [x for x in (a.get("related") or [])]
         rel_arts = [x for x in arts if x["slug"] in related]
         rel_html = ""
@@ -255,6 +260,7 @@ def build_blog():
     </header>
     {f'<figure class="article-hero"><img src="{a["hero"] if is_abs(a["hero"]) else rel(depth, a["hero"])}"{hero_ss} width="{a.get("heroW",1200)}" height="{a.get("heroH",800)}" alt="{esc(a["title"])}" fetchpriority="high" decoding="async"><figcaption>Artwork shown: {esc(BY_SLUG[a["products"][0]]["name"]) if a.get("products") else SITE_NAME}</figcaption></figure>' if a.get('hero') else ''}
     <div class="prose article-body">{body_html}</div>
+    {share_row}
     {rel_html}
     <nav class="article-nav" aria-label="More articles"><a class="btn btn-line" href="../../blog.html">← All articles</a><a class="btn btn-gold" href="../../products.html">Browse brushes</a></nav>
   </article>

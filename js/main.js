@@ -204,10 +204,24 @@
  btn.classList.add("active");
  var tmp = new Image();
  tmp.onload = function () {
- mainImg.src = btn.getAttribute("data-full");
- mainImg.width = parseInt(btn.getAttribute("data-w"), 10) || mainImg.width;
- mainImg.height = parseInt(btn.getAttribute("data-h"), 10) || mainImg.height;
- mainImg.alt = btn.getAttribute("data-alt") || mainImg.alt;
+        mainImg.src = btn.getAttribute("data-full");
+        mainImg.width = parseInt(btn.getAttribute("data-w"), 10) || mainImg.width;
+        mainImg.height = parseInt(btn.getAttribute("data-h"), 10) || mainImg.height;
+        mainImg.alt = btn.getAttribute("data-alt") || mainImg.alt;
+        // Keep the Pinterest save target in sync with what is on screen:
+        // the visible image is the one a pin must capture.
+        var pinMedia = btn.getAttribute("data-pin-media");
+        var pinAnchor = mainImg.parentNode.querySelector("[data-pin-anchor]");
+        if (pinMedia) {
+          mainImg.setAttribute("data-pin-media", pinMedia);
+          if (pinAnchor && window.URL) {
+            try {
+              var pinUrl = new URL(pinAnchor.href);
+              pinUrl.searchParams.set("media", pinMedia);
+              pinAnchor.href = pinUrl.toString();
+            } catch (err) { /* keep the first image's pin target */ }
+          }
+        }
  };
  tmp.src = btn.getAttribute("data-full");
  });

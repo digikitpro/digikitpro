@@ -24,8 +24,15 @@ def gallery_html(p):
     if not items: return "", ""
     first = items[0]
     srcset = img_srcset(2, slug, im, "(min-width: 960px) 46vw, 100vw")
+    # Pinterest: the gallery is the artwork, so it is the best thing to pin.
+    # Every image carries its own data-pin-media (exact file Pinterest should
+    # pull) while the description/URL always point at this product page.
+    pin_page = absurl(f"products/{slug}/")
+    pin_d = pin_desc(p)
+    main_pin_media = asset_abs(slug, first[0])
     main_fig = f"""<figure class="gal-main">
-      <img data-gal-main src="{asset_file(2, slug, first[0])}"{srcset} width="{first[1] or 1200}" height="{first[2] or 800}" alt="{esc(first[3])}" fetchpriority="high" decoding="async">
+      <img data-gal-main src="{asset_file(2, slug, first[0])}"{srcset} width="{first[1] or 1200}" height="{first[2] or 800}" alt="{esc(first[3])}" fetchpriority="high" decoding="async" data-pin-description="{esc(pin_d)}" data-pin-url="{esc(pin_page)}" data-pin-media="{esc(main_pin_media)}">
+      {f'<a class="pin-btn pin-btn-gal" data-pin-anchor href="{esc(pin_create_url(pin_page, main_pin_media, pin_d))}" target="_blank" rel="noopener" aria-label="Save {esc(p["name"])} on Pinterest"><span aria-hidden="true">📌</span> Save</a>' if PINTEREST_URL else ''}
     </figure>"""
     thumbs = ""
     if len(items) > 1:
@@ -33,7 +40,7 @@ def gallery_html(p):
         for i, (f, w, h, alt) in enumerate(items):
             g = next((x for x in ([{"file": main, "card": im.get("card")}] + im.get("gallery", [])) if x["file"] == f), None)
             th = g.get("card", f) if g else f
-            btns.append(f'<button class="gal-thumb{" active" if i==0 else ""}" type="button" data-gal-thumb data-full="{asset_file(2, slug, f)}" data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}" aria-label="View image {i+1}"><img src="{asset_file(2, slug, th)}" width="{g.get("cardW") or 150}" height="{g.get("cardH") or 100}" alt="{esc(alt)} thumbnail" loading="lazy" decoding="async"></button>')
+            btns.append(f'<button class="gal-thumb{" active" if i==0 else ""}" type="button" data-gal-thumb data-full="{asset_file(2, slug, f)}" data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}" data-pin-media="{esc(asset_abs(slug, f))}" aria-label="View image {i+1}"><img src="{asset_file(2, slug, th)}" width="{g.get("cardW") or 150}" height="{g.get("cardH") or 100}" alt="{esc(alt)} thumbnail" loading="lazy" decoding="async"></button>')
         thumbs = f'<div class="gal-thumbs">{"".join(btns)}</div>'
     return main_fig + thumbs, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
 
@@ -188,6 +195,13 @@ def build_product_pages():
       <div class="rel-arts">{links}</div>
     </section>"""
 
+        # Share row: the artwork is already on the page, so a visitor can pin it
+        # to their own board in one click. Placed after the guides, before the
+        # closing CTA, so it never pushes the buy panel down.
+        share_row = share_buttons(absurl(f"products/{slug}/"), p["name"],
+                                  asset_abs(slug, im.get("main") or im.get("card", "")),
+                                  pin_desc(p), heading="Save or share this artwork")
+
         coming = bool(p.get("comingSoon"))
         # CTA verbs are standardised site-wide: free -> "Get Free",
         # paid -> "Buy Now" (this page IS the detail page, so the button
@@ -269,6 +283,7 @@ def build_product_pages():
     {upgrade_panel(p, depth)}
     {faq_html(p)}
     {rel_arts}
+    {share_row}
 
     <section class="psec pdp-cta" aria-labelledby="p-get">
       <div>

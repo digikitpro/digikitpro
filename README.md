@@ -24,7 +24,9 @@ all links are relative.
 **Before going live:** open `tools/build.py` and set
 - `SITE_URL = "https://your-domain.com"` → then run `python3 tools/build.py`
   (regenerates canonical URLs, Open Graph URLs and `sitemap.xml`)
-- `SOCIAL = {...}` → your Pinterest / Instagram / TikTok URLs (hidden while empty - we never fake links)
+- `SOCIAL = {...}` → your Instagram / TikTok URLs (hidden while empty - we never fake links).
+  Pinterest is already live (`PINTEREST_PROFILE`) together with the domain-claim tag,
+  the save buttons and the 30-day posting plan in `docs/PINTEREST-30-DAY-PLAN.md`
 
 Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 
@@ -221,6 +223,24 @@ Debug in the browser console: `dkp.report()` · `dkp.clear()`.
 Turn it off entirely: visit any page with `#dkp-analytics=off`, or build with
 `DKP_ANALYTICS=false`. `Do Not Track` is honoured as a full opt-out.
 No PII, no new cookies, no cross-site identifier. Disclosed in `privacy.html`.
+
+### Pinterest — `tools/core.py` (Pinterest block)
+
+The profile **https://www.pinterest.com/DigiKitProStudio/** is wired into every page the
+build produces, so pins saved from the site always carry the right artwork, description
+and destination:
+
+| Piece | Where it comes from | What it does |
+|---|---|---|
+| Profile URL | `PINTEREST_PROFILE` in `tools/core.py` (override: `PINTEREST_URL`) | Footer follow link + CTA band, Organization schema `sameAs`, `og:see_also` |
+| Domain claim | `PINTEREST_VERIFY` (default `990d08b5349bfcbb0171eab3d6f8f2d2`) | `<meta name="p:domain_verify" …>` on every page — claim the website once in Pinterest settings and every pin of a digikitpro.shop URL credits the account |
+| Save button | `pin_button()` in `tools/core.py` | Red "📌 Save" control on every product image — product cards/listing pages, homepage ladder, best-seller band, bundle panels, eBook covers, freebie cards, product-page gallery, upgrade panel. Links open Pinterest's pin composer pre-filled |
+| Pin data | `pin_attrs()` | `data-pin-description` / `data-pin-url` / `data-pin-media` on each image, so Pinterest's own save button and browser extension pin the product page, not a bare image |
+| Rich Pins | `head()` when `ctx.type == "product"` and paid | `og:type=product` + `product:price:amount`, `product:price:currency=USD`, `product:availability=instock`, `product:brand` — prices come from `data/products.json`, never estimated. Validate once at pinterest.com/rich-pins |
+| Share row | `share_buttons()` | Pinterest Pin + Facebook + X + WhatsApp on every product page ("Save this artwork to Pinterest") and every article ("Share this guide") |
+| Pinterest Tag | `PINTEREST_TAG_ID` (repo variable / env, **off by default**) | Loads `pintrk` `load` + `page` + the `<noscript>` pixel only when an ID is set. No ID = no Pinterest request beyond the save button script |
+
+Editorial plan and the 30-day posting calendar: **`docs/PINTEREST-30-DAY-PLAN.md`**.
 
 ### Freebie funnel
 `freebies.html` leads with an email gate; the direct Payhip link stays visible
