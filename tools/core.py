@@ -247,8 +247,10 @@ def pin_media_url(p):
 
 def pin_attrs(p, media=""):
     """data-pin-* trio for a product image link: description, page, artwork.
-    Pinterest's own save button uses these, so a pin saved from anywhere on
-    the site lands on the product page instead of a bare image."""
+    Pinterest's browser extension and bookmarklet read these, so a pin saved
+    from anywhere on the site lands on the product page with a real
+    description instead of a bare image. These are attributes only — nothing
+    is loaded or injected into the page for them."""
     return (' data-pin-description="' + esc(pin_desc(p)) + '"'
             ' data-pin-url="' + esc(pin_page_url(p)) + '"'
             ' data-pin-media="' + esc(media or pin_media_url(p)) + '"')
@@ -267,8 +269,7 @@ def pin_button(p, cls="pin-btn", media="", label="Save"):
 def share_buttons(url, title, media="", description="", heading="Share this"):
     """Share row (Pinterest Pin + Facebook + X + WhatsApp) for a page with a
     real image and a real title. Every link is a plain share endpoint — no
-    trackers, no widgets, no third-party script beyond the pinit.js already
-    loaded for the pin buttons."""
+    trackers, no widgets, no third-party script of any kind."""
     if not url:
         return ""
     text = description or title
@@ -437,10 +438,12 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <img height="1" width="1" style="display:none;" alt="" src="https://ct.pinterest.com/v3/?event=init&amp;tid={tid}&amp;noscript=1"/>
   </noscript>
 """
-    # The official save/hover script. Deferred and protocol-relative like the
-    # Pinterest snippet itself, so nothing blocks first paint.
-    pin_js = '  <script async defer src="//assets.pinterest.com/js/pinit.js"></script>\n' if PINTEREST_URL else ""
-    pin_dns = '  <link rel="dns-prefetch" href="https://assets.pinterest.com">\n' if PINTEREST_URL else ""
+    # Pinterest needs no script here. The Save buttons are ordinary links into
+    # Pinterest's pin composer (see pin_button()) and the data-pin-* hints are
+    # attributes only, so a page loads nothing at all from pinterest.com.
+    # Loading Pinterest's pinit.js widget script made it scan the DOM and
+    # inject its own hover overlay on every <img>, duplicating — and visually
+    # fighting with — the site's own .pin-btn Save buttons.
     ctx_json = json.dumps(ctx or {}, ensure_ascii=False)
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -476,7 +479,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preconnect" href="https://payhip.com" crossorigin>
   <link rel="dns-prefetch" href="https://pe56d.s3.amazonaws.com">
   <link rel="dns-prefetch" href="https://translate.google.com">
-{pin_dns}  <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}?v={CSS_VERSION}">
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
@@ -492,7 +495,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <script src="{rel(depth,'js/analytics.js')}" defer></script>
   <script src="{rel(depth,'js/feedback.js')}" defer></script>
   <script src="{rel(depth,'js/translate.js')}" defer></script>
-{pin_js}{s}</head>
+{s}</head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
 """
