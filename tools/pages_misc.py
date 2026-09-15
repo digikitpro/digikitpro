@@ -105,6 +105,100 @@ SITE_FAQS = [
 ]
 
 
+def _catalog_row(p):
+    """One product's data for the Pinterest/Google-style product feed (CSV +
+    XML share this same field set — see pinterest_feed() below). Every value
+    comes straight from data/products.json; nothing is invented or estimated.
+    Free items are marked out_of_stock intentionally: Pinterest catalogs are
+    for items with a real checkout, and a $0 'purchase' isn't one — free
+    items still get full Rich Pin treatment via product:price:amount=0.00
+    on the page itself, they are just excluded from the paid catalog feed.
+    """
+    slug = p["slug"]
+    link = absurl(f"products/{slug}/")
+    im = p.get("images") or {}
+    image = im.get("main") or im.get("card") or ""
+    image_link = image if is_abs(image) else absurl(f"assets/products/{slug}/{image}")
+    title = p["name"]
+    desc = (p.get("seoDesc") or p.get("short") or p["name"]).strip()
+    price = f"{p['price']:.2f} {p.get('currency', 'USD')}"
+    availability = "in stock" if not p.get("free") else "out of stock"
+    cat_path = " > ".join(x for x in ["DigiKitPro", p.get("category") or ""] if x)
+    return {
+        "id": slug,
+        "title": title,
+        "description": desc,
+        "link": link,
+        "image_link": image_link,
+        "availability": availability,
+        "price": price,
+        "brand": "DigiKitPro",
+        "condition": "new",
+        "google_product_category": "Software > Multimedia & Design Software > Design Software",
+        "product_type": cat_path,
+        "item_group_id": p.get("category") or "",
+    }
+
+
+def build_pinterest_feed():
+    """Pinterest product-catalog data source: one row per PAID product, the
+    exact fields Pinterest's catalog/data-source ingestion documents (id,
+    title, description, link, image_link, availability, price, brand,
+    condition, google_product_category). Free items are Rich-Pin-only (see
+    _catalog_row docstring) so they are left out of this feed on purpose.
+
+    Written as both CSV (data-source upload / spreadsheet review) and XML/RSS
+    2.0 with the g: namespace (feed-URL ingestion, no re-upload needed after
+    every price/catalog change — Pinterest just re-fetches the URL).
+    Regenerate by re-running tools/build.py; nothing here needs manual sync.
+    """
+    rows = [_catalog_row(p) for p in PRODUCTS if not p.get("free")]
+
+    # ── CSV ────────────────────────────────────────────────────────────
+    cols = ["id", "title", "description", "link", "image_link", "availability",
+            "price", "brand", "condition", "google_product_category",
+            "product_type", "item_group_id"]
+
+    def _csv_cell(v):
+        v = str(v).replace('"', '""')
+        return f'"{v}"' if ("," in v or '"' in v or "\n" in v) else v
+
+    csv_lines = [",".join(cols)]
+    for r in rows:
+        csv_lines.append(",".join(_csv_cell(r[c]) for c in cols))
+    write("pinterest-feed.csv", "\n".join(csv_lines) + "\n")
+
+    # ── XML / RSS 2.0 with g: namespace (Google Shopping / Pinterest catalog format) ──
+    items = []
+    for r in rows:
+        items.append(f"""  <item>
+    <g:id>{esc(r['id'])}</g:id>
+    <title>{esc(r['title'])}</title>
+    <description>{esc(r['description'])}</description>
+    <link>{esc(r['link'])}</link>
+    <g:image_link>{esc(r['image_link'])}</g:image_link>
+    <g:availability>{esc(r['availability'])}</g:availability>
+    <g:price>{esc(r['price'])}</g:price>
+    <g:brand>{esc(r['brand'])}</g:brand>
+    <g:condition>{esc(r['condition'])}</g:condition>
+    <g:google_product_category>{esc(r['google_product_category'])}</g:google_product_category>
+    <g:product_type>{esc(r['product_type'])}</g:product_type>
+    <g:item_group_id>{esc(r['item_group_id'])}</g:item_group_id>
+  </item>""")
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+  <title>{esc(SITE_NAME)} product catalog</title>
+  <link>{esc(SITE_URL)}</link>
+  <description>Paid {esc(SITE_NAME)} products for the Pinterest product catalog / data source.</description>
+{chr(10).join(items)}
+</channel>
+</rss>
+"""
+    write("pinterest-feed.xml", xml)
+    print(f"Pinterest catalog feed: {len(rows)} paid products -> pinterest-feed.csv / pinterest-feed.xml")
+
+
 def build_misc():
     # ── CONTACT ──
     # A real, working form. It posts to the same FormSubmit endpoint as the
