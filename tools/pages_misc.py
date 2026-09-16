@@ -134,7 +134,11 @@ def _catalog_row(p):
         "price": price,
         "brand": "DigiKitPro",
         "condition": "new",
-        "google_product_category": "Software > Multimedia & Design Software > Design Software",
+        # Verified Google product taxonomy leaf (id 4951, taxonomy v2021-09-21).
+        # Pinterest catalog diagnostics flag anything shallower (Warning 126),
+        # and the previous 3-segment value skipped the "Computer Software"
+        # level, so it matched no real node at all.
+        "google_product_category": "Software > Computer Software > Multimedia & Design Software > Graphic Design & Illustration Software",
         "product_type": cat_path,
         "item_group_id": p.get("category") or "",
     }
