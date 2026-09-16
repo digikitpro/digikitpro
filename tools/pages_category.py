@@ -3,6 +3,7 @@
 import os
 from core import *
 from pages_blog import load_articles
+from pages_guides import guide_pills_for_category
 
 CATEGORY_DEFS = [
     {
@@ -202,6 +203,7 @@ def build_categories():
         <a class="text-link" href="../../products.html">All products →</a>
       </div>
       {grid_html}
+      {guide_pills_for_category(depth, cslug)}
     </div>
   </section>
 

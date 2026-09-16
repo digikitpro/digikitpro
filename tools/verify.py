@@ -6,9 +6,12 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 62 CHECKS PASSED.
+Expects: ALL 70 CHECKS PASSED.
 (57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
-ladder completeness x2, no fake-strikethrough pricing.)
+ladder completeness x2, no fake-strikethrough pricing + 8 from the
+2026-09-16 buyer-guides buildout: pages built, sitemap coverage x2, slug
+integrity, no lifestyle leakage, comparison-table completeness, cross-link
+mesh, footer links.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -30,7 +33,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 62
+EXPECTED = 70
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -321,16 +324,16 @@ def main() -> int:
         # compact form: <url><loc>...</loc>
         page_locs = re.findall(r"<url><loc>([^<]+)</loc>", sm_xml)
     # 93 since the Find-My-Brushes page was removed per owner request
-    # (tools/pages_finder.py build_all); 94 while it existed.
-    check("sitemap.xml has 93 page URLs",
-          len(page_locs) == 93, str(len(page_locs)))
+    # (tools/pages_finder.py build_all); +6 buyer-guide pages on 2026-09-16.
+    check("sitemap.xml has 99 page URLs",
+          len(page_locs) == 99, str(len(page_locs)))
     check("sitemap.xml all locs on digikitpro.shop",
           bool(page_locs) and all(u.startswith(HOST) for u in page_locs)
           and not any("github.io" in u for u in page_locs))
 
     sm_txt = read("sitemap.txt") if exists("sitemap.txt") else ""
     txt_urls = [ln.strip() for ln in sm_txt.splitlines() if ln.strip()]
-    check("sitemap.txt has 93 URLs", len(txt_urls) == 93, str(len(txt_urls)))
+    check("sitemap.txt has 99 URLs", len(txt_urls) == 99, str(len(txt_urls)))
     check("sitemap.txt all on digikitpro.shop",
           bool(txt_urls) and all(u.startswith(HOST) for u in txt_urls)
           and not any("github.io" in u for u in txt_urls))
@@ -494,6 +497,60 @@ def main() -> int:
     check("deploy.yml build env includes INDEXNOW_KEY",
           "INDEXNOW_KEY:" in build_step and "vars.INDEXNOW_KEY" in build_step
           and "python3 tools/build.py" in build_step)
+
+    # ── 63–70 buyer guides (tools/pages_guides.py) ──────────────────────
+    import pages_guides as pg
+
+    guide_files = [f"guides/{g['slug']}/index.html" for g in pg.GUIDE_DEFS] + ["guides/index.html"]
+    check("guides: all 6 guide pages built",
+          all(exists(f) for f in guide_files),
+          "; ".join(f for f in guide_files if not exists(f)) or "index + 5 guides")
+
+    sm_want = [f"{HOST}/guides/"] + [f"{HOST}/guides/{g['slug']}/" for g in pg.GUIDE_DEFS]
+    check("guides: all 6 URLs in sitemap.xml",
+          all(u in page_locs for u in sm_want),
+          "; ".join(u for u in sm_want if u not in page_locs) or "all present")
+    check("guides: all 6 URLs in sitemap.txt",
+          all(u in txt_urls for u in sm_want),
+          "; ".join(u for u in sm_want if u not in txt_urls) or "all present")
+
+    missing, lifestyle_hits = [], []
+    for g in pg.GUIDE_DEFS:
+        for grp in g.get("groups", []):
+            for slug in grp.get("slugs", []):
+                p = products.get(slug)
+                if not p:
+                    missing.append(f"{g['slug']}:{slug}")
+                    continue
+                d = pg.disc(slug)  # discovery entry (safe defaults when absent)
+                if d.get("line") == "lifestyle" or d.get("stage") in ("planner", "travel", "templates"):
+                    lifestyle_hits.append(slug)
+    check("guides: every referenced product slug exists in products.json",
+          not missing, "; ".join(missing) or f"{sum(len(gr['slugs']) for g in pg.GUIDE_DEFS for gr in g.get('groups', []))} refs")
+    check("guides: no lifestyle / planner / template product on any guide grid",
+          not lifestyle_hits, "; ".join(lifestyle_hits) or "brush context kept clean")
+
+    comp_html = read("guides/procreate-bundles-compared/index.html") if exists("guides/procreate-bundles-compared/index.html") else ""
+    real_bundles = [p for p in products.values() if p.get("category") == "Bundles"]
+    check("guides: comparison table lists every real brush bundle",
+          bool(real_bundles) and all(f"products/{p['slug']}/" in comp_html for p in real_bundles),
+          f"{len(real_bundles)} bundles expected")
+
+    mesh_ok = True
+    for g in pg.GUIDE_DEFS:
+        f = f"guides/{g['slug']}/index.html"
+        if not exists(f):
+            mesh_ok = False
+            continue
+        body = read(f)
+        others = [x for x in pg.GUIDE_URLS if g["slug"] not in x]
+        if not any(h in body for h in others):
+            mesh_ok = False
+    check("guides: every guide cross-links to at least one other guide", mesh_ok)
+
+    check("guides: homepage footer links all 5 guides",
+          all(f"guides/{g['slug']}/" in home_html for g in pg.GUIDE_DEFS),
+          "; ".join(g["slug"] for g in pg.GUIDE_DEFS if f"guides/{g['slug']}/" not in home_html) or "all 5")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]

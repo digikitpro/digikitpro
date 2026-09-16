@@ -698,6 +698,65 @@ matches this list · the page closes master-library → why → articles → ema
 configured rung renders a card · no ladder rung is missing a price or an asset line ·
 no "was:" / `<del>` strikethrough pricing in generated HTML.
 
+### 2026-09-16 · Phase 3 opens: commercial-intent buyer guides (5 pages + hub)
+
+First Phase 3 (TRAFFIC) work item shipped: the commercial-intent SEO landing
+pages, implemented as `tools/pages_guides.py` so they survive rebuilds and
+Payhip syncs. Direction confirmed with the owner this session (this workstream,
+not bundle itemization, not theme polish; still no real reviews / ESP / artwork
+assets to unblock other Phase 2 items).
+
+| Page | Query it answers | Selection rule (from `discovery.json` tags) |
+|---|---|---|
+| `guides/procreate-starter-kits/` | beginner buying intent | free tier + beginner-level entry kits; explicit free→$5→library ladder |
+| `guides/procreate-pencil-brushes/` | "procreate pencil brushes" | `stage=sketch` kits + charcoal + pose stamps + liners, grouped by drawing sequence |
+| `guides/procreate-texture-brushes/` | "procreate texture brushes" | `craft∋texture`, grouped by subject (skin/fur, paper, painterly, atmosphere) |
+| `guides/procreate-animation-brushes/` | "procreate dreams brushes" | `craft∋animation` + the owner-approved `animationNotice` honesty block verbatim |
+| `guides/procreate-bundles-compared/` | "which bundle" comparative intent | **all 6** `category==Bundles` products, every cell read live from `products.json` |
+
+Design decisions:
+
+- **Explicit slug lists, fail-loud build.** Selections are curated from the
+  discovery tags rather than keyword-matched at build time. If a referenced
+  product disappears (renamed, removed, de-synced), the build stops with a
+  named error instead of publishing a money page with a silent hole.
+- **The beginners' page deliberately does NOT target** "best procreate brushes
+  for beginners" — that query is owned by the existing editorial article
+  (`blog/best-procreate-brushes-for-beginners`). The commercial page is titled
+  and described around "starter kits" instead, and links to the article as its
+  editorial companion; no keyword cannibalization.
+- **Honesty invariants held:** no aggregate libraries in the grids (one
+  flagship band per page, labelled), no lifestyle products in brush contexts,
+  live prices only, no overlap claims between libraries and single packs
+  (the comparison FAQ explicitly declines to claim one), the Dreams
+  compatibility answer recommends testing with the free set rather than
+  trusting the shop.
+- **Retargeted, not duplicated:** the homepage ladder's "Compare every bundle
+  →" link now points at the comparison guide (previously it promised a
+  comparison and delivered the bundles catalog page).
+
+Distribution: sitemap.xml / sitemap.txt (+6 URLs → 99), `js/search-index.js`
+(guides searchable via ⌘K), footer "Buyer Guides" links on every page,
+category landing pages cross-link their relevant guides
+(`GUIDES_FOR_CATEGORY`), guides cross-link categories, technique articles and
+each other.
+
+Small fix folded in: `GOOGLE_VERIFY` / `BING_VERIFY` / `YANDEX_VERIFY` in
+`tools/core.py` now fall back to their real tokens on an **empty** env var
+(the CI workflow always passes the variable, so an unset GitHub variable
+arrived as `""` and stripped the verification metas from the live build while
+local builds kept them — the repo and the deploy now agree).
+
+**Guardrails** (`tools/verify.py`, 62 → **70** checks): all 6 guide pages built ·
+all 6 in sitemap.xml · all 6 in sitemap.txt · every referenced slug exists ·
+no lifestyle/planner/template product on any guide grid · comparison table
+lists every real brush bundle · guide cross-link mesh closed · footer links
+all 5 guides.
+
+**Verify before judging impact:** GA4 `page_view` with `page_type=guide`
+(events flow from day one), Search Console impressions for the five target
+queries over ~4–8 weeks, and `outbound_payhip_click` attribution by page.
+
 **Deliberately not done:** no `data/reviews.json`, no empty review section, no
 placeholder quotes. The brief said "REAL REVIEWS — only when you have them", and the
 site's honesty rule (no invented social proof, enforced by `verify.py`) means the

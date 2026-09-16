@@ -404,7 +404,9 @@ def build_bundles():
   {page_head(0, "Best value", "Procreate Bundles",
     "Complete libraries at a fraction of their combined price. One download, every tool, lifetime access, the fastest way to build a professional brush library.",
     [("Bundles","bundles.html")])}
-  <section class="section"><div class="wrap bundle-stack">{tiles}</div></section>
+  <section class="section"><div class="wrap">
+    <p style="margin-bottom:1.75rem"><a class="text-link" href="guides/procreate-bundles-compared/">Compare every bundle side by side →</a></p>
+  </div><div class="wrap bundle-stack">{tiles}</div></section>
   {newsletter(0)}
 </main>
 """
