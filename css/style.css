@@ -1229,3 +1229,51 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 
 .pt-assets{margin-top:2.6rem;padding-top:1.8rem;border-top:1px solid var(--border)}
 .pt-assets .pt-sub{margin-top:0}
+
+/* ── Look Inside the Masterclass (PDP) — 4 real pages placeholder ── */
+.look-inside .look-note{margin-top:1rem;font-size:.88rem}
+.look-grid{display:grid;gap:1rem;margin-top:1.2rem;grid-template-columns:1fr}
+@media(min-width:640px){.look-grid{grid-template-columns:repeat(2,1fr)}}
+.look-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.look-ph-box{aspect-ratio:3/4;display:grid;place-items:center;background:var(--surface-2);border-bottom:1px solid var(--border);padding:1.5rem;text-align:center}
+.look-ph-box span{font:600 .85rem/1.4 var(--sans);color:var(--muted);letter-spacing:.02em}
+.look-card figcaption{padding:.7rem .9rem;font-size:.82rem;color:var(--muted);background:var(--surface)}
+
+/* ── Workflow strip (portrait kits) ── */
+.workflow-sec .workflow-row{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem .35rem;margin-top:.8rem}
+.wf-step{display:inline-flex;align-items:center;justify-content:center;min-width:4.2rem;padding:.4rem .7rem;border:1px solid var(--border);border-radius:999px;background:var(--surface);font:600 .78rem/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.wf-arrow{color:var(--gold);font-weight:700;font-size:.9rem}
+
+/* ── Mobile polish: hero, header, cards, trust band ── */
+@media(max-width:640px){
+  .hero{padding:2.2rem 0 1.6rem}
+  .hero-grid{gap:1.6rem}
+  .hero h1{font-size:clamp(1.9rem,8vw,2.4rem);line-height:1.05}
+  .hero-sub{font-size:.97rem}
+  .header-inner{gap:.4rem}
+  .header-actions{gap:.25rem}
+  .btn-sm{padding:.45rem .8rem;font-size:.82rem}
+  .trust-inner{grid-template-columns:1fr 1fr;gap:1rem}
+  .craft-grid{gap:.7rem}
+  .craft-card{padding:1rem}
+  .nl-card{padding:1.8rem 1.2rem 1.6rem}
+  .nl-card h2{font-size:1.55rem}
+  .foot-pinterest{flex-direction:column;align-items:stretch}
+  .foot-pin-act{flex-direction:column}
+  .foot-pin-act .btn{width:100%;justify-content:center}
+  .ladder-body h3{font-size:1rem}
+  .flag-inner{gap:1.6rem}
+}
+
+/* Look Inside — real interiors (when assets/*.png present) */
+.look-grid--real{grid-template-columns:1fr}
+@media(min-width:640px){.look-grid--real{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.look-grid--real{grid-template-columns:repeat(2,1fr)}}
+.look-card.look-real img{width:100%;height:auto;display:block;background:var(--surface-2)}
+.look-card.look-real figcaption{font-size:.82rem;padding:.65rem .85rem}
+
+/* Homepage Look Inside preview strip (when real interiors present) */
+.look-home-preview{display:flex;gap:.9rem;overflow-x:auto;margin-top:1.8rem;padding-bottom:.6rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.look-home-preview a{flex:0 0 170px;scroll-snap-align:start;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);transition:transform .25s var(--ease),border-color .25s}
+.look-home-preview a:hover{transform:translateY(-3px);border-color:rgba(201,168,106,.45)}
+.look-home-preview img{width:100%;height:auto;display:block;aspect-ratio:3/4;object-fit:cover}

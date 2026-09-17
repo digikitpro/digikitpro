@@ -71,22 +71,39 @@ def build_home():
   </div>
 </article>"""
         starter_card = edu_card(
-            starter, "edu-start", "Start here · Free",
-            "A visual beginner guide from a blank canvas to a structured, well-lit portrait.",
+            starter, "edu-start", "Free · Start here",
+            "The free Portrait Starter Guide — a structured introduction to Procreate portrait basics on a blank canvas.",
             "PDF eBook · instant download · $0 forever",
             "Get Free Guide ↗", starter["payhipUrl"], ' target="_blank" rel="noopener" ' + buy_attrs(starter, "edu-duo"))
         master_card = edu_card(
-            master, "edu-deep", "Go deeper · Premium",
-            "A complete 15-chapter portrait workflow from a blank canvas to a finished, believable portrait.",
-            "PDF eBook · 107 pages · 15 chapters",
-            "Get the Masterclass", f"products/{master['slug']}/", "")
+            master, "edu-deep", "Premium · Full workflow",
+            "The Complete Procreate Portrait Masterclass — 107 pages, 15 chapters, full portrait workflow from blank canvas to finished believable portrait.",
+            "PDF eBook · 107 pages · 15 chapters · $19",
+            "Explore the Masterclass", f"products/{master['slug']}/", "")
+        # ── homepage Look Inside preview (real interiors when present) ──────
+        import os as _os
+        _look_dir = _os.path.join(ROOT, "assets/products/procreate-portrait-masterclass-ebook")
+        _look_files = []
+        if _os.path.isdir(_look_dir):
+            for _f in sorted(_os.listdir(_look_dir)):
+                if _f.lower().endswith((".png", ".jpg", ".jpeg", ".webp")) and (_f in ("0.jpg","1.jpg","2.jpg","3.jpg","4.jpg","0.png","1.png","2.png","3.png","4.png") or _f.startswith("look-")):
+                    if _f.startswith("procreate-portrait-masterclass"):
+                        continue
+                    _look_files.append(_f)
+        if _look_files:
+            _look_note = f"Real page spreads from inside the book — {len(_look_files)} interior pages now live in <a href=\"products/{master['slug']}/#look-inside\">Look Inside</a> on the Masterclass page."
+            _look_preview = "<div class=\"look-home-preview\">" + "".join(f'<a href="products/{master["slug"]}/#look-inside" aria-label="Look inside — {esc(_f)}"><img src="assets/products/procreate-portrait-masterclass-ebook/{esc(_f)}" alt="Masterclass interior — {esc(_f)}" loading="lazy" decoding="async" width="260" height="346"></a>' for _f in _look_files[:5]) + "</div>"
+        else:
+            _look_note = "Start with the free guide. Then learn the complete workflow — real page spreads from inside the book below (4 real interior images coming soon)."
+            _look_preview = ""
         ebook_section = f"""<section class="section section-alt" id="ebooks" aria-labelledby="edu-title">
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">Learn the craft</p><h2 id="edu-title">Learn Procreate Portraits</h2></div>
-        <p class="sec-note muted">Start with the free guide, then go deeper.</p>
+        <p class="sec-note muted">{_look_note}</p>
       </div>
       <div class="ebook-duo">{starter_card}<div class="edu-link" aria-hidden="true"><span class="edu-arrow">→</span><span class="edu-label">then go deeper</span></div>{master_card}</div>
+      {_look_preview}
     </div>
   </section>
 """
@@ -116,10 +133,10 @@ def build_home():
     before_after = f"""<section class="section ba-section" id="results" aria-labelledby="results-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">See what the brushes actually change</p><h2 id="results-title">Flat Painting → Finished Portrait</h2></div>
+        <div><p class="eyebrow">See the difference</p><h2 id="results-title">See the difference the right tools can make</h2></div>
         <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit →</a>
       </div>
-      <p class="sec-note muted">Same drawing, same lighting: the only difference is texture. Drag the divider to see what skin, hair and finish brushes actually add — pores, freckles, strand detail and the final pass that stops a portrait looking airbrushed.</p>
+      <p class="sec-note muted">Same artwork — different texture, detail and finishing tools. Drag the divider to see what pores, freckles, hair strands and the final polish add, and why the finished portrait stops looking airbrushed.</p>
       <figure class="ba-figure">
         <div class="ba-stage" data-ba>
           <img class="ba-img ba-after" src="assets/img/ba-after.webp" width="1200" height="800" alt="Finished portrait: detailed skin texture, hair strands and final rendering" loading="lazy" decoding="async">
@@ -153,7 +170,7 @@ def build_home():
 
     html_out = head(
         "DigiKitPro | Procreate Brushes for iPad Artists",
-        "Hand-tested Procreate brushes for portraits, skin, line art, watercolor and anime. Instant download on iPad — free packs included.",
+        "Hand-tested Procreate brushes organized around the way you actually create — portraits, skin, line art, watercolor, anime and more. Start free, then build the toolkit you need.",
         SITE_URL + "/", 0, schemas=schema_org_home(), ctx=page_ctx("home"),
         preload="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp")
     html_out += header(0, active="index.html")
@@ -163,12 +180,13 @@ def build_home():
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Procreate brushes for iPad artists</p>
-        <h1>Procreate brushes for <em>iPad artists</em></h1>
-        <p class="hero-sub">Hand-tested Procreate brushes for portraits, skin, line art, watercolor and anime. Instant download on iPad — free packs included.</p>
+        <p class="eyebrow">Procreate brushes for iPad artists · organized by workflow</p>
+        <h1>Procreate Brushes <br>Organized Around<br><span>How You Actually Create</span></h1>
+        <p class="hero-sub">Portrait, skin, line art, watercolor or anime — start with the toolkit built around your kind of work. Real texture, instant download on iPad. Try free packs first, then build the set you need.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold btn-lg" href="products.html">Browse kits</a>
+          <a class="btn btn-gold btn-lg" href="products.html">Browse Procreate Brushes</a>
         </div>
+        <p class="hero-note">Instant download &nbsp;·&nbsp; iPad + Procreate &nbsp;·&nbsp; .brushset files &nbsp;·&nbsp; free packs included</p>
       </div>
       <div class="hero-showcase" aria-hidden="true" data-parallax="10">{showcase}</div>
     </div>
@@ -188,7 +206,7 @@ def build_home():
         <div><p class="eyebrow">Level 1 · Completely free</p><h2>Free Procreate Brushes</h2></div>
         <a class="text-link" href="freebies.html">All freebies →</a>
       </div>
-      <p class="sec-note muted">Real kits, not samples — the same pressure tuning and file quality as the paid packs. Take them, use them, and only spend money once you know how they feel.</p>
+      <p class="sec-note muted">Try the tools before you buy anything. Real kits, not samples — the same pressure tuning and file quality as the paid packs. Download now, keep forever, and only spend money once you know how they feel.</p>
       {product_grid(freebies, 0, eager_first=1, free_direct=True)}
     </div>
   </section>
