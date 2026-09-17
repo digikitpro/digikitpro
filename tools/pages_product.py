@@ -44,6 +44,48 @@ def gallery_html(p):
         thumbs = f'<div class="gal-thumbs">{"".join(btns)}</div>'
     return main_fig + thumbs, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
 
+def look_inside_masterclass(p):
+    """'Look Inside the Masterclass' — placeholder until 4 real interior images are supplied.
+
+    The section is rendered for the Masterclass ebook only. It deliberately shows NO generated
+    screenshots, no fake page numbers, no invented spreads: 4 labelled placeholders that 
+    will be replaced by the actual PDF page exports the owner provides.
+    """
+    if p.get("slug") != "procreate-portrait-masterclass-ebook":
+        return ""
+    placeholders = "".join(
+        f'<figure class="look-card look-ph" aria-label="Look inside page {i}"><div class="look-ph-box"><span>Interior page {i} — real image coming soon</span></div><figcaption>Page {i}: authentic spread will appear here</figcaption></figure>'
+        for i in (1, 2, 3, 4))
+    return f"""<section class="psec look-inside" id="look-inside" aria-labelledby="p-look">
+      <h2 id="p-look">Look Inside the Masterclass</h2>
+      <p class="muted">A complete portrait workflow in 107 pages and 15 chapters — educational PDF eBook, not a brush pack. These 4 interior spreads are placeholders for the real page images you will supply; we do not generate fake screenshots.</p>
+      <div class="look-grid">{placeholders}</div>
+      <p class="muted look-note"><b>No brush installation is required.</b> The Masterclass teaches with Procreate's built-in brushes; DigiKitPro kits are optional accelerators. <a href="../../blog/how-to-install-procreate-brushes/">How to install brush kits →</a></p>
+    </section>"""
+
+
+def workflow_strip(p):
+    """Workflow positioning for key portrait kits: the order you actually paint in.
+
+    Only rendered for the Portrait Mastery Kit and the portrait bundle, where the
+    kit list already maps to a workflow (Sketch → Ink → Blend → Hair …). Keeps
+    the catalog's useful-but-affordable positioning without inventing brushes.
+    """
+    workflow = {
+        "portrait-mastery-kit-46-brushes": ["Sketch", "Ink", "Blend", "Skin", "Hair", "Detail", "Texture", "Finish"],
+        "ultimate-portrait-mastery-bundle": ["Line", "Skin", "Hair", "Finish"],
+        "portrait-skin-brushes-procreate": ["Blend", "Pores", "Freckles", "Texture", "Finish"],
+    }.get(p.get("slug"))
+    if not workflow:
+        return ""
+    chips = "".join(f'<span class="wf-step">{esc(s)}</span><span class="wf-arrow" aria-hidden="true">→</span>' for s in workflow[:-1]) + f'<span class="wf-step">{esc(workflow[-1])}</span>'
+    return f"""<section class="psec workflow-sec" aria-labelledby="p-workflow">
+      <h2 id="p-workflow">Workflow</h2>
+      <p class="muted">Organized by how you actually paint — less hunting, more creating.</p>
+      <div class="workflow-row">{chips}</div>
+    </section>"""
+
+
 def faq_html(p):
     if not p.get("faqs"): return ""
     items = "".join(f"""<details class="faq-item">
@@ -276,10 +318,12 @@ def build_product_pages():
     {bundle_block}
     {included}
     {desc_sec}
+    {look_inside_masterclass(p)}
     {technical}
     {requirements}
     {install_steps(p) if not coming and not p.get("free") else ""}
     {whofor}
+    {workflow_strip(p)}
     {upgrade_panel(p, depth)}
     {faq_html(p)}
     {rel_arts}
