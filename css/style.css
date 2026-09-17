@@ -238,7 +238,12 @@ h3{font-size:1.15rem}
 .art-card:has(.art-img){padding:0;overflow:hidden}
 .art-card .art-body{padding:1.1rem 1.2rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
 .article-hero{margin:0 0 2rem;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
-.article-hero img{width:100%;max-height:440px;object-fit:cover}
+/* Hero shows the linked product's COVER artwork, which has the product name
+   baked into it. A fixed-height frame + object-fit:cover centre-cropped every
+   cover (portrait 3:4 covers lost >50% of their height — brand header, title
+   and feature icons sliced off), so the hero now renders the full artwork at
+   its natural ratio; height:auto + the width/height attrs keep zero CLS. */
+.article-hero img{width:100%;height:auto;object-fit:contain;background:var(--surface-2)}
 .article-hero figcaption{padding:.6rem 1rem;font-size:.75rem;color:var(--muted);background:var(--surface)}
 
 /* ── why ── */
