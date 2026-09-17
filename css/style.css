@@ -146,14 +146,37 @@ h3{font-size:1.15rem}
 @media(min-width:1280px){.cards{grid-template-columns:repeat(4,1fr)}}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s ease,transform .2s ease}
 .card:hover{border-color:rgba(201,168,106,.5);transform:translateY(-3px)}
-/* Card media: one uniform square frame per card, filled edge-to-edge.
-   Previous treatment letterboxed portrait covers (object-fit:contain +
-   12px padding inside a 3:2 frame), which rendered the artwork small and
-   shrunken inside its own card. Cover + centred position + square ratio
-   means every artwork now spans the full card width on every breakpoint. */
-.card-media{position:relative;display:block;width:100%;padding:0;margin:0;aspect-ratio:1/1;overflow:hidden;background:var(--surface-2)}
-.card-media img{width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;object-position:center;display:block;transition:transform .45s ease}
-.card:hover .card-media img{transform:scale(1.05)}
+/* Card media: one uniform square frame per card, artwork shown whole.
+   The frame used to be filled with object-fit:cover, on the grounds that the
+   alternative letterboxed the art. Measured over the real catalog
+   (cardW x cardH in data/products.json, 51 products), that crop is not the
+   "mild top/bottom trim of a 4:5 cover" it was described as: it hides 30.3% of
+   the artwork on average, and on most of the catalog it cuts the SIDES, because
+   41 of 51 card renders are LANDSCAPE banners (3:2 and 16:9) that lost 24-44%
+   of their width, while the 9 portrait pack covers lost 19-44% of their
+   height. Every cover carries its product name, a brand lockup or a
+   feature-icon row BAKED INTO THE ARTWORK, so the crop sliced them off — the
+   Master Library ribbon arrived as "PICK". The fix has to keep the grid tidy,
+   which rules out the two obvious alternatives:
+   • each card at its own natural ratio crops nothing, but across the site's 94
+     product-card grids a third of the rows would mix media heights by more than
+     1.75x (2.67x on the catalog). Uniform frame or the grid falls apart.
+   • painting a blurred copy of the artwork behind the img fills the leftover
+     area with colour at no layout cost, but a CSS background is never
+     lazy-loaded: it pulls all 51 catalog artworks at first paint, undoing the
+     loading="lazy" that 47 of them carry. Not worth a prettier letterbox.
+   So: uniform square frame + object-fit:contain, and the leftover area is a
+   deliberate MAT (a soft sweep in the site's own palette) rather than dead
+   space. Nothing is sliced, and the artwork still spans the full card width
+   wherever its own ratio allows it — which is every landscape banner, i.e.
+   four fifths of the catalog. Same frame, same row heights, same CLS. */
+.card-media{position:relative;display:block;width:100%;padding:0;margin:0;aspect-ratio:1/1;overflow:hidden;background:radial-gradient(125% 85% at 50% 0,rgba(201,168,106,.07),transparent 62%),var(--surface-2)}
+/* background:none is load-bearing: the global img{background:var(--surface-2)}
+   paints on the ELEMENT box, and a contained img box is the whole square, so
+   leaving it on would cover the mat with a flat panel. There is deliberately no
+   transform on this img: once the fit is `contain`, any hover zoom past 100% is
+   just the old crop arriving on mouseover. */
+.card-media img{width:100%;height:100%;aspect-ratio:1/1;object-fit:contain;object-position:center;display:block;background:none}
 .badge{position:absolute;top:10px;left:10px;background:rgba(12,12,14,.82);backdrop-filter:blur(6px);border:1px solid rgba(201,168,106,.45);color:var(--gold);font:600 .66rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:.42rem .6rem;border-radius:999px}
 .badge-free{border-color:rgba(140,200,140,.5);color:#9FD8A4}
 .badge-soon{border-style:dashed;border-color:rgba(201,168,106,.75);color:var(--gold);background:rgba(201,168,106,.1)}
@@ -816,8 +839,11 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 
 /* ══ 4. PRODUCT CARDS — "this is something I can click" ════════════════ */
 .card:hover{transform:translateY(-6px);border-color:rgba(201,168,106,.55);box-shadow:0 26px 50px -28px rgba(0,0,0,.85),0 0 0 1px rgba(201,168,106,.08)}
-.card:hover .card-media img{transform:scale(1.06)}
-.card:hover .card-media img.fit.contain{transform:scale(1.05)}
+/* Both card-media hover zooms that used to live here are gone: inside a
+   `contain` frame a 6% zoom simply re-crops the artwork, which is the whole
+   point of this card. The card still lifts (above) with its border, shadow,
+   badge, title and button, so the affordance is intact — and the dead
+   `img.fit.contain` override, whose classes no template emits, went with them. */
 .card:active{transform:translateY(-2px) scale(.995)}
 .card:hover .card-title a{color:var(--gold)}
 .card:hover .card-foot .btn{border-color:var(--gold);color:var(--gold);background:var(--gold-soft)}
