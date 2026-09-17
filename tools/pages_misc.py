@@ -3,6 +3,7 @@
 from core import *
 from pages_season import SEASON_DEFS
 from pages_guides import GUIDES_DIR, GUIDE_URLS, GUIDE_DEFS, GUIDES_INDEX
+from pages_partner import PARTNER_DIR, PARTNER_URL
 from datetime import datetime
 from email.utils import format_datetime
 
@@ -472,6 +473,12 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     for u in [f"/{GUIDES_DIR}/"] + [f"/{u}" for u in GUIDE_URLS]:
         sm += f" <url><loc>{SITE_URL}{u}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.75</priority></url>\n"
 
+    # Partner portal (tools/pages_partner.py). Deliberately the lowest
+    # priority on the site: it is a page for creators who already know the
+    # store, not a search-traffic landing page, and it must never outrank a
+    # product or a buyer guide in the crawl budget.
+    sm += f" <url><loc>{SITE_URL}{PARTNER_URL}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>\n"
+
     for p in PRODUCTS:
         slug = p["slug"]
         im = p.get("images") or {}
@@ -512,6 +519,7 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     txt_urls += [f"{SITE_URL}/category/{cslug}/" for cslug in CATEGORY_SLUGS.values()]
     txt_urls += [f"{SITE_URL}/season/{sdef['slug']}/" for sdef in SEASON_DEFS]
     txt_urls += [f"{SITE_URL}/{GUIDES_DIR}/"] + [f"{SITE_URL}/{u}" for u in GUIDE_URLS]
+    txt_urls += [f"{SITE_URL}{PARTNER_URL}"]
     txt_urls += [f"{SITE_URL}/products/{p['slug']}/" for p in PRODUCTS]
     txt_urls += [f"{SITE_URL}/blog/{a['slug']}/" for a in load_articles()]
     write("sitemap.txt", "\n".join(txt_urls) + "\n")

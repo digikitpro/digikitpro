@@ -115,6 +115,7 @@ blog/<slug>/index.html            × 18 articles
 category/<slug>/index.html        × 10 category landing pages
 season/<slug>/index.html          × 2 seasonal hubs
 guides/index.html + guides/<slug>/index.html   ← 5 buyer guides (see §9)
+partner/index.html                             ← partner portal (see §10)
 assets/products/<slug>/*.webp     × 174 original product images (3 size variants)
 assets/img/                       brand assets (favicon / OG cover)
 css/style.css  js/main.js  js/search-index.js
@@ -131,7 +132,7 @@ scraped/                          ← original scraper + Payhip source data (ref
 
 Unique title/meta per page · canonicals · Open Graph + Twitter cards · Product + Offer JSON-LD
 with real Payhip prices · Article schema · BreadcrumbList · Organization + WebSite (SearchAction) ·
-FAQPage schema on product pages · `sitemap.xml` (76+ URLs) · `robots.txt` · semantic HTML5 ·
+FAQPage schema on product pages · `sitemap.xml` (100 URLs) · `robots.txt` · semantic HTML5 ·
 lazy-loading responsive WebP · descriptive alt text · clean URLs.
 
 ## 6. Where the data came from
@@ -361,3 +362,51 @@ To edit a guide: change `GUIDE_DEFS` in `tools/pages_guides.py` (copy,
 groups, FAQs, cross-links) and run `python3 tools/build.py`.
 `GUIDES_FOR_CATEGORY` in the same file controls which buyer guides each
 category landing page cross-links.
+
+## 10. Partner portal — `/partner/` (affiliate program front door)
+
+One generated page (`partner/index.html`, built by `tools/pages_partner.py`)
+that does the public half of the partner program. The private half — tracked
+links, click/sale reporting, payout — stays in **Payhip's own affiliate
+system**, because Payhip already takes every payment and delivers every file
+for this store. So the page has **no login, no accounts and no commission
+ledger**, and it never renders numbers it cannot keep true.
+
+What it contains:
+
+| Block | What it does |
+|---|---|
+| Program status + CTA | Invite-only vs. open, driven by one variable (below) |
+| Four steps | Apply → get tracked links → share → get paid by Payhip |
+| Share kit | 3 free packs + 5 paid kits: real cover art, real one-line copy, live price, product URL, Payhip checkout URL and absolute artwork URL, all read from `data/products.json` at build time |
+| Promotion rules | Do / do-not list. Extends the site's own fabrication rules to partners: no invented reviews, ratings, sales totals, earnings promises or fake scarcity |
+| Partner FAQ | 10 questions, also emitted as `FAQPage` JSON-LD (+ `BreadcrumbList`) |
+
+**The one knob — `PARTNER_SIGNUP_URL`.** Payhip → Dashboard → **Marketing →
+Affiliates** hands out a single sign-up link. Set it as a repository variable
+(**Settings → Secrets and variables → Actions → Variables → New variable**,
+name `PARTNER_SIGNUP_URL`) and both workflows pass it to the build: the
+primary CTA becomes the real application form. Left empty, the page says the
+program is invite-only and routes applicants to the Payhip store contact form
+— the only channel that reaches the owner, since `EMAIL_ENDPOINT` is unset and
+a form on this site would deliver nothing. It never renders a dead button.
+
+Contract (enforced by `tools/verify.py`, checks 71–80):
+
+- Share-kit slugs are **explicit lists** (`PARTNER_FREE_SLUGS` /
+  `PARTNER_PAID_SLUGS`) and the build **fails loudly** on a stale slug — a
+  Payhip rename can never leave a hole in a page partners copy links from.
+- Prices, Payhip URLs and cover images come from `data/products.json`, so the
+  daily sync keeps the kit truthful with no edit here.
+- No commission rate or earnings figure may appear (a rate is agreed per
+  partner and paid by Payhip, so any number printed here could only be wrong).
+- The page is linked from the **footer of every generated page**, is in
+  `sitemap.xml` + `sitemap.txt` (priority 0.4 — it is for creators who already
+  know the store, and must never outrank a product or a buyer guide), and is
+  deliberately **not** in the site search index: a shopper searching "brushes"
+  should not get an affiliate page.
+
+To edit the copy: `tools/pages_partner.py` holds the steps, rules, FAQs and
+the "who this kit is for" angles; `PARTNER_*_SLUGS` holds the kit. Then
+`python3 tools/build.py`. Styles are the `pt-*` block at the end of
+`css/style.css`.

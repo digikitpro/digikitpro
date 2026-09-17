@@ -1157,3 +1157,75 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 .table-wrap td.price{white-space:nowrap;font-weight:600;color:var(--gold)}
 .table-wrap tbody tr{transition:background .15s}
 .table-wrap tbody tr:hover{background:rgba(201,168,106,.05)}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   PARTNER PORTAL — /partner/ (tools/pages_partner.py)
+   Reuses the design system (--gold, --surface, --border, .btn, .trend-pill,
+   .faq-q, .table-wrap) so the page reads as part of the shop, not a bolt-on.
+   The step list borrows the numbered-circle pattern from .install-steps.
+   Mobile-first; nothing here animates beyond the shared hover transform.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* program status + primary actions */
+.pt-status{display:inline-flex;align-items:center;gap:.55rem;margin:1.3rem 0 0;padding:.55rem 1rem;
+  border:1px solid var(--border);border-radius:999px;background:var(--surface);
+  font:500 .84rem/1.4 var(--sans);color:var(--muted);max-width:100%}
+.pt-dot{width:.55rem;height:.55rem;border-radius:50%;flex:none}
+.pt-dot-open{background:#9FD8A4;box-shadow:0 0 0 3px rgba(159,216,164,.18)}
+.pt-dot-invite{background:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.pt-cta-row{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.4rem 0 .9rem}
+.pt-cta-note{font-size:.88rem;max-width:70ch}
+
+/* four-step process */
+.pt-steps{list-style:none;counter-reset:pt;display:grid;gap:1.1rem;margin:1.8rem 0 0}
+.pt-steps li{counter-increment:pt;position:relative;padding:1.15rem 1.2rem 1.15rem 1.2rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.pt-steps li::before{content:counter(pt,decimal-leading-zero);display:block;
+  font:700 .74rem/1 var(--sans);letter-spacing:.14em;color:var(--gold);margin-bottom:.6rem}
+.pt-steps h3{font-size:1.06rem;margin-bottom:.4rem}
+.pt-steps p{color:var(--muted);font-size:.94rem;margin:0}
+@media(min-width:900px){.pt-steps{grid-template-columns:repeat(2,1fr)}}
+
+/* share-kit subsections */
+.pt-sub{margin:2.2rem 0 .3rem;font-size:1.24rem}
+.pt-sub-note{font-size:.92rem;max-width:74ch;margin-bottom:1.2rem}
+
+/* one share-kit row: cover | copy + real links */
+.pt-kit{display:grid;gap:1rem}
+.pt-item{display:grid;gap:1rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1rem;transition:border-color .2s ease}
+.pt-item:hover{border-color:rgba(201,168,106,.45)}
+@media(min-width:640px){.pt-item{grid-template-columns:170px 1fr;gap:1.3rem;align-items:start}}
+.pt-thumb{border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);background:var(--surface-2)}
+.pt-thumb img{width:100%;height:auto;display:block;aspect-ratio:1/1;object-fit:cover}
+.pt-body h3{font-size:1.12rem;margin-bottom:.45rem}
+.pt-price{font:700 .92rem/1 var(--sans);color:var(--gold)}
+.pt-free{font:700 .78rem/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#9FD8A4}
+.pt-copy{color:var(--muted);font-size:.93rem;margin:.5rem 0 0}
+.pt-angle{color:var(--text);font-size:.9rem;margin:.7rem 0 0;padding-left:.85rem;
+  border-left:2px solid rgba(201,168,106,.5)}
+.pt-links{margin:.9rem 0 0;display:grid;gap:.4rem;font-size:.85rem}
+.pt-links>div{display:grid;gap:.15rem}
+@media(min-width:520px){.pt-links>div{grid-template-columns:9.5rem 1fr;gap:.8rem;align-items:baseline}}
+.pt-links dt{font:600 .68rem/1.5 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#8b8880}
+.pt-links dd{margin:0;overflow-wrap:anywhere}
+.pt-links a{color:var(--gold)}
+.pt-links a:hover{color:#E0C289;text-decoration:underline}
+
+/* promotion rules: do / do not */
+.pt-rules{display:grid;gap:1rem;margin:1.8rem 0 1.2rem}
+@media(min-width:820px){.pt-rules{grid-template-columns:1fr 1fr}}
+.pt-rule-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem 1.3rem 1.1rem}
+.pt-rule-col h3{font-size:1.1rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+.pt-rule-col h3::before{content:"";width:.5rem;height:.5rem;border-radius:50%;flex:none}
+.pt-do h3::before{background:#9FD8A4}
+.pt-dont h3::before{background:#D98C7A}
+.pt-rule-col ul{list-style:none;display:grid;gap:.75rem;margin:0;padding:0}
+.pt-rule-col li{position:relative;padding-left:1.4rem;color:var(--muted);font-size:.92rem}
+.pt-rule-col li::before{position:absolute;left:0;top:0;font:700 .9rem/1.5 var(--sans)}
+.pt-do li::before{content:"✓";color:#9FD8A4}
+.pt-dont li::before{content:"✕";color:#D98C7A}
+.pt-rules-note{font-size:.88rem;max-width:80ch}
+
+.pt-assets{margin-top:2.6rem;padding-top:1.8rem;border-top:1px solid var(--border)}
+.pt-assets .pt-sub{margin-top:0}

@@ -22,6 +22,22 @@ SITE_URL = os.environ.get("SITE_URL", "https://digikitpro.shop").rstrip("/")
 SITE_NAME = "DigiKitPro"
 TAGLINE = "Procreate brushes for iPad artists."
 STORE_URL = "https://payhip.com/digikitpro"
+# ── Partner / affiliate program (see tools/pages_partner.py → /partner/) ──
+# Every order, download and message on this store runs through Payhip, so the
+# partner program runs on Payhip's own affiliate system — DigiKitPro has no
+# accounts, no login and no commission ledger of its own, and /partner/ never
+# pretends otherwise.
+#
+# Payhip → Dashboard → Marketing → Affiliates hands out ONE sign-up link. Paste
+# it here (or set the PARTNER_SIGNUP_URL repository variable, which both
+# workflows pass through) and the /partner/ page switches its primary CTA from
+# "message us" to the real application link, with no other edit needed.
+#
+# EMPTY = the program is invite-only: the page says so plainly and routes
+# applicants to the Payhip store contact form, which is the only message
+# channel that actually reaches the owner (EMAIL_ENDPOINT below is unset, so a
+# form on this site would deliver nothing).
+PARTNER_SIGNUP_URL = (os.environ.get("PARTNER_SIGNUP_URL") or "").strip()
 EMAIL_TO = "" # email hidden, contact via Payhip store only
 EMAIL_ENDPOINT = "" # no direct email endpoint, newsletter falls back to Payhip freebies collection
 # To switch providers later (Brevo/MailerLite/ConvertKit), paste their form-action URL here
@@ -670,6 +686,7 @@ def footer(depth):
       <div class="foot-links">
         <a href="{rel(depth,'faq.html')}">FAQ</a>
         <a href="{rel(depth,'contact.html')}">Contact</a>
+        <a href="{rel(depth,'partner/')}">Partner Program</a>
         <a href="{rel(depth,'refunds.html')}">Refund Policy</a>
         <a href="{rel(depth,'privacy.html')}">Privacy Policy</a>
         <a href="{rel(depth,'terms.html')}">Terms</a>

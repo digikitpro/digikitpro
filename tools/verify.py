@@ -6,12 +6,16 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 70 CHECKS PASSED.
+Expects: ALL 80 CHECKS PASSED.
 (57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
 ladder completeness x2, no fake-strikethrough pricing + 8 from the
 2026-09-16 buyer-guides buildout: pages built, sitemap coverage x2, slug
 integrity, no lifestyle leakage, comparison-table completeness, cross-link
-mesh, footer links.)
+mesh, footer links + 10 from the 2026-09-17 partner portal: page built,
+canonical, sitemap coverage, share-kit slug integrity, live prices + Payhip
+checkout links, site-wide footer link, no dead application CTA while the
+sign-up variable is unset, no unpublished commission rate, the variable
+reaching BOTH build workflows, and the CTA flipping when it is set.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -20,6 +24,7 @@ data/products.json or data/discovery.json.
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import os
 import re
@@ -27,13 +32,14 @@ import subprocess
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
+from html import escape as html_escape
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 70
+EXPECTED = 80
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -233,8 +239,14 @@ def source_blob() -> str:
     return "\n".join(parts)
 
 
+def esc_price(t: str) -> str:
+    """Price text as it appears in generated HTML (nothing to escape today,
+    but a currency symbol or an & must never break an equality check)."""
+    return html_escape(str(t), quote=True)
+
+
 def main() -> int:
-    print("DigiKitPro verify — 62 checks\n")
+    print("DigiKitPro verify — 80 checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -324,16 +336,18 @@ def main() -> int:
         # compact form: <url><loc>...</loc>
         page_locs = re.findall(r"<url><loc>([^<]+)</loc>", sm_xml)
     # 93 since the Find-My-Brushes page was removed per owner request
-    # (tools/pages_finder.py build_all); +6 buyer-guide pages on 2026-09-16.
-    check("sitemap.xml has 99 page URLs",
-          len(page_locs) == 99, str(len(page_locs)))
+    # (tools/pages_finder.py build_all); +6 buyer-guide pages on 2026-09-16;
+    # +1 partner portal (/partner/) on 2026-09-17.
+    # The partner portal adds one URL, so both sitemaps moved 99 → 100.
+    check("sitemap.xml has 100 page URLs",
+          len(page_locs) == 100, str(len(page_locs)))
     check("sitemap.xml all locs on digikitpro.shop",
           bool(page_locs) and all(u.startswith(HOST) for u in page_locs)
           and not any("github.io" in u for u in page_locs))
 
     sm_txt = read("sitemap.txt") if exists("sitemap.txt") else ""
     txt_urls = [ln.strip() for ln in sm_txt.splitlines() if ln.strip()]
-    check("sitemap.txt has 99 URLs", len(txt_urls) == 99, str(len(txt_urls)))
+    check("sitemap.txt has 100 URLs", len(txt_urls) == 100, str(len(txt_urls)))
     check("sitemap.txt all on digikitpro.shop",
           bool(txt_urls) and all(u.startswith(HOST) for u in txt_urls)
           and not any("github.io" in u for u in txt_urls))
@@ -551,6 +565,98 @@ def main() -> int:
     check("guides: homepage footer links all 5 guides",
           all(f"guides/{g['slug']}/" in home_html for g in pg.GUIDE_DEFS),
           "; ".join(g["slug"] for g in pg.GUIDE_DEFS if f"guides/{g['slug']}/" not in home_html) or "all 5")
+
+    # ── 71–80 partner portal (tools/pages_partner.py → /partner/) ───────
+    # The portal is a marketing page, not a dashboard: Payhip's affiliate
+    # system holds every tracked link and payout, so these checks police the
+    # two things that could quietly rot — share-kit slugs that a Payhip sync
+    # renamed, and copy that promises a number the store cannot keep.
+    # Pin the variable OFF before importing, exactly as the INDEXNOW_KEY
+    # checks do: the page's CTA depends on it, and this suite must be able to
+    # verify the published artifact even when a developer's shell exports a
+    # value the deployed site does not have.
+    os.environ["PARTNER_SIGNUP_URL"] = ""
+    import pages_partner as pp
+
+    partner_file = f"{pp.PARTNER_DIR}/index.html"
+    partner_html = read(partner_file) if exists(partner_file) else ""
+    check("partner: /partner/index.html built", bool(partner_html), partner_file)
+
+    partner_canon = f"{HOST}{pp.PARTNER_URL}"
+    check("partner: URL in sitemap.xml and sitemap.txt",
+          partner_canon in page_locs and partner_canon in txt_urls,
+          f"xml={partner_canon in page_locs} txt={partner_canon in txt_urls}")
+    check("partner: canonical is digikitpro.shop/partner/",
+          f'<link rel="canonical" href="{partner_canon}">' in partner_html)
+
+    kit_slugs = pp.PARTNER_FREE_SLUGS + pp.PARTNER_PAID_SLUGS
+    check("partner: share kit lists 8 real catalog products",
+          len(kit_slugs) == len(set(kit_slugs)) == 8
+          and all(s in products for s in kit_slugs)
+          and all(f"products/{s}/" in partner_html for s in kit_slugs),
+          "; ".join(s for s in kit_slugs if s not in products) or "all 8 present")
+
+    missing_payhip = [s for s in kit_slugs
+                      if not (products.get(s) or {}).get("payhipUrl")
+                      or (products[s]["payhipUrl"] not in partner_html)]
+    check("partner: every share-kit entry carries its live price + Payhip URL",
+          not missing_payhip
+          and all(esc_price(products[s]["priceText"]) in partner_html
+                  for s in kit_slugs if not products[s].get("free")),
+          "; ".join(missing_payhip) or "prices + checkout links match products.json")
+
+    foot_ok = [p for p in html_files
+               if not is_verification_page(p) and 'partner/' in read(str(p.relative_to(ROOT)))]
+    check("partner: linked from the footer of every generated page",
+          len(foot_ok) == len([p for p in html_files if not is_verification_page(p)]),
+          f"{len(foot_ok)} page(s) carry the footer link")
+
+    # With no Payhip sign-up link configured the page must say the program is
+    # invite-only and must NOT render an application CTA that leads nowhere.
+    check("partner: no dead application CTA while PARTNER_SIGNUP_URL is unset",
+          bool(pp.PARTNER_SIGNUP_URL)
+          or ("Invite-only" in partner_html and "payhip.com/digikitpro" in partner_html
+              and 'data-dkp-event="partner_apply_click"' in partner_html),
+          "signup URL set" if pp.PARTNER_SIGNUP_URL else "invite-only copy + Payhip CTA")
+
+    # Never print a commission rate or an earnings figure: it is agreed per
+    # partner and paid by Payhip, so a number on this page could only be wrong.
+    rate_hits = (re.findall(r"\b\d+(?:\.\d+)?\s*%\s*(?:commission|of (?:each|every) sale)", partner_html, re.I)
+                 + re.findall(r"\b(?:commission|earn|paying)\s+(?:of\s+)?\d+(?:\.\d+)?\s*%", partner_html, re.I))
+    check("partner: no unpublished commission rate or earnings claim",
+          not rate_hits, str(rate_hits[:2]) if rate_hits else "0 rate/earnings figures")
+
+    # The repository variable must reach BOTH builds, or a daily Payhip sync
+    # would silently flip the page back to invite-only between deploys.
+    sync_build_step = sync[sync.find("Rebuild static site"): sync.find("Commit auto-sync results")]
+    check("both workflows pass PARTNER_SIGNUP_URL to tools/build.py",
+          "PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}" in build_step
+          and "PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}" in sync_build_step)
+
+    # With the variable set, the CTA must really become the sign-up link and
+    # the invite-only copy must go. Renders the page in-process, then rebuilds
+    # it from the pinned (unset) environment so the artifact on disk always
+    # matches the build a fresh checkout produces.
+    # core must be reloaded first: pages_partner binds PARTNER_SIGNUP_URL with
+    # `from core import *`, so reloading the page module alone would keep
+    # reading the stale constant out of an already-imported core.
+    import core as _core
+    test_signup = "https://payhip.com/affiliates/verify-selftest"
+    os.environ["PARTNER_SIGNUP_URL"] = test_signup
+    importlib.reload(_core)
+    importlib.reload(pp)
+    pp.build_partner()
+    open_html = read(partner_file)
+    os.environ["PARTNER_SIGNUP_URL"] = ""
+    importlib.reload(_core)
+    importlib.reload(pp)
+    pp.build_partner()
+    restored_html = read(partner_file)   # re-read: partner_html above may predate a developer's local build
+    check("partner: PARTNER_SIGNUP_URL switches the page to open applications",
+          f'href="{test_signup}"' in open_html and "Apply to join" in open_html
+          and "Invite-only" not in open_html
+          and "Invite-only" in restored_html and test_signup not in restored_html,
+          "application CTA + status copy follow the variable, and the artifact is rebuilt without it")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]
