@@ -54,10 +54,13 @@ BUILD_DATE = date.today().isoformat()
 # follow links, the pin buttons or the domain-verify tag off the site.
 # To turn Pinterest off completely: blank the two defaults here.
 PINTEREST_PROFILE = "https://www.pinterest.com/DigiKitProStudio/"
+INSTAGRAM_PROFILE = "https://www.instagram.com/digikitprostudio/"
 SOCIAL = { # ← add your profiles; hidden while empty
     "Pinterest": (os.environ.get("PINTEREST_URL") or PINTEREST_PROFILE).strip(),
-    "Instagram": "",
-    "TikTok": "",
+    # Non-empty env wins; empty env falls back to the live profile so an unset
+    # CI variable can never strip the Instagram footer/schema link.
+    "Instagram": (os.environ.get("INSTAGRAM_URL") or INSTAGRAM_PROFILE).strip(),
+    "TikTok": (os.environ.get("TIKTOK_URL") or "").strip(),
 }
 PINTEREST_URL = (SOCIAL.get("Pinterest") or "").strip()
 # Domain claim token ("Claim your website" in Pinterest settings → the value
@@ -1194,12 +1197,14 @@ def upgrade_panel(p, depth):
     """Level 2/3 → Level 4 ladder on a product page.
     Shown only where an upgrade is genuinely logical: never on the flagship
     itself, never on free products (a free visitor gets the starter path
-    instead), and never on lifestyle products."""
+    instead), never on lifestyle products, and never on education products
+    (Masterclass is the education layer — pitching the brush library against
+    it with a +$0 delta confuses the product format and the ladder)."""
     f = flagship()
     if not f or p["slug"] == f["slug"] or p.get("free") or line_of(p) == "lifestyle":
         return ""
     tier = tier_of(p)
-    if tier == "flagship":
+    if tier in ("flagship", "education"):
         return ""
     diff = f["price"] - p.get("price", 0)
     if tier == "bundle":
@@ -1240,29 +1245,76 @@ def upgrade_panel(p, depth):
 """
 
 
-def licence_line():
-    """The commercial-usage objection, answered above the fold instead of
-    buried in a collapsed FAQ. States exactly what terms.html already says."""
-    return ('<p class="licence-line"><b>Can I sell what I make?</b> Yes — finished artwork you '
-            'create with these files is yours to use personally and commercially. You may not '
-            'resell or redistribute the brush files themselves. '
-            '<a href="../../terms.html">Full licence</a>.</p>')
+def _is_ebook(p):
+    """True when the product is a PDF/eBook guide, not a .brushset pack.
+
+    Evidence-based only: Guides & eBooks category, or technical/assets lines
+    that name a PDF eBook. Never invents format.
+    """
+    if not p:
+        return False
+    if (p.get("category") or "") == "Guides & eBooks":
+        return True
+    blob = " ".join([
+        str(p.get("assets") or ""),
+        " ".join(p.get("technical") or []),
+        " ".join(p.get("included") or []),
+        " ".join(p.get("tags") or []),
+    ]).lower()
+    return ("pdf" in blob and any(k in blob for k in
+            ("ebook", "e-book", "guide", "masterclass", "coursebook")))
 
 
-def install_steps():
-    """How do I install it? A real question that blocks purchase for anyone
-    new to iPad. Same steps already documented in the install guide article."""
-    steps = [
-        "Buy or download on Payhip — the .brushset file arrives by email instantly.",
-        "Get the file onto your iPad (AirDrop from a Mac, or any file transfer on Windows).",
-        "Tap the .brushset file in the Files app and choose <b>Open in Procreate</b>.",
-        "The set installs automatically and appears in your Brushes panel, ready to use.",
-    ]
+def licence_line(p=None):
+    """Commercial-usage objection, answered above the fold.
+
+    Wording follows the product format so an eBook is never described as if
+    it were a brush pack (and vice versa)."""
+    if p is not None and _is_ebook(p):
+        body = ('Yes — finished artwork you create while following this guide is yours '
+                'to use personally and commercially. You may not resell, redistribute '
+                'or republish the eBook itself.')
+    else:
+        body = ('Yes — finished artwork you create with these files is yours to use '
+                'personally and commercially. You may not resell or redistribute the '
+                'brush files themselves.')
+    return (f'<p class="licence-line"><b>Can I sell what I make?</b> {body} '
+            f'<a href="../../terms.html">Full licence</a>.</p>')
+
+
+def install_steps(p=None):
+    """How do I get it onto my device? Format-aware.
+
+    Brush packs → .brushset install into Procreate.
+    PDF eBooks  → open-in-any-reader path (no brush installation).
+    Passing no product keeps the historical brush default.
+    """
+    if p is not None and _is_ebook(p):
+        steps = [
+            "Buy or download on Payhip — the PDF arrives by email instantly.",
+            "Open the PDF on any device (iPad Books / Files, Mac Preview, phone, or browser).",
+            "On iPad, keep Procreate open beside the guide (Split View) so you can paint each stage as you read.",
+            "No brush installation is required — every technique works with Procreate&#x27;s built-in brushes; DigiKitPro kits are optional accelerators.",
+        ]
+        note = ('This is a PDF eBook, not a .brushset. Looking for brush install steps? '
+                '<a href="../../blog/how-to-install-procreate-brushes/">'
+                'How to install Procreate brushes</a>.')
+        heading = "How to use it"
+    else:
+        steps = [
+            "Buy or download on Payhip — the .brushset file arrives by email instantly.",
+            "Get the file onto your iPad (AirDrop from a Mac, or any file transfer on Windows).",
+            "Tap the .brushset file in the Files app and choose <b>Open in Procreate</b>.",
+            "The set installs automatically and appears in your Brushes panel, ready to use.",
+        ]
+        note = ('Full walkthrough with screenshots: '
+                '<a href="../../blog/how-to-install-procreate-brushes/">'
+                'How to install Procreate brushes</a>.')
+        heading = "How to install it"
     lis = "".join(f"<li>{s}</li>" for s in steps)
     return (f'<section class="psec install-steps" aria-labelledby="p-install">'
-            f'<h2 id="p-install">How to install it</h2><ol class="steps-list">{lis}</ol>'
-            f'<p class="muted install-note">Full walkthrough with screenshots: '
-            f'<a href="../../blog/how-to-install-procreate-brushes/">How to install Procreate brushes</a>.</p></section>')
+            f'<h2 id="p-install">{heading}</h2><ol class="steps-list">{lis}</ol>'
+            f'<p class="muted install-note">{note}</p></section>')
 
 
 def freebie_gate(depth, p=None, source="freebies"):

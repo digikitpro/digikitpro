@@ -248,7 +248,7 @@ def build_product_pages():
         # objection for working artists. It was only answered inside a collapsed
         # FAQ and on terms.html, i.e. below the fold and hidden. Now it sits
         # under the buy panel, stating exactly what terms.html already says.
-        licence = "" if coming else licence_line()
+        licence = "" if coming else licence_line(p)
 
         _og_img = asset_abs(slug, im.get("card", "")) if im.get("card", "") else absurl("assets/img/og-cover.jpg")
         _preload = asset_abs(slug, im.get("main", "")) if im.get("main", "") else None
@@ -278,7 +278,7 @@ def build_product_pages():
     {desc_sec}
     {technical}
     {requirements}
-    {install_steps() if not coming and not p.get("free") else ""}
+    {install_steps(p) if not coming and not p.get("free") else ""}
     {whofor}
     {upgrade_panel(p, depth)}
     {faq_html(p)}
