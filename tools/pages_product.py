@@ -44,6 +44,160 @@ def gallery_html(p):
         thumbs = f'<div class="gal-thumbs">{"".join(btns)}</div>'
     return main_fig + thumbs, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
 
+def look_inside_masterclass(p):
+    """'Look Inside the Masterclass' — real interiors when present, honest placeholders otherwise.
+
+    The section is rendered for the Masterclass ebook only. If the owner has dropped
+    interior exports into assets/products/procreate-portrait-masterclass-ebook/ (look-*.png/jpg/webp
+    or 0.png … 4.png from the supplied set), those files render as a premium slider
+    (swipe, dots, thumbs, arrow keys) with accurate alt text. Otherwise 4 labelled
+    placeholders remain — never generated fakes.
+
+    The slider is server-rendered as a stack of full-width slides, so every interior
+    page stays readable and indexable with JS off; js/main.js adds `.is-js`, which is
+    what turns the stack into one-page-at-a-time. Same progressive-enhancement rule
+    the motion system follows.
+    """
+    if p.get("slug") != "procreate-portrait-masterclass-ebook":
+        return ""
+    # ── discover real interiors on disk (build-time) ─────────────────────
+    import os as _os
+    asset_dir = _os.path.join(ROOT, "assets/products/procreate-portrait-masterclass-ebook")
+    # Known supplied set — alt text is verbatim from the page so Pinterest/SEO stays honest
+    known = {
+        "look-contents.png": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system — pp.04–103"),
+        "look-contents.jpg": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system — pp.04–103"),
+        "look-contents.webp": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system — pp.04–103"),
+        "look-ch05-value.png": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design — Light Is Design"),
+        "look-ch05-value.jpg": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design — Light Is Design"),
+        "look-ch07-skin.png": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection — Details, Depth"),
+        "look-ch07-skin.jpg": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection — Details, Depth"),
+        "look-ch08-features.png": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips — Features Are Structure"),
+        "look-ch08-features.jpg": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips — Features Are Structure"),
+        "look-ch08-practice.png": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye — expression studies"),
+        "look-ch08-practice.jpg": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye — expression studies"),
+        "0.png": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system"),
+        "0.jpg": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system"),
+        "0.webp": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system"),
+        "1.png": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design"),
+        "1.jpg": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design"),
+        "1.webp": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design"),
+        "2.png": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection"),
+        "2.jpg": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection"),
+        "2.webp": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection"),
+        "3.png": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips"),
+        "3.jpg": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips"),
+        "3.webp": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips"),
+        "4.png": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye"),
+        "4.jpg": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye"),
+        "4.webp": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye"),
+        "contents.png": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters", "Contents — 15 chapters"),
+        "contents.jpg": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters", "Contents — 15 chapters"),
+        "ch05-value.png": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan.", "Ch 05 — Value Structure"),
+        "ch05-value.jpg": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan.", "Ch 05 — Value Structure"),
+        "ch07-skin.png": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability", "Ch 07 — Skin Texture"),
+        "ch07-skin.jpg": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability", "Ch 07 — Skin Texture"),
+        "ch08-features.png": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure", "Ch 08 — Features"),
+        "ch08-features.jpg": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure", "Ch 08 — Features"),
+        "ch08-practice.png": ("Chapter 08 Expression Practice — Draw Each Eye", "Ch 08 Practice"),
+        "ch08-practice.jpg": ("Chapter 08 Expression Practice — Draw Each Eye", "Ch 08 Practice"),
+    }
+    real = []
+    if _os.path.isdir(asset_dir):
+        for fname in sorted(_os.listdir(asset_dir)):
+            low = fname.lower()
+            if not low.endswith((".png", ".jpg", ".jpeg", ".webp")):
+                continue
+            # Exclude the product cover images themselves
+            if low.startswith("procreate-portrait-masterclass-ebook"):
+                continue
+            if fname in known or low.startswith("look-") or fname in ("0.png","1.png","2.png","3.png","4.png","contents.png"):
+                # Only accept files that look like interior pages (avoid random uploads)
+                alt, cap = known.get(fname, (f"Masterclass interior — {fname}", fname))
+                real.append((fname, alt, cap))
+    # Sort to stable order: contents → ch05 → ch07 → ch08 features → ch08 practice
+    order = {"look-contents.png":0,"look-contents.jpg":0,"look-contents.webp":0,"0.png":0,"0.jpg":0,"0.webp":0,"contents.png":0,"contents.jpg":0,"look-ch05-value.png":1,"look-ch05-value.jpg":1,"1.png":1,"1.jpg":1,"1.webp":1,"ch05-value.png":1,"ch05-value.jpg":1,"look-ch07-skin.png":2,"look-ch07-skin.jpg":2,"2.png":2,"2.jpg":2,"2.webp":2,"ch07-skin.png":2,"ch07-skin.jpg":2,"look-ch08-features.png":3,"look-ch08-features.jpg":3,"3.png":3,"3.jpg":3,"3.webp":3,"ch08-features.png":3,"ch08-features.jpg":3,"look-ch08-practice.png":4,"look-ch08-practice.jpg":4,"4.png":4,"4.jpg":4,"4.webp":4,"ch08-practice.png":4,"ch08-practice.jpg":4}
+    real.sort(key=lambda x: order.get(x[0], 99))
+    if real:
+        # Render real interiors — premium slider, pinnable, honest alt text from the page.
+        n = len(real)
+        slides = ""
+        dots = ""
+        thumbs = ""
+        for i, (fname, alt, cap) in enumerate(real):
+            on = i == 0
+            sid = f"look-slide-{i + 1}"
+            active = " is-active" if on else ""
+            tab = "" if on else ' tabindex="-1"'
+            sel = "true" if on else "false"
+            img = (f'<img src="{asset_file(2, p["slug"], fname)}" alt="{esc(alt)}" loading="lazy" decoding="async"'
+                   f' data-pin-description="{esc(pin_desc(p))}" data-pin-url="{esc(pin_page_url(p))}"'
+                   f' data-pin-media="{esc(asset_abs(p["slug"], fname))}">')
+            slides += (f'<figure class="look-slide{active}" id="{sid}" data-look-slide="{i}" role="group"'
+                       f' aria-roledescription="slide" aria-label="{i + 1} of {n}">{img}'
+                       f'<figcaption>{esc(cap)}</figcaption></figure>')
+            dots += (f'<button class="look-dot{active}" type="button" data-look-dot="{i}" role="tab"'
+                     f' aria-selected="{sel}" aria-controls="{sid}" aria-label="Interior page {i + 1}"{tab}></button>')
+            thumbs += (f'<button class="look-thumb{active}" type="button" data-look-thumb="{i}"'
+                       f' aria-controls="{sid}" aria-label="Show interior page {i + 1}">'
+                       f'<img src="{asset_file(2, p["slug"], fname)}" alt="" loading="lazy" decoding="async"></button>')
+        chev_l = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>'
+        chev_r = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>'
+        slider = f'''<div class="look-slider" data-look-slider>
+        <div class="look-viewport">
+          <div class="look-track" data-look-track>{slides}</div>
+          <div class="look-nav">
+            <button class="look-nav-btn" type="button" data-look-prev aria-label="Previous interior page" disabled>{chev_l}</button>
+            <button class="look-nav-btn" type="button" data-look-next aria-label="Next interior page">{chev_r}</button>
+          </div>
+        </div>
+        <div class="look-bar">
+          <p class="look-count" aria-live="polite"><b data-look-current>1</b> / {n} <span>interior pages</span></p>
+          <div class="look-dots" role="tablist" aria-label="Choose an interior page">{dots}</div>
+        </div>
+        <div class="look-thumbs">{thumbs}</div>
+      </div>'''
+        note = "A complete portrait workflow in 107 pages and 15 chapters — educational PDF eBook, not a brush pack. Real interior spreads from the PDF (above)."
+        return f"""<section class="psec look-inside" id="look-inside" aria-labelledby="p-look">
+      <h2 id="p-look">Look Inside the Masterclass</h2>
+      <p class="muted">{note}</p>
+      {slider}
+      <p class="muted look-note"><b>No brush installation is required.</b> The Masterclass teaches with Procreate's built-in brushes; DigiKitPro kits are optional accelerators. <a href="../../blog/how-to-install-procreate-brushes/">How to install brush kits →</a></p>
+    </section>"""
+    # ── fallback: honest placeholders ───────────────────────────────────
+    placeholders = "".join(
+        f'<figure class="look-card look-ph" aria-label="Look inside page {i}"><div class="look-ph-box"><span>Interior page {i} — real image coming soon</span></div><figcaption>Page {i}: authentic spread will appear here</figcaption></figure>'
+        for i in (1, 2, 3, 4))
+    return f"""<section class="psec look-inside" id="look-inside" aria-labelledby="p-look">
+      <h2 id="p-look">Look Inside the Masterclass</h2>
+      <p class="muted">A complete portrait workflow in 107 pages and 15 chapters — educational PDF eBook, not a brush pack. These 4 interior spreads are placeholders for the real page images you will supply; we do not generate fake screenshots.</p>
+      <div class="look-grid">{placeholders}</div>
+      <p class="muted look-note"><b>No brush installation is required.</b> The Masterclass teaches with Procreate's built-in brushes; DigiKitPro kits are optional accelerators. <a href="../../blog/how-to-install-procreate-brushes/">How to install brush kits →</a></p>
+    </section>"""
+
+
+def workflow_strip(p):
+    """Workflow positioning for key portrait kits: the order you actually paint in.
+
+    Only rendered for the Portrait Mastery Kit and the portrait bundle, where the
+    kit list already maps to a workflow (Sketch → Ink → Blend → Hair …). Keeps
+    the catalog's useful-but-affordable positioning without inventing brushes.
+    """
+    workflow = {
+        "portrait-mastery-kit-46-brushes": ["Sketch", "Ink", "Blend", "Skin", "Hair", "Detail", "Texture", "Finish"],
+        "ultimate-portrait-mastery-bundle": ["Line", "Skin", "Hair", "Finish"],
+        "portrait-skin-brushes-procreate": ["Blend", "Pores", "Freckles", "Texture", "Finish"],
+    }.get(p.get("slug"))
+    if not workflow:
+        return ""
+    chips = "".join(f'<span class="wf-step">{esc(s)}</span><span class="wf-arrow" aria-hidden="true">→</span>' for s in workflow[:-1]) + f'<span class="wf-step">{esc(workflow[-1])}</span>'
+    return f"""<section class="psec workflow-sec" aria-labelledby="p-workflow">
+      <h2 id="p-workflow">Workflow</h2>
+      <p class="muted">Organized by how you actually paint — less hunting, more creating.</p>
+      <div class="workflow-row">{chips}</div>
+    </section>"""
+
+
 def faq_html(p):
     if not p.get("faqs"): return ""
     items = "".join(f"""<details class="faq-item">
@@ -276,10 +430,12 @@ def build_product_pages():
     {bundle_block}
     {included}
     {desc_sec}
+    {look_inside_masterclass(p)}
     {technical}
     {requirements}
     {install_steps(p) if not coming and not p.get("free") else ""}
     {whofor}
+    {workflow_strip(p)}
     {upgrade_panel(p, depth)}
     {faq_html(p)}
     {rel_arts}

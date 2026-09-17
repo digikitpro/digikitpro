@@ -22,6 +22,22 @@ SITE_URL = os.environ.get("SITE_URL", "https://digikitpro.shop").rstrip("/")
 SITE_NAME = "DigiKitPro"
 TAGLINE = "Procreate brushes for iPad artists."
 STORE_URL = "https://payhip.com/digikitpro"
+# ── Partner / affiliate program (see tools/pages_partner.py → /partner/) ──
+# Every order, download and message on this store runs through Payhip, so the
+# partner program runs on Payhip's own affiliate system — DigiKitPro has no
+# accounts, no login and no commission ledger of its own, and /partner/ never
+# pretends otherwise.
+#
+# Payhip → Dashboard → Marketing → Affiliates hands out ONE sign-up link. Paste
+# it here (or set the PARTNER_SIGNUP_URL repository variable, which both
+# workflows pass through) and the /partner/ page switches its primary CTA from
+# "message us" to the real application link, with no other edit needed.
+#
+# EMPTY = the program is invite-only: the page says so plainly and routes
+# applicants to the Payhip store contact form, which is the only message
+# channel that actually reaches the owner (EMAIL_ENDPOINT below is unset, so a
+# form on this site would deliver nothing).
+PARTNER_SIGNUP_URL = (os.environ.get("PARTNER_SIGNUP_URL") or "").strip()
 EMAIL_TO = "" # email hidden, contact via Payhip store only
 EMAIL_ENDPOINT = "" # no direct email endpoint, newsletter falls back to Payhip freebies collection
 # To switch providers later (Brevo/MailerLite/ConvertKit), paste their form-action URL here
@@ -539,6 +555,9 @@ def header(depth, active=None):
       <button class="icon-btn" type="button" data-search-open aria-label="Search products and articles">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
+      <a class="icon-btn" href="{esc(INSTAGRAM_PROFILE)}" target="_blank" rel="noopener" aria-label="DigiKitPro on Instagram">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
       <a class="btn btn-gold btn-sm" href="{rel(depth,'products.html')}" rel="noopener">Browse kits</a>
       <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -560,9 +579,9 @@ def header(depth, active=None):
 </div>
 """
 
-def newsletter(depth, heading="Get Free Procreate Brushes",
-               sub="Join the DigiKitPro list for free brush drops, new kit releases and iPad art tips. No spam, unsubscribe any time.",
-               source="site", lead="", uid="nl", cta="Send me brushes", eyebrow="Free download"):
+def newsletter(depth, heading="Get the Free Procreate Starter Pack",
+               sub="Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.",
+               source="site", lead="", uid="nl", cta="Send me the Starter Pack", eyebrow="Free starter pack"):
     """Email capture block.
 
     `source` and `lead` are sent to the inbox alongside the address (and to the
@@ -608,19 +627,18 @@ def footer(depth):
     # counts, no "join 10k artists" — just what the account actually posts.
     pin_band = ""
     if PINTEREST_URL:
-        other_socials = "".join(f'<a href="{esc(v)}" target="_blank" rel="noopener">{esc(k)}</a>'
-                                for k, v in SOCIAL.items() if v and k != "Pinterest")
-        other_links = f'<div class="foot-pin-links">{other_socials}</div>' if other_socials else ""
+        ig_url = esc(INSTAGRAM_PROFILE)
         pin_band = f"""
   <div class="wrap">
     <div class="foot-pinterest">
       <div class="foot-pin-copy">
-        <p class="foot-label">Pinterest</p>
+        <p class="foot-label">Pinterest + Instagram</p>
         <p class="foot-pin-title">Daily Procreate inspiration</p>
-        <p class="muted">Brush previews, artwork breakdowns and new free packs — pinned as they go live. Follow along to catch them in your feed.</p>
+        <p class="muted">Brush previews, artwork breakdowns and new free packs — pinned and posted as they go live. Follow along to catch them in your feed.</p>
       </div>
       <div class="foot-pin-act">
-        <a class="btn btn-pin" href="{esc(PINTEREST_URL)}" target="_blank" rel="noopener">Follow on Pinterest <span class="btn-arr" aria-hidden="true">↗</span></a>{other_links}
+        <a class="btn btn-pin" href="{esc(PINTEREST_URL)}" target="_blank" rel="noopener">Follow on Pinterest <span class="btn-arr" aria-hidden="true">↗</span></a>
+        <a class="btn btn-line" href="{ig_url}" target="_blank" rel="noopener" style="margin-top:.6rem">Follow on Instagram <span class="btn-arr" aria-hidden="true">↗</span></a>
       </div>
     </div>
   </div>"""
@@ -670,6 +688,7 @@ def footer(depth):
       <div class="foot-links">
         <a href="{rel(depth,'faq.html')}">FAQ</a>
         <a href="{rel(depth,'contact.html')}">Contact</a>
+        <a href="{rel(depth,'partner/')}">Partner Program</a>
         <a href="{rel(depth,'refunds.html')}">Refund Policy</a>
         <a href="{rel(depth,'privacy.html')}">Privacy Policy</a>
         <a href="{rel(depth,'terms.html')}">Terms</a>
@@ -999,6 +1018,7 @@ def craft_grid(depth=0):
       <div><p class="eyebrow">Start with your work, not our catalog</p><h2 id="craft-title">What Do You Create?</h2></div>
       <a class="text-link" href="{rel(depth,'products.html')}">Browse all products →</a>
     </div>
+    <p class="sec-note muted">Start with the tools built around your kind of work.</p>
     <div class="grid craft-grid">{tiles}</div>
   </div>
 </section>
@@ -1046,8 +1066,8 @@ def bundle_ladder(depth=0):
     count, `bundleContents` as the kit list, priceText as the price — and
     data/discovery.json supplies only the rung label. A Payhip sync therefore
     moves the ladder's numbers by itself, and no savings claim is invented
-    here. The only maths on the page is "$x per brush", derived from this
-    product's own price and brush count.
+    here. Per-brush maths has been removed — the ladder sells workflow and
+    organization, not commodity arithmetic.
     """
     rungs = ladder_rungs()
     if len(rungs) < 2:
@@ -1062,16 +1082,10 @@ def bundle_ladder(depth=0):
         who = clip(feats[0]) if feats else clip(p.get("short") or r.get("rung") or "")
         # "What's inside" comes from the product's own bundleContents, so the
         # kit count is real, and no second place has to remember a price.
-        # Two more honest numbers, both arithmetic on this product's own data.
-        # They only appear when the data actually supports them, which also
-        # keeps the four steps visually balanced without padding them.
+        # No per-brush maths: selling workflow and organization, not commodity
+        # arithmetic. Keep only neutral extras like file counts where genuinely
+        # helpful, so the ladder never reads as "$0.01 per brush".
         extras = []
-        m_brushes = re.search(r"([\d,]{3,})\+?\s*(?:professional\s+)?(?:organized\s+)?brushes",
-                              str(p.get("assets") or ""), re.I)
-        if m_brushes and (p.get("price") or 0) >= 5:
-            n_brushes = int(m_brushes.group(1).replace(",", ""))
-            if n_brushes >= 100:
-                extras.append(f"${p['price'] / n_brushes:.2f} per brush")
         m_files = re.search(r"\nin\s+(\d+)\s+ZIP", " ".join(feats))
         if m_files:
             extras.append(f"{m_files.group(1)} ZIP downloads")
@@ -1125,6 +1139,8 @@ def bundle_ladder(depth=0):
 
 def flagship_band(depth=0, bridge=True, ladder_href=None):
     """Level 4 — the Master Library, given the prominence its value deserves.
+    Positioned as '2,000+ organized Procreate brushes — one library, multiple
+    workflows, less tool hunting' — affordable and useful, not cheap per-brush.
     The comparison is arithmetic on real prices, never a scarcity or
     popularity claim. ``bridge=False`` drops the checkout/refund line
     (the homepage keeps its product bands free of legal copy).
@@ -1171,13 +1187,13 @@ def flagship_band(depth=0, bridge=True, ladder_href=None):
       <img src="{asset_file(depth, f['slug'], img)}"{srcset} width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(f.get('alt') or f['name'])}" loading="lazy" decoding="async">{pin_button(f)}
     </div>
     <div class="flag-body">
-      <p class="eyebrow">The complete library</p>
+      <p class="eyebrow">One library. Multiple workflows. Less tool hunting.</p>
       <h2 id="flag-title">{esc(f['name'])}</h2>
-      <p class="lead-sm">{esc(f['short'])}</p>
+      <p class="lead-sm">2,000+ organized Procreate brushes — affordable, organized and ready for every workflow, from portraits and skin to line art, watercolor and anime.</p>
       <ul class="flag-points">
-        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> in organised category folders</li>
-        <li>Linework, traditional media, watercolour, character &amp; anatomy, texture and effects</li>
-        <li>One .brushset download, lifetime access, no more tool hunting</li>
+        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> in organised category folders — no more hunting for the right tool</li>
+        <li>Portrait, skin, hair, linework, watercolour, traditional media, character &amp; anatomy, texture and effects</li>
+        <li>One organized download, lifetime access, built for how you actually create</li>
       </ul>
       <p class="flag-compare muted">{compare}</p>
       <div class="flag-cta">
@@ -1271,9 +1287,9 @@ def licence_line(p=None):
     Wording follows the product format so an eBook is never described as if
     it were a brush pack (and vice versa)."""
     if p is not None and _is_ebook(p):
-        body = ('Yes — finished artwork you create while following this guide is yours '
-                'to use personally and commercially. You may not resell, redistribute '
-                'or republish the eBook itself.')
+        body = ('You may create your own artwork while following the Masterclass and use your artwork '
+                'personally or commercially. The Masterclass PDF, text, illustrations, images and educational '
+                'materials may not be resold, redistributed, publicly shared, repackaged or presented as your own product.')
     else:
         body = ('Yes — finished artwork you create with these files is yours to use '
                 'personally and commercially. You may not resell or redistribute the '
@@ -1291,12 +1307,13 @@ def install_steps(p=None):
     """
     if p is not None and _is_ebook(p):
         steps = [
-            "Buy or download on Payhip — the PDF arrives by email instantly.",
-            "Open the PDF on any device (iPad Books / Files, Mac Preview, phone, or browser).",
-            "On iPad, keep Procreate open beside the guide (Split View) so you can paint each stage as you read.",
-            "No brush installation is required — every technique works with Procreate&#x27;s built-in brushes; DigiKitPro kits are optional accelerators.",
+            "Purchase the Masterclass.",
+            "Your PDF eBook is delivered after checkout.",
+            "Open the PDF on your iPad, tablet, computer or phone using a PDF reader.",
+            "Keep Procreate open on your iPad while following the lessons and exercises.<br><b>No brush installation is required</b> — every technique works with Procreate's built-in brushes; DigiKitPro brush kits are optional accelerators.",
         ]
-        note = ('This is a PDF eBook, not a .brushset. Looking for brush install steps? '
+        note = ('This is a PDF eBook, not a .brushset — no brushes are installed. The Masterclass is an educational guide. '
+                'Looking for brush install steps for DigiKitPro kits? '
                 '<a href="../../blog/how-to-install-procreate-brushes/">'
                 'How to install Procreate brushes</a>.')
         heading = "How to use it"
