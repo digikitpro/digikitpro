@@ -1271,3 +1271,9 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 @media(min-width:1024px){.look-grid--real{grid-template-columns:repeat(2,1fr)}}
 .look-card.look-real img{width:100%;height:auto;display:block;background:var(--surface-2)}
 .look-card.look-real figcaption{font-size:.82rem;padding:.65rem .85rem}
+
+/* Homepage Look Inside preview strip (when real interiors present) */
+.look-home-preview{display:flex;gap:.9rem;overflow-x:auto;margin-top:1.8rem;padding-bottom:.6rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.look-home-preview a{flex:0 0 170px;scroll-snap-align:start;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);transition:transform .25s var(--ease),border-color .25s}
+.look-home-preview a:hover{transform:translateY(-3px);border-color:rgba(201,168,106,.45)}
+.look-home-preview img{width:100%;height:auto;display:block;aspect-ratio:3/4;object-fit:cover}

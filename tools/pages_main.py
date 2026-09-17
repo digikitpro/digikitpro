@@ -80,13 +80,30 @@ def build_home():
             "The Complete Procreate Portrait Masterclass — 107 pages, 15 chapters, full portrait workflow from blank canvas to finished believable portrait.",
             "PDF eBook · 107 pages · 15 chapters · $19",
             "Explore the Masterclass", f"products/{master['slug']}/", "")
+        # ── homepage Look Inside preview (real interiors when present) ──────
+        import os as _os
+        _look_dir = _os.path.join(ROOT, "assets/products/procreate-portrait-masterclass-ebook")
+        _look_files = []
+        if _os.path.isdir(_look_dir):
+            for _f in sorted(_os.listdir(_look_dir)):
+                if _f.lower().endswith((".png", ".jpg", ".jpeg", ".webp")) and (_f in ("0.jpg","1.jpg","2.jpg","3.jpg","4.jpg","0.png","1.png","2.png","3.png","4.png") or _f.startswith("look-")):
+                    if _f.startswith("procreate-portrait-masterclass"):
+                        continue
+                    _look_files.append(_f)
+        if _look_files:
+            _look_note = f"Real page spreads from inside the book — {len(_look_files)} interior pages now live in <a href=\"products/{master['slug']}/#look-inside\">Look Inside</a> on the Masterclass page."
+            _look_preview = "<div class=\"look-home-preview\">" + "".join(f'<a href="products/{master["slug"]}/#look-inside" aria-label="Look inside — {esc(_f)}"><img src="assets/products/procreate-portrait-masterclass-ebook/{esc(_f)}" alt="Masterclass interior — {esc(_f)}" loading="lazy" decoding="async" width="260" height="346"></a>' for _f in _look_files[:5]) + "</div>"
+        else:
+            _look_note = "Start with the free guide. Then learn the complete workflow — real page spreads from inside the book below (4 real interior images coming soon)."
+            _look_preview = ""
         ebook_section = f"""<section class="section section-alt" id="ebooks" aria-labelledby="edu-title">
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">Learn the craft</p><h2 id="edu-title">Learn Procreate Portraits</h2></div>
-        <p class="sec-note muted">Start with the free guide. Then learn the complete workflow — real page spreads from inside the book below (4 real interior images coming soon).</p>
+        <p class="sec-note muted">{_look_note}</p>
       </div>
       <div class="ebook-duo">{starter_card}<div class="edu-link" aria-hidden="true"><span class="edu-arrow">→</span><span class="edu-label">then go deeper</span></div>{master_card}</div>
+      {_look_preview}
     </div>
   </section>
 """

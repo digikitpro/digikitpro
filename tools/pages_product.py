@@ -60,20 +60,41 @@ def look_inside_masterclass(p):
     # Known supplied set — alt text is verbatim from the page so Pinterest/SEO stays honest
     known = {
         "look-contents.png": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system — pp.04–103"),
+        "look-contents.jpg": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system — pp.04–103"),
+        "look-contents.webp": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system — pp.04–103"),
         "look-ch05-value.png": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design — Light Is Design"),
+        "look-ch05-value.jpg": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design — Light Is Design"),
         "look-ch07-skin.png": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection — Details, Depth"),
+        "look-ch07-skin.jpg": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection — Details, Depth"),
         "look-ch08-features.png": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips — Features Are Structure"),
+        "look-ch08-features.jpg": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips — Features Are Structure"),
         "look-ch08-practice.png": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye — expression studies"),
+        "look-ch08-practice.jpg": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye — expression studies"),
         "0.png": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system"),
+        "0.jpg": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system"),
+        "0.webp": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters (The Professional Workflow → Troubleshooting) — pp.04–103", "Contents — 15 chapters, one system"),
         "1.png": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design"),
+        "1.jpg": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design"),
+        "1.webp": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan. — How light affects form + 6-step Building a Value Structure", "Ch 05 — Value Structure & Light Design"),
         "2.png": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection"),
+        "2.jpg": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection"),
+        "2.webp": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability — 6-Stage Detail Process + Colour Harmony + Layer Stack", "Ch 07 — Skin Texture & Imperfection"),
         "3.png": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips"),
+        "3.jpg": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips"),
+        "3.webp": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure, Not Stickers — Eyes/Nose/Lips 4-step builds + Features in Three Passes", "Ch 08 — Eyes, Nose & Lips"),
         "4.png": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye"),
+        "4.jpg": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye"),
+        "4.webp": ("Chapter 08 Expression Practice — Draw Each Eye — Neutral/Focused/Thoughtful/Happy/Tired + Light Change + Transition practice fields", "Ch 08 Practice — Draw Each Eye"),
         "contents.png": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters", "Contents — 15 chapters"),
+        "contents.jpg": ("Contents — Your Complete Path to Master Portrait Art — 15 chapters", "Contents — 15 chapters"),
         "ch05-value.png": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan.", "Ch 05 — Value Structure"),
+        "ch05-value.jpg": ("Chapter 05 Value Structure & Light Design — Light Is Design. Values Are Your Plan.", "Ch 05 — Value Structure"),
         "ch07-skin.png": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability", "Ch 07 — Skin Texture"),
+        "ch07-skin.jpg": ("Chapter 07 Skin Texture & Imperfection — Details, Depth & Believability", "Ch 07 — Skin Texture"),
         "ch08-features.png": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure", "Ch 08 — Features"),
+        "ch08-features.jpg": ("Chapter 08 Eyes, Nose & Lips — Features Are Structure", "Ch 08 — Features"),
         "ch08-practice.png": ("Chapter 08 Expression Practice — Draw Each Eye", "Ch 08 Practice"),
+        "ch08-practice.jpg": ("Chapter 08 Expression Practice — Draw Each Eye", "Ch 08 Practice"),
     }
     real = []
     if _os.path.isdir(asset_dir):
@@ -89,7 +110,7 @@ def look_inside_masterclass(p):
                 alt, cap = known.get(fname, (f"Masterclass interior — {fname}", fname))
                 real.append((fname, alt, cap))
     # Sort to stable order: contents → ch05 → ch07 → ch08 features → ch08 practice
-    order = {"look-contents.png":0,"0.png":0,"contents.png":0,"look-ch05-value.png":1,"1.png":1,"ch05-value.png":1,"look-ch07-skin.png":2,"2.png":2,"ch07-skin.png":2,"look-ch08-features.png":3,"3.png":3,"ch08-features.png":3,"look-ch08-practice.png":4,"4.png":4,"ch08-practice.png":4}
+    order = {"look-contents.png":0,"look-contents.jpg":0,"look-contents.webp":0,"0.png":0,"0.jpg":0,"0.webp":0,"contents.png":0,"contents.jpg":0,"look-ch05-value.png":1,"look-ch05-value.jpg":1,"1.png":1,"1.jpg":1,"1.webp":1,"ch05-value.png":1,"ch05-value.jpg":1,"look-ch07-skin.png":2,"look-ch07-skin.jpg":2,"2.png":2,"2.jpg":2,"2.webp":2,"ch07-skin.png":2,"ch07-skin.jpg":2,"look-ch08-features.png":3,"look-ch08-features.jpg":3,"3.png":3,"3.jpg":3,"3.webp":3,"ch08-features.png":3,"ch08-features.jpg":3,"look-ch08-practice.png":4,"look-ch08-practice.jpg":4,"4.png":4,"4.jpg":4,"4.webp":4,"ch08-practice.png":4,"ch08-practice.jpg":4}
     real.sort(key=lambda x: order.get(x[0], 99))
     if real:
         # Render real interiors — responsive, pinnable, with honest alt text from the page
