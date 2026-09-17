@@ -49,8 +49,14 @@ def look_inside_masterclass(p):
 
     The section is rendered for the Masterclass ebook only. If the owner has dropped
     interior exports into assets/products/procreate-portrait-masterclass-ebook/ (look-*.png/jpg/webp
-    or 0.png … 4.png from the supplied set), those files render as a responsive gallery
-    with accurate alt text. Otherwise 4 labelled placeholders remain — never generated fakes.
+    or 0.png … 4.png from the supplied set), those files render as a premium slider
+    (swipe, dots, thumbs, arrow keys) with accurate alt text. Otherwise 4 labelled
+    placeholders remain — never generated fakes.
+
+    The slider is server-rendered as a stack of full-width slides, so every interior
+    page stays readable and indexable with JS off; js/main.js adds `.is-js`, which is
+    what turns the stack into one-page-at-a-time. Same progressive-enhancement rule
+    the motion system follows.
     """
     if p.get("slug") != "procreate-portrait-masterclass-ebook":
         return ""
@@ -113,16 +119,49 @@ def look_inside_masterclass(p):
     order = {"look-contents.png":0,"look-contents.jpg":0,"look-contents.webp":0,"0.png":0,"0.jpg":0,"0.webp":0,"contents.png":0,"contents.jpg":0,"look-ch05-value.png":1,"look-ch05-value.jpg":1,"1.png":1,"1.jpg":1,"1.webp":1,"ch05-value.png":1,"ch05-value.jpg":1,"look-ch07-skin.png":2,"look-ch07-skin.jpg":2,"2.png":2,"2.jpg":2,"2.webp":2,"ch07-skin.png":2,"ch07-skin.jpg":2,"look-ch08-features.png":3,"look-ch08-features.jpg":3,"3.png":3,"3.jpg":3,"3.webp":3,"ch08-features.png":3,"ch08-features.jpg":3,"look-ch08-practice.png":4,"look-ch08-practice.jpg":4,"4.png":4,"4.jpg":4,"4.webp":4,"ch08-practice.png":4,"ch08-practice.jpg":4}
     real.sort(key=lambda x: order.get(x[0], 99))
     if real:
-        # Render real interiors — responsive, pinnable, with honest alt text from the page
-        cards = ""
-        for fname, alt, cap in real:
-            cards += f'<figure class="look-card look-real"><img src="{asset_file(2, p["slug"], fname)}" alt="{esc(alt)}" loading="lazy" decoding="async" data-pin-description="{esc(pin_desc(p))}" data-pin-url="{esc(pin_page_url(p))}" data-pin-media="{esc(asset_abs(p["slug"], fname))}"><figcaption>{esc(cap)}</figcaption></figure>'
+        # Render real interiors — premium slider, pinnable, honest alt text from the page.
+        n = len(real)
+        slides = ""
+        dots = ""
+        thumbs = ""
+        for i, (fname, alt, cap) in enumerate(real):
+            on = i == 0
+            sid = f"look-slide-{i + 1}"
+            active = " is-active" if on else ""
+            tab = "" if on else ' tabindex="-1"'
+            sel = "true" if on else "false"
+            img = (f'<img src="{asset_file(2, p["slug"], fname)}" alt="{esc(alt)}" loading="lazy" decoding="async"'
+                   f' data-pin-description="{esc(pin_desc(p))}" data-pin-url="{esc(pin_page_url(p))}"'
+                   f' data-pin-media="{esc(asset_abs(p["slug"], fname))}">')
+            slides += (f'<figure class="look-slide{active}" id="{sid}" data-look-slide="{i}" role="group"'
+                       f' aria-roledescription="slide" aria-label="{i + 1} of {n}">{img}'
+                       f'<figcaption>{esc(cap)}</figcaption></figure>')
+            dots += (f'<button class="look-dot{active}" type="button" data-look-dot="{i}" role="tab"'
+                     f' aria-selected="{sel}" aria-controls="{sid}" aria-label="Interior page {i + 1}"{tab}></button>')
+            thumbs += (f'<button class="look-thumb{active}" type="button" data-look-thumb="{i}"'
+                       f' aria-controls="{sid}" aria-label="Show interior page {i + 1}">'
+                       f'<img src="{asset_file(2, p["slug"], fname)}" alt="" loading="lazy" decoding="async"></button>')
+        chev_l = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>'
+        chev_r = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>'
+        slider = f'''<div class="look-slider" data-look-slider>
+        <div class="look-viewport">
+          <div class="look-track" data-look-track>{slides}</div>
+          <div class="look-nav">
+            <button class="look-nav-btn" type="button" data-look-prev aria-label="Previous interior page" disabled>{chev_l}</button>
+            <button class="look-nav-btn" type="button" data-look-next aria-label="Next interior page">{chev_r}</button>
+          </div>
+        </div>
+        <div class="look-bar">
+          <p class="look-count" aria-live="polite"><b data-look-current>1</b> / {n} <span>interior pages</span></p>
+          <div class="look-dots" role="tablist" aria-label="Choose an interior page">{dots}</div>
+        </div>
+        <div class="look-thumbs">{thumbs}</div>
+      </div>'''
         note = "A complete portrait workflow in 107 pages and 15 chapters — educational PDF eBook, not a brush pack. Real interior spreads from the PDF (above)."
-        grid = f'<div class="look-grid look-grid--real">{cards}</div>'
         return f"""<section class="psec look-inside" id="look-inside" aria-labelledby="p-look">
       <h2 id="p-look">Look Inside the Masterclass</h2>
       <p class="muted">{note}</p>
-      {grid}
+      {slider}
       <p class="muted look-note"><b>No brush installation is required.</b> The Masterclass teaches with Procreate's built-in brushes; DigiKitPro kits are optional accelerators. <a href="../../blog/how-to-install-procreate-brushes/">How to install brush kits →</a></p>
     </section>"""
     # ── fallback: honest placeholders ───────────────────────────────────
