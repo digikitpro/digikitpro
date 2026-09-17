@@ -1264,3 +1264,10 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
   .ladder-body h3{font-size:1rem}
   .flag-inner{gap:1.6rem}
 }
+
+/* Look Inside — real interiors (when assets/*.png present) */
+.look-grid--real{grid-template-columns:1fr}
+@media(min-width:640px){.look-grid--real{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.look-grid--real{grid-template-columns:repeat(2,1fr)}}
+.look-card.look-real img{width:100%;height:auto;display:block;background:var(--surface-2)}
+.look-card.look-real figcaption{font-size:.82rem;padding:.65rem .85rem}
