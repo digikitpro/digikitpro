@@ -108,11 +108,13 @@ Until then, submits gracefully deep-link to the store's Freebies collection.
 
 ```
 index.html  products.html  bundles.html  freebies.html  blog.html  about.html
-search.html  privacy.html  terms.html  404.html
-find-my-brushes.html        ← the Brush Finder (Level-1 conversion tool)
+faq.html  contact.html  refunds.html  search.html  privacy.html  terms.html  404.html
 thank-you.html              ← post-signup delivery + first starter offer (noindex)
 products/<slug>/index.html        × 51 product pages
-blog/<slug>/index.html            × 16 articles
+blog/<slug>/index.html            × 18 articles
+category/<slug>/index.html        × 10 category landing pages
+season/<slug>/index.html          × 2 seasonal hubs
+guides/index.html + guides/<slug>/index.html   ← 5 buyer guides (see §9)
 assets/products/<slug>/*.webp     × 174 original product images (3 size variants)
 assets/img/                       brand assets (favicon / OG cover)
 css/style.css  js/main.js  js/search-index.js
@@ -120,7 +122,7 @@ data/products.json                ← master product data (edit me)
 data/discovery.json               ← merchandising model (edit me; see §8)
 content/blog/*.md                 ← article source (edit me)
 tools/build.py  tools/core.py …   ← generator (run: python3 tools/build.py)
-js/analytics.js  js/finder.js  js/feedback.js   ← conversion layer (no build needed)
+js/analytics.js  js/feedback.js   ← conversion layer (no build needed)
 robots.txt  sitemap.xml
 scraped/                          ← original scraper + Payhip source data (reference only)
 ```
@@ -158,6 +160,16 @@ cadence that keeps the site visible on search results.
 ## 8. Sales engine (Phase 1) — how the new parts work
 
 Full audit and the phased plan: **`docs/AUDIT-AND-PLAN.md`**.
+
+> **Status note (2026-09-16):** two Phase-1 features were later RETIRED at the
+> owner's request and the sections below are kept for the design rationale only:
+> the **Brush Finder** (`find-my-brushes.html`, `js/finder.js`; removed in
+> PR #16 — the generator code remains, commented out, in
+> `tools/pages_finder.py → build_all`) and the visible **store email address**
+> (contact now runs through the Payhip store form). Everything else in §8 —
+> value ladder, homepage IA, bundle ladder, conversion events, freebie funnel,
+> feedback prompt — is live. The buyer-intent counterpart of the retired finder
+> is the buyer-guide set in §9.
 
 ### The value ladder
 Every product now carries a **tier** in `data/discovery.json`, and the homepage,
@@ -308,7 +320,44 @@ Tag it properly when you see that notice so the Brush Finder can recommend it.
 ### Build determinism
 The homepage used to rotate its "Trending" section by calendar day, so every
 deploy rewrote the homepage and handed Google a different page on each crawl.
-That is gone: two consecutive builds of all 108 generated files are now
+That is gone: two consecutive builds of all generated files are now
 **byte-identical**. The section is now "Popular Starting Points", ordered by
 the editorial priority you set in `data/discovery.json` — and it no longer
 claims to reflect search demand, because nothing on a static site measures that.
+
+## 9. Buyer guides — `/guides/` (Phase 3, commercial-intent SEO)
+
+Five landing pages that answer **shopping** queries the technique articles
+don't cover — built by `tools/pages_guides.py` from explicit, tag-derived
+product selections:
+
+| Page | URL | It answers |
+|---|---|---|
+| Starter Kits | `guides/procreate-starter-kits/` | "what should a beginner buy first?" — free packs → one $5 kit → library |
+| Pencil Brushes | `guides/procreate-pencil-brushes/` | "procreate pencil brushes" — graphite/charcoal kits, pose stamps, ink liners |
+| Texture Brushes | `guides/procreate-texture-brushes/` | "procreate texture brushes" — skin/fur, paper grain, painterly, atmosphere |
+| Animation Brushes | `guides/procreate-animation-brushes/` | "procreate dreams brushes" — liners, palettes, FX + the honest Dreams notice |
+| Bundles Compared | `guides/procreate-bundles-compared/` | "which procreate bundle?" — all 6 real brush bundles side by side, live data |
+
+Plus `guides/index.html` as the hub. Contract (enforced by `tools/verify.py`,
+checks 63–70):
+
+- **Selections are explicit slug lists** in `GUIDE_DEFS`, chosen from the
+  `data/discovery.json` tags. The build **fails loudly** on a stale slug, so a
+  Payhip sync can never leave a silent hole on a money page.
+- **No aggregates in the grids** — whole-catalog libraries match everything, so
+  they would tell the shopper nothing; the Master Library appears once per
+  page in its clearly-labelled flagship band.
+- **No lifestyle products** (planners, travel, Canva templates) — buyer guides
+  are a brush context (owner decision: they stay in the general catalog).
+- **Nothing invented** — prices, asset counts and bundle rows are read from
+  `data/products.json` at build time; no "was" strikethroughs, no countdowns,
+  no fake urgency (also guarded by the honesty checks).
+- Every guide carries BreadcrumbList + ItemList + FAQPage JSON-LD, cross-links
+  its sibling guides, the matching `/category/` pages and the technique
+  articles, and is in the sitemap, the search index and the footer.
+
+To edit a guide: change `GUIDE_DEFS` in `tools/pages_guides.py` (copy,
+groups, FAQs, cross-links) and run `python3 tools/build.py`.
+`GUIDES_FOR_CATEGORY` in the same file controls which buyer guides each
+category landing page cross-links.

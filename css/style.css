@@ -1145,3 +1145,15 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 @media(prefers-reduced-motion:reduce){
   .pin-btn,.share-btn,.btn-pin{transition:none}
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   BUYER GUIDES — bundle comparison table (guides/procreate-bundles-compared/)
+   Mirrors the .prose table styling, but usable outside .prose containers.
+   ────────────────────────────────────────────────────────────────────────── */
+.table-wrap table{width:100%;min-width:640px;border-collapse:collapse;font-size:.92rem}
+.table-wrap th,.table-wrap td{padding:.8rem .95rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
+.table-wrap thead th{color:var(--text);font-weight:650;background:rgba(201,168,106,.08)}
+.table-wrap tbody tr:last-child td{border-bottom:0}
+.table-wrap td.price{white-space:nowrap;font-weight:600;color:var(--gold)}
+.table-wrap tbody tr{transition:background .15s}
+.table-wrap tbody tr:hover{background:rgba(201,168,106,.05)}

@@ -3,7 +3,7 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from core import *
-import pages_blog, pages_main, pages_product, pages_misc, pages_category, pages_season, pages_finder
+import pages_blog, pages_main, pages_product, pages_misc, pages_category, pages_season, pages_finder, pages_guides
 
 pages_main.load_articles = pages_blog.load_articles # shared loader
 pages_misc.load_articles = pages_blog.load_articles
@@ -11,6 +11,7 @@ pages_product.load_articles = pages_blog.load_articles
 pages_category.load_articles = pages_blog.load_articles
 pages_season.load_articles = pages_blog.load_articles
 pages_finder.load_articles = pages_blog.load_articles
+pages_guides.load_articles = pages_blog.load_articles
 
 def main():
     pages_finder.build_all()   # Brush Finder + thank-you page + js/finder-index.js
@@ -19,6 +20,7 @@ def main():
     pages_main.build_freebies()
     pages_main.build_bundles()
     pages_category.build_categories()
+    pages_guides.build_guides()  # buyer-guide landing pages (before misc: sitemap + search index read them)
     pages_season.build_seasons()
     pages_product.build_product_pages()
     pages_blog.build_blog()

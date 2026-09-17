@@ -2,6 +2,7 @@
 """About, legal, search, 404, robots, sitemap, feeds, search index."""
 from core import *
 from pages_season import SEASON_DEFS
+from pages_guides import GUIDES_DIR, GUIDE_URLS, GUIDE_DEFS, GUIDES_INDEX
 from datetime import datetime
 from email.utils import format_datetime
 
@@ -467,6 +468,10 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     for sdef in SEASON_DEFS:
         sm += f" <url><loc>{SITE_URL}/season/{sdef['slug']}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>\n"
 
+    # Buyer-guide landing pages (tools/pages_guides.py) — commercial intent
+    for u in [f"/{GUIDES_DIR}/"] + [f"/{u}" for u in GUIDE_URLS]:
+        sm += f" <url><loc>{SITE_URL}{u}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.75</priority></url>\n"
+
     for p in PRODUCTS:
         slug = p["slug"]
         im = p.get("images") or {}
@@ -506,6 +511,7 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     ]
     txt_urls += [f"{SITE_URL}/category/{cslug}/" for cslug in CATEGORY_SLUGS.values()]
     txt_urls += [f"{SITE_URL}/season/{sdef['slug']}/" for sdef in SEASON_DEFS]
+    txt_urls += [f"{SITE_URL}/{GUIDES_DIR}/"] + [f"{SITE_URL}/{u}" for u in GUIDE_URLS]
     txt_urls += [f"{SITE_URL}/products/{p['slug']}/" for p in PRODUCTS]
     txt_urls += [f"{SITE_URL}/blog/{a['slug']}/" for a in load_articles()]
     write("sitemap.txt", "\n".join(txt_urls) + "\n")
@@ -582,6 +588,13 @@ Sitemap: {SITE_URL}/sitemap-images.xml
             "free": p["free"],
         })
     idx_articles = [{"t": a["title"], "u": f"blog/{a['slug']}/", "d": a["description"], "k": (a["title"] + " " + a.get("category","") + " " + a["description"]).lower()} for a in load_articles()]
+    # Buyer guides ride the articles index so ⌘K/search surfaces the shopping
+    # pages for "pencil", "texture", "animation", "bundle", "beginner" queries.
+    idx_articles += [{"t": g["h1"], "u": f"{GUIDES_DIR}/{g['slug']}/", "d": g["card_blurb"],
+                      "k": (g["h1"] + " buyer guide shopping " + g["card_blurb"] + " " + g["slug"].replace("-", " ")).lower()}
+                     for g in GUIDE_DEFS]
+    idx_articles.append({"t": GUIDES_INDEX["h1"], "u": f"{GUIDES_DIR}/", "d": GUIDES_INDEX["lead"][:140],
+                         "k": (GUIDES_INDEX["h1"] + " buyer guides shopping " + GUIDES_INDEX["seo_desc"]).lower()})
     js = "window.DKP_INDEX=" + json.dumps({"products": idx_products, "articles": idx_articles}, ensure_ascii=False) + ";"
     write("js/search-index.js", js)
     print("misc pages + sitemap + search index done")

@@ -27,9 +27,13 @@ EMAIL_ENDPOINT = "" # no direct email endpoint, newsletter falls back to Payhip 
 # To switch providers later (Brevo/MailerLite/ConvertKit), paste their form-action URL here
 # and the same form keeps working.
 # ── Search Console verification tokens (paste once Google/Bing give them to you) ──
-GOOGLE_VERIFY = os.environ.get("GOOGLE_VERIFY", "1e87093669a800cb") # content of the <meta name="google-site-verification"> token
-BING_VERIFY = os.environ.get("BING_VERIFY", "52B8ABC07828BE6CE77B297D3F2E50A3") # content of the <meta name="msvalidate.01"> token
-YANDEX_VERIFY = os.environ.get("YANDEX_VERIFY", "48977a1d04865b21") # content of the <meta name="yandex-verification"> token
+# `or <default>` (not os.environ.get's default arg): the deploy workflow always
+# passes these variables, so an UNSET GitHub variable arrives here as an empty
+# string — which must fall back to the real token, or the verification metas
+# silently vanish from the live build while local builds keep them.
+GOOGLE_VERIFY = (os.environ.get("GOOGLE_VERIFY") or "1e87093669a800cb") # content of the <meta name="google-site-verification"> token
+BING_VERIFY = (os.environ.get("BING_VERIFY") or "52B8ABC07828BE6CE77B297D3F2E50A3") # content of the <meta name="msvalidate.01"> token
+YANDEX_VERIFY = (os.environ.get("YANDEX_VERIFY") or "48977a1d04865b21") # content of the <meta name="yandex-verification"> token
 INDEXNOW_KEY = os.environ.get("INDEXNOW_KEY", "") # IndexNow API key file name (no extension); see tools/submit_index.py
 GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "G-5MFQFHNB6B") # Google Analytics 4 Measurement ID
 # ── Conversion event layer (js/analytics.js) ─────────────────────────────
@@ -641,13 +645,21 @@ def footer(depth):
         <a href="{rel(depth,'category/anime/')}">Anime Brushes</a>
       </div>
     </nav>
-    <nav aria-label="Footer learn">
+    <nav aria-label="Footer learn and buyer guides">
       <p class="foot-label">Learn</p>
       <div class="foot-links">
         <a href="{rel(depth,'blog.html')}">Articles</a>
         <a href="{rel(depth,'blog/best-procreate-brushes-for-portraits/')}">Best Portrait Brushes</a>
         <a href="{rel(depth,'blog/how-to-create-realistic-skin-in-procreate/')}">Realistic Skin Guide</a>
         <a href="{rel(depth,'about.html')}">About</a>
+      </div>
+      <p class="foot-label">Buyer Guides</p>
+      <div class="foot-links">
+        <a href="{rel(depth,'guides/procreate-starter-kits/')}">Starter Kits</a>
+        <a href="{rel(depth,'guides/procreate-pencil-brushes/')}">Pencil Brushes</a>
+        <a href="{rel(depth,'guides/procreate-texture-brushes/')}">Texture Brushes</a>
+        <a href="{rel(depth,'guides/procreate-animation-brushes/')}">Animation Brushes</a>
+        <a href="{rel(depth,'guides/procreate-bundles-compared/')}">Bundles Compared</a>
       </div>
     </nav>
     <nav aria-label="Footer legal">
@@ -1098,7 +1110,7 @@ def bundle_ladder(depth=0):
   <div class="wrap">
     <div class="sec-head">
       <div><p class="eyebrow">Pick your rung</p><h2 id="lad-title">Procreate Bundles</h2></div>
-      <a class="text-link" href="{rel(depth, 'bundles.html')}">Compare every bundle \u2192</a>
+      <a class="text-link" href="{rel(depth, 'guides/procreate-bundles-compared/')}">Compare every bundle \u2192</a>
     </div>
     <p class="ladder-lead muted">{lead} \u2014 each rung is more of the studio in one checkout. Prices below are live store prices, so no rung advertises a "was" figure it does not have.</p>
     <ol class="ladder">{steps}</ol>
