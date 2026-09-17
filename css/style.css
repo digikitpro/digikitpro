@@ -1265,12 +1265,72 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
   .flag-inner{gap:1.6rem}
 }
 
-/* Look Inside — real interiors (when assets/*.png present) */
+/* Look Inside — real interiors: grid classes kept for the placeholder fallback;
+   when real interiors exist the section now renders .look-slider (below). */
 .look-grid--real{grid-template-columns:1fr}
 @media(min-width:640px){.look-grid--real{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1024px){.look-grid--real{grid-template-columns:repeat(2,1fr)}}
 .look-card.look-real img{width:100%;height:auto;display:block;background:var(--surface-2)}
 .look-card.look-real figcaption{font-size:.82rem;padding:.65rem .85rem}
+
+/* ── Look Inside premium slider (PDP) ──────────────────────────────────────
+   Dark card, parchment mat, gold accents. Server-rendered as a stacked list,
+   so with JS off (and for crawlers) every interior page is still on the page;
+   js/main.js adds `.is-js`, which collapses the stack to one page at a time
+   and wires swipe / drag / dots / thumbs / arrow keys. Nav, bar and thumbs
+   stay display:none until JS is live — never a control that does nothing. */
+.look-slider{margin-top:1.4rem;border:1px solid var(--border);border-radius:calc(var(--radius) + 4px);background:linear-gradient(180deg,#17171C,#101014);box-shadow:var(--shadow);overflow:hidden}
+.look-viewport{position:relative;overflow:hidden}
+.look-track{display:flex;flex-wrap:wrap;gap:1rem}
+.look-slide{position:relative;flex:0 0 100%;margin:0;padding:14px;border-radius:var(--radius-sm);background:linear-gradient(155deg,#F8F3E6,#EFE6D2 55%,#E6D9BF)}
+.look-slide img{width:100%;height:auto;display:block;border-radius:var(--radius-sm);background:#FFFDF7;box-shadow:0 12px 30px -14px rgba(0,0,0,.6)}
+.look-slide figcaption{position:absolute;left:14px;right:14px;bottom:14px;margin:0;padding:1.7rem .9rem .7rem;font:600 .8rem/1.35 var(--sans);color:#F7F2E6;text-align:center;background:linear-gradient(180deg,rgba(10,10,12,0),rgba(10,10,12,.78) 62%,rgba(10,10,12,.92));border-radius:0 0 var(--radius-sm) var(--radius-sm);pointer-events:none}
+.look-nav,.look-bar,.look-thumbs{display:none}
+
+/* JS is live: one page at a time + the controls that drive it */
+.look-slider.is-js .look-viewport{touch-action:pan-y;cursor:grab}
+.look-slider.is-js.is-dragging .look-viewport{cursor:grabbing;user-select:none;-webkit-user-select:none}
+.look-slider.is-js .look-track{flex-wrap:nowrap;gap:0;transition:transform .5s var(--ease)}
+.look-slider.is-js .look-slide{min-width:100%;border-radius:0}
+.look-slider.is-js .look-slide img{-webkit-user-drag:none;user-select:none}
+.look-slider.is-js.is-dragging .look-track{transition:none}
+.look-slider.is-js .look-nav{display:block}
+.look-slider.is-js .look-bar{display:flex}
+.look-slider.is-js .look-thumbs{display:flex}
+.look-nav-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:3;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(245,242,235,.2);border-radius:999px;background:rgba(10,10,12,.45);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);color:#F7F2E6;cursor:pointer;transition:background var(--tap) var(--ease),border-color var(--tap) var(--ease),color var(--tap) var(--ease),opacity var(--tap) var(--ease)}
+.look-nav-btn:hover:not(:disabled){background:rgba(10,10,12,.78);border-color:var(--gold);color:var(--gold)}
+.look-nav-btn:disabled{opacity:.25;cursor:default}
+.look-nav-btn[data-look-prev]{left:12px}
+.look-nav-btn[data-look-next]{right:12px}
+.look-nav-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.look-nav-btn:focus-visible,.look-dot:focus-visible{border-radius:999px}
+.look-bar{align-items:center;justify-content:space-between;gap:.8rem 1rem;flex-wrap:wrap;padding:.8rem 1.05rem;border-top:1px solid var(--border);background:rgba(20,20,23,.55)}
+.look-count{margin:0;font:600 .76rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.look-count b{font-size:1rem;font-weight:800;letter-spacing:0;color:var(--gold)}
+.look-dots{display:flex;align-items:center;gap:8px}
+.look-dot{width:9px;height:9px;padding:0;border:0;border-radius:999px;background:rgba(245,242,235,.22);cursor:pointer;transition:background var(--tap) var(--ease),width .3s var(--ease)}
+.look-dot:hover{background:rgba(201,168,106,.55)}
+.look-dot.is-active{width:26px;background:linear-gradient(90deg,#D8BA7E,var(--gold))}
+.look-thumbs{gap:10px;padding:.9rem 1.05rem 1.1rem;border-top:1px solid var(--border);overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.look-thumb{flex:0 0 60px;scroll-snap-align:center;padding:3px;border:1px solid var(--border);border-radius:10px;background:#F3ECDC;cursor:pointer;opacity:.5;transition:opacity var(--tap) var(--ease),border-color var(--tap) var(--ease),transform var(--tap) var(--ease),box-shadow var(--tap) var(--ease)}
+.look-thumb img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:7px;background:#FFFDF7}
+.look-thumb:hover{opacity:.85;transform:translateY(-2px)}
+.look-thumb.is-active{opacity:1;border-color:var(--gold);box-shadow:0 0 0 1px rgba(201,168,106,.3),0 10px 22px -14px rgba(201,168,106,.75)}
+@media(max-width:640px){
+  .look-slider{border-radius:var(--radius)}
+  .look-slide{padding:10px}
+  .look-slide figcaption{left:10px;right:10px;bottom:10px;padding:1.4rem .7rem .55rem;font-size:.75rem}
+  .look-nav-btn{width:38px;height:38px}
+  .look-nav-btn svg{width:17px;height:17px}
+  .look-nav-btn[data-look-prev]{left:8px}
+  .look-nav-btn[data-look-next]{right:8px}
+  .look-bar{padding:.7rem .85rem}
+  .look-thumbs{gap:8px;padding:.8rem .85rem 1rem}
+  .look-thumb{flex-basis:52px}
+}
+@media(prefers-reduced-motion:reduce){
+  .look-slider.is-js .look-track{transition:none}
+}
 
 /* Homepage Look Inside preview strip (when real interiors present) */
 .look-home-preview{display:flex;gap:.9rem;overflow-x:auto;margin-top:1.8rem;padding-bottom:.6rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}

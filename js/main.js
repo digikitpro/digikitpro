@@ -356,4 +356,161 @@
     per page instead of two, and one place to honour reduced motion.
     Cards that a filter brings back are marked visible in the filter
     code above, so they never stay faded. */
+
+ /* ---------- Look Inside premium slider (product page) ----------
+    tools/pages_product.py server-renders the interiors as a stacked list, so
+    with JS off (and for crawlers) all five pages stay on the page. Adding
+    `.is-js` here is what collapses the stack into one page at a time and shows
+    the controls — never a control that does nothing.
+    Drives: prev/next, dots, thumbs, ArrowLeft/ArrowRight/Home/End, touch swipe
+    and mouse drag, with a rubber-band at both ends. */
+ (function () {
+ var roots = $$("[data-look-slider]");
+ if (!roots.length) return;
+
+ roots.forEach(function (root) {
+ var viewport = $(".look-viewport", root);
+ var track = $("[data-look-track]", root);
+ var slides = $$("[data-look-slide]", root);
+ if (!viewport || !track || slides.length < 2) return; /* one page: nothing to slide */
+ var prev = $("[data-look-prev]", root);
+ var next = $("[data-look-next]", root);
+ var dots = $$("[data-look-dot]", root);
+ var thumbs = $$("[data-look-thumb]", root);
+ var counter = $("[data-look-current]", root);
+ var reduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+ var idx = 0;
+ var width = 0;
+ var startX = 0;
+ var startY = 0;
+ var dx = 0;
+ var dragging = false;
+ var axis = null;   /* "x" once the gesture proves horizontal, "y" if it is really a page scroll */
+ var raf = 0;
+
+ root.classList.add("is-js");
+ root.setAttribute("tabindex", "0");
+ root.setAttribute("role", "region");
+ root.setAttribute("aria-roledescription", "carousel");
+ root.setAttribute("aria-label", "Look Inside the Masterclass — interior pages, swipe or use arrow keys");
+
+ function measure() { width = viewport.clientWidth || track.clientWidth || 1; }
+
+ function place(offset) {
+ track.style.transform = "translate3d(" + (offset === undefined ? -idx * width : offset) + "px,0,0)";
+ }
+
+ /* Inactive slides are translated outside the viewport, which can put them
+    beyond native lazy-load range. Wake the destination page and its neighbours
+    so the first swipe never lands on a blank slide. */
+ function wake(i) {
+ var img = slides[i] && slides[i].querySelector("img");
+ if (img && img.getAttribute("loading") !== "eager") img.setAttribute("loading", "eager");
+ }
+
+ function go(n, moveFocus) {
+ n = Math.max(0, Math.min(slides.length - 1, n));
+ var moved = n !== idx;
+ idx = n;
+ place();
+ slides.forEach(function (s, i) {
+ var on = i === idx;
+ s.classList.toggle("is-active", on);
+ if (on) s.removeAttribute("aria-hidden"); else s.setAttribute("aria-hidden", "true");
+ });
+ dots.forEach(function (d, i) {
+ var on = i === idx;
+ d.classList.toggle("is-active", on);
+ d.setAttribute("aria-selected", on ? "true" : "false");
+ if (on) d.removeAttribute("tabindex"); else d.setAttribute("tabindex", "-1");
+ });
+ thumbs.forEach(function (t, i) { t.classList.toggle("is-active", i === idx); });
+ if (counter) counter.textContent = String(idx + 1);
+ if (prev) prev.disabled = idx === 0;
+ if (next) next.disabled = idx === slides.length - 1;
+ wake(idx - 1); wake(idx); wake(idx + 1);
+ if (!moved) return;
+ var t = thumbs[idx];
+ if (t && t.scrollIntoView) {
+ try { t.scrollIntoView({ block: "nearest", inline: "center", behavior: reduced ? "auto" : "smooth" }); }
+ catch (_) { t.scrollIntoView(false); }
+ }
+ if (moveFocus && dots[idx]) dots[idx].focus();
+ }
+
+ /* ---- gesture plumbing shared by touch and mouse ---- */
+ function down(x, y) {
+ dragging = true; axis = null; startX = x; startY = y; dx = 0;
+ root.classList.add("is-dragging");
+ }
+ function move(x, y, stopScroll) {
+ if (!dragging) return;
+ dx = x - startX;
+ var dy = y - startY;
+ if (axis === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+ if (axis !== "x") return;              /* it was a vertical scroll: leave it alone */
+ if (stopScroll) stopScroll();
+ if ((idx === 0 && dx > 0) || (idx === slides.length - 1 && dx < 0)) dx /= 2.6;
+ place(-idx * width + dx);
+ }
+ function up() {
+ if (!dragging) return;
+ dragging = false; axis = null;
+ root.classList.remove("is-dragging");
+ var travelled = dx;
+ dx = 0;
+ if (Math.abs(travelled) > Math.max(38, width * 0.16)) go(idx + (travelled < 0 ? 1 : -1));
+ else place();                          /* under the threshold: snap back */
+ }
+
+ viewport.addEventListener("touchstart", function (e) {
+ if (e.touches && e.touches.length === 1) down(e.touches[0].clientX, e.touches[0].clientY);
+ }, { passive: true });
+ viewport.addEventListener("touchmove", function (e) {
+ if (!e.touches || !e.touches.length) return;
+ move(e.touches[0].clientX, e.touches[0].clientY, function () { if (e.cancelable) e.preventDefault(); });
+ }, { passive: false });
+ viewport.addEventListener("touchend", up);
+ viewport.addEventListener("touchcancel", up);
+
+ viewport.addEventListener("mousedown", function (e) {
+ if (e.button !== 0) return;
+ /* Nav buttons live inside the viewport: let them behave like buttons. */
+ if (e.target && e.target.closest && e.target.closest("button")) return;
+ down(e.clientX, e.clientY);
+ e.preventDefault();                    /* no image drag ghost, no text selection */
+ });
+ window.addEventListener("mousemove", function (e) { if (dragging) move(e.clientX, e.clientY); });
+ window.addEventListener("mouseup", up);
+
+ /* ---- controls ---- */
+ if (prev) prev.addEventListener("click", function () { go(idx - 1); });
+ if (next) next.addEventListener("click", function () { go(idx + 1); });
+ dots.forEach(function (d, i) { d.addEventListener("click", function () { go(i, true); }); });
+ thumbs.forEach(function (t, i) { t.addEventListener("click", function () { go(i); }); });
+
+ root.addEventListener("keydown", function (e) {
+ var k = e.key;
+ if (k !== "ArrowLeft" && k !== "ArrowRight" && k !== "Home" && k !== "End") return;
+ /* From the dot picker, arrows also move focus (roving tabindex). */
+ var fromTabs = !!(e.target && e.target.hasAttribute && e.target.hasAttribute("data-look-dot"));
+ e.preventDefault();
+ if (k === "ArrowLeft") go(idx - 1, fromTabs);
+ else if (k === "ArrowRight") go(idx + 1, fromTabs);
+ else if (k === "Home") go(0, fromTabs);
+ else go(slides.length - 1, fromTabs);
+ });
+
+ /* Layout width changes (rotate, resize, desktop scrollbar) must not leave the
+    track stranded between two pages. */
+ window.addEventListener("resize", function () {
+ if (raf) cancelAnimationFrame(raf);
+ raf = requestAnimationFrame(function () { raf = 0; measure(); place(); });
+ });
+
+ measure();
+ go(0);
+ });
+ })();
 })();
