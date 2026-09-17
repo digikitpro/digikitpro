@@ -15,7 +15,9 @@ mesh, footer links + 10 from the 2026-09-17 partner portal: page built,
 canonical, sitemap coverage, share-kit slug integrity, live prices + Payhip
 checkout links, site-wide footer link, no dead application CTA while the
 sign-up variable is unset, no unpublished commission rate, the variable
-reaching BOTH build workflows, and the CTA flipping when it is set.)
+reaching BOTH build workflows, and the CTA flipping when it is set + 2 from
+the 2026-09-17 card-media uncrop: product cards must frame the artwork whole
+inside one uniform square, and the mat behind it must not be painted over.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -39,7 +41,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 80
+EXPECTED = 82
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -657,6 +659,25 @@ def main() -> int:
           and "Invite-only" not in open_html
           and "Invite-only" in restored_html and test_signup not in restored_html,
           "application CTA + status copy follow the variable, and the artifact is rebuilt without it")
+
+    # ── 81–82 product card framing (see .card-media in css/style.css) ──
+    # Card artwork must never be cropped, and the frame must stay a uniform
+    # square: both halves are deliberate and each has already been "fixed"
+    # the wrong way once (contain inside a 3:2 frame = shrunken art; cover
+    # inside a 1:1 frame = 30% of every cover sliced off).
+    css_txt = read("css/style.css")
+    cm = re.search(r"\.card-media\{([^}]*)\}", css_txt)
+    ci = re.search(r"\.card-media img\{([^}]*)\}", css_txt)
+    check("product cards frame the artwork whole, in a uniform square",
+          bool(ci) and "object-fit:contain" in ci.group(1)
+          and "object-fit:cover" not in ci.group(1)
+          and bool(cm) and "aspect-ratio:1/1" in cm.group(1),
+          "no crop inside one fixed frame ratio")
+    # The global `img{background:var(--surface-2)}` rule paints on the ELEMENT
+    # box, so a contained <img> would cover its own mat with a flat panel.
+    check("card media mat is not painted over by the global img background",
+          bool(ci) and "background:none" in ci.group(1),
+          ".card-media img must reset the inherited img background")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]
