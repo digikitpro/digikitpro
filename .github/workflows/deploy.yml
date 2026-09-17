@@ -59,6 +59,12 @@ jobs:
           # Writes <key>.txt at the site root so IndexNow can verify the ping.
           # Harmless when unset: tools/build.py skips the key file.
           INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+          # Partner portal (/partner/). Paste the Payhip affiliate sign-up link
+          # (Payhip → Marketing → Affiliates) here and the page's primary CTA
+          # becomes the real application form. Unset = the page states the
+          # program is invite-only and routes applicants to the store contact
+          # form, so it never renders a dead button.
+          PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}
         run: python3 tools/build.py
 
       - uses: actions/configure-pages@v5

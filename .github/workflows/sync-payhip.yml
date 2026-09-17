@@ -52,6 +52,10 @@ jobs:
           PINTEREST_URL: ${{ vars.PINTEREST_URL }}
           PINTEREST_VERIFY: ${{ vars.PINTEREST_VERIFY }}
           PINTEREST_TAG_ID: ${{ vars.PINTEREST_TAG_ID }}
+          # Keep the daily rebuild identical to the deploy build: with this
+          # unset here but set over there, a sync commit would silently flip
+          # /partner/ back to invite-only until the next real deploy.
+          PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}
           INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
         run: python3 tools/build.py
 
