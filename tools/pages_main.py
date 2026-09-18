@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
-"""Homepage, products index, bundles, freebies."""
+"""Homepage, products index, bundles, freebies, thank-you page.
+
+The homepage is a product-first storefront (owner direction, 2026-09-18):
+a short commercial hero, buying assurances, popular product cards near the
+top, shop-by-workflow, the bundle ladder, the Master Library, the free
+packs, the Starter Guide + Portrait Masterclass pair, the before/after
+demonstration, and only then the supporting trust and educational content.
+Section order is pinned by tools/verify.py.
+
+The Find My Brush Kit was removed in full on 2026-09-18 (page, both scripts,
+nav entry, homepage links). The post-signup thank-you page — which used to be
+built by tools/pages_finder.py because it shared a module, not because it is
+finder logic — lives here now and is unchanged in behavior.
+"""
 from core import *
 
 def page_head(depth, eyebrow, title, lead, crumbs_items=None, lead_html=None):
@@ -11,6 +24,10 @@ def page_head(depth, eyebrow, title, lead, crumbs_items=None, lead_html=None):
 # ─────────────────────────── HOME ───────────────────────────
 def build_home():
     byslug = BY_SLUG
+
+    # ── Hero showcase: three real product covers (the storefront's window
+    #    display). Same slugs as before the refocus — proven picks, and all
+    #    three still render with un-cropped covers (object-fit:contain).
     showcase_slugs = ["portrait-skin-brushes-procreate", "artista-studio-kit-76-brushes", "watercolor-studio-kit-50-brushes"]
     showcase = ""
     for i, s in enumerate(showcase_slugs):
@@ -18,54 +35,45 @@ def build_home():
         _hw, _hh = im.get("fullW") or 1200, im.get("fullH") or 800
         showcase += f'<figure class="hero-card h{i+1}" style="--hero-ar:{_hw}/{_hh}"><img src="{asset_file(0, p["slug"], im.get("main",""))}" width="{im.get("fullW") or 1200}" height="{im.get("fullH") or 800}" alt="{esc(p["name"])}" loading="{"eager" if i==0 else "lazy"}" fetchpriority="{"high" if i==0 else "auto"}" decoding="async"><figcaption>{esc(p["name"])}</figcaption></figure>'
 
-    freebies = [p for p in PRODUCTS if p["free"] and not p.get("comingSoon") and p["category"] != "Guides & eBooks"]
-    # The homepage bundle row used to be "all Bundles-category packs, cheapest
-    # first", which buried the $19 Master Library under a $5 palette bundle and
-    # cut it off the page entirely. It is now an explicit value ladder authored
-    # in data/discovery.json -> bundleLadder.rungs (see core.bundle_ladder),
-    # with the flagship library as its top rung. Seasonal packs stay in the
-    # catalog and on bundles.html — nothing was deleted, only re-sequenced.
-
-    # ── Featured Brush Kits: storefront cards, best-seller excluded ──────
-    # The best-seller gets the compact spotlight above the cards; these are
-    # the studio picks that fill out the catalog row. Hand-picked slugs keep
-    # the row curated instead of whichever product edited its flag last.
-    featured_kits = [byslug[s] for s in (
+    # ── Popular product cards: the six packs the storefront leads with.
+    #    Hand-picked slugs (the old "popular starting points" + "studio
+    #    favorites" rows, merged): curated, stable, and every one of them a
+    #    live product with a real price and Payhip checkout. The best seller
+    #    gets the compact spotlight above the grid (see core.feature_band).
+    popular = [byslug[s] for s in (
+        "portrait-mastery-kit-46-brushes",
+        "essential-line-art-sketch-kit",
         "artista-studio-kit-76-brushes",
         "anime-soft-style-studio-kit",
         "watercolor-studio-kit-50-brushes",
-    ) if s in byslug]
-
-    # ── Popular Starting Points: the three packs new customers begin with ─
-    starting_points = [byslug[s] for s in (
-        "portrait-mastery-kit-46-brushes",
-        "essential-line-art-sketch-kit",
         "ultimate-portrait-mastery-bundle",
     ) if s in byslug]
 
+    freebies = [p for p in PRODUCTS if p["free"] and not p.get("comingSoon") and p["category"] != "Guides & eBooks"]
+
     # ── LEARN: free starter guide → paid masterclass, side by side ───────
-    # A true two-column editorial pair with equal visual weight: the FREE
-    # guide is the entry point ("start here"), the $19 Masterclass the
-    # premium next step ("go deeper"). The connector between the cards is
-    # the funnel. No third card, no placeholders.
+    # Large, un-cropped covers (object-fit:contain on a premium dark mat),
+    # premium card styling, and a stronger emphasis for the paid Masterclass
+    # (gold edge, wider column, primary CTA). The connector between the cards
+    # is the funnel: start free, then go deeper.
     starter = byslug.get("procreate-starter-guide-free-ebook")
     master = byslug.get("procreate-portrait-masterclass-ebook")
     ebook_section = ""
     if starter and master:
-        def edu_card(p, level_cls, level_label, desc, meta, cta_label, cta_href, cta_ext):
+        def edu_card(p, level_cls, level_label, desc, meta, cta_label, cta_href, cta_ext, cta_cls):
             im = p["images"]
             name = p["name"].split(" (")[0]
             return f"""<article class="ebook-card edu-card {level_cls}">
   <a class="ebook-cover" href="products/{p['slug']}/"{pin_attrs(p)}>
     <img src="{asset_file(0, p['slug'], im.get('card',''))}" width="{im.get('cardW') or 750}" height="{im.get('cardH') or 1000}" alt="{esc(name)}: cover" loading="lazy" decoding="async">
-  </a>{pin_button(p, cls="pin-btn pin-btn-cover")}
+  </a>{pin_button(p)}
   <div class="ebook-body">
     <p class="edu-level">{esc(level_label)}</p>
     <h3>{esc(name)}</h3>
     <p class="edu-desc muted">{esc(desc)}</p>
     <div class="ebook-foot">
       <span class="price price-lg">{"Free" if p["free"] else esc(p["priceText"])}</span>
-      <a class="btn btn-gold" href="{cta_href}"{cta_ext}>{cta_label}</a>
+      <a class="btn {cta_cls}" href="{cta_href}"{cta_ext}>{cta_label}</a>
     </div>
     <p class="edu-meta">{esc(meta)}</p>
   </div>
@@ -74,12 +82,12 @@ def build_home():
             starter, "edu-start", "Free · Start here",
             "The free Portrait Starter Guide — a structured introduction to Procreate portrait basics on a blank canvas.",
             "PDF eBook · instant download · $0 forever",
-            "Get Free Guide ↗", starter["payhipUrl"], ' target="_blank" rel="noopener" ' + buy_attrs(starter, "edu-duo"))
+            "Get Free Guide ↗", starter["payhipUrl"], ' target="_blank" rel="noopener" ' + buy_attrs(starter, "edu-duo"), "btn-line")
         master_card = edu_card(
             master, "edu-deep", "Premium · Full workflow",
             "The Complete Procreate Portrait Masterclass — 107 pages, 15 chapters, full portrait workflow from blank canvas to finished believable portrait.",
             "PDF eBook · 107 pages · 15 chapters · $19",
-            "Explore the Masterclass", f"products/{master['slug']}/", "")
+            "Explore the Masterclass", f"products/{master['slug']}/", "", "btn-gold btn-lg")
         # ── homepage Look Inside preview (real interiors when present) ──────
         import os as _os
         _look_dir = _os.path.join(ROOT, "assets/products/procreate-portrait-masterclass-ebook")
@@ -176,95 +184,81 @@ def build_home():
     html_out += header(0, active="index.html")
     html_out += f"""
 <main id="main">
-  <!-- 1 · HERO: one value proposition, one product visual, one primary CTA. -->
+  <!-- 1 · HERO: short and commercial — one value proposition, two CTAs
+       (Shop All Brushes / Try Free Brushes), the window-display covers. -->
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Procreate brushes for iPad artists · organized by workflow</p>
-        <h1>Choose the Right<br>Procreate Brushes<br><span>for Your Workflow</span></h1>
-        <p class="hero-sub">Portrait, skin, line art, watercolor, anime and texture kits tested for real iPad artwork. Choose quickly, see what each tool produces, and build only the workflow you need.</p>
+        <p class="eyebrow">Premium Procreate brushes · organized by workflow</p>
+        <h1>Procreate Brushes<br>for <em>iPad Artists</em></h1>
+        <p class="hero-sub">Hand-tested portrait, skin, line art, watercolor and anime kits. Instant download, lifetime access — and free packs to try before you spend a cent.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold btn-lg" href="find-my-brushes.html">Find My Brush Kit</a>
-          <a class="btn btn-line btn-lg" href="products.html">Browse All Brushes</a>
+          <a class="btn btn-gold btn-lg" href="products.html">Shop All Brushes</a>
+          <a class="btn btn-line btn-lg" href="freebies.html">Try Free Brushes</a>
         </div>
-        <p class="hero-note"><b>Free packs available</b> &nbsp;·&nbsp; Instant download &nbsp;·&nbsp; Lifetime access &nbsp;·&nbsp; Procreate 5+ for iPad</p>
+        <p class="hero-meta">Secure checkout via Payhip &nbsp;·&nbsp; Instant worldwide delivery &nbsp;·&nbsp; Lifetime access &nbsp;·&nbsp; Free packs, no email needed</p>
       </div>
       <div class="hero-showcase" aria-hidden="true" data-parallax="10">{showcase}</div>
     </div>
   </section>
 
-  <!-- 2 · TRUST / VALUE STRIP: concrete catalog numbers, verifiable from
-       data/products.json — never invented social proof. -->
+  <!-- 2 · BUYING ASSURANCES: checkout, delivery, access, free packs —
+       statements the store already makes, verifiable in-repo. -->
   {trust_band(0)}
 
-  <!-- 3 · WHAT DO YOU CREATE? routes by intent before the catalog. -->
+  <!-- 3 · POPULAR: best-seller spotlight + the six packs the store leads
+       with. Products lead: a storefront shows the goods before the story. -->
+  <section class="section" id="popular" aria-labelledby="pop-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Start here</p><h2 id="pop-title">Popular Procreate Brushes</h2></div>
+        <a class="text-link" href="products.html">Browse all {len(PRODUCTS)} products →</a>
+      </div>
+      <p class="sec-note muted">The packs painters reach for first — real kits from the full catalog, each with its own product page, live price and Payhip checkout.</p>
+      {feature_band(0)}
+      {product_grid(popular, 0, eager_first=1, classes="grid cards cards-3")}
+    </div>
+  </section>
+
+  <!-- 4 · SHOP BY WORKFLOW: route by the artist's intent, not our file
+       structure. Cards are generated from data/discovery.json. -->
   {craft_grid(0)}
 
-  <!-- 4 · FREE PROCREATE BRUSHES: "Get Free" goes straight to Payhip. -->
+  <!-- 5 · PROCREATE BUNDLES: a value ladder (Starter → Advanced → Ultimate
+       → Master Library), not a tile grid ordered by price.
+       data/discovery.json → bundleLadder owns the rungs; the heading link
+       goes to the full side-by-side comparison guide. -->
+  {bundle_ladder_section}
+
+  <!-- 6 · MASTER LIBRARY: the ladder's top rung, broken out so the library
+       gets a real argument instead of a fourth card. -->
+  {flagship_band(0, bridge=True, ladder_href="#bundles")}
+
+  <!-- 7 · FREE PROCREATE BRUSHES: "Get Free" goes straight to Payhip. -->
   <section class="section" id="free">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Level 1 · Completely free</p><h2>Free Procreate Brushes</h2></div>
+        <div><p class="eyebrow">Completely free</p><h2>Free Procreate Brushes</h2></div>
         <a class="text-link" href="freebies.html">All freebies →</a>
       </div>
       <p class="sec-note muted">Try the tools before you buy anything. Real kits, not samples — the same pressure tuning and file quality as the paid packs. Download now, keep forever, and only spend money once you know how they feel.</p>
-      {product_grid(freebies, 0, eager_first=1, free_direct=True)}
+      {product_grid(freebies, 0, eager_first=1, free_direct=True, classes="grid cards cards-3")}
     </div>
   </section>
 
-  <!-- 5 · LEARN PROCREATE PORTRAITS: free starter guide → masterclass, side by
-       side. It sits BEFORE the proof of result so a visitor reads "this can be
-       learned" before "this is what it looks like when learned". -->
+  <!-- 8 · LEARN PROCREATE PORTRAITS: free starter guide → paid masterclass,
+       side by side. Large covers, premium cards, the paid Masterclass gets
+       the stronger emphasis. -->
   {ebook_section}
 
-  <!-- 6 · BEFORE → AFTER: the answer to "what do the brushes actually change".
-       Medium-width slider, not another full-bleed product band. -->
+  <!-- 9 · BEFORE → AFTER: the answer to "what do the brushes actually
+       change". Medium-width slider, not another full-bleed product band. -->
   {before_after}
 
-  <!-- 7 · ONE "WHERE DO I GO NEXT?" BLOCK: the two curated rows share a single
-       question as their heading, so the middle of the page reads as one decision
-       point instead of two rival storefronts. "Popular starting points" = the
-       packs people begin with; "Studio favorites" = what we keep reaching for.
-       The old "Not sure where to start?" eyebrow and the identical h2 said the
-       same thing twice — the question is now the h2, the two rows answer it. -->
-  <section class="section" id="starting-points" aria-labelledby="sp-title">
+  <!-- 10 · WHY DIGIKITPRO: supporting trust content, after the products. -->
+  <section class="section section-alt" id="why" aria-labelledby="why-title">
     <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">Two ways in</p><h2 id="sp-title">Not sure where to start?</h2></div>
-        <a class="text-link" href="products.html">Browse the full catalog →</a>
-      </div>
-      <p class="sec-note muted">Choose the path that matches where you are today. Each route keeps the decision small and uses the existing catalog.</p>
-      <div class="shop-paths">
-        <article class="shop-path"><span class="shop-path-num">01</span><h3>I am a beginner</h3><p>Start with the free packs and Portrait Starter Guide. Learn the basics before spending anything.</p><a class="btn btn-line btn-sm" href="freebies.html">Start free →</a></article>
-        <article class="shop-path"><span class="shop-path-num">02</span><h3>I need one workflow</h3><p>Answer four quick questions and get one focused recommendation ranked by relevance, not price.</p><a class="btn btn-gold btn-sm" href="find-my-brushes.html">Find my kit →</a></article>
-        <article class="shop-path"><span class="shop-path-num">03</span><h3>I want a complete library</h3><p>Compare focused kits, related bundles and the 2,000+ brush Master Library.</p><a class="btn btn-line btn-sm" href="#bundles">Compare libraries →</a></article>
-      </div>
-      <div class="sub-head">
-        <h3>Popular starting points</h3>
-      </div>
-      {product_grid(starting_points, 0)}
-      <div class="sub-head sub-head--row">
-        <h3>Studio favorites</h3>
-        <a class="text-link" href="products.html">Browse all products →</a>
-      </div>
-      {feature_band(0)}
-      {product_grid(featured_kits, 0, classes="grid cards cards-3")}
-    </div>
-  </section>
-
-  <!-- 8 · PROCREATE BUNDLES: a value ladder (Starter → Advanced → Ultimate →
-       Master Library), not a tile grid ordered by price.
-       data/discovery.json → bundleLadder owns the rungs. -->
-  {bundle_ladder_section}
-
-  <!-- 9 · MASTER LIBRARY: Level 4 — the ladder's top rung, broken out so the
-       library gets a real argument instead of a fourth card. -->
-  {flagship_band(0, bridge=True, ladder_href="#bundles")}
-
-  <!-- 10 · WHY DIGIKITPRO -->
-  <section class="section section-alt">
-    <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2>Tools that respect your craft</h2></div></div>
+      <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2 id="why-title">Tools that respect your craft</h2></div></div>
       <div class="grid why-grid">
         <div class="why"><h3>Hand-tested on real artwork</h3><p class="muted">Every brush is drawn, tuned and re-tuned on actual portrait and illustration work before release, never bulk-generated.</p></div>
         <div class="why"><h3>Organized by workflow</h3><p class="muted">Kits follow the order you actually paint in: sketch, ink, blend, texture, finish. Less hunting, more creating.</p></div>
@@ -274,11 +268,11 @@ def build_home():
     </div>
   </section>
 
-  <!-- 11 · ARTICLES -->
-  <section class="section">
+  <!-- 11 · ARTICLES: supporting educational content. -->
+  <section class="section" id="articles" aria-labelledby="articles-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">The blog</p><h2>Procreate Guides & Techniques</h2></div>
+        <div><p class="eyebrow">The blog</p><h2 id="articles-title">Procreate Guides & Techniques</h2></div>
         <a class="text-link" href="blog.html">All articles →</a>
       </div>
       <div class="grid arts-grid">{art_cards}</div>
@@ -286,22 +280,166 @@ def build_home():
   </section>
 
   <!-- 12 · FREE BRUSH EMAIL CTA: last on the page on purpose — it is the
-       low-commitment exit for a visitor who has read the pitch and still is not
-       buying, and nothing competes with it after. The articles sit above it as
-       free value, so the page ends on "take this" rather than "read more".
+       low-commitment exit for a visitor who has read the pitch and still is
+       not buying, and nothing competes with it after. The articles sit
+       above it as free value, so the page ends on "take this" rather than
+       "read more".
 
        REAL REVIEWS belongs between WHY DIGIKITPRO (10) and this block, the
        moment verifiable quotes exist. It is deliberately NOT built: no
        placeholder quotes, no star ratings, no review counts — tools/verify.py
-       fails the build on invented social proof, and an empty "Reviews" heading
-       is a worse signal than no heading. Add plain attributed text here when
-       you have it. See README → "Social proof", docs/AUDIT-AND-PLAN.md Part 13. -->
+       fails the build on invented social proof, and an empty "Reviews"
+       heading is a worse signal than no heading. Add plain attributed text
+       here when you have it. See README → "Social proof", docs/AUDIT-AND-PLAN.md Part 13. -->
   {newsletter(0)}
 
 </main>
 """
     html_out += footer(0)
     write("index.html", html_out)
+
+# ───────────────────── THANK-YOU PAGE (post-signup delivery) ─────────────
+# Moved here from tools/pages_finder.py on 2026-09-18 when the Brush Finder
+# was removed: this page is the free-download delivery page for every email
+# capture on the site (the newsletter's `_next`), not finder logic. Its two
+# jobs, in this order: DELIVER the promised free files, then make ONE
+# starter offer and show the flagship. Never more than one ask per level.
+
+def _compat(p):
+    """Compatibility statement, derived from the product's own requirement
+    text so we never claim support that is not in the data."""
+    hay = " ".join((p.get("requirements") or []) + (p.get("technical") or [])
+                   + [p.get("category", ""), p.get("short", "")]).lower()
+    if "goodnotes" in hay or "notability" in hay:
+        return "GoodNotes, Notability & compatible PDF note apps"
+    if "canva" in hay:
+        return "Canva (editable templates)"
+    if "procreate" in hay or "ipad" in hay:
+        return "Procreate on iPad (Procreate 5 or newer)"
+    if p.get("category") in ("Other", "Guides & eBooks"):
+        return "See the requirements on the product page"
+    return "Procreate on iPad"
+
+
+def build_thanks():
+    depth = 0
+    freebies = [p for p in PRODUCTS if p.get("free") and not p.get("comingSoon")]
+    freebies.sort(key=lambda p: -(disc(p["slug"]).get("priority") or 0))
+
+    cards = ""
+    for p in freebies:
+        im = p.get("images") or {}
+        card = im.get("card", "")
+        cards += f'''<article class="thanks-card" data-thanks-slug="{esc(p["slug"])}">
+  <a class="thanks-media" href="{rel(depth, 'products/' + p['slug'] + '/')}">
+    <img src="{asset_file(depth, p['slug'], card)}"{img_srcset(depth, p['slug'], im, "(min-width: 1100px) 320px, 92vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(p.get('alt') or p['name'])}" loading="lazy" decoding="async">
+  </a>
+  <div class="thanks-body">
+    <span class="badge badge-free">Free</span>
+    <h2>{esc(p['name'])}</h2>
+    <p class="muted">{esc(p.get('assets') or '')}</p>
+    <a class="btn btn-gold btn-sm" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'thanks')}>Get Free ↗</a>
+  </div>
+</article>'''
+
+    # ONE starter offer: the highest-priority paid specialist pack.
+    entries = [p for p in PRODUCTS
+               if not p.get("free") and tier_of(p) == "entry" and line_of(p) == "procreate"]
+    entries.sort(key=lambda p: -(disc(p["slug"]).get("priority") or 0))
+    starter = entries[0] if entries else None
+    starter_html = ""
+    if starter:
+        im = starter.get("images") or {}
+        starter_html = f'''<section class="section section-alt" aria-labelledby="starter-title">
+  <div class="wrap starter-inner">
+    <div class="starter-media">
+      <a href="{rel(depth, 'products/' + starter['slug'] + '/')}">
+        <img src="{asset_file(depth, starter['slug'], im.get('card',''))}"{img_srcset(depth, starter['slug'], im, "(min-width: 960px) 340px, 92vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(starter.get('alt') or starter['name'])}" loading="lazy" decoding="async">
+      </a>
+    </div>
+    <div class="starter-body">
+      <p class="eyebrow">Your next step</p>
+      <h2 id="starter-title">{esc(starter['name'])}</h2>
+      <p class="muted">{esc(starter.get('short',''))}</p>
+      <ul class="tick-list check">
+        <li>{esc(starter.get('assets') or 'Complete specialist set')}</li>
+        <li>{esc(_compat(starter))}</li>
+        <li>Instant download, lifetime access</li>
+      </ul>
+      <div class="starter-cta">
+        <span class="price price-lg">{esc(starter['priceText'])}</span>
+        <a class="btn btn-gold" href="{starter['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(starter, 'thanks-starter')}>Buy Now ↗</a>
+        <a class="text-link" href="{rel(depth, 'products/' + starter['slug'] + '/')}">See what is inside →</a>
+      </div>
+      <p class="muted starter-note">Not yet? No pressure at all — the free packs above are yours to keep, and the
+        <a href="{rel(depth, 'products.html')}">full catalog</a> is waiting when you are ready.</p>
+    </div>
+  </div>
+</section>'''
+
+    html_out = head(
+        "Thank You — Your Free Procreate Downloads | DigiKitPro",
+        "Your free Procreate brushes are ready to download right now, plus the recommended next step for your workflow.",
+        SITE_URL + "/thank-you.html", depth,
+        schemas=schema_breadcrumb([("Home", "/"), ("Thank you", "/thank-you.html")]),
+        ctx=page_ctx("thankyou"))
+    # Thank-you pages should be reachable but not compete for ranking.
+    html_out = html_out.replace(
+        '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">',
+        '<meta name="robots" content="noindex, follow">', 1)
+    html_out += header(depth)
+    html_out += f"""
+<main id="main">
+  <section class="page-head thanks-head"><div class="wrap">
+    <p class="eyebrow">You are on the list</p>
+    <h1 data-thanks-title>Your free Procreate downloads are ready</h1>
+    <p class="lead" data-thanks-lead>Grab them right here — no need to wait for an email. Every file below is free,
+      delivered instantly by Payhip, and yours to keep.</p>
+    <p class="muted thanks-mail" data-thanks-mail>We have also sent a confirmation to your inbox. If it does not appear
+      in a few minutes, check spam, or just use the links below.</p>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="grid thanks-grid">{cards}</div>
+  </div></section>
+
+  {starter_html}
+
+  {flagship_band(depth)}
+
+  <section class="section"><div class="wrap narrow">
+    <div class="sec-head"><div><p class="eyebrow">While you are here</p><h2>Learn the workflow</h2></div></div>
+    <p class="muted">Brushes are half of it. These guides show the same tools used on finished artwork, step by step.</p>
+    <ul class="thanks-links">
+      <li><a href="{rel(depth,'blog/procreate-portrait-workflow/')}">The complete Procreate portrait workflow →</a></li>
+      <li><a href="{rel(depth,'blog/how-to-install-procreate-brushes/')}">How to install .brushset files on iPad →</a></li>
+      <li><a href="{rel(depth,'blog/how-to-choose-procreate-brushes/')}">How to choose brushes without regretting it →</a></li>
+    </ul>
+  </div></section>
+</main>
+"""
+    html_out += footer(depth)
+
+    # Tiny inline script: the only page-specific JS on the site. It reads the
+    # ?lead= parameter set by the signup form and puts the promised pack first,
+    # so the page matches what the visitor actually asked for.
+    html_out = html_out.replace("</body>", """<script>
+(function(){
+  try{
+    var lead=new URLSearchParams(location.search).get('lead');
+    if(!lead)return;
+    var card=document.querySelector('[data-thanks-slug="'+CSS.escape(lead)+'"]');
+    if(card&&card.parentNode)card.parentNode.insertBefore(card,card.parentNode.firstChild);
+    var t=document.querySelector('[data-thanks-title]');
+    var name=card?card.querySelector('h2'):null;
+    if(t&&name)t.textContent='Your download is ready: '+name.textContent;
+    var m=document.querySelector('[data-thanks-mail]');
+    if(m)m.hidden=true;
+  }catch(e){}
+})();
+</script>
+</body>""", 1)
+    write("thank-you.html", html_out)
 
 # ─────────────────────────── PRODUCTS INDEX ───────────────────────────
 def build_products():

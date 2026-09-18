@@ -162,13 +162,13 @@ cadence that keeps the site visible on search results.
 
 Full audit and the phased plan: **`docs/AUDIT-AND-PLAN.md`**.
 
-> **Status note (2026-09-16):** two Phase-1 features were later RETIRED at the
-> owner's request and the sections below are kept for the design rationale only:
-> the **Brush Finder** (`find-my-brushes.html`, `js/finder.js`; removed in
-> PR #16 — the generator code remains, commented out, in
-> `tools/pages_finder.py → build_all`) and the visible **store email address**
-> (contact now runs through the Payhip store form). Everything else in §8 —
-> value ladder, homepage IA, bundle ladder, conversion events, freebie funnel,
+> **Status note (2026-09-18):** two Phase-1 features were later RETIRED at the
+> owner's request: the **Brush Finder** (`find-my-brushes.html`, `js/finder.js`,
+> `js/finder-index.js`, `tools/pages_finder.py` — removed in full on 2026-09-18,
+> no traces left anywhere in the build) and the visible **store email address**
+> (contact now runs through the Payhip store form). The "Brush Finder" section
+> below is kept for the design rationale only. Everything else in §8 — value
+> ladder, homepage IA, bundle ladder, conversion events, freebie funnel,
 > feedback prompt — is live. The buyer-intent counterpart of the retired finder
 > is the buyer-guide set in §9.
 
@@ -178,35 +178,42 @@ catalog and Brush Finder all read it:
 
 | Level | Tier | What it is | Where it appears |
 |---|---|---|---|
-| 1 | `free` | Free Procreate packs | Homepage §4, `/freebies.html` (email-first), `/thank-you.html` |
-| 2 | `entry` | $4–$10 specialist packs (skin, hair, line art…) | Homepage §7, catalog, finder primary result |
-| 3 | `bundle` | $8–$20 multi-kit bundles | Homepage §8 — the **bundle ladder**, `/bundles.html` |
-| 4 | `flagship` | **Master Library, 2,000+ brushes, $19** | Homepage §8 (top rung) + §9 (dedicated band) + upgrade panel on 37 product pages |
-| 5 | `education` | Free starter guide + $19 Portrait Masterclass | Homepage §5, finder cross-sell for portrait answers |
+| 1 | `free` | Free Procreate packs | Homepage §7, `/freebies.html` (email-first), `/thank-you.html` |
+| 2 | `entry` | $4–$10 specialist packs (skin, hair, line art…) | Homepage §3 popular row, catalog, PDPs |
+| 3 | `bundle` | $8–$20 multi-kit bundles | Homepage §5 — the **bundle ladder**, `/bundles.html` |
+| 4 | `flagship` | **Master Library, 2,000+ brushes, $19** | Homepage §5 (top rung) + §6 (dedicated band) + upgrade panel on 37 product pages |
+| 5 | `education` | Free starter guide + $19 Portrait Masterclass | Homepage §8, PDPs |
 
 ### Homepage information architecture
 
 The order below is the merchandising decision — each section answers the one before it:
 
 ```
-HEADER → HERO → TRUST / VALUE STRIP → WHAT DO YOU CREATE? → FREE PROCREATE BRUSHES
-→ LEARN PROCREATE PORTRAITS (free guide | masterclass $19, side by side)
+HEADER → HERO (short + commercial: Shop All Brushes / Try Free Brushes)
+→ BUYING ASSURANCES → POPULAR PRODUCTS (best-seller spotlight + six curated kits)
+→ SHOP BY WORKFLOW → PROCREATE BUNDLES (ladder) → MASTER LIBRARY (the ladder's top rung)
+→ FREE PROCREATE BRUSHES → LEARN PROCREATE PORTRAITS (free guide | masterclass $19)
 → BEFORE → AFTER ("what do the brushes actually change")
-→ NOT SURE WHERE TO START? (popular starting points + studio favorites, one block)
-→ PROCREATE BUNDLES (ladder) → MASTER LIBRARY (the ladder's top rung)
 → WHY DIGIKITPRO → ARTICLES → FREE BRUSH EMAIL CTA → FOOTER
 ```
 
 Section order is generated from `build_home()` in `tools/pages_main.py` and is checked
-after every build by `tools/verify.py` (`homepage section order matches the IA brief` +
-`homepage closes: master library → why → articles → email CTA`).
+after every build by `tools/verify.py` (`homepage section order matches the
+product-first brief` + `homepage closes: why → articles → email CTA` +
+`hero CTAs are Shop All Brushes + Try Free Brushes`). The same suite also
+guards the Brush Finder removal (page, scripts and references all gone).
 The bundle row is a **ladder**, not a tile grid: its rungs live in
 `data/discovery.json → bundleLadder.rungs` (`Starter → Advanced → Ultimate →
 Master Library`), while every number on a rung (price, asset count, kit list,
 "$x per brush") is read from `data/products.json`, so a Payhip sync updates it.
 The homepage deliberately carries **no review section** — see "Social proof" below.
 
-### Brush Finder — `find-my-brushes.html`
+### Brush Finder — RETIRED 2026-09-18 (kept for the design rationale)
+**Everything is gone**: the page, `js/finder.js`, `js/finder-index.js`, the nav
+entry, the homepage links and the `tools/pages_finder.py` generator module.
+The post-signup `thank-you.html` it once co-built now lives in
+`tools/pages_main.py`. What follows is the design record.
+
 Four questions (craft → goal → level → style) produce one recommendation.
 Scoring is **relevance-first, never price-first**: craft +40, goal +30, style +15,
 level +10, editorial priority ≤+5. Verified across all **1,080** answer
@@ -228,8 +235,7 @@ One entry point, `dkp.track(name, params)`. Forwards to GA4 and keeps a
 first-party count-only summary in `localStorage`. Events: `homepage_view`,
 `product_view`, `category_view`, `bundle_view`, `master_library_view`,
 `masterclass_view`, `free_download_click`, `email_signup`, `product_buy_click`,
-`outbound_payhip_click`, `brush_finder_started`, `brush_finder_completed`,
-`recommendation_clicked`, `upgrade_clicked`, `craft_card_click`, `search_query`,
+`outbound_payhip_click`, `upgrade_clicked`, `craft_card_click`, `search_query`,
 `scroll_depth`, `feedback_reason`.
 
 Debug in the browser console: `dkp.report()` · `dkp.clear()`.
