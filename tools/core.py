@@ -468,6 +468,10 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     # inject its own hover overlay on every <img>, duplicating — and visually
     # fighting with — the site's own .pin-btn Save buttons.
     ctx_json = json.dumps(ctx or {}, ensure_ascii=False)
+    finder_scripts = ""
+    if ctx and ctx.get("type") == "finder":
+        finder_scripts = (f'  <script src="{rel(depth,"js/finder-index.js")}" defer></script>\n'
+                          f'  <script src="{rel(depth,"js/finder.js")}" defer></script>\n')
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -518,12 +522,13 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <script src="{rel(depth,'js/analytics.js')}" defer></script>
   <script src="{rel(depth,'js/feedback.js')}" defer></script>
   <script src="{rel(depth,'js/translate.js')}" defer></script>
-{s}</head>
+{finder_scripts}{s}</head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
 """
 
-NAV = [("Free Brushes","freebies.html"),("Products","products.html"),("Bundles","bundles.html"),
+NAV = [("Find My Brush Kit","find-my-brushes.html"),("Free Brushes","freebies.html"),
+       ("Products","products.html"),("Bundles","bundles.html"),
        ("Articles","blog.html"),("About","about.html")]
 
 def header(depth, active=None):
@@ -1291,11 +1296,12 @@ def licence_line(p=None):
                 'personally or commercially. The Masterclass PDF, text, illustrations, images and educational '
                 'materials may not be resold, redistributed, publicly shared, repackaged or presented as your own product.')
     else:
-        body = ('Yes — finished artwork you create with these files is yours to use '
-                'personally and commercially. You may not resell or redistribute the '
-                'brush files themselves.')
-    return (f'<p class="licence-line"><b>Can I sell what I make?</b> {body} '
-            f'<a href="../../terms.html">Full licence</a>.</p>')
+        body = ('Yes — commercial use is allowed. Finished artwork you create is yours to use in '
+                'commissions, client projects, prints, products and other commercial work. You may not '
+                'resell, share, redistribute or repackage the brush files themselves. Contact us before '
+                'agency, classroom or multi-user use.')
+    return (f'<p class="licence-line"><b>Commercial use allowed.</b> {body} '
+            f'<a href="../../terms.html">Read the full licence</a>.</p>')
 
 
 def install_steps(p=None):

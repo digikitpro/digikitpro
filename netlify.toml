@@ -10,6 +10,18 @@
   publish = "."
   command = "SITE_URL=$URL python3 tools/build.py"
 
+# Baseline browser protections. CSP starts conservatively because checkout,
+# analytics and opt-in translation are third-party integrations.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co https://payhip.com; img-src 'self' data: https:; font-src 'self'; style-src 'self' 'unsafe-inline' https://translate.googleapis.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://translate.google.com https://translate.googleapis.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://formsubmit.co; frame-src https://translate.google.com https://payhip.com; upgrade-insecure-requests"
+
 # Long-cache immutable media, always-fresh HTML.
 [[headers]]
   for = "/assets/*"

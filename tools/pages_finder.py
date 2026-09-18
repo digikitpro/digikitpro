@@ -433,6 +433,7 @@ def build_thanks():
 
 
 def build_all():
-    # Find My Brushes removed per owner request - keep only thank-you page
-    # build_finder()
+    # The finder uses the existing product/category URLs and only recommends
+    # products from the real catalog. Re-enabled as the guided shopping path.
+    build_finder()
     build_thanks()
