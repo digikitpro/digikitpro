@@ -169,7 +169,10 @@
             : (f === "__procreate" ? c.getAttribute("data-line") !== "lifestyle"
               : (f === "__lifestyle" ? c.getAttribute("data-line") === "lifestyle"
                 : (f === "__flagship" ? c.getAttribute("data-tier") === "flagship"
-                  : c.getAttribute("data-category") === f)))));
+                  : (f === "__under10" ? c.getAttribute("data-free") !== "1" && parseFloat(c.getAttribute("data-dkp-price") || "0") < 10
+                    : (f === "__starter" ? c.getAttribute("data-tier") === "entry"
+                      : (f === "__bundles" ? c.getAttribute("data-tier") === "bundle"
+                        : c.getAttribute("data-category") === f))))))));
       c.classList.toggle("hidden", !match);
       /* A card that a filter brings back was never scrolled past, so the
          reveal observer may not have fired for it: show it directly. */

@@ -324,8 +324,11 @@ def build_misc():
     <ul>
       <li><strong>Workflow over catalog size.</strong> A kit organized around how you paint beats a thousand loose brushes.</li>
       <li><strong>Real media behavior.</strong> Bleeds, tooth, crumble and granulation, digital tools should carry the soul of physical media.</li>
-      <li><strong>Honest pricing.</strong> Professional kits for the price of a coffee, and a free collection big enough to start a career with.</li>
+      <li><strong>Honest pricing.</strong> Professional kits for the price of a coffee, and useful free packs that let you test the quality first.</li>
     </ul>
+    <h2>How a kit earns its place</h2>
+    <p>Each release is organized around a real stage of making artwork: sketching, line, paint, texture, detail or finishing. Brushes are tested under the Apple Pencil at different pressure levels and used together as a workflow—not treated as isolated novelty marks. Product pages state the files, compatibility and requirements so you can check the fit before buying.</p>
+    <p>Compatibility guidance is reviewed as product information changes. If a file does not install or an order is missing, use the <a href="contact.html">support page</a> with the product name and order details so the issue can be traced through Payhip.</p>
     <h2>Worldwide, instant, in your language</h2>
     <p>Everything here is a digital download delivered instantly through Payhip, so artists in the <strong>United States, Canada, Europe and every other country</strong> get the same files at the same moment. There is no shipping and no physical product. Prices display in USD, and Payhip automatically converts the charge to your local currency at checkout. Use the globe button in the header to translate the whole site into English, Español, Français, Deutsch, Italiano, Português or Nederlands.</p>
     <h2 id="contact">Contact</h2>

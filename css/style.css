@@ -504,6 +504,20 @@ body{top:0 !important}
 @media(min-width:960px){.craft-grid{grid-template-columns:repeat(4,1fr)}}
 .craft-card{display:flex;flex-direction:column;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.2rem 1.1rem;color:var(--text);transition:transform .18s ease,border-color .18s ease,background .18s ease}
 .craft-card:hover{transform:translateY(-3px);border-color:var(--gold);background:var(--surface-2);color:var(--text)}
+
+/* Guided shopping paths: three decisions, not another wall of products. */
+.shop-paths{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0 2.4rem}
+.shop-path{display:flex;flex-direction:column;align-items:flex-start;gap:.7rem;padding:1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.shop-path h3{margin:0;font-size:1.18rem}.shop-path p{color:var(--muted);margin:0 0 .3rem;flex:1}
+.shop-path-num{color:var(--gold);font-size:.76rem;font-weight:800;letter-spacing:.14em}
+@media(max-width:760px){.shop-paths{grid-template-columns:1fr}.hero-ctas{align-items:stretch}.hero-ctas .btn{justify-content:center}}
+.finder-result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.finder-result-card{display:flex;flex-direction:column;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.finder-result-card.primary{border-color:var(--gold)}.finder-result-card img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:calc(var(--radius) - 4px);margin-bottom:1rem}
+.finder-result-card h3{font-size:1.08rem}.finder-result-actions{display:flex;align-items:center;justify-content:space-between;gap:.7rem;margin-top:auto;padding-top:1rem}
+@media(max-width:980px){.finder-result-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.finder-result-grid{grid-template-columns:1fr}}
+
 .craft-name{font:600 1.06rem var(--serif);letter-spacing:-.01em}
 .craft-blurb{color:var(--muted);font-size:.87rem;line-height:1.5;flex:1}
 .craft-meta{color:var(--gold);font:600 .76rem/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;margin-top:.35rem}

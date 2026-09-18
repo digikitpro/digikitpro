@@ -123,7 +123,7 @@ def build_home():
     if skin:
         skin_cta = (
             f'<a class="btn btn-gold" href="products/{skin["slug"]}/" {buy_attrs(skin, "before-after")}>'
-            f'Get the Skin Brushes <span class="btn-arr">·</span> {esc(skin["priceText"])}</a>'
+            f'Shop the tools used in this artwork <span class="btn-arr">·</span> {esc(skin["priceText"])}</a>'
         )
     if portrait_bundle:
         bundle_cta = (
@@ -181,12 +181,13 @@ def build_home():
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="eyebrow">Procreate brushes for iPad artists · organized by workflow</p>
-        <h1>Procreate Brushes <br>Organized Around<br><span>How You Actually Create</span></h1>
-        <p class="hero-sub">Portrait, skin, line art, watercolor or anime — start with the toolkit built around your kind of work. Real texture, instant download on iPad. Try free packs first, then build the set you need.</p>
+        <h1>Choose the Right<br>Procreate Brushes<br><span>for Your Workflow</span></h1>
+        <p class="hero-sub">Portrait, skin, line art, watercolor, anime and texture kits tested for real iPad artwork. Choose quickly, see what each tool produces, and build only the workflow you need.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold btn-lg" href="products.html">Browse Procreate Brushes</a>
+          <a class="btn btn-gold btn-lg" href="find-my-brushes.html">Find My Brush Kit</a>
+          <a class="btn btn-line btn-lg" href="products.html">Browse All Brushes</a>
         </div>
-        <p class="hero-note">Instant download &nbsp;·&nbsp; iPad + Procreate &nbsp;·&nbsp; .brushset files &nbsp;·&nbsp; free packs included</p>
+        <p class="hero-note"><b>Free packs available</b> &nbsp;·&nbsp; Instant download &nbsp;·&nbsp; Lifetime access &nbsp;·&nbsp; Procreate 5+ for iPad</p>
       </div>
       <div class="hero-showcase" aria-hidden="true" data-parallax="10">{showcase}</div>
     </div>
@@ -232,7 +233,12 @@ def build_home():
         <div><p class="eyebrow">Two ways in</p><h2 id="sp-title">Not sure where to start?</h2></div>
         <a class="text-link" href="products.html">Browse the full catalog →</a>
       </div>
-      <p class="sec-note muted">Pick a small, focused pack — or pick one we keep reaching for ourselves. Both rows are instant downloads you can use on your next piece.</p>
+      <p class="sec-note muted">Choose the path that matches where you are today. Each route keeps the decision small and uses the existing catalog.</p>
+      <div class="shop-paths">
+        <article class="shop-path"><span class="shop-path-num">01</span><h3>I am a beginner</h3><p>Start with the free packs and Portrait Starter Guide. Learn the basics before spending anything.</p><a class="btn btn-line btn-sm" href="freebies.html">Start free →</a></article>
+        <article class="shop-path"><span class="shop-path-num">02</span><h3>I need one workflow</h3><p>Answer four quick questions and get one focused recommendation ranked by relevance, not price.</p><a class="btn btn-gold btn-sm" href="find-my-brushes.html">Find my kit →</a></article>
+        <article class="shop-path"><span class="shop-path-num">03</span><h3>I want a complete library</h3><p>Compare focused kits, related bundles and the 2,000+ brush Master Library.</p><a class="btn btn-line btn-sm" href="#bundles">Compare libraries →</a></article>
+      </div>
       <div class="sub-head">
         <h3>Popular starting points</h3>
       </div>
@@ -310,8 +316,11 @@ def build_products():
     n_flagship = sum(1 for p in PRODUCTS if tier_of(p) == "flagship")
     chips = f'<button class="chip active" type="button" data-filter="all">All ({len(PRODUCTS)})</button>'
     chips += f'<button class="chip" type="button" data-filter="__featured">Featured ({featured_count})</button>'
+    chips += f'<button class="chip" type="button" data-filter="__under10">Under $10 ({sum(1 for p in PRODUCTS if not p["free"] and p.get("price", 0) < 10)})</button>'
+    chips += f'<button class="chip" type="button" data-filter="__starter">Starter Kits ({sum(1 for p in PRODUCTS if tier_of(p) == "entry")})</button>'
+    chips += f'<button class="chip" type="button" data-filter="__bundles">Bundles ({sum(1 for p in PRODUCTS if tier_of(p) == "bundle")})</button>'
     if n_flagship:
-        chips += f'<button class="chip chip-gold" type="button" data-filter="__flagship">Master Library ({n_flagship})</button>'
+        chips += f'<button class="chip chip-gold" type="button" data-filter="__flagship">Complete Libraries ({n_flagship})</button>'
     chips += f'<button class="chip chip-free" type="button" data-filter="__free">Free ({sum(1 for p in PRODUCTS if p["free"])})</button>'
     for c in CATEGORIES:
         if counts.get(c):
