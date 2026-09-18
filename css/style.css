@@ -526,6 +526,7 @@ body{top:0 !important}
 
 .craft-name{font:600 1.06rem var(--serif);letter-spacing:-.01em}
 .craft-blurb{color:var(--muted);font-size:.87rem;line-height:1.5;flex:1}
+.craft-meta{color:var(--gold);font:600 .76rem/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;margin-top:.35rem}
 
 /* ── Level 4: Master Library flagship band ────────────────────────────── */
 .flagship-band{background:linear-gradient(165deg,#17161b 0%,#0e0e11 60%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
@@ -689,6 +690,8 @@ html.js-motion .bundle-stack > .bundle-panel,
 html.js-motion .ebook-duo > .ebook-card,
 html.js-motion .ladder > .ladder-step,
 html.js-motion .thanks-grid > .thanks-card,
+html.js-motion .journey > .journey-step,
+html.js-motion .proof-grid > .proof-slot,
 html.js-motion .ba-figure,
 html.js-motion .ba-cta{
   opacity:0;
@@ -719,6 +722,8 @@ html.js-motion .bundle-stack > .bundle-panel.rv-in,
 html.js-motion .ebook-duo > .ebook-card.rv-in,
 html.js-motion .ladder > .ladder-step.rv-in,
 html.js-motion .thanks-grid > .thanks-card.rv-in,
+html.js-motion .journey > .journey-step.rv-in,
+html.js-motion .proof-grid > .proof-slot.rv-in,
 html.js-motion .ba-figure.rv-in,
 html.js-motion .ba-cta.rv-in{opacity:1;translate:0 0}
 
@@ -803,8 +808,9 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
   transform:scaleX(0);transform-origin:0 50%;transition:transform .38s var(--ease)}
 .craft-card:hover::before,.craft-card:focus-visible::before{transform:scaleX(1)}
 .craft-card:hover{transform:translateY(-4px)}
-.craft-card .craft-name{transition:transform var(--tap) var(--ease),color var(--tap) var(--ease)}
+.craft-card .craft-name,.craft-card .craft-meta{transition:transform var(--tap) var(--ease),color var(--tap) var(--ease)}
 .craft-card:hover .craft-name{transform:translateX(3px)}
+.craft-card:hover .craft-meta{transform:translateX(5px)}
 .cat-tile:hover .cat-n{transform:translateX(2px)}
 .cat-tile .cat-n{transition:transform var(--tap) var(--ease)}
 
@@ -828,11 +834,11 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 .art-card:hover .text-link{transform:translateX(3px)}
 
 /* ══ 8. BEFORE / AFTER — the result, not the brushes ══════════════════ */
-.ba-section{background:linear-gradient(170deg,rgba(201,168,106,.045),rgba(201,168,106,0) 60%),var(--bg);padding:2.8rem 0}
-@media(min-width:720px){.ba-section{padding:3.4rem 0}}
+.ba-section{background:linear-gradient(170deg,rgba(201,168,106,.045),rgba(201,168,106,0) 60%),var(--bg);padding:3.8rem 0}
+@media(min-width:720px){.ba-section{padding:5rem 0}}
 .flagship-band{--wipe-bg:#141318}   /* match the band gradient so the reveal wipe is seamless */
-.ba-figure{margin:0 auto;max-width:720px}
-.ba-cta{max-width:720px;margin-left:auto;margin-right:auto}
+.ba-figure{margin:0 auto;max-width:780px}
+.ba-cta{max-width:780px;margin-left:auto;margin-right:auto}
 .ba-stage{
   --pos:50%;
   position:relative;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius);
@@ -916,7 +922,8 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
   html.js-motion .arts-grid > .art-card,html.js-motion .bundles-grid > .bundle-tile,
   html.js-motion .bundle-stack > .bundle-panel,html.js-motion .ebook-duo > .ebook-card,
   html.js-motion .ladder > .ladder-step,
-  html.js-motion .thanks-grid > .thanks-card,html.js-motion .ba-figure,html.js-motion .ba-cta{
+  html.js-motion .thanks-grid > .thanks-card,html.js-motion .ba-figure,html.js-motion .ba-cta,
+  html.js-motion .journey > .journey-step,html.js-motion .proof-grid > .proof-slot{
     translate:none;transform:none;transition:opacity .2s linear}
   html.js-motion .hero-copy > *,html.js-motion .hero-showcase .hero-card{opacity:1;animation:none}
   /* same specificity as the ≥960px float rules, later in the file: it wins */
@@ -1085,6 +1092,7 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 .bundle-panel:hover .pin-btn,
 .ebook-card:hover .pin-btn,
 .flag-media:hover .pin-btn,
+.journey-step:hover .pin-btn,
 .up-inner:hover .pin-btn{opacity:1;transform:none}
 
 /* touch screens have no hover state — the button is simply always on */
@@ -1311,3 +1319,107 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 .look-home-preview a{flex:0 0 170px;aspect-ratio:3/4;scroll-snap-align:start;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--mat);transition:transform .25s var(--ease),border-color .25s}
 .look-home-preview a:hover{transform:translateY(-3px);border-color:rgba(201,168,106,.45)}
 .look-home-preview img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:none}
+
+/* ══════════════════════════════════════════════════════════════════════
+   HOMEPAGE REORDER + UX UPGRADE (2026-09-18)
+   ----------------------------------------------------------------------
+   New components for the result-first homepage, same tokens only:
+   single-artwork hero, 4-up card rows with dual CTAs, before/after step
+   chips, workflow cards with artwork, the portrait journey, why-icons,
+   Master Library chips, honest community-art slots. Mobile-first; every
+   hover is subtle (lift + border, 1–2% image zoom max).
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1 · hero: ONE large finished artwork instead of three covers ────── */
+.hero-showcase--single{grid-template-columns:1fr;width:100%;max-width:540px}
+@media(min-width:960px){.hero-showcase--single{justify-self:end}}
+@media(max-width:959px){.hero-showcase--single{margin:0 auto;max-width:430px}}
+a.hero-card--link{display:block;color:var(--text);transition:border-color .25s ease}
+a.hero-card--link:hover{border-color:rgba(201,168,106,.6)}
+a.hero-card--link:focus-visible{border-color:var(--gold);outline-offset:3px}
+.hero-card .hero-cap{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;flex-direction:column;gap:.12rem;
+  padding:2.2rem .95rem .7rem;font-size:.72rem;line-height:1.45;color:var(--text);letter-spacing:.02em;
+  background:linear-gradient(transparent,rgba(5,5,7,.92))}
+.hero-cap b{color:var(--gold);font-weight:600}
+a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-offset:3px}
+
+/* ── 2 · 4-up galleries (best sellers + free row), 32px desktop gaps ─── */
+.grid.cards-4{grid-template-columns:1fr;gap:1.4rem}
+@media(min-width:560px){.grid.cards-4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1080px){.grid.cards-4{grid-template-columns:repeat(4,minmax(0,1fr));gap:2rem}}
+/* two actions in one card foot: View Product (page) + Buy Now (Payhip) */
+.card-acts{display:inline-flex;align-items:center;gap:.45rem;flex-wrap:wrap;justify-content:flex-end}
+.grid.cards-4 .card-foot{flex-wrap:wrap;gap:.5rem}
+
+/* ── 3 · before/after: the "what the tools add" step chips ───────────── */
+.ba-steps{list-style:none;margin:1.2rem auto 0;padding:0;max-width:780px;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem .75rem}
+.ba-steps li{display:flex;align-items:center;gap:.6rem;font:600 .71rem/1 var(--sans);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.ba-steps li+li::before{content:"→";color:rgba(201,168,106,.75);letter-spacing:0}
+
+/* ── 4 · workflow cards carry one artwork each (discovery, not tiles) ── */
+.craft-art{display:block;aspect-ratio:16/9;border-radius:var(--radius-sm);overflow:hidden;
+  background:var(--mat);border:1px solid var(--border);margin-bottom:.6rem}
+.craft-art img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:none;
+  transition:transform .5s var(--ease)}
+.craft-card:hover .craft-art img{transform:scale(1.02)}
+@media(prefers-reduced-motion:reduce){.craft-card:hover .craft-art img{transform:none}}
+
+/* ── 5 · PORTRAIT JOURNEY: $0 → kit → bundle → Masterclass, in order ─── */
+.journey{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:26px}
+@media(min-width:1080px){.journey{grid-template-columns:repeat(5,minmax(0,1fr));gap:22px}}
+.journey-step{position:relative;display:flex;flex-direction:column;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+  transition:transform .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
+@media(max-width:1079px){.journey-step{max-width:460px;width:100%;margin:0 auto}}
+.journey-step:hover{transform:translateY(-4px);border-color:rgba(201,168,106,.45);box-shadow:0 22px 48px -28px rgba(0,0,0,.9)}
+.journey-step--final{background:linear-gradient(155deg,#17161b,#101013);border-color:rgba(201,168,106,.4)}
+.journey-rung{display:flex;align-items:center;gap:.5rem;padding:.85rem 1.05rem 0;
+  font:700 .64rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.journey-rung i{display:grid;place-items:center;width:1.4rem;height:1.4rem;border-radius:50%;
+  border:1px solid rgba(201,168,106,.45);font:600 .66rem/1 var(--sans);font-style:normal;color:var(--muted);flex:none}
+.journey-step--final .journey-rung i{background:var(--gold);border-color:var(--gold);color:#181206}
+.journey-media{display:block;aspect-ratio:3/4;overflow:hidden;background:var(--mat);margin-top:.85rem}
+.journey-media img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:none;transition:transform .5s var(--ease)}
+.journey-step:hover .journey-media img{transform:scale(1.02)}
+@media(prefers-reduced-motion:reduce){
+  .journey-step:hover{transform:none}
+  .journey-step:hover .journey-media img{transform:none}
+}
+.journey-body{display:flex;flex-direction:column;gap:.4rem;padding:.95rem 1.05rem 1.1rem;flex:1}
+.journey-body h3{font-size:1rem;line-height:1.3}
+.journey-body h3 a{color:var(--text)}
+.journey-body h3 a:hover{color:var(--gold)}
+.journey-meta{font-size:.76rem;letter-spacing:.02em;margin:0}
+.journey-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding-top:.55rem}
+/* the path, drawn: → between steps on desktop, ↓ between rows on mobile */
+@media(min-width:1080px){
+  .journey-step + .journey-step::before{content:"→";position:absolute;left:-1.3rem;top:2.1rem;
+    font-size:1rem;line-height:1;color:rgba(201,168,106,.65)}
+}
+@media(max-width:1079px){
+  .journey-step + .journey-step::after{content:"↓";position:absolute;top:-1.42rem;left:50%;
+    transform:translateX(-50%);font-size:1rem;line-height:1;color:rgba(201,168,106,.65)}
+}
+
+/* ── 6 · WHY: quiet stroke icons, same four factual blocks ───────────── */
+.why-ic{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:11px;
+  border:1px solid rgba(201,168,106,.35);background:var(--gold-soft);color:var(--gold);margin-bottom:.8rem}
+.why-ic svg{width:19px;height:19px}
+
+/* ── 7 · MASTER LIBRARY: the nine workflows as scannable chips ───────── */
+.flag-chips{list-style:none;display:flex;flex-wrap:wrap;gap:.4rem;padding:0;margin:.85rem 0 .4rem}
+.flag-chips li{border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.015);
+  padding:.34rem .85rem;font-size:.78rem;color:var(--muted)}
+
+/* ── 8 · COMMUNITY PROOF: honest empty slots, never fabricated quotes ── */
+.proof-grid{grid-template-columns:1fr}
+@media(min-width:640px){.proof-grid{grid-template-columns:repeat(3,1fr)}}
+.proof-slot{margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.55rem;text-align:center;aspect-ratio:4/5;padding:1.4rem;color:var(--muted);
+  border:1.5px dashed rgba(201,168,106,.38);border-radius:var(--radius);background:rgba(201,168,106,.03)}
+.proof-slot svg{width:26px;height:26px;color:rgba(201,168,106,.65)}
+.proof-slot b{color:var(--text);font:600 .95rem var(--sans)}
+.proof-slot span{font-size:.78rem;line-height:1.5;max-width:26ch}
+.proof-cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.3rem}

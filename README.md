@@ -178,35 +178,41 @@ catalog and Brush Finder all read it:
 
 | Level | Tier | What it is | Where it appears |
 |---|---|---|---|
-| 1 | `free` | Free Procreate packs | Homepage §7, `/freebies.html` (email-first), `/thank-you.html` |
-| 2 | `entry` | $4–$10 specialist packs (skin, hair, line art…) | Homepage §3 popular row, catalog, PDPs |
-| 3 | `bundle` | $8–$20 multi-kit bundles | Homepage §5 — the **bundle ladder**, `/bundles.html` |
-| 4 | `flagship` | **Master Library, 2,000+ brushes, $19** | Homepage §5 (top rung) + §6 (dedicated band) + upgrade panel on 37 product pages |
-| 5 | `education` | Free starter guide + $19 Portrait Masterclass | Homepage §8, PDPs |
+| 1 | `free` | Free Procreate packs | Homepage "Try Before You Buy" row, `/freebies.html` (email-first), `/thank-you.html` |
+| 2 | `entry` | $4–$10 specialist packs (skin, hair, line art…) | Homepage best-seller four + portrait journey, catalog, PDPs |
+| 3 | `bundle` | $8–$20 multi-kit bundles | Homepage **bundle ladder** + portrait journey, `/bundles.html` |
+| 4 | `flagship` | **Master Library, 2,000+ brushes, $19** | Homepage ladder (top rung) + dedicated feature band + upgrade panel on 37 product pages |
+| 5 | `education` | Free starter guide + $19 Portrait Masterclass | Homepage free row + journey (first/last step), PDPs |
 
-### Homepage information architecture
+### Homepage information architecture — 2026-09-18 exact reorder
 
-The order below is the merchandising decision — each section answers the one before it:
+The order below is the merchandising decision — each section answers the one before it
+(see → believe → find → try → start → go deeper → trust → learn → stay connected):
 
 ```
-HEADER → HERO (short + commercial: Shop All Brushes / Try Free Brushes)
-→ BUYING ASSURANCES → POPULAR PRODUCTS (best-seller spotlight + six curated kits)
-→ SHOP BY WORKFLOW → PROCREATE BUNDLES (ladder) → MASTER LIBRARY (the ladder's top rung)
-→ FREE PROCREATE BRUSHES → LEARN PROCREATE PORTRAITS (free guide | masterclass $19)
-→ BEFORE → AFTER ("what do the brushes actually change")
-→ WHY DIGIKITPRO → ARTICLES → FREE BRUSH EMAIL CTA → FOOTER
+HEADER → HERO (one finished portrait artwork; Shop All Brushes / Try Free Brushes; trust row)
+→ BEFORE → AFTER (visual proof, directly under the hero)
+→ START WITH WHAT YOU ACTUALLY NEED (four best sellers: skin / mastery / line art / watercolor)
+→ WHAT DO YOU CREATE? (shop-by-workflow route cards, one artwork each)
+→ TRY DIGIKITPRO BEFORE YOU BUY (Starter Guide + three $0 kits, direct Payhip)
+→ FROM FIRST PORTRAIT TO FINISHED PORTRAIT ($0 → $5 → $8 → $15 → $19 journey)
+→ WANT MORE THAN ONE KIT? (Starter → Advanced → Ultimate → Master Library ladder)
+→ ONE LIBRARY. MULTIPLE WORKFLOWS. (Master Library feature)
+→ TOOLS THAT RESPECT YOUR CRAFT (four factual claims) → MADE FOR REAL ARTWORK
+(honest empty slots — no fabricated proof) → LEARN PROCREATE. CREATE BETTER. (3 guides)
+→ GET THE FREE STARTER PACK (email) → FOOTER
 ```
 
 Section order is generated from `build_home()` in `tools/pages_main.py` and is checked
 after every build by `tools/verify.py` (`homepage section order matches the
-product-first brief` + `homepage closes: why → articles → email CTA` +
+result-first brief` + `homepage closes: proof → articles → email CTA` +
 `hero CTAs are Shop All Brushes + Try Free Brushes`). The same suite also
 guards the Brush Finder removal (page, scripts and references all gone).
 The bundle row is a **ladder**, not a tile grid: its rungs live in
 `data/discovery.json → bundleLadder.rungs` (`Starter → Advanced → Ultimate →
-Master Library`), while every number on a rung (price, asset count, kit list,
-"$x per brush") is read from `data/products.json`, so a Payhip sync updates it.
-The homepage deliberately carries **no review section** — see "Social proof" below.
+Master Library`), while every number on a rung (price, asset count, kit list)
+is read from `data/products.json`, so a Payhip sync updates it.
+The homepage community-art strip is an **honest placeholder** — see "Social proof" below.
 
 ### Brush Finder — RETIRED 2026-09-18 (kept for the design rationale)
 **Everything is gone**: the page, `js/finder.js`, `js/finder-index.js`, the nav
@@ -298,17 +304,20 @@ anywhere until you point it at a Cloudflare Worker or Vercel function.
 Full rationale and the review point for the catalog decision:
 `docs/AUDIT-AND-PLAN.md` → "OWNER DECISIONS".
 
-### Social proof — why there is still no "Real reviews" section
-The homepage IA reserves a slot for real reviews between "Why DigiKitPro" and the
-email CTA. It is **deliberately not built**: this site publishes no placeholder
-quotes, no star ratings and no review counts, and `tools/verify.py` fails the build
-if any appear in generated HTML. An empty "Reviews" heading with nothing under it is
-a worse signal to a buyer than no heading at all.
+### Social proof — the "Made for Real Artwork" placeholder
+The homepage carries a **Made for Real Artwork** strip between "Why DigiKitPro" and
+the guides: three clearly-marked empty slots (`.proof-slot quote-slot`) that invite
+artists to share finished pieces. It deliberately contains **no quotes, no names,
+no artwork and no counts** — an honest frame is a better trust signal than fake
+proof, and `tools/verify.py` fails the build if fabricated testimonial copy,
+star ratings or review counts appear anywhere in generated HTML (the empty
+`.quote-slot` figures are its documented placeholder shape and are excluded
+from that scan as placeholders, never as proof).
 
-When you have verifiable quotes (a Payhip review, a direct message, an email reply —
-with permission), add them under `REAL REVIEWS` in `build_home()` in
-`tools/pages_main.py` as plain attributed text: name or handle, what they bought,
-their words. Do **not** add an aggregate star rating unless the rating is hosted and
+When a real artist shares real work (tagged post, direct message, email — with
+permission), replace one slot in `build_home()` in `tools/pages_main.py` with the
+piece as plain attributed text: the artwork, their own handle, what they used.
+Do **not** add an aggregate star rating unless the rating is hosted and
 verifiable by Google, and expect `python3 tools/verify.py` to fail any check that
 looks manufactured — that is the guard doing its job, not a bug to switch off.
 

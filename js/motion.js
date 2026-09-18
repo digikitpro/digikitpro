@@ -56,7 +56,8 @@
     ".cards > .card", ".craft-grid > .craft-card", ".why-grid > .why",
     ".arts-grid > .art-card", ".bundles-grid > .bundle-tile",
     ".bundle-stack > .bundle-panel", ".ebook-duo > .ebook-card",
-    ".ladder > .ladder-step",
+    ".ladder > .ladder-step", ".journey > .journey-step",
+    ".proof-grid > .proof-slot",
     ".thanks-grid > .thanks-card"
   ].join(",");
 

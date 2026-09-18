@@ -67,7 +67,7 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=3859a288cf071ff9e5bec35486d9acd8">
+  <link rel="stylesheet" href="css/style.css?v=aa4607788dc0617a001b04e54f8883bc">
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="feed.xml">
   <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
        are hidden from the very first frame (no flash of visible content).
@@ -134,7 +134,8 @@
 
 <main id="main">
   <!-- 1 · HERO: short and commercial — one value proposition, two CTAs
-       (Shop All Brushes / Try Free Brushes), the window-display covers. -->
+       (Shop All Brushes / Try Free Brushes), ONE finished artwork on the
+       right, trust row under the buttons. -->
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
@@ -147,47 +148,75 @@
         </div>
         <p class="hero-meta">Secure checkout via Payhip &nbsp;·&nbsp; Instant worldwide delivery &nbsp;·&nbsp; Lifetime access &nbsp;·&nbsp; Free packs, no email needed</p>
       </div>
-      <div class="hero-showcase" aria-hidden="true" data-parallax="10"><figure class="hero-card h1" style="--hero-ar:1400/1766"><img src="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp" width="1400" height="1766" alt="Portrait Skin Brushes for Procreate" loading="eager" fetchpriority="high" decoding="async"><figcaption>Portrait Skin Brushes for Procreate</figcaption></figure><figure class="hero-card h2" style="--hero-ar:1400/1731"><img src="assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" width="1400" height="1731" alt="Artista Studio Kit: 76 Procreate Brushes" loading="lazy" fetchpriority="auto" decoding="async"><figcaption>Artista Studio Kit: 76 Procreate Brushes</figcaption></figure><figure class="hero-card h3" style="--hero-ar:580/435"><img src="assets/products/watercolor-studio-kit-50-brushes/watercolor-studio-kit-50-brushes.webp" width="580" height="435" alt="50+ Realistic Watercolor Studio Kit for Procreate" loading="lazy" fetchpriority="auto" decoding="async"><figcaption>50+ Realistic Watercolor Studio Kit for Procreate</figcaption></figure></div>
+      <div class="hero-showcase hero-showcase--single" data-parallax="10"><a class="hero-card h1 hero-card--link" href="products/portrait-skin-brushes-procreate/" style="--hero-ar:1400/1766"><img src="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp" width="1400" height="1766" alt="Portrait Skin Brushes for Procreate — finished portrait painted with the kit" loading="eager" fetchpriority="high" decoding="async"><span class="hero-cap">Painted with the Portrait Skin Brushes for Procreate<b>View the kit →</b></span></a></div>
     </div>
   </section>
 
-  <!-- 2 · BUYING ASSURANCES: checkout, delivery, access, free packs —
-       statements the store already makes, verifiable in-repo. -->
-  <div class="trust-band" role="region" aria-label="Why buy from DigiKitPro"><div class="wrap trust-inner"><div class="tb-item"><span>Secure checkout</span><p>PayPal, cards &amp; Apple Pay — processed by Payhip</p></div><div class="tb-item"><span>Instant delivery</span><p>Worldwide, seconds after checkout</p></div><div class="tb-item"><span>Lifetime access</span><p>A permanent download link in your inbox</p></div><div class="tb-item"><span>4 free packs</span><p>$0 forever, no email needed to download</p></div></div></div>
+  <!-- 2 · VISUAL PROOF: before → after, directly under the hero. The
+       transformation comes before any catalog browsing. -->
+  <section class="section ba-section" id="results" aria-labelledby="results-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Visual proof</p><h2 id="results-title">See the difference the right tools can make</h2></div>
+        <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit →</a>
+      </div>
+      <p class="sec-note muted">Same artwork — different texture, detail and finishing tools. Drag the divider to see what pores, freckles, hair strands and the final polish add, and why the finished portrait stops looking airbrushed.</p>
+      <figure class="ba-figure">
+        <div class="ba-stage" data-ba>
+          <img class="ba-img ba-after" src="assets/img/ba-after.webp" width="1200" height="800" alt="Finished portrait: detailed skin texture, hair strands and final rendering" loading="lazy" decoding="async">
+          <div class="ba-clip">
+            <img class="ba-img ba-before" src="assets/img/ba-before.webp" width="1200" height="800" alt="Unfinished portrait: flat base colour with no skin texture or detail" loading="lazy" decoding="async">
+          </div>
+          <span class="ba-tag ba-tag-b">Before · flat base</span>
+          <span class="ba-tag ba-tag-a">After · textured finish</span>
+          <div class="ba-divider" role="slider" tabindex="0" aria-label="Reveal the finished portrait" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% finished">
+            <span class="ba-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 4 12l5 6M15 6l5 6-5 6"/></svg></span>
+          </div>
+          <div class="ba-sweep" aria-hidden="true"></div>
+        </div>
+        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use ← →.</span><span>Demonstration artwork.</span></figcaption>
+      </figure>
+      <ol class="ba-steps" aria-label="What the tools add, in paint order">
+        <li>Skin texture</li><li>Pores</li><li>Freckles</li><li>Hair</li><li>Final polish</li>
+      </ol>
+      <div class="ba-cta"><a class="btn btn-gold" href="products/portrait-skin-brushes-procreate/" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="before-after">Shop the tools used in this artwork <span class="btn-arr">·</span> $5.00</a><a class="btn btn-line" href="products/ultimate-portrait-mastery-bundle/">Or take the full portrait bundle →</a></div>
+    </div>
+  </section>
 
-  <!-- 3 · POPULAR: best-seller spotlight + the six packs the store leads
-       with. Products lead: a storefront shows the goods before the story. -->
+
+  <!-- 3 · POPULAR / BEST SELLERS: four focused kits, gallery-style cards
+       with View Product + Payhip Buy Now. No spotlight wall, no ten-card
+       pile — this is where "start with what you need" is answered. -->
   <section class="section" id="popular" aria-labelledby="pop-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Start here</p><h2 id="pop-title">Popular Procreate Brushes</h2></div>
+        <div><p class="eyebrow">Best sellers</p><h2 id="pop-title">Start With What You Actually Need</h2></div>
         <a class="text-link" href="products.html">Browse all 51 products →</a>
       </div>
-      <p class="sec-note muted">The packs painters reach for first — real kits from the full catalog, each with its own product page, live price and Payhip checkout.</p>
-      <div class="bs-inner" id="best-seller">
-      <div class="card-img">
-      <a class="bs-media" href="products/portrait-skin-brushes-procreate/" tabindex="-1" aria-hidden="true" data-pin-description="Portrait Skin Brushes for Procreate - 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-skin-brushes-procreate/" data-pin-media="https://digikitpro.shop/assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp">
-        <img src="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 900px) 430px, 92vw" width="750" height="946" alt="" loading="lazy" decoding="async">
-      </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-skin-brushes-procreate%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-skin-brushes-procreate%2Fportrait-skin-brushes-procreate-card.webp&amp;description=Portrait+Skin+Brushes+for+Procreate+-+19+premium+skin-texture+brushes%3A+pores%2C+freckles%2C+wrinkles+and+textured+blenders+that+turn+flat+paintings+into+believable+portraits.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Skin Brushes for Procreate on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-      </div>
-      <div class="bs-body">
-        <p class="bs-kicker"><span class="bs-badge">Best Seller</span></p>
-        <h2 id="bs-title">Portrait Skin Brushes <span class="bs-sub">for Procreate</span></h2>
-        <p class="lead-sm">19 realistic skin-texture brushes for natural-looking digital portraits.</p>
-        <ul class="bs-points"><li>Pores</li><li>Freckles</li><li>Wrinkles</li><li>Skin texture</li><li>Natural blending</li></ul>
-        <div class="bs-cta">
-          <span class="price price-lg">$5.00</span>
-          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/btOrh" target="_blank" rel="noopener" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="feature-band">Buy Now <span class="btn-arr">↗</span></a>
-          <a class="btn btn-line" href="products/portrait-skin-brushes-procreate/">View Product</a>
-        </div>
-      </div>
-</div>
-
-      <div class="grid cards cards-3">
+      <p class="sec-note muted">Focused tools for specific workflows. No giant brush pile required — every kit below is a real product with its own page, live price and Payhip checkout.</p>
+      <div class="grid cards cards-4">
+<article class="card" data-category="Skin Texture" data-name="portrait skin brushes for procreate" data-tags="skin skin texture pores freckles wrinkles portrait realistic blending blusher highlighter" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
+  <div class="card-img">
+  <a class="card-media" href="products/portrait-skin-brushes-procreate/" data-pin-description="Portrait Skin Brushes for Procreate - 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-skin-brushes-procreate/" data-pin-media="https://digikitpro.shop/assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp">
+    <img src="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Portrait Skin Brushes for Procreate: 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits." loading="lazy" decoding="async">
+    <span class="badge">Best Seller</span>
+  </a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-skin-brushes-procreate%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-skin-brushes-procreate%2Fportrait-skin-brushes-procreate-card.webp&amp;description=Portrait+Skin+Brushes+for+Procreate+-+19+premium+skin-texture+brushes%3A+pores%2C+freckles%2C+wrinkles+and+textured+blenders+that+turn+flat+paintings+into+believable+portraits.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Skin Brushes for Procreate on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="card-body">
+    <a class="card-cat" href="category/skin-texture/">Skin Texture</a>
+    <h3 class="card-title"><a href="products/portrait-skin-brushes-procreate/">Portrait Skin Brushes for Procreate</a></h3>
+    <p class="card-short">19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits.</p>
+    <div class="card-foot">
+      <span class="price">$5.00</span>
+      <span class="card-acts"><a class="btn btn-line btn-sm" href="products/portrait-skin-brushes-procreate/">View Product</a><a class="btn btn-gold btn-sm" href="https://payhip.com/b/btOrh" target="_blank" rel="noopener" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a></span>
+    </div>
+  </div>
+</article>
 <article class="card" data-category="Portrait" data-name="portrait mastery kit: 46 procreate brushes" data-tags="portrait portrait workflow skin hair blending paper texture face realistic" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
   <div class="card-img">
   <a class="card-media" href="products/portrait-mastery-kit-46-brushes/" data-pin-description="Portrait Mastery Kit: 46 Procreate Brushes - A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-mastery-kit-46-brushes/" data-pin-media="https://digikitpro.shop/assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp">
-    <img src="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Portrait Mastery Kit: 46 Procreate Brushes: A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish." loading="eager" fetchpriority="high" decoding="async">
+    <img src="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Portrait Mastery Kit: 46 Procreate Brushes: A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish." loading="lazy" decoding="async">
     <span class="badge">Best Seller</span>
   </a>
     <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-mastery-kit-46-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-mastery-kit-46-brushes%2Fportrait-mastery-kit-46-brushes-card.webp&amp;description=Portrait+Mastery+Kit%3A+46+Procreate+Brushes+-+A+portrait-specific+workflow+kit%3A+46+pro+brushes+plus+4+paper+textures+organized+into+sketch%2C+ink%2C+blend%2C+hair%2C+detail%2C+texture+and+finish.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Mastery Kit: 46 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
@@ -198,7 +227,7 @@
     <p class="card-short">A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish.</p>
     <div class="card-foot">
       <span class="price">$8.00</span>
-      <a class="btn btn-line btn-sm" href="https://payhip.com/b/pOG6v" target="_blank" rel="noopener" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
+      <span class="card-acts"><a class="btn btn-line btn-sm" href="products/portrait-mastery-kit-46-brushes/">View Product</a><a class="btn btn-gold btn-sm" href="https://payhip.com/b/pOG6v" target="_blank" rel="noopener" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a></span>
     </div>
   </div>
 </article>
@@ -216,43 +245,7 @@
     <p class="card-short">43 focused brushes plus a bonus texture brush for clean line art, natural pencil sketches and confident inking, no pack-switching.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="https://payhip.com/b/b70QE" target="_blank" rel="noopener" data-dkp-slug="essential-line-art-sketch-kit" data-dkp-name="Essential Line Art &amp; Sketch Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
-    </div>
-  </div>
-</article>
-<article class="card" data-category="Portrait" data-name="artista studio kit: 76 procreate brushes" data-tags="studio kit all in one inking shading graphite charcoal markers illustration comics" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <div class="card-img">
-  <a class="card-media" href="products/artista-studio-kit-76-brushes/" data-pin-description="Artista Studio Kit: 76 Procreate Brushes - One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/artista-studio-kit-76-brushes/" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp">
-    <img src="assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" srcset="assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Artista Studio Kit: 76 Procreate Brushes: One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects." loading="lazy" decoding="async">
-    
-  </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fartista-studio-kit-76-brushes%2Fartista-studio-kit-76-brushes-card.webp&amp;description=Artista+Studio+Kit%3A+76+Procreate+Brushes+-+One+organized+76-brush+collection+that+covers+the+full+studio+workflow%2C+linework%2C+inking%2C+sketching%2C+shading%2C+graphite%2C+markers+and+effects.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Artista Studio Kit: 76 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-  </div>
-  <div class="card-body">
-    <a class="card-cat" href="category/portrait/">Portrait</a>
-    <h3 class="card-title"><a href="products/artista-studio-kit-76-brushes/">Artista Studio Kit: 76 Procreate Brushes</a></h3>
-    <p class="card-short">One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects.</p>
-    <div class="card-foot">
-      <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="https://payhip.com/b/IjRTk" target="_blank" rel="noopener" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
-    </div>
-  </div>
-</article>
-<article class="card" data-category="Anime" data-name="anime soft-style studio kit: 100+ procreate brushes" data-tags="anime manga soft style shading blending cel chibi watercolor" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="anime-soft-style-studio-kit" data-dkp-name="Anime Soft-Style Studio Kit: 100+ Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
-  <div class="card-img">
-  <a class="card-media" href="products/anime-soft-style-studio-kit/" data-pin-description="Anime Soft-Style Studio Kit: 100+ Procreate Brushes - A complete anime ecosystem: 100+ brushes for soft gradients, luminous shading, razor-sharp manga ink and glowing final details. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/anime-soft-style-studio-kit/" data-pin-media="https://digikitpro.shop/assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp">
-    <img src="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp" srcset="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp 580w, assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Anime Soft-Style Studio Kit: 100+ Procreate Brushes: A complete anime ecosystem: 100+ brushes for soft gradients, luminous shading, razor-sharp manga ink and glowing final details." loading="lazy" decoding="async">
-    
-  </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fanime-soft-style-studio-kit%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fanime-soft-style-studio-kit%2Fanime-soft-style-studio-kit-card.webp&amp;description=Anime+Soft-Style+Studio+Kit%3A+100%2B+Procreate+Brushes+-+A+complete+anime+ecosystem%3A+100%2B+brushes+for+soft+gradients%2C+luminous+shading%2C+razor-sharp+manga+ink+and+glowing+final+details.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Anime Soft-Style Studio Kit: 100+ Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-  </div>
-  <div class="card-body">
-    <a class="card-cat" href="category/anime/">Anime</a>
-    <h3 class="card-title"><a href="products/anime-soft-style-studio-kit/">Anime Soft-Style Studio Kit: 100+ Procreate Brushes</a></h3>
-    <p class="card-short">A complete anime ecosystem: 100+ brushes for soft gradients, luminous shading, razor-sharp manga ink and glowing final details.</p>
-    <div class="card-foot">
-      <span class="price">$5.00</span>
-      <a class="btn btn-line btn-sm" href="https://payhip.com/b/yce9b" target="_blank" rel="noopener" data-dkp-slug="anime-soft-style-studio-kit" data-dkp-name="Anime Soft-Style Studio Kit: 100+ Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
+      <span class="card-acts"><a class="btn btn-line btn-sm" href="products/essential-line-art-sketch-kit/">View Product</a><a class="btn btn-gold btn-sm" href="https://payhip.com/b/b70QE" target="_blank" rel="noopener" data-dkp-slug="essential-line-art-sketch-kit" data-dkp-name="Essential Line Art &amp; Sketch Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a></span>
     </div>
   </div>
 </article>
@@ -274,21 +267,103 @@
     </div>
   </div>
 </article>
-<article class="card" data-category="Bundles" data-name="ultimate portrait mastery bundle: 4 procreate kits" data-tags="bundle portrait skin hair glitter line art workflow value" data-free="0" data-featured="1" data-tier="bundle" data-line="procreate" data-dkp-slug="ultimate-portrait-mastery-bundle" data-dkp-name="Ultimate Portrait Mastery Bundle: 4 Procreate Kits" data-dkp-price="15.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="card">
+</div>
+    </div>
+  </section>
+
+  <!-- 4 · SHOP BY WORKFLOW ("What Do You Create?"): discovery by intent,
+       one artwork per route. Built from data/discovery.json + CRAFT_ART. -->
+  <section class="section section-alt" id="craft" aria-labelledby="craft-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Kits for the way you create</p><h2 id="craft-title">What Do You Create?</h2></div>
+      <a class="text-link" href="products.html">Browse all products →</a>
+    </div>
+    <p class="sec-note muted">Find the right tools for your style and workflow — every card routes to a real category of finished, hand-tested kits.</p>
+    <div class="grid craft-grid"><a class="craft-card" href="category/portrait/" data-dkp-event="craft_card_click" data-dkp-craft="portraits" data-dkp-count="14"><span class="craft-art"><img src="assets/products/hair-hairstyle-stamp-kit/hair-hairstyle-stamp-kit-card.webp" width="580" height="387" alt="Portraits — artwork from Professional Hair &amp; Hairstyle Stamp Kit for Procreate" loading="lazy" decoding="async"></span><span class="craft-name">Portraits</span><span class="craft-blurb">Skin, hair, likeness and the full portrait workflow.</span><span class="craft-meta">14 packs →</span></a><a class="craft-card" href="category/anime/" data-dkp-event="craft_card_click" data-dkp-craft="anime" data-dkp-count="13"><span class="craft-art"><img src="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp" width="580" height="387" alt="Anime &amp; Manga — artwork from Anime Soft-Style Studio Kit: 100+ Procreate Brushes" loading="lazy" decoding="async"></span><span class="craft-name">Anime &amp; Manga</span><span class="craft-blurb">Soft-style shading, clean liners and cel colour.</span><span class="craft-meta">13 packs →</span></a><a class="craft-card" href="category/line-art/" data-dkp-event="craft_card_click" data-dkp-craft="illustration" data-dkp-count="39"><span class="craft-art"><img src="assets/products/illustration-brushes-2/illustration-brushes-2-card.webp" width="750" height="500" alt="Illustration — artwork from Illustration Brushes 2 for Procreate" loading="lazy" decoding="async"></span><span class="craft-name">Illustration</span><span class="craft-blurb">Characters, scenes, books and commission work.</span><span class="craft-meta">39 packs →</span></a><a class="craft-card" href="category/sketching/" data-dkp-event="craft_card_click" data-dkp-craft="sketching" data-dkp-count="16"><span class="craft-art"><img src="assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp" width="580" height="387" alt="Sketching — artwork from Professional Digital Sketchbook for Procreate" loading="lazy" decoding="async"></span><span class="craft-name">Sketching</span><span class="craft-blurb">Studies, sketchbooks and fast traditional-feel drawing.</span><span class="craft-meta">16 packs →</span></a><a class="craft-card" href="category/watercolor/" data-dkp-event="craft_card_click" data-dkp-craft="painting" data-dkp-count="15"><span class="craft-art"><img src="assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes-card.webp" width="580" height="435" alt="Digital Painting — artwork from 80 Organic Brushes: Watercolor Studio Kit for Procreate" loading="lazy" decoding="async"></span><span class="craft-name">Digital Painting</span><span class="craft-blurb">Watercolour, pastel, charcoal and painterly renders.</span><span class="craft-meta">15 packs →</span></a><a class="craft-card" href="category/traditional/" data-dkp-event="craft_card_click" data-dkp-craft="texture" data-dkp-count="18"><span class="craft-art"><img src="assets/products/professional-charcoal-studio/professional-charcoal-studio-card.webp" width="580" height="387" alt="Texture &amp; Traditional — artwork from Professional Charcoal Studio for Procreate" loading="lazy" decoding="async"></span><span class="craft-name">Texture &amp; Traditional</span><span class="craft-blurb">Paper grain, chalk, fur, smoke and analog surface.</span><span class="craft-meta">18 packs →</span></a><a class="craft-card" href="products.html" data-dkp-event="craft_card_click" data-dkp-craft="animation" data-dkp-count="14"><span class="craft-art"><img src="assets/products/smoke-brushes-12/smoke-brushes-12-card.webp" width="750" height="500" alt="Animation / Procreate Dreams — artwork from Smoke Procreate Brushes: 12 Realistic Smoke Effects" loading="lazy" decoding="async"></span><span class="craft-name">Animation / Procreate Dreams</span><span class="craft-blurb">Line, glow and texture tools animation artists reach for.</span><span class="craft-meta">14 packs →</span></a></div>
+  </div>
+</section>
+
+
+  <!-- 5 · FREE PROCREATE RESOURCES: the Starter Guide first, then the $0
+       kits. "Get Free" goes straight to Payhip — generous, not a teaser. -->
+  <section class="section" id="free" aria-labelledby="free-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Completely free</p><h2 id="free-title">Try DigiKitPro Before You Buy</h2></div>
+        <a class="text-link" href="freebies.html">All freebies →</a>
+      </div>
+      <p class="sec-note muted">Try real Procreate resources before spending anything — the same pressure tuning and file quality as the paid packs. Download now, keep forever, and only spend money once you know how they feel.</p>
+      <div class="grid cards cards-4">
+<article class="card" data-category="Guides &amp; eBooks" data-name="procreate portrait starter guide (free ebook)" data-tags="ebook guide procreate basics beginners portrait free ebook" data-free="1" data-featured="1" data-tier="education" data-line="procreate" data-dkp-slug="procreate-starter-guide-free-ebook" data-dkp-name="Procreate Portrait Starter Guide (Free eBook)" data-dkp-price="0.00" data-dkp-tier="education" data-dkp-free="1" data-dkp-loc="card">
   <div class="card-img">
-  <a class="card-media" href="products/ultimate-portrait-mastery-bundle/" data-pin-description="Ultimate Portrait Mastery Bundle: 4 Procreate Kits - Four professional portrait kits in one workflow: line art (43), skin texture (19), hair stamps (160) and glitter effects (30), 252+ assets. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/ultimate-portrait-mastery-bundle/" data-pin-media="https://digikitpro.shop/assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp">
-    <img src="assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp" srcset="assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp 750w, assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle.webp 1128w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="927" alt="Ultimate Portrait Mastery Bundle: 4 Procreate Kits: Four professional portrait kits in one workflow: line art (43), skin texture (19), hair stamps (160) and glitter effects (30), 252+ assets." loading="lazy" decoding="async">
-    <span class="badge">Best Value</span>
+  <a class="card-media" href="products/procreate-starter-guide-free-ebook/" data-pin-description="Procreate Portrait Starter Guide (Free eBook) - Stop guessing. Start your first believable Procreate portrait this week: a free visual guide from a blank canvas to a structured, well-lit head study. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/procreate-starter-guide-free-ebook/" data-pin-media="https://digikitpro.shop/assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook-card.webp">
+    <img src="assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook-card.webp" srcset="assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook-card.webp 750w, assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="1000" alt="Procreate Portrait Starter Guide (Free eBook): Stop guessing. Start your first believable Procreate portrait this week: a free visual guide from a blank canvas to a structured, well-lit head study." loading="lazy" decoding="async">
+    <span class="badge badge-free">Free</span>
   </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fultimate-portrait-mastery-bundle%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fultimate-portrait-mastery-bundle%2Fultimate-portrait-mastery-bundle-card.webp&amp;description=Ultimate+Portrait+Mastery+Bundle%3A+4+Procreate+Kits+-+Four+professional+portrait+kits+in+one+workflow%3A+line+art+%2843%29%2C+skin+texture+%2819%29%2C+hair+stamps+%28160%29+and+glitter+effects+%2830%29%2C+252%2B+assets.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Ultimate Portrait Mastery Bundle: 4 Procreate Kits on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fprocreate-starter-guide-free-ebook%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fprocreate-starter-guide-free-ebook%2Fprocreate-starter-guide-free-ebook-card.webp&amp;description=Procreate+Portrait+Starter+Guide+%28Free+eBook%29+-+Stop+guessing.+Start+your+first+believable+Procreate+portrait+this+week%3A+a+free+visual+guide+from+a+blank+canvas+to+a+structured%2C+well-lit+head+study.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Procreate Portrait Starter Guide (Free eBook) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
   </div>
   <div class="card-body">
-    <a class="card-cat" href="bundles.html">Bundles</a>
-    <h3 class="card-title"><a href="products/ultimate-portrait-mastery-bundle/">Ultimate Portrait Mastery Bundle: 4 Procreate Kits</a></h3>
-    <p class="card-short">Four professional portrait kits in one workflow: line art (43), skin texture (19), hair stamps (160) and glitter effects (30), 252+ assets.</p>
+    <a class="card-cat" href="products.html#cat-Guides%20&amp;%20eBooks">Guides &amp; eBooks</a>
+    <h3 class="card-title"><a href="products/procreate-starter-guide-free-ebook/">Procreate Portrait Starter Guide (Free eBook)</a></h3>
+    <p class="card-short">Stop guessing. Start your first believable Procreate portrait this week: a free visual guide from a blank canvas to a structured, well-lit head study.</p>
     <div class="card-foot">
-      <span class="price">$15.00</span>
-      <a class="btn btn-line btn-sm" href="products/ultimate-portrait-mastery-bundle/" data-dkp-slug="ultimate-portrait-mastery-bundle" data-dkp-name="Ultimate Portrait Mastery Bundle: 4 Procreate Kits" data-dkp-price="15.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="card">View Product</a>
+      <span class="price">Free</span>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/XRA5B" target="_blank" rel="noopener" data-dkp-slug="procreate-starter-guide-free-ebook" data-dkp-name="Procreate Portrait Starter Guide (Free eBook)" data-dkp-price="0.00" data-dkp-tier="education" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
+    </div>
+  </div>
+</article>
+<article class="card" data-category="Line Art" data-name="free fine liner set: 100 brushes + 13 paper textures" data-tags="free fine liner liner pen micron paper textures inking" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
+  <div class="card-img">
+  <a class="card-media" href="products/free-fine-liner-brushes-100/" data-pin-description="Free Fine Liner Set: 100 Brushes + 13 Paper Textures - Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-fine-liner-brushes-100/" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp">
+    <img src="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" srcset="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp 580w, assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Free Fine Liner Set: 100 Brushes + 13 Paper Textures: Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download." loading="lazy" decoding="async">
+    <span class="badge badge-free">Free</span>
+  </a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100-card.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+instant+download.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Free Fine Liner Set: 100 Brushes + 13 Paper Textures on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="card-body">
+    <a class="card-cat" href="category/line-art/">Line Art</a>
+    <h3 class="card-title"><a href="products/free-fine-liner-brushes-100/">Free Fine Liner Set: 100 Brushes + 13 Paper Textures</a></h3>
+    <p class="card-short">Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download.</p>
+    <div class="card-foot">
+      <span class="price">Free</span>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
+    </div>
+  </div>
+</article>
+<article class="card" data-category="Traditional" data-name="chalkboard artist&#x27;s toolkit: 20+ chalk brushes (free)" data-tags="free chalk chalkboard dusty lettering traditional" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-chalkboard-artists-toolkit" data-dkp-name="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
+  <div class="card-img">
+  <a class="card-media" href="products/free-chalkboard-artists-toolkit/" data-pin-description="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free) - The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-chalkboard-artists-toolkit/" data-pin-media="https://digikitpro.shop/assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp">
+    <img src="assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp" srcset="assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp 580w, assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free): The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download." loading="lazy" decoding="async">
+    <span class="badge badge-free">Free</span>
+  </a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-chalkboard-artists-toolkit%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-chalkboard-artists-toolkit%2Ffree-chalkboard-artists-toolkit-card.webp&amp;description=Chalkboard+Artist%27s+Toolkit%3A+20%2B+Chalk+Brushes+%28Free%29+-+The+raw+essence+of+traditional+chalk+on+your+iPad%3A+20%2B+dusty%2C+tactile+chalk+brushes+with+real+blackboard+soul.+Free+download.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="card-body">
+    <a class="card-cat" href="category/traditional/">Traditional</a>
+    <h3 class="card-title"><a href="products/free-chalkboard-artists-toolkit/">Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)</a></h3>
+    <p class="card-short">The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download.</p>
+    <div class="card-foot">
+      <span class="price">Free</span>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/Rexg7" target="_blank" rel="noopener" data-dkp-slug="free-chalkboard-artists-toolkit" data-dkp-name="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
+    </div>
+  </div>
+</article>
+<article class="card" data-category="Other" data-name="ultimate procreate color vault: 1,200+ swatches (free)" data-tags="free color palettes swatches color vault" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
+  <div class="card-img">
+  <a class="card-media" href="products/free-color-vault-1200-swatches/" data-pin-description="Ultimate Procreate Color Vault: 1,200+ Swatches (Free) - 40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-color-vault-1200-swatches/" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp">
+    <img src="assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp" srcset="assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Ultimate Procreate Color Vault: 1,200+ Swatches (Free): 40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade." loading="lazy" decoding="async">
+    <span class="badge badge-free">Free</span>
+  </a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-color-vault-1200-swatches%2Ffree-color-vault-1200-swatches-card.webp&amp;description=Ultimate+Procreate+Color+Vault%3A+1%2C200%2B+Swatches+%28Free%29+-+40+professional+palettes%2C+1%2C200%2B+curated+swatches%2C+so+you+never+burn+the+first+hour+of+a+painting+hunting+for+the+right+shade.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Ultimate Procreate Color Vault: 1,200+ Swatches (Free) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="card-body">
+    <a class="card-cat" href="products.html#cat-Other">Other</a>
+    <h3 class="card-title"><a href="products/free-color-vault-1200-swatches/">Ultimate Procreate Color Vault: 1,200+ Swatches (Free)</a></h3>
+    <p class="card-short">40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade.</p>
+    <div class="card-foot">
+      <span class="price">Free</span>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/BmFdZ" target="_blank" rel="noopener" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
     </div>
   </div>
 </article>
@@ -296,31 +371,90 @@
     </div>
   </section>
 
-  <!-- 4 · SHOP BY WORKFLOW: route by the artist's intent, not our file
-       structure. Cards are generated from data/discovery.json. -->
-  <section class="section" id="craft" aria-labelledby="craft-title">
+  <!-- 6 · PORTRAIT JOURNEY: the portrait funnel as a path, not a pile —
+       free guide → focused kit → full kit → bundle → Masterclass. -->
+  <section class="section section-alt" id="journey" aria-labelledby="journey-title">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="eyebrow">Kits for the way you create</p><h2 id="craft-title">Shop by Workflow</h2></div>
-      <a class="text-link" href="products.html">Browse all products →</a>
+      <div><p class="eyebrow">The portrait path</p><h2 id="journey-title">From First Portrait to Finished Portrait</h2></div>
+      <a class="text-link" href="blog/procreate-portrait-workflow/">Read the portrait workflow →</a>
     </div>
-    <p class="sec-note muted">Pick the workflow you paint in — every card routes to a real category of finished, hand-tested kits.</p>
-    <div class="grid craft-grid"><a class="craft-card" href="category/portrait/" data-dkp-event="craft_card_click" data-dkp-craft="portraits" data-dkp-count="14"><span class="craft-name">Portraits</span><span class="craft-blurb">Skin, hair, likeness and the full portrait workflow.</span></a><a class="craft-card" href="category/anime/" data-dkp-event="craft_card_click" data-dkp-craft="anime" data-dkp-count="13"><span class="craft-name">Anime &amp; Manga</span><span class="craft-blurb">Soft-style shading, clean liners and cel colour.</span></a><a class="craft-card" href="category/line-art/" data-dkp-event="craft_card_click" data-dkp-craft="illustration" data-dkp-count="39"><span class="craft-name">Illustration</span><span class="craft-blurb">Characters, scenes, books and commission work.</span></a><a class="craft-card" href="category/sketching/" data-dkp-event="craft_card_click" data-dkp-craft="sketching" data-dkp-count="16"><span class="craft-name">Sketching</span><span class="craft-blurb">Studies, sketchbooks and fast traditional-feel drawing.</span></a><a class="craft-card" href="category/watercolor/" data-dkp-event="craft_card_click" data-dkp-craft="painting" data-dkp-count="15"><span class="craft-name">Digital Painting</span><span class="craft-blurb">Watercolour, pastel, charcoal and painterly renders.</span></a><a class="craft-card" href="category/traditional/" data-dkp-event="craft_card_click" data-dkp-craft="texture" data-dkp-count="18"><span class="craft-name">Texture &amp; Traditional</span><span class="craft-blurb">Paper grain, chalk, fur, smoke and analog surface.</span></a><a class="craft-card" href="products.html" data-dkp-event="craft_card_click" data-dkp-craft="animation" data-dkp-count="14"><span class="craft-name">Animation / Procreate Dreams</span><span class="craft-blurb">Line, glow and texture tools animation artists reach for.</span></a></div>
+    <p class="sec-note muted">A simple path from learning the basics to building a complete portrait workflow. Start free — then add the tools when your portraits ask for them.</p>
+    <ol class="journey"><li class="journey-step">
+  <span class="journey-rung"><i aria-hidden="true">1</i>Free</span>
+  <div class="card-img">
+  <a class="journey-media" href="products/procreate-starter-guide-free-ebook/" tabindex="-1" aria-hidden="true" data-pin-description="Procreate Portrait Starter Guide (Free eBook) - Stop guessing. Start your first believable Procreate portrait this week: a free visual guide from a blank canvas to a structured, well-lit head study. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/procreate-starter-guide-free-ebook/" data-pin-media="https://digikitpro.shop/assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook-card.webp">
+    <img src="assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook-card.webp" srcset="assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook-card.webp 750w, assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook.webp 1400w" sizes="(min-width: 1080px) 220px, 88vw" width="750" height="1000" alt="" loading="lazy" decoding="async">
+  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fprocreate-starter-guide-free-ebook%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fprocreate-starter-guide-free-ebook%2Fprocreate-starter-guide-free-ebook-card.webp&amp;description=Procreate+Portrait+Starter+Guide+%28Free+eBook%29+-+Stop+guessing.+Start+your+first+believable+Procreate+portrait+this+week%3A+a+free+visual+guide+from+a+blank+canvas+to+a+structured%2C+well-lit+head+study.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Procreate Portrait Starter Guide (Free eBook) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="journey-body">
+    <h3><a href="products/procreate-starter-guide-free-ebook/">Procreate Portrait Starter Guide</a></h3>
+    <p class="journey-meta muted">PDF eBook · instant download</p>
+    <div class="journey-foot"><span class="price">Free</span><a class="btn btn-line btn-sm" href="https://payhip.com/b/XRA5B" target="_blank" rel="noopener" data-dkp-slug="procreate-starter-guide-free-ebook" data-dkp-name="Procreate Portrait Starter Guide (Free eBook)" data-dkp-price="0.00" data-dkp-tier="education" data-dkp-free="1" data-dkp-loc="journey">Get Free ↗</a></div>
+  </div>
+</li><li class="journey-step">
+  <span class="journey-rung"><i aria-hidden="true">2</i>Portrait skin</span>
+  <div class="card-img">
+  <a class="journey-media" href="products/portrait-skin-brushes-procreate/" tabindex="-1" aria-hidden="true" data-pin-description="Portrait Skin Brushes for Procreate - 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-skin-brushes-procreate/" data-pin-media="https://digikitpro.shop/assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp">
+    <img src="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1080px) 220px, 88vw" width="750" height="946" alt="" loading="lazy" decoding="async">
+  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-skin-brushes-procreate%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-skin-brushes-procreate%2Fportrait-skin-brushes-procreate-card.webp&amp;description=Portrait+Skin+Brushes+for+Procreate+-+19+premium+skin-texture+brushes%3A+pores%2C+freckles%2C+wrinkles+and+textured+blenders+that+turn+flat+paintings+into+believable+portraits.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Skin Brushes for Procreate on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="journey-body">
+    <h3><a href="products/portrait-skin-brushes-procreate/">Portrait Skin Brushes for Procreate</a></h3>
+    <p class="journey-meta muted">19 professional brushes</p>
+    <div class="journey-foot"><span class="price">$5.00</span><a class="btn btn-line btn-sm" href="products/portrait-skin-brushes-procreate/">View Product</a></div>
+  </div>
+</li><li class="journey-step">
+  <span class="journey-rung"><i aria-hidden="true">3</i>Portrait workflow</span>
+  <div class="card-img">
+  <a class="journey-media" href="products/portrait-mastery-kit-46-brushes/" tabindex="-1" aria-hidden="true" data-pin-description="Portrait Mastery Kit: 46 Procreate Brushes - A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-mastery-kit-46-brushes/" data-pin-media="https://digikitpro.shop/assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp">
+    <img src="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1080px) 220px, 88vw" width="750" height="928" alt="" loading="lazy" decoding="async">
+  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-mastery-kit-46-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-mastery-kit-46-brushes%2Fportrait-mastery-kit-46-brushes-card.webp&amp;description=Portrait+Mastery+Kit%3A+46+Procreate+Brushes+-+A+portrait-specific+workflow+kit%3A+46+pro+brushes+plus+4+paper+textures+organized+into+sketch%2C+ink%2C+blend%2C+hair%2C+detail%2C+texture+and+finish.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Mastery Kit: 46 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="journey-body">
+    <h3><a href="products/portrait-mastery-kit-46-brushes/">Portrait Mastery Kit: 46 Procreate Brushes</a></h3>
+    <p class="journey-meta muted">46 brushes + 4 paper textures</p>
+    <div class="journey-foot"><span class="price">$8.00</span><a class="btn btn-line btn-sm" href="products/portrait-mastery-kit-46-brushes/">View Product</a></div>
+  </div>
+</li><li class="journey-step">
+  <span class="journey-rung"><i aria-hidden="true">4</i>Complete</span>
+  <div class="card-img">
+  <a class="journey-media" href="products/ultimate-portrait-mastery-bundle/" tabindex="-1" aria-hidden="true" data-pin-description="Ultimate Portrait Mastery Bundle: 4 Procreate Kits - Four professional portrait kits in one workflow: line art (43), skin texture (19), hair stamps (160) and glitter effects (30), 252+ assets. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/ultimate-portrait-mastery-bundle/" data-pin-media="https://digikitpro.shop/assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp">
+    <img src="assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp" srcset="assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle-card.webp 750w, assets/products/ultimate-portrait-mastery-bundle/ultimate-portrait-mastery-bundle.webp 1128w" sizes="(min-width: 1080px) 220px, 88vw" width="750" height="927" alt="" loading="lazy" decoding="async">
+  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fultimate-portrait-mastery-bundle%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fultimate-portrait-mastery-bundle%2Fultimate-portrait-mastery-bundle-card.webp&amp;description=Ultimate+Portrait+Mastery+Bundle%3A+4+Procreate+Kits+-+Four+professional+portrait+kits+in+one+workflow%3A+line+art+%2843%29%2C+skin+texture+%2819%29%2C+hair+stamps+%28160%29+and+glitter+effects+%2830%29%2C+252%2B+assets.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Ultimate Portrait Mastery Bundle: 4 Procreate Kits on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="journey-body">
+    <h3><a href="products/ultimate-portrait-mastery-bundle/">Ultimate Portrait Mastery Bundle: 4 Procreate Kits</a></h3>
+    <p class="journey-meta muted">252+ assets across 4 complete kits</p>
+    <div class="journey-foot"><span class="price">$15.00</span><a class="btn btn-line btn-sm" href="products/ultimate-portrait-mastery-bundle/">View Product</a></div>
+  </div>
+</li><li class="journey-step journey-step--final">
+  <span class="journey-rung"><i aria-hidden="true">5</i>Masterclass</span>
+  <div class="card-img">
+  <a class="journey-media" href="products/procreate-portrait-masterclass-ebook/" tabindex="-1" aria-hidden="true" data-pin-description="The Complete Procreate Portrait Masterclass (eBook) - From a blank canvas to a believable portrait, in 15 chapters: a repeatable Procreate portrait workflow you can audit and reuse on every portrait after. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/procreate-portrait-masterclass-ebook/" data-pin-media="https://digikitpro.shop/assets/products/procreate-portrait-masterclass-ebook/procreate-portrait-masterclass-ebook-card.webp">
+    <img src="assets/products/procreate-portrait-masterclass-ebook/procreate-portrait-masterclass-ebook-card.webp" srcset="assets/products/procreate-portrait-masterclass-ebook/procreate-portrait-masterclass-ebook-card.webp 750w, assets/products/procreate-portrait-masterclass-ebook/procreate-portrait-masterclass-ebook.webp 1400w" sizes="(min-width: 1080px) 220px, 88vw" width="750" height="1000" alt="" loading="lazy" decoding="async">
+  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fprocreate-portrait-masterclass-ebook%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fprocreate-portrait-masterclass-ebook%2Fprocreate-portrait-masterclass-ebook-card.webp&amp;description=The+Complete+Procreate+Portrait+Masterclass+%28eBook%29+-+From+a+blank+canvas+to+a+believable+portrait%2C+in+15+chapters%3A+a+repeatable+Procreate+portrait+workflow+you+can+audit+and+reuse+on+every+portrait+after.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save The Complete Procreate Portrait Masterclass (eBook) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="journey-body">
+    <h3><a href="products/procreate-portrait-masterclass-ebook/">The Complete Procreate Portrait Masterclass</a></h3>
+    <p class="journey-meta muted">PDF eBook · 107 pages · 15 chapters</p>
+    <div class="journey-foot"><span class="price">$19.00</span><a class="btn btn-gold btn-sm" href="products/procreate-portrait-masterclass-ebook/">Explore the Masterclass</a></div>
+  </div>
+</li></ol>
   </div>
 </section>
 
 
-  <!-- 5 · PROCREATE BUNDLES: a value ladder (Starter → Advanced → Ultimate
-       → Master Library), not a tile grid ordered by price.
-       data/discovery.json → bundleLadder owns the rungs; the heading link
-       goes to the full side-by-side comparison guide. -->
-  <section class="section section-alt" id="bundles" aria-labelledby="lad-title">
+  <!-- 7 · PROCREATE BUNDLES ("Want More Than One Kit?"): the value ladder
+       only AFTER the visitor has seen focused kits and the portrait path.
+       data/discovery.json → bundleLadder owns the rungs. -->
+  <section class="section" id="bundles" aria-labelledby="lad-title">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="eyebrow">Pick your rung</p><h2 id="lad-title">Procreate Bundles</h2></div>
+      <div><p class="eyebrow">Bundles &amp; libraries</p><h2 id="lad-title">Want More Than One Kit?</h2></div>
       <a class="text-link" href="guides/procreate-bundles-compared/">Compare every bundle →</a>
     </div>
-    <p class="ladder-lead muted">Starter → Advanced → Ultimate → <b>Master Library</b> — each rung is more of the studio in one checkout. Prices below are live store prices, so no rung advertises a "was" figure it does not have.</p>
+    <p class="ladder-lead muted">Starter → Advanced → Ultimate → <b>Master Library</b> — choose the collection that fits how you create. Every rung below says exactly what it adds and who it is for — a bigger library is not automatically the better buy, the right rung is.</p>
     <ol class="ladder"><li class="ladder-step" id="ladder-starter">
   <span class="ladder-rung"><i aria-hidden="true">1</i>Starter</span>
   <div class="card-img">
@@ -399,26 +533,27 @@
 </section>
 
 
-  <!-- 6 · MASTER LIBRARY: the ladder's top rung, broken out so the library
-       gets a real argument instead of a fourth card. -->
+  <!-- 8 · MASTER LIBRARY FEATURE: the advanced option — one library, nine
+       workflows as scannable chips, Compare Bundles as the second CTA. -->
   <section class="section flagship-band" id="master-library" aria-labelledby="flag-title">
   <div class="wrap flag-inner">
     <div class="flag-media" data-wipe data-pin-description="The DigiKitPro Master Library: 2,000+ Procreate Brushes - The definitive DigiKitPro collection: 2,000+ professional brushes, organized and optimized, every style, one library, no more tool fatigue. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/master-library-2000-brushes/" data-pin-media="https://digikitpro.shop/assets/products/master-library-2000-brushes/master-library-2000-brushes-card.webp">
       <img src="assets/products/master-library-2000-brushes/master-library-2000-brushes.webp" srcset="assets/products/master-library-2000-brushes/master-library-2000-brushes-card.webp 750w, assets/products/master-library-2000-brushes/master-library-2000-brushes.webp 1200w" sizes="(min-width: 960px) 42vw, 92vw" width="1200" height="800" alt="The DigiKitPro Master Library, 2,000+ Procreate Brushes, product preview artwork" loading="lazy" decoding="async"><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fmaster-library-2000-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fmaster-library-2000-brushes%2Fmaster-library-2000-brushes-card.webp&amp;description=The+DigiKitPro+Master+Library%3A+2%2C000%2B+Procreate+Brushes+-+The+definitive+DigiKitPro+collection%3A+2%2C000%2B+professional+brushes%2C+organized+and+optimized%2C+every+style%2C+one+library%2C+no+more+tool+fatigue.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save The DigiKitPro Master Library: 2,000+ Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
     </div>
     <div class="flag-body">
-      <p class="eyebrow">One library. Multiple workflows. Less tool hunting.</p>
-      <h2 id="flag-title">The DigiKitPro Master Library: 2,000+ Procreate Brushes</h2>
+      <p class="eyebrow">The DigiKitPro Master Library: 2,000+ Procreate Brushes</p>
+      <h2 id="flag-title">One Library. Multiple Workflows. Less Tool Hunting.</h2>
       <p class="lead-sm">2,000+ organized Procreate brushes — affordable, organized and ready for every workflow, from portraits and skin to line art, watercolor and anime.</p>
       <ul class="flag-points">
         <li><b>2,000+ organized brushes</b> in organised category folders — no more hunting for the right tool</li>
-        <li>Portrait, skin, hair, linework, watercolour, traditional media, character &amp; anatomy, texture and effects</li>
         <li>One organized download, lifetime access, built for how you actually create</li>
       </ul>
+      <ul class="flag-chips"><li>Portrait</li><li>Skin</li><li>Hair</li><li>Linework</li><li>Watercolor</li><li>Traditional media</li><li>Character &amp; anatomy</li><li>Texture</li><li>Effects</li></ul>
       <p class="flag-compare muted">Single specialist packs run <b>$4–$10</b> each across 31 kits. One library, every style, $19.00.</p>
       <div class="flag-cta">
         <span class="price price-lg">$19.00</span>
-        <a class="btn btn-gold" href="products/master-library-2000-brushes/">View Product</a>
+        <a class="btn btn-gold" href="products/master-library-2000-brushes/">View the Master Library</a>
+        <a class="btn btn-line" href="guides/procreate-bundles-compared/">Compare Bundles</a>
         <a class="text-link" href="https://payhip.com/b/G2N8m" target="_blank" rel="noopener" data-dkp-slug="master-library-2000-brushes" data-dkp-name="The DigiKitPro Master Library: 2,000+ Procreate Brushes" data-dkp-price="19.00" data-dkp-tier="flagship" data-dkp-free="0" data-dkp-loc="flagship-band">Buy on Payhip ↗</a>
       </div>
       <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="refunds.html">Refund policy</a></p>
@@ -428,171 +563,56 @@
 </section>
 
 
-  <!-- 7 · FREE PROCREATE BRUSHES: "Get Free" goes straight to Payhip. -->
-  <section class="section" id="free">
+  <!-- 9 · WHY DIGIKITPRO: trust AFTER products and results, four factual
+       blocks with quiet stroke icons. -->
+  <section class="section" id="why" aria-labelledby="why-title">
     <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">Completely free</p><h2>Free Procreate Brushes</h2></div>
-        <a class="text-link" href="freebies.html">All freebies →</a>
-      </div>
-      <p class="sec-note muted">Try the tools before you buy anything. Real kits, not samples — the same pressure tuning and file quality as the paid packs. Download now, keep forever, and only spend money once you know how they feel.</p>
-      <div class="grid cards cards-3">
-<article class="card" data-category="Line Art" data-name="free fine liner set: 100 brushes + 13 paper textures" data-tags="free fine liner liner pen micron paper textures inking" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
-  <div class="card-img">
-  <a class="card-media" href="products/free-fine-liner-brushes-100/" data-pin-description="Free Fine Liner Set: 100 Brushes + 13 Paper Textures - Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-fine-liner-brushes-100/" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp">
-    <img src="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" srcset="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp 580w, assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Free Fine Liner Set: 100 Brushes + 13 Paper Textures: Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download." loading="eager" fetchpriority="high" decoding="async">
-    <span class="badge badge-free">Free</span>
-  </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100-card.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+instant+download.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Free Fine Liner Set: 100 Brushes + 13 Paper Textures on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-  </div>
-  <div class="card-body">
-    <a class="card-cat" href="category/line-art/">Line Art</a>
-    <h3 class="card-title"><a href="products/free-fine-liner-brushes-100/">Free Fine Liner Set: 100 Brushes + 13 Paper Textures</a></h3>
-    <p class="card-short">Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download.</p>
-    <div class="card-foot">
-      <span class="price">Free</span>
-      <a class="btn btn-line btn-sm" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
-    </div>
-  </div>
-</article>
-<article class="card" data-category="Traditional" data-name="chalkboard artist&#x27;s toolkit: 20+ chalk brushes (free)" data-tags="free chalk chalkboard dusty lettering traditional" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-chalkboard-artists-toolkit" data-dkp-name="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
-  <div class="card-img">
-  <a class="card-media" href="products/free-chalkboard-artists-toolkit/" data-pin-description="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free) - The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-chalkboard-artists-toolkit/" data-pin-media="https://digikitpro.shop/assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp">
-    <img src="assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp" srcset="assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit-card.webp 580w, assets/products/free-chalkboard-artists-toolkit/free-chalkboard-artists-toolkit.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free): The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download." loading="lazy" decoding="async">
-    <span class="badge badge-free">Free</span>
-  </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-chalkboard-artists-toolkit%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-chalkboard-artists-toolkit%2Ffree-chalkboard-artists-toolkit-card.webp&amp;description=Chalkboard+Artist%27s+Toolkit%3A+20%2B+Chalk+Brushes+%28Free%29+-+The+raw+essence+of+traditional+chalk+on+your+iPad%3A+20%2B+dusty%2C+tactile+chalk+brushes+with+real+blackboard+soul.+Free+download.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-  </div>
-  <div class="card-body">
-    <a class="card-cat" href="category/traditional/">Traditional</a>
-    <h3 class="card-title"><a href="products/free-chalkboard-artists-toolkit/">Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)</a></h3>
-    <p class="card-short">The raw essence of traditional chalk on your iPad: 20+ dusty, tactile chalk brushes with real blackboard soul. Free download.</p>
-    <div class="card-foot">
-      <span class="price">Free</span>
-      <a class="btn btn-line btn-sm" href="https://payhip.com/b/Rexg7" target="_blank" rel="noopener" data-dkp-slug="free-chalkboard-artists-toolkit" data-dkp-name="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
-    </div>
-  </div>
-</article>
-<article class="card" data-category="Other" data-name="ultimate procreate color vault: 1,200+ swatches (free)" data-tags="free color palettes swatches color vault" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
-  <div class="card-img">
-  <a class="card-media" href="products/free-color-vault-1200-swatches/" data-pin-description="Ultimate Procreate Color Vault: 1,200+ Swatches (Free) - 40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-color-vault-1200-swatches/" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp">
-    <img src="assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp" srcset="assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Ultimate Procreate Color Vault: 1,200+ Swatches (Free): 40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade." loading="lazy" decoding="async">
-    <span class="badge badge-free">Free</span>
-  </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-color-vault-1200-swatches%2Ffree-color-vault-1200-swatches-card.webp&amp;description=Ultimate+Procreate+Color+Vault%3A+1%2C200%2B+Swatches+%28Free%29+-+40+professional+palettes%2C+1%2C200%2B+curated+swatches%2C+so+you+never+burn+the+first+hour+of+a+painting+hunting+for+the+right+shade.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Ultimate Procreate Color Vault: 1,200+ Swatches (Free) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-  </div>
-  <div class="card-body">
-    <a class="card-cat" href="products.html#cat-Other">Other</a>
-    <h3 class="card-title"><a href="products/free-color-vault-1200-swatches/">Ultimate Procreate Color Vault: 1,200+ Swatches (Free)</a></h3>
-    <p class="card-short">40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade.</p>
-    <div class="card-foot">
-      <span class="price">Free</span>
-      <a class="btn btn-line btn-sm" href="https://payhip.com/b/BmFdZ" target="_blank" rel="noopener" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
-    </div>
-  </div>
-</article>
-</div>
-    </div>
-  </section>
-
-  <!-- 8 · LEARN PROCREATE PORTRAITS: free starter guide → paid masterclass,
-       side by side. Large covers, premium cards, the paid Masterclass gets
-       the stronger emphasis. -->
-  <section class="section section-alt" id="ebooks" aria-labelledby="edu-title">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">Learn the craft</p><h2 id="edu-title">Learn Procreate Portraits</h2></div>
-        <p class="sec-note muted">Real page spreads from inside the book — 5 interior pages now live in <a href="products/procreate-portrait-masterclass-ebook/#look-inside">Look Inside</a> on the Masterclass page.</p>
-      </div>
-      <div class="ebook-duo"><article class="ebook-card edu-card edu-start">
-  <a class="ebook-cover" href="products/procreate-starter-guide-free-ebook/" data-pin-description="Procreate Portrait Starter Guide (Free eBook) - Stop guessing. Start your first believable Procreate portrait this week: a free visual guide from a blank canvas to a structured, well-lit head study. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/procreate-starter-guide-free-ebook/" data-pin-media="https://digikitpro.shop/assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook-card.webp">
-    <img src="assets/products/procreate-starter-guide-free-ebook/procreate-starter-guide-free-ebook-card.webp" width="750" height="1000" alt="Procreate Portrait Starter Guide: cover" loading="lazy" decoding="async">
-  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fprocreate-starter-guide-free-ebook%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fprocreate-starter-guide-free-ebook%2Fprocreate-starter-guide-free-ebook-card.webp&amp;description=Procreate+Portrait+Starter+Guide+%28Free+eBook%29+-+Stop+guessing.+Start+your+first+believable+Procreate+portrait+this+week%3A+a+free+visual+guide+from+a+blank+canvas+to+a+structured%2C+well-lit+head+study.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Procreate Portrait Starter Guide (Free eBook) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-  <div class="ebook-body">
-    <p class="edu-level">Free · Start here</p>
-    <h3>Procreate Portrait Starter Guide</h3>
-    <p class="edu-desc muted">The free Portrait Starter Guide — a structured introduction to Procreate portrait basics on a blank canvas.</p>
-    <div class="ebook-foot">
-      <span class="price price-lg">Free</span>
-      <a class="btn btn-line" href="https://payhip.com/b/XRA5B" target="_blank" rel="noopener" data-dkp-slug="procreate-starter-guide-free-ebook" data-dkp-name="Procreate Portrait Starter Guide (Free eBook)" data-dkp-price="0.00" data-dkp-tier="education" data-dkp-free="1" data-dkp-loc="edu-duo">Get Free Guide ↗</a>
-    </div>
-    <p class="edu-meta">PDF eBook · instant download · $0 forever</p>
-  </div>
-</article><div class="edu-link" aria-hidden="true"><span class="edu-arrow">→</span><span class="edu-label">then go deeper</span></div><article class="ebook-card edu-card edu-deep">
-  <a class="ebook-cover" href="products/procreate-portrait-masterclass-ebook/" data-pin-description="The Complete Procreate Portrait Masterclass (eBook) - From a blank canvas to a believable portrait, in 15 chapters: a repeatable Procreate portrait workflow you can audit and reuse on every portrait after. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/procreate-portrait-masterclass-ebook/" data-pin-media="https://digikitpro.shop/assets/products/procreate-portrait-masterclass-ebook/procreate-portrait-masterclass-ebook-card.webp">
-    <img src="assets/products/procreate-portrait-masterclass-ebook/procreate-portrait-masterclass-ebook-card.webp" width="750" height="1000" alt="The Complete Procreate Portrait Masterclass: cover" loading="lazy" decoding="async">
-  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fprocreate-portrait-masterclass-ebook%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fprocreate-portrait-masterclass-ebook%2Fprocreate-portrait-masterclass-ebook-card.webp&amp;description=The+Complete+Procreate+Portrait+Masterclass+%28eBook%29+-+From+a+blank+canvas+to+a+believable+portrait%2C+in+15+chapters%3A+a+repeatable+Procreate+portrait+workflow+you+can+audit+and+reuse+on+every+portrait+after.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save The Complete Procreate Portrait Masterclass (eBook) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-  <div class="ebook-body">
-    <p class="edu-level">Premium · Full workflow</p>
-    <h3>The Complete Procreate Portrait Masterclass</h3>
-    <p class="edu-desc muted">The Complete Procreate Portrait Masterclass — 107 pages, 15 chapters, full portrait workflow from blank canvas to finished believable portrait.</p>
-    <div class="ebook-foot">
-      <span class="price price-lg">$19.00</span>
-      <a class="btn btn-gold btn-lg" href="products/procreate-portrait-masterclass-ebook/">Explore the Masterclass</a>
-    </div>
-    <p class="edu-meta">PDF eBook · 107 pages · 15 chapters · $19</p>
-  </div>
-</article></div>
-      <div class="look-home-preview"><a href="products/procreate-portrait-masterclass-ebook/#look-inside" aria-label="Look inside — 0.jpg"><img src="assets/products/procreate-portrait-masterclass-ebook/0.jpg" alt="Masterclass interior — 0.jpg" loading="lazy" decoding="async" width="260" height="346"></a><a href="products/procreate-portrait-masterclass-ebook/#look-inside" aria-label="Look inside — 1.jpg"><img src="assets/products/procreate-portrait-masterclass-ebook/1.jpg" alt="Masterclass interior — 1.jpg" loading="lazy" decoding="async" width="260" height="346"></a><a href="products/procreate-portrait-masterclass-ebook/#look-inside" aria-label="Look inside — 2.jpg"><img src="assets/products/procreate-portrait-masterclass-ebook/2.jpg" alt="Masterclass interior — 2.jpg" loading="lazy" decoding="async" width="260" height="346"></a><a href="products/procreate-portrait-masterclass-ebook/#look-inside" aria-label="Look inside — 3.jpg"><img src="assets/products/procreate-portrait-masterclass-ebook/3.jpg" alt="Masterclass interior — 3.jpg" loading="lazy" decoding="async" width="260" height="346"></a><a href="products/procreate-portrait-masterclass-ebook/#look-inside" aria-label="Look inside — 4.jpg"><img src="assets/products/procreate-portrait-masterclass-ebook/4.jpg" alt="Masterclass interior — 4.jpg" loading="lazy" decoding="async" width="260" height="346"></a></div>
-    </div>
-  </section>
-
-
-  <!-- 9 · BEFORE → AFTER: the answer to "what do the brushes actually
-       change". Medium-width slider, not another full-bleed product band. -->
-  <section class="section ba-section" id="results" aria-labelledby="results-title">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">See the difference</p><h2 id="results-title">See the difference the right tools can make</h2></div>
-        <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit →</a>
-      </div>
-      <p class="sec-note muted">Same artwork — different texture, detail and finishing tools. Drag the divider to see what pores, freckles, hair strands and the final polish add, and why the finished portrait stops looking airbrushed.</p>
-      <figure class="ba-figure">
-        <div class="ba-stage" data-ba>
-          <img class="ba-img ba-after" src="assets/img/ba-after.webp" width="1200" height="800" alt="Finished portrait: detailed skin texture, hair strands and final rendering" loading="lazy" decoding="async">
-          <div class="ba-clip">
-            <img class="ba-img ba-before" src="assets/img/ba-before.webp" width="1200" height="800" alt="Unfinished portrait: flat base colour with no skin texture or detail" loading="lazy" decoding="async">
-          </div>
-          <span class="ba-tag ba-tag-b">Before · flat base</span>
-          <span class="ba-tag ba-tag-a">After · textured finish</span>
-          <div class="ba-divider" role="slider" tabindex="0" aria-label="Reveal the finished portrait" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% finished">
-            <span class="ba-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 4 12l5 6M15 6l5 6-5 6"/></svg></span>
-          </div>
-          <div class="ba-sweep" aria-hidden="true"></div>
-        </div>
-        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use ← →.</span><span>Demonstration artwork.</span></figcaption>
-      </figure>
-      <div class="ba-cta"><a class="btn btn-gold" href="products/portrait-skin-brushes-procreate/" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="before-after">Shop the tools used in this artwork <span class="btn-arr">·</span> $5.00</a><a class="btn btn-line" href="products/ultimate-portrait-mastery-bundle/">Or take the full portrait bundle →</a></div>
-    </div>
-  </section>
-
-
-  <!-- 10 · WHY DIGIKITPRO: supporting trust content, after the products. -->
-  <section class="section section-alt" id="why" aria-labelledby="why-title">
-    <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2 id="why-title">Tools that respect your craft</h2></div></div>
+      <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2 id="why-title">Tools That Respect Your Craft</h2></div></div>
       <div class="grid why-grid">
-        <div class="why"><h3>Hand-tested on real artwork</h3><p class="muted">Every brush is drawn, tuned and re-tuned on actual portrait and illustration work before release, never bulk-generated.</p></div>
-        <div class="why"><h3>Organized by workflow</h3><p class="muted">Kits follow the order you actually paint in: sketch, ink, blend, texture, finish. Less hunting, more creating.</p></div>
-        <div class="why"><h3>Instant, lifetime access</h3><p class="muted">Payhip delivers your .brushset seconds after checkout, with a permanent download link in your inbox.</p></div>
-        <div class="why"><h3>Made for Apple Pencil</h3><p class="muted">Pressure and tilt behavior tuned for the iPad + Apple Pencil, on Procreate 5 and newer.</p></div>
+        <div class="why"><span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.4-4.3L15.6 5.5a2.05 2.05 0 0 1 2.9 0l1 1a2.05 2.05 0 0 1 0 2.9L9.3 19.6 4 20z"/><path d="m13.8 7.4 3.8 3.8"/></svg></span><h3>Hand-tested on real artwork</h3><p class="muted">Every brush is drawn, tuned and re-tuned on actual portrait and illustration work before release, never bulk-generated.</p></div>
+        <div class="why"><span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 12.5 9 5 9-5"/><path d="m3 16.5 9 5 9-5"/></svg></span><h3>Organized by workflow</h3><p class="muted">Kits follow the order you actually paint in: sketch, ink, blend, texture, finish. Less hunting, more creating.</p></div>
+        <div class="why"><span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7 9.5 5 5 5-5"/><path d="M4 21h16"/></svg></span><h3>Instant, lifetime access</h3><p class="muted">Payhip delivers your .brushset seconds after checkout, with a permanent download link in your inbox.</p></div>
+        <div class="why"><span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="13" height="17" rx="2.5"/><path d="m19.4 8.4 1.9 1.9a1.5 1.5 0 0 1 0 2.1l-3.9 3.9-2.3.3.3-2.3 3.9-3.9a.1.1 0 0 1 .1 0z"/></svg></span><h3>Made for Apple Pencil</h3><p class="muted">Pressure and tilt behavior tuned for the iPad + Apple Pencil, on Procreate 5 and newer.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- 11 · ARTICLES: supporting educational content. -->
+  <!-- 10 · CUSTOMER ART / SOCIAL PROOF — honest placeholder, populated
+       only with genuine, permission-granted artist work.
+       STORE RULE: no invented quotes, no stock "customer" photos, no
+       manufactured ratings. tools/verify.py fails the build on fabricated
+       social proof (the empty .quote-slot figures below are its documented
+       placeholder shape and are excluded from that scan as placeholders,
+       never as proof). Until real artwork exists, the slots display the
+       invitation — an empty, clearly-marked frame beats fake proof.
+       TO PUBLISH A REAL PIECE: replace one .proof-slot figure with the
+       artwork, the artist's own handle (with their permission) and a link
+       to their profile or shop. Keep the others as slots. -->
+  <section class="section section-alt" id="proof" aria-labelledby="proof-title">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">Community</p><h2 id="proof-title">Made for Real Artwork</h2></div></div>
+      <p class="sec-note muted">This space is reserved for finished pieces painted with DigiKitPro kits. Nothing appears here until a real artist shares real work and says we may show it — we would rather keep it empty than fake proof. Painting with our brushes? Tag <b>@digikitprostudio</b> on Instagram or pin your work on Pinterest, and tell us we may feature it here.</p>
+      <div class="grid proof-grid">
+        <figure class="proof-slot quote-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg><b>Your artwork here</b><span>Reserved for a DigiKitPro artist — shared with permission.</span></figure>
+        <figure class="proof-slot quote-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg><b>Your artwork here</b><span>Reserved for a DigiKitPro artist — shared with permission.</span></figure>
+        <figure class="proof-slot quote-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg><b>Your artwork here</b><span>Reserved for a DigiKitPro artist — shared with permission.</span></figure>
+      </div>
+      <div class="proof-cta">
+        <a class="btn btn-line btn-sm" href="https://www.instagram.com/digikitprostudio/" target="_blank" rel="noopener">Share on Instagram ↗</a>
+        <a class="btn btn-line btn-sm" href="https://www.pinterest.com/DigiKitProStudio/" target="_blank" rel="noopener">Share on Pinterest ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · LEARN PROCREATE: three guides, beginners → line art → anime,
+       ordered to connect naturally to the products above. -->
   <section class="section" id="articles" aria-labelledby="articles-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">The blog</p><h2 id="articles-title">Procreate Guides & Techniques</h2></div>
+        <div><p class="eyebrow">The blog</p><h2 id="articles-title">Learn Procreate. Create Better.</h2></div>
         <a class="text-link" href="blog.html">All articles →</a>
       </div>
-      <div class="grid arts-grid"><a class="art-card" href="blog/best-procreate-brushes-for-anime/">
-      <img class="art-img" src="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp" srcset="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp 580w, assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit.webp 580w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="580" height="387" alt="Best Procreate Brushes for Anime and Manga: Lines, Shading, and Texture" loading="lazy" decoding="async">
-      <div class="art-body"><span class="art-cat">Procreate Brushes</span>
-      <h3>Best Procreate Brushes for Anime and Manga: Lines, Shading, and Texture</h3>
-      <p class="muted">Choose Procreate brushes for anime and manga by line control, soft shading, washes, and finishing texture. A practical guide to focused DigiKitPro options.</p>
-      <span class="text-link">Read the guide →</span></div></a><a class="art-card" href="blog/best-procreate-brushes-for-beginners/">
+      <div class="grid arts-grid"><a class="art-card" href="blog/best-procreate-brushes-for-beginners/">
       <img class="art-img" src="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" srcset="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp 580w, assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp 580w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="580" height="387" alt="Best Procreate Brushes for Beginners: A Simple Starter Kit" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Guides</span>
       <h3>Best Procreate Brushes for Beginners: A Simple Starter Kit</h3>
@@ -602,22 +622,17 @@
       <div class="art-body"><span class="art-cat">Procreate Brushes</span>
       <h3>Best Procreate Brushes for Line Art: How to Choose a Liner</h3>
       <p class="muted">Find Procreate brushes for line art by comparing taper, pressure response, texture, stabilisation, and workflow. Includes free and specialist options.</p>
+      <span class="text-link">Read the guide →</span></div></a><a class="art-card" href="blog/best-procreate-brushes-for-anime/">
+      <img class="art-img" src="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp" srcset="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp 580w, assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit.webp 580w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="580" height="387" alt="Best Procreate Brushes for Anime and Manga: Lines, Shading, and Texture" loading="lazy" decoding="async">
+      <div class="art-body"><span class="art-cat">Procreate Brushes</span>
+      <h3>Best Procreate Brushes for Anime and Manga: Lines, Shading, and Texture</h3>
+      <p class="muted">Choose Procreate brushes for anime and manga by line control, soft shading, washes, and finishing texture. A practical guide to focused DigiKitPro options.</p>
       <span class="text-link">Read the guide →</span></div></a></div>
     </div>
   </section>
 
-  <!-- 12 · FREE BRUSH EMAIL CTA: last on the page on purpose — it is the
-       low-commitment exit for a visitor who has read the pitch and still is
-       not buying, and nothing competes with it after. The articles sit
-       above it as free value, so the page ends on "take this" rather than
-       "read more".
-
-       REAL REVIEWS belongs between WHY DIGIKITPRO (10) and this block, the
-       moment verifiable quotes exist. It is deliberately NOT built: no
-       placeholder quotes, no star ratings, no review counts — tools/verify.py
-       fails the build on invented social proof, and an empty "Reviews"
-       heading is a worse signal than no heading. Add plain attributed text
-       here when you have it. See README → "Social proof", docs/AUDIT-AND-PLAN.md Part 13. -->
+  <!-- 12 · FREE STARTER PACK EMAIL CTA: the final invitation — one
+       low-commitment exit after everything, never an aggressive popup. -->
   <section class="newsletter" id="newsletter">
   <div class="wrap">
     <div class="nl-card">
