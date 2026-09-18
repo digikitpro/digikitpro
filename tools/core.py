@@ -775,7 +775,7 @@ def trust_bridge(depth=0, free=False):
     return (f'<p class="trust-bridge">Secure checkout via Payhip · instant download · '
             f'{terms} · <a href="{rel(depth, "refunds.html")}">Refund policy</a></p>')
 
-def product_card(p, depth, eager=False, free_direct=False):
+def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
     im = p.get("images") or {}
     card = im.get("card", "")
     w, h = im.get("cardW") or 750, im.get("cardH") or 500
@@ -799,6 +799,16 @@ def product_card(p, depth, eager=False, free_direct=False):
         badge = f'<span class="badge badge-free">Free</span>' if p["free"] else (f'<span class="badge">{esc(blabel)}</span>' if blabel else "")
     price = "Free" if p["free"] else money(p)
     cta = label
+    # dual_buy (homepage best sellers): direct-checkout packs ALSO offer the
+    # detail page — "View Product" for the explanation, "Buy Now" straight to
+    # Payhip for the impulse. Every other surface keeps the one-CTA rule.
+    if dual_buy and kind == "payhip" and not coming:
+        actions = (f'<span class="card-acts">'
+                   f'<a class="btn btn-line btn-sm" href="{u}">View Product</a>'
+                   f'<a class="btn btn-gold btn-sm" href="{p["payhipUrl"]}" target="_blank" rel="noopener" {buy_attrs(p, "card")}>Buy Now</a>'
+                   f'</span>')
+    else:
+        actions = f'<a class="btn btn-line btn-sm" href="{href}"{ext_attr} {buy_attrs(p, "card")}>{cta}</a>'
     loading = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw") if card else ""
     img_src = asset_file(depth, p["slug"], card) if card else rel(depth, "assets/img/coming-soon.svg")
@@ -830,15 +840,15 @@ def product_card(p, depth, eager=False, free_direct=False):
     <p class="card-short">{esc(p['short'])}</p>
     <div class="card-foot">
       <span class="price">{price}</span>
-      <a class="btn btn-line btn-sm" href="{href}"{ext_attr} {buy_attrs(p, 'card')}>{cta}</a>
+      {actions}
     </div>
   </div>
 </article>"""
 
-def product_grid(products, depth, eager_first=0, classes="grid cards", free_direct=False):
+def product_grid(products, depth, eager_first=0, classes="grid cards", free_direct=False, dual_buy=False):
     out = [f'<div class="{classes}">']
     for i, p in enumerate(products):
-        out.append(product_card(p, depth, eager=i < eager_first, free_direct=free_direct))
+        out.append(product_card(p, depth, eager=i < eager_first, free_direct=free_direct, dual_buy=dual_buy))
     out.append("</div>")
     return "\n".join(out)
 
@@ -989,10 +999,25 @@ def freebie_download_row(depth=0):
 </section>"""
 
 
+# Workflow-route artwork: one real kit cover per card. The map lives here,
+# not in data/discovery.json, so a daily Payhip sync can never blank a card —
+# a missing or renamed product simply renders the card without artwork.
+CRAFT_ART = {
+    "portraits":    "hair-hairstyle-stamp-kit",
+    "anime":        "anime-soft-style-studio-kit",
+    "illustration": "illustration-brushes-2",
+    "sketching":    "professional-digital-sketchbook",
+    "painting":     "organic-watercolor-80-brushes",
+    "texture":      "professional-charcoal-studio",
+    "animation":    "smoke-brushes-12",
+}
+
+
 def craft_grid(depth=0):
-    """SHOP BY WORKFLOW — routes intent before the catalog.
-    Each card links to the matching category page (animation routes to the
-    catalog, where we honestly do not have a dedicated pack yet)."""
+    """SHOP BY WORKFLOW (\"What Do You Create?\") — routes intent before the
+    catalog. Each card links to the matching category page (animation routes
+    to the catalog, where we honestly do not have a dedicated pack yet) and
+    shows one real artwork from a kit in that workflow (CRAFT_ART above)."""
     cards = DISCOVERY.get("craftCards") or []
     counts = {}
     for pr in PRODUCTS:
@@ -1005,19 +1030,29 @@ def craft_grid(depth=0):
     for c in cards:
         n = counts.get(c["id"], 0)
         href = rel(depth, c["href"])
+        art = ""
+        ap = BY_SLUG.get(CRAFT_ART.get(c["id"]) or "")
+        if ap:
+            aim = ap.get("images") or {}
+            acard = aim.get("card") or aim.get("main") or ""
+            if acard:
+                art = (f'<span class="craft-art"><img src="{asset_file(depth, ap["slug"], acard)}" '
+                       f'width="{aim.get("cardW") or 750}" height="{aim.get("cardH") or 500}" '
+                       f'alt="{esc(c["label"])} — artwork from {esc(ap["name"])}" loading="lazy" decoding="async"></span>')
         tiles += (
             f'<a class="craft-card" href="{esc(href)}" data-dkp-event="craft_card_click" '
             f'data-dkp-craft="{esc(c["id"])}" data-dkp-count="{n}">'
+            f'{art}'
             f'<span class="craft-name">{esc(c["label"])}</span>'
             f'<span class="craft-blurb">{esc(c["blurb"])}</span>'
             f'<span class="craft-meta">{n} {"pack" if n == 1 else "packs"} →</span></a>')
-    return f"""<section class="section" id="craft" aria-labelledby="craft-title">
+    return f"""<section class="section section-alt" id="craft" aria-labelledby="craft-title">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="eyebrow">Kits for the way you create</p><h2 id="craft-title">Shop by Workflow</h2></div>
+      <div><p class="eyebrow">Kits for the way you create</p><h2 id="craft-title">What Do You Create?</h2></div>
       <a class="text-link" href="{rel(depth,'products.html')}">Browse all products →</a>
     </div>
-    <p class="sec-note muted">Pick the workflow you paint in — every card routes to a real category of finished, hand-tested kits.</p>
+    <p class="sec-note muted">Find the right tools for your style and workflow — every card routes to a real category of finished, hand-tested kits.</p>
     <div class="grid craft-grid">{tiles}</div>
   </div>
 </section>
@@ -1052,7 +1087,9 @@ def clip(text, n=96):
     return cut + "\u2026"
 
 
-def bundle_ladder(depth=0):
+def bundle_ladder(depth=0, section_cls="section section-alt",
+                  eyebrow="Pick your rung", title="Procreate Bundles",
+                  lead_rest=None):
     """PROCREATE BUNDLES, drawn as a ladder instead of a tile grid.
 
     Starter -> Advanced -> Ultimate -> Master Library: one row, four rungs, the
@@ -1122,13 +1159,16 @@ def bundle_ladder(depth=0):
 </li>"""
     lead = " \u2192 ".join(f'<b>{esc(r.get("role") or p["name"])}</b>' if r.get("ladder_flagship")
                            else esc(r.get("role") or p["name"]) for r, p in rungs)
-    return f"""<section class="section section-alt" id="bundles" aria-labelledby="lad-title">
+    if lead_rest is None:
+        lead_rest = ('each rung is more of the studio in one checkout. Prices below are live '
+                     'store prices, so no rung advertises a "was" figure it does not have.')
+    return f"""<section class="{esc(section_cls)}" id="bundles" aria-labelledby="lad-title">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="eyebrow">Pick your rung</p><h2 id="lad-title">Procreate Bundles</h2></div>
+      <div><p class="eyebrow">{esc(eyebrow)}</p><h2 id="lad-title">{esc(title)}</h2></div>
       <a class="text-link" href="{rel(depth, 'guides/procreate-bundles-compared/')}">Compare every bundle \u2192</a>
     </div>
-    <p class="ladder-lead muted">{lead} \u2014 each rung is more of the studio in one checkout. Prices below are live store prices, so no rung advertises a "was" figure it does not have.</p>
+    <p class="ladder-lead muted">{lead} \u2014 {esc(lead_rest)}</p>
     <ol class="ladder">{steps}</ol>
     <p class="ladder-note muted">Seasonal packs (Christmas, Halloween) are not part of the ladder \u2014 they live on <a href="{rel(depth, 'bundles.html')}">bundles</a> and in the <a href="{rel(depth, 'products.html')}">catalog</a>.</p>
   </div>
@@ -1136,7 +1176,7 @@ def bundle_ladder(depth=0):
 """
 
 
-def flagship_band(depth=0, bridge=True, ladder_href=None):
+def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
     """Level 4 — the Master Library, given the prominence its value deserves.
     Positioned as '2,000+ organized Procreate brushes — one library, multiple
     workflows, less tool hunting' — affordable and useful, not cheap per-brush.
@@ -1144,7 +1184,10 @@ def flagship_band(depth=0, bridge=True, ladder_href=None):
     popularity claim. ``bridge=False`` drops the checkout/refund line
     (the homepage keeps its product bands free of legal copy).
     ``ladder_href`` adds the "top rung of the bundle ladder" link back to the
-    bundle ladder, so the two sections read as one climb instead of two."""
+    bundle ladder, so the two sections read as one climb instead of two.
+    ``home=True`` renders the homepage variant (2026-09-18 reorder): headline
+    swapped to "One Library. Multiple Workflows. Less Tool Hunting.", the nine
+    workflows as chips, and Compare Bundles as the secondary CTA."""
     f = flagship()
     if not f:
         return ""
@@ -1180,6 +1223,43 @@ def flagship_band(depth=0, bridge=True, ladder_href=None):
         hi_s = f"${hi:.0f}" if float(hi).is_integer() else f"${hi:.2f}"
         compare = (f'Single specialist packs run <b>{lo_s}\u2013{hi_s}</b> each across '
                    f'{len(prices)} kits. One library, every style, {esc(f["priceText"])}.')
+    if home:
+        # ── Homepage variant (2026-09-18 reorder): the library is the
+        #    advanced option AFTER the bundle ladder, so the headline sells
+        #    the idea ("one library, less tool hunting") and the product name
+        #    moves to the eyebrow. The 9 workflows render as scannable chips
+        #    instead of one long comma line, and the secondary CTA routes to
+        #    the bundle comparison, not back to checkout. ─────────────────
+        chips = "".join(f"<li>{esc(c)}</li>" for c in (
+            "Portrait", "Skin", "Hair", "Linework", "Watercolor",
+            "Traditional media", "Character & anatomy", "Texture", "Effects"))
+        return f"""<section class="section flagship-band" id="master-library" aria-labelledby="flag-title">
+  <div class="wrap flag-inner">
+    <div class="flag-media" data-wipe{pin_attrs(f)}>
+      <img src="{asset_file(depth, f['slug'], img)}"{srcset} width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(f.get('alt') or f['name'])}" loading="lazy" decoding="async">{pin_button(f)}
+    </div>
+    <div class="flag-body">
+      <p class="eyebrow">{esc(f['name'])}</p>
+      <h2 id="flag-title">One Library. Multiple Workflows. Less Tool Hunting.</h2>
+      <p class="lead-sm">2,000+ organized Procreate brushes — affordable, organized and ready for every workflow, from portraits and skin to line art, watercolor and anime.</p>
+      <ul class="flag-points">
+        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> in organised category folders — no more hunting for the right tool</li>
+        <li>One organized download, lifetime access, built for how you actually create</li>
+      </ul>
+      <ul class="flag-chips">{chips}</ul>
+      <p class="flag-compare muted">{compare}</p>
+      <div class="flag-cta">
+        <span class="price price-lg">{esc(f['priceText'])}</span>
+        <a class="btn btn-gold" href="{rel(depth, 'products/' + f['slug'] + '/')}">View the Master Library</a>
+        <a class="btn btn-line" href="{rel(depth, 'guides/procreate-bundles-compared/')}">Compare Bundles</a>
+        <a class="text-link" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'flagship-band')}>Buy on Payhip ↗</a>
+      </div>
+      {trust_bridge(depth) if bridge else ""}
+      {f'<p class="flag-ladder muted">Top rung of the bundle ladder — <a href="{esc(ladder_href)}">see Starter → Advanced → Ultimate → Master Library</a>.</p>' if ladder_href else ""}
+    </div>
+  </div>
+</section>
+"""
     return f"""<section class="section flagship-band" id="master-library" aria-labelledby="flag-title">
   <div class="wrap flag-inner">
     <div class="flag-media" data-wipe{pin_attrs(f)}>

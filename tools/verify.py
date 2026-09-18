@@ -21,7 +21,11 @@ inside one uniform square, and the mat behind it must not be painted over.
 The three 2026-09-17 finder-combo checks were replaced on 2026-09-18 when
 the Find My Brush Kit was removed in full: the page and both scripts must be
 gone, no generated page may reference them, and the hero must offer exactly
-the two storefront CTAs (Shop All Brushes / Try Free Brushes).)
+the two storefront CTAs (Shop All Brushes / Try Free Brushes). The two
+homepage-IA checks were re-pinned later the same day to the result-first
+order — hero → before/after → best sellers → workflow → free → portrait
+journey → bundles → Master Library → why → community proof → articles →
+email — a re-pin of the same two checks, so the count is unchanged.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -410,16 +414,21 @@ def main() -> int:
           and 'href="freebies.html">Try Free Brushes' in home_html,
           "products.html + freebies.html as the two entry points")
 
-    # ── 44–45 information architecture (product-first storefront) ──────
+    # ── 44–45 information architecture (result-first storefront) ───────
+    # 2026-09-18 exact reorder (owner brief): proof first, discovery before
+    # bundles, the portrait journey as the education funnel, community art
+    # as an honest placeholder, learning late, email last. Same conversion
+    # spine as the live brief: see → believe → find → try → start → deepen
+    # → trust → learn → stay.
     ids = homepage_section_ids(home_html)
-    IA = ["popular", "craft", "bundles", "master-library", "free",
-          "ebooks", "results", "why", "articles", "newsletter"]
-    check("homepage section order matches the product-first brief",
+    IA = ["results", "popular", "craft", "free", "journey", "bundles",
+          "master-library", "why", "proof", "articles", "newsletter"]
+    check("homepage section order matches the result-first brief",
           ids == IA, ", ".join(ids) or "no sections found")
-    # The page must close on free value and end with the one low-commitment
-    # CTA: … before/after → Why → Articles → newsletter as the last section.
-    check("homepage closes: why → articles → email CTA",
-          ids[-3:] == ["why", "articles", "newsletter"],
+    # The page must close on proof and learning, then the one low-commitment
+    # CTA: … community art → Articles → newsletter as the last section.
+    check("homepage closes: proof → articles → email CTA",
+          ids[-3:] == ["proof", "articles", "newsletter"],
           "final section: " + (ids[-1] if ids else "-"))
 
     products = {p["slug"]: p for p in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))}
