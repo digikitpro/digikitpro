@@ -992,7 +992,11 @@ def freebie_download_row(depth=0):
 def craft_grid(depth=0):
     """SHOP BY WORKFLOW — routes intent before the catalog.
     Each card links to the matching category page (animation routes to the
-    catalog, where we honestly do not have a dedicated pack yet)."""
+    catalog, where we honestly do not have a dedicated pack yet).
+
+    Cards show the workflow name and the one-line blurb only. The per-card
+    "N packs" line was removed on request; the count is still computed and
+    shipped as data-dkp-count for analytics, it is just not printed."""
     cards = DISCOVERY.get("craftCards") or []
     counts = {}
     for pr in PRODUCTS:
@@ -1009,8 +1013,7 @@ def craft_grid(depth=0):
             f'<a class="craft-card" href="{esc(href)}" data-dkp-event="craft_card_click" '
             f'data-dkp-craft="{esc(c["id"])}" data-dkp-count="{n}">'
             f'<span class="craft-name">{esc(c["label"])}</span>'
-            f'<span class="craft-blurb">{esc(c["blurb"])}</span>'
-            f'<span class="craft-meta">{n} {"pack" if n == 1 else "packs"} →</span></a>')
+            f'<span class="craft-blurb">{esc(c["blurb"])}</span></a>')
     return f"""<section class="section" id="craft" aria-labelledby="craft-title">
   <div class="wrap">
     <div class="sec-head">

@@ -526,7 +526,6 @@ body{top:0 !important}
 
 .craft-name{font:600 1.06rem var(--serif);letter-spacing:-.01em}
 .craft-blurb{color:var(--muted);font-size:.87rem;line-height:1.5;flex:1}
-.craft-meta{color:var(--gold);font:600 .76rem/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;margin-top:.35rem}
 
 /* ── Level 4: Master Library flagship band ────────────────────────────── */
 .flagship-band{background:linear-gradient(165deg,#17161b 0%,#0e0e11 60%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
@@ -804,9 +803,8 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
   transform:scaleX(0);transform-origin:0 50%;transition:transform .38s var(--ease)}
 .craft-card:hover::before,.craft-card:focus-visible::before{transform:scaleX(1)}
 .craft-card:hover{transform:translateY(-4px)}
-.craft-card .craft-name,.craft-card .craft-meta{transition:transform var(--tap) var(--ease),color var(--tap) var(--ease)}
+.craft-card .craft-name{transition:transform var(--tap) var(--ease),color var(--tap) var(--ease)}
 .craft-card:hover .craft-name{transform:translateX(3px)}
-.craft-card:hover .craft-meta{transform:translateX(5px)}
 .cat-tile:hover .cat-n{transform:translateX(2px)}
 .cat-tile .cat-n{transition:transform var(--tap) var(--ease)}
 
