@@ -468,10 +468,6 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     # inject its own hover overlay on every <img>, duplicating — and visually
     # fighting with — the site's own .pin-btn Save buttons.
     ctx_json = json.dumps(ctx or {}, ensure_ascii=False)
-    finder_scripts = ""
-    if ctx and ctx.get("type") == "finder":
-        finder_scripts = (f'  <script src="{rel(depth,"js/finder-index.js")}" defer></script>\n'
-                          f'  <script src="{rel(depth,"js/finder.js")}" defer></script>\n')
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -522,12 +518,12 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <script src="{rel(depth,'js/analytics.js')}" defer></script>
   <script src="{rel(depth,'js/feedback.js')}" defer></script>
   <script src="{rel(depth,'js/translate.js')}" defer></script>
-{finder_scripts}{s}</head>
+{s}</head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
 """
 
-NAV = [("Find My Brush Kit","find-my-brushes.html"),("Free Brushes","freebies.html"),
+NAV = [("Free Brushes","freebies.html"),
        ("Products","products.html"),("Bundles","bundles.html"),
        ("Articles","blog.html"),("About","about.html")]
 
@@ -850,24 +846,22 @@ cat_slug = lambda c: "cat-" + c.replace(" ", "%20")
 
 # ── worldwide trust band + trending topics (homepage / catalog) ─────────
 def trust_band(depth=0):
-    """Proof bar directly under the hero.
+    """Buying-assurance bar directly under the hero.
 
-    PLACEHOLDER (owner): swap these catalog figures for real performance
-    numbers — total downloads, kits sold, average rating — as soon as they
-    exist. Until then the bar states only counts that are verifiable from
-    data/products.json, never invented social proof.
+    Every line is a statement the store already makes on its legal pages or
+    in data/products.json — secure Payhip checkout, instant worldwide
+    delivery, the permanent download link, and the live count of free packs.
+    No invented social proof, no numbers that cannot be verified in-repo.
     """
-    f = flagship()
     free_n = sum(1 for p in PRODUCTS if p["free"])
-    brush_count = (f.get("assets") or "2,000+ brushes") if f else "2,000+ brushes"
     items = [
-        (f"{len(PRODUCTS)} kits &amp; tools", "Brushes, bundles, palettes, planners and eBooks in one catalog"),
-        (esc(brush_count), "In the Master Library alone — one organised download"),
-        (f"{free_n} free packs", "$0 forever — download now, no email needed"),
-        ("Instant delivery", "Worldwide via Payhip · PayPal, cards &amp; Apple Pay"),
+        ("Secure checkout", "PayPal, cards &amp; Apple Pay — processed by Payhip"),
+        ("Instant delivery", "Worldwide, seconds after checkout"),
+        ("Lifetime access", "A permanent download link in your inbox"),
+        (f"{free_n} free packs", "$0 forever, no email needed to download"),
     ]
     cells = "".join(f'<div class="tb-item"><span>{title}</span><p>{sub}</p></div>' for title, sub in items)
-    return f'<div class="trust-band" role="region" aria-label="DigiKitPro by the numbers"><div class="wrap trust-inner">{cells}</div></div>'
+    return f'<div class="trust-band" role="region" aria-label="Why buy from DigiKitPro"><div class="wrap trust-inner">{cells}</div></div>'
 
 def trend_topics(depth=0):
     topics = [
@@ -996,9 +990,9 @@ def freebie_download_row(depth=0):
 
 
 def craft_grid(depth=0):
-    """"WHAT DO YOU CREATE?" — routes intent before the catalog.
-    Each card links to the matching category page (or the Brush Finder for
-    animation, where we honestly do not have a dedicated pack yet)."""
+    """SHOP BY WORKFLOW — routes intent before the catalog.
+    Each card links to the matching category page (animation routes to the
+    catalog, where we honestly do not have a dedicated pack yet)."""
     cards = DISCOVERY.get("craftCards") or []
     counts = {}
     for pr in PRODUCTS:
@@ -1020,10 +1014,10 @@ def craft_grid(depth=0):
     return f"""<section class="section" id="craft" aria-labelledby="craft-title">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="eyebrow">Start with your work, not our catalog</p><h2 id="craft-title">What Do You Create?</h2></div>
+      <div><p class="eyebrow">Kits for the way you create</p><h2 id="craft-title">Shop by Workflow</h2></div>
       <a class="text-link" href="{rel(depth,'products.html')}">Browse all products →</a>
     </div>
-    <p class="sec-note muted">Start with the tools built around your kind of work.</p>
+    <p class="sec-note muted">Pick the workflow you paint in — every card routes to a real category of finished, hand-tested kits.</p>
     <div class="grid craft-grid">{tiles}</div>
   </div>
 </section>

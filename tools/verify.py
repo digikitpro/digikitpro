@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 80 CHECKS PASSED.
+Expects: ALL 82 CHECKS PASSED.
 (57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
 ladder completeness x2, no fake-strikethrough pricing + 8 from the
 2026-09-16 buyer-guides buildout: pages built, sitemap coverage x2, slug
@@ -17,7 +17,11 @@ checkout links, site-wide footer link, no dead application CTA while the
 sign-up variable is unset, no unpublished commission rate, the variable
 reaching BOTH build workflows, and the CTA flipping when it is set + 2 from
 the 2026-09-17 card-media uncrop: product cards must frame the artwork whole
-inside one uniform square, and the mat behind it must not be painted over.)
+inside one uniform square, and the mat behind it must not be painted over.
+The three 2026-09-17 finder-combo checks were replaced on 2026-09-18 when
+the Find My Brush Kit was removed in full: the page and both scripts must be
+gone, no generated page may reference them, and the hero must offer exactly
+the two storefront CTAs (Shop All Brushes / Try Free Brushes).)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -148,54 +152,6 @@ def resolve_href(page: Path, href: str) -> Path | None:
     return target
 
 
-def finder_combo_stats():
-    from core import DISCOVERY, disc
-    from pages_finder import finder_products
-
-    questions = {q["id"]: q for q in DISCOVERY.get("questions", [])}
-    crafts = [o["id"] for o in questions["craft"]["options"]]
-    improves = [o["id"] for o in questions["improve"]["options"]]
-    levels = [o["id"] for o in questions["level"]["options"]]
-    styles = [o["id"] for o in questions["style"]["options"]]
-    prods = finder_products()
-
-    empty = aggregate = lifestyle = 0
-    n = 0
-    for craft in crafts:
-        for improve in improves:
-            for level in levels:
-                for style in styles:
-                    n += 1
-                    scored = []
-                    for slug, p in prods.items():
-                        s = 0.0
-                        if craft in (p.get("craft") or []):
-                            s += 40
-                        if improve in (p.get("improve") or []):
-                            s += 30
-                        if style in (p.get("style") or []):
-                            s += 15
-                        if level in (p.get("level") or []):
-                            s += 10
-                        s += min(5, (p.get("priority") or 0) * 0.05)
-                        if p.get("aggregate") or s <= 0:
-                            continue
-                        scored.append((s, p.get("priority") or 0, p))
-                    scored.sort(key=lambda t: (-t[0], -t[1]))
-                    if not scored:
-                        empty += 1
-                        continue
-                    buyable = [t for t in scored if t[2].get("tier") in ("entry", "bundle")]
-                    primary = (buyable or scored)[0][2]
-                    d = disc(primary["slug"])
-                    if d.get("aggregate") or primary.get("aggregate"):
-                        aggregate += 1
-                    if d.get("line") == "lifestyle" or primary.get("line") == "lifestyle":
-                        lifestyle += 1
-    return n, empty, aggregate, lifestyle
-
-
-
 def homepage_section_ids(html_text: str) -> list[str]:
     """Ordered ids of the homepage <main> sections — the information
     architecture itself. Cheap string scan (no parser, no new dependency):
@@ -248,7 +204,7 @@ def esc_price(t: str) -> str:
 
 
 def main() -> int:
-    print("DigiKitPro verify — 80 checks\n")
+    print("DigiKitPro verify — 82 checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -337,10 +293,10 @@ def main() -> int:
     if not page_locs:
         # compact form: <url><loc>...</loc>
         page_locs = re.findall(r"<url><loc>([^<]+)</loc>", sm_xml)
-    # 93 since the Find-My-Brushes page was removed per owner request
-    # (tools/pages_finder.py build_all); +6 buyer-guide pages on 2026-09-16;
-    # +1 partner portal (/partner/) on 2026-09-17.
-    # The partner portal adds one URL, so both sitemaps moved 99 → 100.
+    # 100 = 12 static + 10 categories + 2 seasons + 6 buyer guides +
+    # 1 partner portal + 51 products + 18 blog articles. The Find My
+    # Brush Kit page (removed in full on 2026-09-18) was never listed
+    # here, so its removal changes no count.
     check("sitemap.xml has 100 page URLs",
           len(page_locs) == 100, str(len(page_locs)))
     check("sitemap.xml all locs on digikitpro.shop",
@@ -426,23 +382,45 @@ def main() -> int:
     check("refunds.html exists", exists("refunds.html"))
     check("every content page has exactly one h1", h1_bad == 0, str(h1_bad))
 
-    # ── 40–42 finder ──────────────────────────────────────────────────
-    n_combos, n_empty, n_agg, n_life = finder_combo_stats()
-    check("finder 1080 combos: 0 empty", n_combos == 1080 and n_empty == 0,
-          f"{n_combos} combos, {n_empty} empty")
-    check("finder 1080 combos: 0 aggregate primary", n_agg == 0, str(n_agg))
-    check("finder 1080 combos: 0 lifestyle primary", n_life == 0, str(n_life))
+    # ── 40–42 Find My Brush Kit removal (2026-09-18) ──────────────────
+    # The finder was removed in full per owner request: the page, both
+    # generated scripts and every link to them must be gone. The earlier
+    # three checks verified the recommendation engine; these three police
+    # the removal so a later edit cannot resurrect a dead link.
+    deleted = (not exists("find-my-brushes.html") and not exists("js/finder.js")
+               and not exists("js/finder-index.js") and not exists("tools/pages_finder.py"))
+    check("finder removed: find-my-brushes.html, js/finder.js, js/finder-index.js gone",
+          deleted, "page + both scripts (and the generator module) deleted")
+    refs = 0
+    ref_samples = []
+    for p in html_files:
+        t = p.read_text(encoding="utf-8", errors="replace")
+        if "find-my-brushes" in t or "js/finder" in t or "DKP_FINDER" in t:
+            refs += 1
+            if len(ref_samples) < 3:
+                ref_samples.append(p.relative_to(ROOT).as_posix())
+    check("finder removed: no generated page references the finder",
+          refs == 0, "; ".join(ref_samples) or f"{len(html_files)} pages clean")
 
-    # ── 43–46 information architecture ────────────────────────────────
+    # ── 43 information architecture (product-first storefront) ─────────
     home_html = read("index.html")
+    # The hero is the storefront's first job: two CTAs, named exactly.
+    check("hero CTAs are Shop All Brushes + Try Free Brushes",
+          'href="products.html">Shop All Brushes' in home_html
+          and 'href="freebies.html">Try Free Brushes' in home_html,
+          "products.html + freebies.html as the two entry points")
+
+    # ── 44–45 information architecture (product-first storefront) ──────
     ids = homepage_section_ids(home_html)
-    IA = ["craft", "free", "ebooks", "results", "starting-points", "bundles", "master-library"]
-    check("homepage section order matches the IA brief", ids[:len(IA)] == IA,
-          ", ".join(ids) or "no sections found")
-    # The page must close on free value and end with the one low-commitment CTA:
-    # … master-library → (Why) → Articles → newsletter as the last <section>.
-    check("homepage closes: master library → why → articles → email CTA",
-          ids == IA + ["newsletter"], "final section: " + (ids[-1] if ids else "-"))
+    IA = ["popular", "craft", "bundles", "master-library", "free",
+          "ebooks", "results", "why", "articles", "newsletter"]
+    check("homepage section order matches the product-first brief",
+          ids == IA, ", ".join(ids) or "no sections found")
+    # The page must close on free value and end with the one low-commitment
+    # CTA: … before/after → Why → Articles → newsletter as the last section.
+    check("homepage closes: why → articles → email CTA",
+          ids[-3:] == ["why", "articles", "newsletter"],
+          "final section: " + (ids[-1] if ids else "-"))
 
     products = {p["slug"]: p for p in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))}
     want, kept = ladder_state()

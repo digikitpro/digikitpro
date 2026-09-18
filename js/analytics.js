@@ -14,7 +14,7 @@
       future serverless collector can be dropped in without touching HTML.
    4. Auto-binds the standard events by delegation (no per-page wiring):
       page views by type, outbound Payhip clicks, buy / free-download clicks,
-      upgrade clicks, recommendation clicks, craft-card clicks, search,
+      upgrade clicks, craft-card clicks, search,
       scroll depth, feedback.
 
    PRIVACY RULES (non-negotiable, mirrored in privacy.html)
@@ -172,7 +172,6 @@
       if (/\/products\/[^/]+\/?$/.test(path)) t = "product";
       else if (/\/category\/[^/]+\/?$/.test(path)) t = "category";
       else if (/\/blog\/[^/]+\/?$/.test(path)) t = "article";
-      else if (/find-my-brushes/.test(path)) t = "finder";
       else if (/thank-you/.test(path)) t = "thankyou";
       else if (/bundles/.test(path)) t = "bundles";
       else if (/freebies/.test(path)) t = "freebies";
