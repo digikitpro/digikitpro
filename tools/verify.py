@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 86 CHECKS PASSED.
+Expects: ALL 87 CHECKS PASSED.
 (57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
 ladder completeness x2, no fake-strikethrough pricing + 8 from the
 2026-09-16 buyer-guides buildout: pages built, sitemap coverage x2, slug
@@ -54,7 +54,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 86
+EXPECTED = 87
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -732,6 +732,18 @@ def main() -> int:
           and len(two_up) == 1 and two_up[0].startswith("@media(min-width:1080px){")
           and not widened,
           "one full-width card below 1080px; two-up only from 1080px, where the CTA row holds")
+    # ── 87 the cover dock's min-width (third pass, 2026-09-19) ──────────
+    # A flex item's automatic minimum is its content-based minimum, not its
+    # flex-basis: the 3:4 cover <img> inside the dock lets Chrome resolve the
+    # dock wider than its declared basis (264px measured against the 220px
+    # rule), the body column absorbs the loss, its text wraps taller than the
+    # cover-driven card height, and the foot row renders below the card's
+    # frame. min-width:0 on the base rule binds the dock to its basis at all
+    # three widths — the 479px/640px variants only override flex and padding.
+    check("ebooks cover dock holds its declared width",
+          bool(dock) and "min-width:0" in dock.group(1)
+          and re.search(r"flex:0 0 \d+px", dock.group(1)) is not None,
+          "the dock must declare min-width:0, or its cover image inflates it past its flex-basis")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]

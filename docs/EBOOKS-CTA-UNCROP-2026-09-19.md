@@ -159,3 +159,77 @@ stopped clipping.
 
 All rebuilt pages changed only by the stylesheet cache-bust hash
 (`?v=285a9123…` → `?v=0d5fc8f8…`; `tools/core.py` fingerprints the file).
+
+---
+
+## Correction — 2026-09-19 (third pass, check 87): the cover dock held a width it never declared
+
+**Files:** `css/style.css` (one line) + `tools/verify.py` (check 87).
+The no-clip spec above is right, and round 1's fit math is right — but the
+removal of the clip exposed a second geometry bug one box upstream: on both
+cards the price, the "View Masterclass" pill and "Buy on Payhip ↗" rendered
+**below the card's rounded frame**. Visible, not clipped — round 2 could no
+longer hide the overflow as a cut pill.
+
+### What was actually happening
+
+`.ebooks-grid .ebook-cover` is a flex item, and a flex item's automatic
+minimum size is **not** its flex-basis: it is the content-based minimum
+(`min-width:auto`). The dock's content is a replaced element — the 3:4 cover
+`<img>` (`width:100%;aspect-ratio:3/4` over a 750×1000 asset) — and in Chrome
+that minimum let the dock resolve **wider than its declared basis**: measured
+**264px against the 220px basis** at ≥640px widths (the 150px base and 116px
+narrow-phone rules inflated in kind). The body column
+(`.ebook-body{flex:1;min-width:0}` — correctly shrinkable) absorbed the loss,
+its text wrapped extra lines, and the body came out **taller than the
+cover-driven card height**. The foot row, pinned to the column's bottom by
+`margin-top:auto`, hung below the card's bottom edge — exactly where the
+original report saw the CTA, now un-clipped.
+
+### The measurement
+
+DOM-geometry sweep, one assertion per viewport width 320–2560: the bottom of
+`#ebooks .ebook-foot` (and of its last child) must sit **above** the bottom
+of `#ebooks .ebook-card`.
+
+| State | Foot bottom vs. card bottom |
+|---|---|
+| before the fix, 390px viewport | **+182.8px below** the card's edge |
+| after the fix, worst case 320–2560px | **−17.8px** (17.8px of clearance) |
+
+(Method: headless sweep with `@sparticuz/chromium` + `puppeteer-core` — the
+build sandbox has no Chrome and its CDN is blocked, so no first-party
+`--headless` run was possible.)
+
+### The fix (one line)
+
+```css
+.ebooks-grid .ebook-cover{… flex:0 0 150px;min-width:0; …}
+```
+
+`min-width:0` on the **base** rule only: the ≤479px (116px) and ≥640px
+(220px) variants override just `flex` and `padding`, so the base declaration
+binds all three widths. The dock now holds exactly its declared basis
+everywhere, and the cover keeps its 3:4 ratio at that declared width.
+
+### The wrong fix this rejects
+
+**Restore `overflow:hidden` on `.ebook-card`.** It would have pushed the
+overflow back inside the frame — reinstating the very mechanism round 2
+removed, and converting the symptom back into the original bug: a CTA sliced
+flush at the card edge. The geometry was wrong, not the clip. A card that
+crops nothing must hold its contents geometrically, and the dock's missing
+minimum was the one missing pin. (Also rejected: narrowing the cover or
+shrinking the CTA again — round 1's numbers still hold at the declared dock
+width; there was nothing left to squeeze.)
+
+### Guardrails, third pass
+
+`tools/verify.py` is now **87 checks**. #87 ("ebooks cover dock holds its
+declared width") asserts the dock declares `min-width:0` **alongside** a
+`flex:0 0 Npx` basis — so either deleting the minimum or deleting the
+explicit basis fails the suite, and any future basis change is forced to
+keep the pair honest.
+
+All rebuilt pages changed only by the stylesheet cache-bust hash
+(`?v=0d5fc8f8…` → `?v=e8d96474…`; `tools/core.py` fingerprints the file).
