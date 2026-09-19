@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 84 CHECKS PASSED.
+Expects: ALL 86 CHECKS PASSED.
 (57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
 ladder completeness x2, no fake-strikethrough pricing + 8 from the
 2026-09-16 buyer-guides buildout: pages built, sitemap coverage x2, slug
@@ -26,7 +26,11 @@ homepage-IA checks were re-pinned on 2026-09-19 to the proof-first order —
 results → ebooks → popular → craft → bundles → master-library → free → articles → newsletter — a re-pin of the same two checks, so the count is unchanged.
 + 2 from the 2026-09-19 ebooks CTA uncrop: the Starter Guide & Masterclass
 pills must never be clipped by their card's overflow:hidden, and they must
-keep a full measure on a 320px phone.)
+keep a full measure on a 320px phone + 2 from that day's no-clip second pass:
+the card itself must crop nothing (overflow:visible at an auto height, covers
+stay contain, and the cover mat and the gold bar round their own corners
+instead of leaning on the clip) and the two-up grid must engage only from
+1080px, one full-width card below it.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -50,7 +54,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 84
+EXPECTED = 86
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -668,14 +672,15 @@ def main() -> int:
     # ── 83–84 ebooks CTA row (see .ebooks-grid .ebook-foot in css/style.css) ──
     # The Starter Guide & Masterclass cards are horizontal at every width, so
     # the fixed cover used to starve the pitch column on a phone and the card's
-    # own overflow:hidden sliced the CTA pill. Two halves, each of which has a
-    # plausible wrong fix: capping the foot children (a bare `overflow:visible`
-    # on the card would let the cover mat square off the card corners) and
-    # buying the label a real measure below 480px.
+    # own overflow sliced the CTA pill. Two halves, each of which has a
+    # plausible wrong fix: capping the foot children (so a CTA may wrap or move
+    # to its own line, but never outgrow its card) and buying the label a real
+    # measure below 480px. The card itself stopped clipping in the no-clip
+    # second pass — checks 85–86 below.
     foot_kid = re.search(r"\.ebooks-grid \.ebook-foot>\*\{([^}]*)\}", css_txt)
     foot_btn = re.search(r"\.ebooks-grid \.ebook-foot \.btn\{([^}]*)\}", css_txt)
     foot_link = re.search(r"\.ebooks-grid \.ebook-foot \.text-link\{([^}]*)\}", css_txt)
-    check("ebooks CTAs cannot be clipped by the card's own overflow:hidden",
+    check("ebooks CTAs are capped to their row, so no label can outgrow the card",
           bool(foot_kid) and "max-width:100%" in foot_kid.group(1)
           and "min-width:0" in foot_kid.group(1)
           and bool(foot_btn) and "white-space:normal" in foot_btn.group(1)
@@ -689,6 +694,44 @@ def main() -> int:
           bool(cover_n) and int(cover_n.group(1)) <= 120
           and ".ebooks-grid .ebook-foot .btn" in nb and "flex:1 1 100%" in nb,
           "cover narrows and both CTAs go full width below 480px")
+
+    # ── 85–86 the no-clip second pass (see .ebooks-grid in css/style.css) ──
+    # Round 1 made the CTA fit; this pass removes the mechanism instead of the
+    # symptom — the card itself no longer clips, so no descendant (CTA, label,
+    # badge, cover shadow, or anything added later) can be sliced by the card
+    # edge. The two decorations that used to lean on that clip must therefore
+    # round themselves, and a bare `overflow:visible` without them is exactly
+    # the wrong fix: the mat would square off the card's corners and the gold
+    # bar would spill past them. Both are pinned here, as is the grid width
+    # where a two-up card can still hold its own CTA row.
+    card = re.search(r"\.ebooks-grid \.ebook-card\{([^}]*)\}", css_txt)
+    card_css = card.group(1) if card else ""
+    frame_img = re.search(r"\.ebooks-grid \.ebook-frame img\{([^}]*)\}", css_txt)
+    dock = re.search(r"\.ebooks-grid \.ebook-cover\{([^}]*)\}", css_txt)
+    gold = re.search(r"\.ebooks-grid \.ebook-card\.edu-deep::before\{([^}]*)\}", css_txt)
+    gold_css = gold.group(1) if gold else ""
+    corner = "calc(var(--radius) - 1px)"      # the card's inner corner: --radius - 1px border
+    check("ebooks cards crop nothing, by construction",
+          "overflow:visible" in card_css and "overflow:hidden" not in card_css
+          and card_css.count("height:") == 1 and "height:auto" in card_css
+          and bool(frame_img) and "object-fit:contain" in frame_img.group(1)
+          and "object-fit:cover" not in frame_img.group(1)
+          and bool(dock) and corner in dock.group(1)
+          and f"height:{corner}" in gold_css and corner in gold_css
+          and "100% 3px" in gold_css and "pointer-events:none" in gold_css,
+          "card is overflow:visible at an auto height and the covers stay contain; the "
+          "cover mat and the gold bar carry the card's own corners instead of a clip")
+    base_grid = re.search(r"^#ebooks \.ebooks-grid\{([^}]*)\}", css_txt, re.M)
+    two_up = [ln for ln in css_txt.splitlines()
+              if "#ebooks .ebooks-grid{" in ln and "repeat(2,minmax(0,1fr))" in ln]
+    widened = [ln for ln in css_txt.splitlines()
+               if ln.startswith("@media(") and "ebooks-grid" in ln
+               and "min-width:1080px" not in ln]
+    check("the ebooks grid is one column until 1080px",
+          bool(base_grid) and "grid-template-columns:1fr" in base_grid.group(1)
+          and len(two_up) == 1 and two_up[0].startswith("@media(min-width:1080px){")
+          and not widened,
+          "one full-width card below 1080px; two-up only from 1080px, where the CTA row holds")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]
