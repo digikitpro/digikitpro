@@ -122,3 +122,49 @@ same mat pattern if the owner says go.
 `.bs-media` (homepage best-seller panel) already uses `width:100%;height:auto` —
 natural ratio, uncropped — which is the precedent that this treatment is
 consistent with, not new invention.
+
+## 2026-09-19 addendum — the best-sellers row rejoins the square
+
+The 2026-09-18 premium pass on the homepage's **Best sellers** row (`#popular`,
+the four lead kits, `.grid.cards-4`) re-docked its four cards in a **4:3 frame
+with a 1rem/1.1rem inset** (`#popular .card-media{aspect-ratio:4/3;padding:1rem
+1.1rem}` plus `aspect-ratio:auto` on the img), scoped after the global rules so
+checks 81–82 kept passing. It cropped nothing — but it made the storefront's
+lead row the one product grid on the site that did **not** share the square
+above, and it re-introduced exactly the frame ratio this note rejected for the
+catalog ("pushes portrait loss … the flagship packs are the portrait ones").
+Three of the four best sellers are those portrait covers.
+
+Computed from the shipped CSS (border-box, 16px root; 1200px wrap → 264px media
+width at ≥1080px, 348px on a 390px phone):
+
+| Cover | 4:3 + inset dock | Shared square | Δ |
+|---|---|---|---|
+| portrait 750×946 (×2) / 750×928 | 132×166 px desktop · 182×229 phone | 209×264 · 276×348 | **+59% / +52% linear**, ×2.5 / ×2.3 area |
+| landscape 580×435 | 221×166 · 305×229 | 264×198 · 348×261 | +19% / +14% linear |
+| media height (row height) | 198 · 261 | 264 · 348 | +66 px · +87 px — now equal to the free row |
+
+So the portrait best sellers had been rendering at 63–66% of the size the same
+artwork gets on every other card, in a tile shorter than its neighbours.
+
+**Change (CSS only).** The `#popular .card-media{aspect-ratio:4/3;padding:…}`
+rule is gone and `aspect-ratio:auto` is gone from `#popular .card-media img`;
+the row now inherits the shared `.card-media` square + `contain` + zero padding
+verbatim. Everything that was actually *premium* about the pass stays: the
+gradient shell and gold border, the hairline `::after` overlay (absolutely
+positioned — adds no box), the pedestal `drop-shadow` filter (never a
+transform), the roomier body, the gold price.
+
+**Invariant.** `tools/verify.py` **88** (count 87 → 88): the built homepage
+must still render `#popular` as `.card-media` cards, and every `#popular` rule
+whose selector reaches `.card-media` (the `::after` overlay excepted) may
+declare no frame property — `aspect-ratio`, any `padding-*`, `width`/`height`
+and their min/max/logical forms — and, on the img, no `object-fit`,
+`object-position`, `transform`, `scale` or `zoom`. Property names are compared
+whole. Confirmed to fail against the previous stylesheet, naming both offending
+rules (`#popular .card-media`, `#popular .card-media img`).
+
+**Build.** `python3 tools/build.py && python3 tools/verify.py` → `ALL 88 CHECKS
+PASSED`; a second build leaves the tree clean; the 102 rebuilt HTML files differ
+from `HEAD` only by the stylesheet cache-buster (`?v=e8d96474… → ?v=35fce012…`).
+Roll back: restore the two `#popular` declarations and set `EXPECTED` back to 87.

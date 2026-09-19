@@ -1351,22 +1351,29 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .grid.cards-4 .card-foot{flex-wrap:wrap;gap:.5rem}
 
 /* ── 2b · #popular premium row (homepage Best sellers ONLY) ────────────
-   Scoped overrides for the best-sellers row. The global .card-media
-   square + contain contract (verify checks 81–82) stays untouched; every
-   rule here is re-declared under #popular and sits AFTER that contract.
-   Artwork keeps the inherited object-fit:contain and floats centred on
-   the mat — three of the four covers are portrait renders with titles
-   baked into the artwork edge-to-edge, so nothing is ever cropped or
-   zoomed; the row's landscape banner (watercolor studio kit, 580x435 =
-   4:3) fills the medium dock exactly. */
+   Scoped FINISH for the best-sellers row — shell, hairline, pedestal
+   shadow, type, price — never the frame. The four cards use the same
+   .card-media square + contain contract as every other product card on
+   the site (verify checks 81–82; check 88 pins THIS row to it): no
+   #popular rule may set an aspect-ratio, a padding, a height or a fit on
+   the media or its img. Three of the four covers are portrait renders
+   (750x946 / 750x928) with titles baked into the artwork edge-to-edge
+   and the fourth is a 4:3 landscape banner (580x435); contained in the
+   shared square each shows whole at the frame's full height or width,
+   the site mat filling the rest — the same read as the free row further
+   down the page. An earlier pass re-docked this row in a 4:3 box with
+   a 1rem/1.1rem inset: it cropped nothing, but it made the storefront's
+   lead row the one grid that did not share the square (shorter tiles,
+   portrait covers ~37% smaller than the same artwork on any other card,
+   and the very frame ratio docs/CARD-MEDIA-FRAMING-2026-09-17.md had
+   already rejected for the catalog). Dropped 2026-09-19. */
 #popular .card{background:linear-gradient(165deg,#191920 0%,#101014 76%);border-color:rgba(201,168,106,.26);transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease}
 #popular .card:hover{border-color:rgba(201,168,106,.55);box-shadow:0 22px 50px -20px rgba(201,168,106,.26)}
-/* medium gallery dock: 4:3 with a mat inset — every cover floats whole */
-#popular .card-media{aspect-ratio:4/3;padding:1rem 1.1rem}
+/* gold hairline on the media edge: an overlay, adds no geometry */
 #popular .card-media::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(201,168,106,.10);pointer-events:none}
-/* img already fills the dock box (w/h 100%): drop the redundant square
-   ratio, add a pedestal shadow — a filter, never a transform (no zoom) */
-#popular .card-media img{aspect-ratio:auto;filter:drop-shadow(0 14px 22px rgba(0,0,0,.42))}
+/* pedestal shadow on the artwork — a filter, never a transform (no zoom);
+   width/height/aspect-ratio/object-fit stay exactly the globals' */
+#popular .card-media img{filter:drop-shadow(0 14px 22px rgba(0,0,0,.42))}
 #popular .card:hover .card-media img{filter:drop-shadow(0 18px 26px rgba(0,0,0,.5)) brightness(1.05)}
 /* roomier body, gold price: the premium read without new claims */
 #popular .card-body{padding:1.15rem 1.2rem 1.25rem;gap:.5rem}

@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 87 CHECKS PASSED.
+Expects: ALL 88 CHECKS PASSED.
 (57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
 ladder completeness x2, no fake-strikethrough pricing + 8 from the
 2026-09-16 buyer-guides buildout: pages built, sitemap coverage x2, slug
@@ -30,7 +30,12 @@ keep a full measure on a 320px phone + 2 from that day's no-clip second pass:
 the card itself must crop nothing (overflow:visible at an auto height, covers
 stay contain, and the cover mat and the gold bar round their own corners
 instead of leaning on the clip) and the two-up grid must engage only from
-1080px, one full-width card below it.)
+1080px, one full-width card below it + 1 from the 2026-09-19 best-sellers
+re-square: the #popular finish (shell, hairline, pedestal shadow, body,
+price) may not re-dock .card-media — no #popular rule may put an
+aspect-ratio, padding, height, fit or transform on the media or its img —
+so the homepage's lead row shares the one square that 81–82 pin for every
+other product card.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -54,7 +59,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 87
+EXPECTED = 88
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -744,6 +749,41 @@ def main() -> int:
           bool(dock) and "min-width:0" in dock.group(1)
           and re.search(r"flex:0 0 \d+px", dock.group(1)) is not None,
           "the dock must declare min-width:0, or its cover image inflates it past its flex-basis")
+
+    # ── 88 the best-sellers row keeps the shared square (2026-09-19) ────
+    # #popular is a scoped FINISH — gradient shell, gold hairline, pedestal
+    # shadow, roomier body, gold price — and must never become a second
+    # frame. The premium pass had re-docked the row in a 4:3 box with a
+    # 1rem/1.1rem inset: nothing was cropped, but the storefront's lead row
+    # became the one product grid whose cards did not share the .card-media
+    # square that 81–82 pin — shorter tiles than the free row, and the three
+    # portrait covers about a third smaller than the same artwork on any
+    # other card. Both halves are pinned: the built homepage still renders
+    # #popular as .card-media cards (so the globals reach it at all), and
+    # every #popular rule that touches the media carries no geometry and no
+    # fit — the square, the contain and the zero padding all come from the
+    # globals. ::after is exempt: an absolutely positioned overlay adds no
+    # box of its own. Property names are compared whole, so max-width or
+    # line-height can never trip (or hide behind) the width/height guards,
+    # and the selector scan is not line-anchored, so a one-line @media
+    # block cannot smuggle the dock back in either.
+    pop_sec = re.search(r'<section[^>]*id="popular".*?</section>', home_html, re.S)
+    pop_cards = pop_sec.group(0).count('class="card-media"') if pop_sec else 0
+    pop_rules = re.findall(r"(#popular[^{}\n]*\.card-media[^{}\n]*)\{([^}]*)\}", css_txt)
+    props = lambda body: {d.split(":", 1)[0].strip() for d in body.split(";") if ":" in d}
+    frame_props = {"aspect-ratio", "padding", "padding-top", "padding-right", "padding-bottom",
+                   "padding-left", "padding-block", "padding-inline", "height", "min-height",
+                   "max-height", "width", "min-width", "max-width", "block-size", "inline-size"}
+    fit_props = frame_props | {"object-fit", "object-position", "transform", "scale", "zoom"}
+    redocked = [sel.strip() for sel, body in pop_rules if "::" not in sel
+                and props(body) & (fit_props if sel.rstrip().endswith("img") else frame_props)]
+    check("homepage best-sellers row keeps the shared square card frame",
+          bool(pop_sec) and pop_cards >= 1
+          and "#popular .card-media{aspect-ratio:4/3" not in css_txt
+          and not redocked,
+          ("re-docked by: " + ", ".join(redocked)) if redocked
+          else f"{pop_cards} #popular cards inherit the global .card-media square + contain; "
+               "no #popular geometry or fit override")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]
