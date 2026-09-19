@@ -1452,14 +1452,31 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
    baked-in titles to the edge, so they are never cropped or zoomed); the
    premium read comes from the gold book frame, spine shading, cover flag
    and hover glow. No interior previews on index. */
+/* One column until 1080px. Below that a two-up card is ~460px with a ~193px
+   pitch column, and the price + the 145px "View Masterclass" pill need 208px
+   together — they stacked into a 4-line foot. From 1080px each card is ~508px
+   with a ~243px column: price and pill share a line, and the description wraps
+   to 5 lines instead of 6. */
 #ebooks .ebooks-grid{max-width:1060px;margin:0 auto;display:grid;gap:1.4rem;grid-template-columns:1fr}
-@media(min-width:980px){#ebooks .ebooks-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}}
-.ebooks-grid .ebook-card{border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(150deg,#191920 0%,#101014 72%);overflow:hidden;display:flex;flex-direction:row;align-items:stretch;transition:border-color .25s,transform .25s,box-shadow .25s}
+@media(min-width:1080px){#ebooks .ebooks-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}}
+/* The card never crops: overflow stays visible at an auto height, so nothing a
+   card holds — CTA, label, badge, cover shadow, any future element — can be
+   sliced by the card edge. The two decorations that used to lean on the clip
+   round themselves instead (see .ebook-cover and .edu-deep::before below). */
+.ebooks-grid .ebook-card{border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(150deg,#191920 0%,#101014 72%);overflow:visible;height:auto;display:flex;flex-direction:row;align-items:stretch;transition:border-color .25s,transform .25s,box-shadow .25s}
 .ebooks-grid .ebook-card:hover{border-color:rgba(201,168,106,.55);transform:translateY(-3px);box-shadow:0 22px 50px -20px rgba(201,168,106,.28)}
 .ebooks-grid .ebook-card.edu-deep{position:relative;border-color:rgba(201,168,106,.42);box-shadow:0 0 0 1px rgba(201,168,106,.12),0 24px 56px -22px rgba(201,168,106,.30)}
-.ebooks-grid .ebook-card.edu-deep::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#D8BA7E,var(--gold) 55%,var(--gold-deep));z-index:2}
-/* cover dock: medium cover, centred on the shared mat */
-.ebooks-grid .ebook-cover{position:relative;flex:0 0 150px;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.9rem .55rem .9rem .9rem}
+/* Gold top bar: a 3px strip cannot carry a 13px corner radius — CSS scales the
+   radius down and the strip spills past the card's rounded corner — so the box
+   is as tall as that corner and only its top 3px are painted: the painted arc
+   is then the card's inner arc exactly, with no clip needed. Decoration only,
+   so it never intercepts a click. */
+.ebooks-grid .ebook-card.edu-deep::before{content:"";position:absolute;top:0;left:0;right:0;height:calc(var(--radius) - 1px);border-radius:calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;background:linear-gradient(90deg,#D8BA7E,var(--gold) 55%,var(--gold-deep)) top/100% 3px no-repeat;pointer-events:none;z-index:2}
+/* cover dock: medium cover, centred on the shared mat. The mat is a child of a
+   card that no longer clips, so the dock carries the card's own corner itself:
+   inner radius = --radius minus the 1px border, left side only (its right edge
+   meets the body, not a corner). */
+.ebooks-grid .ebook-cover{position:relative;flex:0 0 150px;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.9rem .55rem .9rem .9rem;border-radius:calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px)}
 .ebooks-grid .ebook-frame{position:relative;display:block;width:100%;border-radius:5px;box-shadow:0 16px 32px -12px rgba(0,0,0,.75),0 0 0 1px rgba(201,168,106,.30);transition:box-shadow .25s,filter .25s}
 .ebooks-grid .ebook-frame img{width:100%;aspect-ratio:3/4;height:auto;object-fit:contain;object-position:center;display:block;background:none;border-radius:5px}
 .ebooks-grid .ebook-card:hover .ebook-frame{box-shadow:0 20px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,106,.55);filter:brightness(1.05)}
