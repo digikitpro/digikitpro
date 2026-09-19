@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Homepage, products index, bundles, freebies, thank-you page.
 
-The homepage (2026-09-19 layout): hero → best sellers → workflow discovery →
-bundle ladder → Master Library → free resources → before/after proof →
-Starter Guide & Masterclass (ebooks, 3:4 covers, max-width 780px) → three guides →
-email CTA. Community (#proof) and Why (#why) sections removed; ebooks section
-placed immediately after results; Pinterest footer band removed. Section order
-is pinned by tools/verify.py.
+The homepage (2026-09-19 layout): hero → before/after proof → Starter Guide
+& Masterclass (ebooks, medium 3:4 covers in horizontal book cards) → best
+sellers → workflow discovery → bundle ladder → Master Library → free
+resources → three guides → email CTA. Community (#proof) and Why (#why) sections
+removed; ebooks section placed immediately after results; Pinterest footer
+band removed. Section order is pinned by tools/verify.py.
 
 Buyer's path: see it (hero art) → believe it (before/after) → find it
 (best sellers + workflow cards) → try it (free) → start it (journey) → go
@@ -111,8 +111,10 @@ def build_home():
 """
 
     # ── Starter Guide & Masterclass (ebooks) — immediately after results ──
-    # Two medium premium cards side-by-side, max-width 780px, 3:4 covers on dark mat.
-    # No interior preview images on the index page (covers only).
+    # Two horizontal book-feature cards: medium 3:4 cover left (framed, never
+    # cropped — both covers carry baked-in titles to the edge), pitch + price
+    # + CTAs right. Cover flags and step labels state facts from products.json
+    # only. No interior preview images on the index page (covers only).
     ebooks_section = ""
     master_p = byslug.get("procreate-portrait-masterclass-ebook")
     # starter already fetched above; reuse
@@ -132,12 +134,13 @@ def build_home():
     </div>
     <p class="sec-note muted">Structured portrait learning for Procreate artists. Start free with the essentials, or step into the full 15-chapter masterclass.</p>
     <div class="ebooks-grid">
-      <article class="ebook-card">
-        <a class="ebook-cover" href="{s_u}">
-          <img src="{asset_file(0, starter['slug'], s_card)}"{img_srcset(0, starter['slug'], s_im, "(min-width: 640px) 360px, 92vw")} width="{s_im.get('cardW') or 750}" height="{s_im.get('cardH') or 1000}" alt="{esc(starter['name'])}" loading="lazy" decoding="async">
+      <article class="ebook-card edu-start">
+        <a class="ebook-cover" href="{s_u}" aria-label="{esc(starter['name'])}">
+          <span class="ebook-frame"><img src="{asset_file(0, starter['slug'], s_card)}"{img_srcset(0, starter['slug'], s_im, "(min-width: 640px) 170px, 115px")} width="{s_im.get('cardW') or 750}" height="{s_im.get('cardH') or 1000}" alt="{esc(starter['name'])}" loading="lazy" decoding="async"></span>
+          <span class="ebook-flag flag-free">Free</span>
         </a>
         <div class="ebook-body">
-          <p class="edu-level">Beginner · Free</p>
+          <p class="edu-level">Step 1 · Beginner · Free</p>
           <h3><a href="{s_u}">{esc(starter['name'])}</a></h3>
           <p class="edu-desc muted">{esc(starter.get('short') or "Start your first believable portrait this week — a free visual guide from blank canvas to structured head study.")}</p>
           <div class="ebook-foot">
@@ -149,11 +152,12 @@ def build_home():
         </div>
       </article>
       <article class="ebook-card edu-deep">
-        <a class="ebook-cover" href="{m_u}">
-          <img src="{asset_file(0, master_p['slug'], m_card)}"{img_srcset(0, master_p['slug'], m_im, "(min-width: 640px) 360px, 92vw")} width="{m_im.get('cardW') or 750}" height="{m_im.get('cardH') or 1000}" alt="{esc(master_p['name'])}" loading="lazy" decoding="async">
+        <a class="ebook-cover" href="{m_u}" aria-label="{esc(master_p['name'])}">
+          <span class="ebook-frame"><img src="{asset_file(0, master_p['slug'], m_card)}"{img_srcset(0, master_p['slug'], m_im, "(min-width: 640px) 170px, 115px")} width="{m_im.get('cardW') or 750}" height="{m_im.get('cardH') or 1000}" alt="{esc(master_p['name'])}" loading="lazy" decoding="async"></span>
+          <span class="ebook-flag flag-gold">15 chapters</span>
         </a>
         <div class="ebook-body">
-          <p class="edu-level">15 chapters · 107 pages</p>
+          <p class="edu-level">Step 2 · 15 chapters · 107 pages</p>
           <h3><a href="{m_u}">{esc(master_p['name'])}</a></h3>
           <p class="edu-desc muted">{esc(master_p.get('short') or "From blank canvas to believable portrait — a repeatable workflow you can reuse on every portrait after.")}</p>
           <div class="ebook-foot">
@@ -217,6 +221,12 @@ def build_home():
     </div>
   </section>
 
+  <!-- VISUAL PROOF: before → after -->
+  {before_after}
+
+  <!-- STARTER GUIDE & MASTERCLASS — immediately after results -->
+  {ebooks_section}
+
   <!-- POPULAR / BEST SELLERS -->
   <section class="section" id="popular" aria-labelledby="pop-title">
     <div class="wrap">
@@ -249,12 +259,6 @@ def build_home():
       {product_grid(free_row, 0, free_direct=True, classes="grid cards cards-4")}
     </div>
   </section>
-
-  <!-- VISUAL PROOF: before → after -->
-  {before_after}
-
-  <!-- STARTER GUIDE & MASTERCLASS — immediately after results -->
-  {ebooks_section}
 
   <!-- LEARN PROCREATE: three guides -->
   <section class="section" id="articles" aria-labelledby="articles-title">
