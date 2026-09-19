@@ -302,15 +302,15 @@ def main() -> int:
     # 1 partner portal + 51 products + 18 blog articles. The Find My
     # Brush Kit page (removed in full on 2026-09-18) was never listed
     # here, so its removal changes no count.
-    check("sitemap.xml has 100 page URLs",
-          len(page_locs) == 100, str(len(page_locs)))
+    check("sitemap.xml has 99 page URLs",
+          len(page_locs) == 99, str(len(page_locs)))
     check("sitemap.xml all locs on digikitpro.shop",
           bool(page_locs) and all(u.startswith(HOST) for u in page_locs)
           and not any("github.io" in u for u in page_locs))
 
     sm_txt = read("sitemap.txt") if exists("sitemap.txt") else ""
     txt_urls = [ln.strip() for ln in sm_txt.splitlines() if ln.strip()]
-    check("sitemap.txt has 100 URLs", len(txt_urls) == 100, str(len(txt_urls)))
+    check("sitemap.txt has 99 URLs", len(txt_urls) == 99, str(len(txt_urls)))
     check("sitemap.txt all on digikitpro.shop",
           bool(txt_urls) and all(u.startswith(HOST) for u in txt_urls)
           and not any("github.io" in u for u in txt_urls))

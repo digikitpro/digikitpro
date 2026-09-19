@@ -363,11 +363,8 @@ def build_thanks():
         "Your free Procreate brushes are ready to download right now, plus the recommended next step for your workflow.",
         SITE_URL + "/thank-you.html", depth,
         schemas=schema_breadcrumb([("Home", "/"), ("Thank you", "/thank-you.html")]),
-        ctx=page_ctx("thankyou"))
-    # Thank-you pages should be reachable but not compete for ranking.
-    html_out = html_out.replace(
-        '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">',
-        '<meta name="robots" content="noindex, follow">', 1)
+        ctx=page_ctx("thankyou"),
+        robots="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1")
     html_out += header(depth)
     html_out += f"""
 <main id="main">

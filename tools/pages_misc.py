@@ -396,7 +396,8 @@ def build_misc():
     write("terms.html", html_out)
 
     # ── SEARCH page (fallback target for SearchAction/schema) ──
-    html_out = head("Search, DigiKitPro", "Search all DigiKitPro Procreate brushes, bundles, freebies and articles.", SITE_URL + "/search.html", 0)
+    html_out = head("Search, DigiKitPro", "Search all DigiKitPro Procreate brushes, bundles, freebies and articles.", SITE_URL + "/search.html", 0,
+                      robots="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1")
     html_out += header(0)
     html_out += f"""
 <main id="main"><section class="section"><div class="wrap">
@@ -411,7 +412,8 @@ def build_misc():
     write("search.html", html_out)
 
     # ── 404 ──
-    html_out = head("Page not found, DigiKitPro", "That page doesn't exist, but the brushes do. Browse the full DigiKitPro catalog.", SITE_URL + "/404.html", 0)
+    html_out = head("Page not found, DigiKitPro", "That page doesn't exist, but the brushes do. Browse the full DigiKitPro catalog.", SITE_URL + "/404.html", 0,
+                      robots="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1")
     html_out += header(0)
     html_out += f"""
 <main id="main"><section class="section"><div class="wrap narrow" style="text-align:center;padding:6rem 0">
@@ -456,7 +458,6 @@ Sitemap: {SITE_URL}/sitemap-images.xml
         ("/about.html", "0.6", "monthly"),
         ("/faq.html", "0.6", "monthly"),
         ("/contact.html", "0.5", "monthly"),
-        ("/search.html", "0.5", "weekly"),
         ("/refunds.html", "0.3", "monthly"),
         ("/privacy.html", "0.3", "monthly"),
         ("/terms.html", "0.3", "monthly"),
@@ -514,7 +515,6 @@ Sitemap: {SITE_URL}/sitemap-images.xml
         SITE_URL + "/about.html",
         SITE_URL + "/faq.html",
         SITE_URL + "/contact.html",
-        SITE_URL + "/search.html",
         SITE_URL + "/refunds.html",
         SITE_URL + "/privacy.html",
         SITE_URL + "/terms.html",
