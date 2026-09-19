@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 82 CHECKS PASSED.
+Expects: ALL 84 CHECKS PASSED.
 (57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
 ladder completeness x2, no fake-strikethrough pricing + 8 from the
 2026-09-16 buyer-guides buildout: pages built, sitemap coverage x2, slug
@@ -23,7 +23,10 @@ the Find My Brush Kit was removed in full: the page and both scripts must be
 gone, no generated page may reference them, and the hero must offer exactly
 the two storefront CTAs (Shop All Brushes / Try Free Brushes). The two
 homepage-IA checks were re-pinned on 2026-09-19 to the proof-first order —
-results → ebooks → popular → craft → bundles → master-library → free → articles → newsletter — a re-pin of the same two checks, so the count is unchanged.)
+results → ebooks → popular → craft → bundles → master-library → free → articles → newsletter — a re-pin of the same two checks, so the count is unchanged.
++ 2 from the 2026-09-19 ebooks CTA uncrop: the Starter Guide & Masterclass
+pills must never be clipped by their card's overflow:hidden, and they must
+keep a full measure on a 320px phone.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -47,7 +50,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 82
+EXPECTED = 84
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -661,6 +664,31 @@ def main() -> int:
     check("card media mat is not painted over by the global img background",
           bool(ci) and "background:none" in ci.group(1),
           ".card-media img must reset the inherited img background")
+
+    # ── 83–84 ebooks CTA row (see .ebooks-grid .ebook-foot in css/style.css) ──
+    # The Starter Guide & Masterclass cards are horizontal at every width, so
+    # the fixed cover used to starve the pitch column on a phone and the card's
+    # own overflow:hidden sliced the CTA pill. Two halves, each of which has a
+    # plausible wrong fix: capping the foot children (a bare `overflow:visible`
+    # on the card would let the cover mat square off the card corners) and
+    # buying the label a real measure below 480px.
+    foot_kid = re.search(r"\.ebooks-grid \.ebook-foot>\*\{([^}]*)\}", css_txt)
+    foot_btn = re.search(r"\.ebooks-grid \.ebook-foot \.btn\{([^}]*)\}", css_txt)
+    foot_link = re.search(r"\.ebooks-grid \.ebook-foot \.text-link\{([^}]*)\}", css_txt)
+    check("ebooks CTAs cannot be clipped by the card's own overflow:hidden",
+          bool(foot_kid) and "max-width:100%" in foot_kid.group(1)
+          and "min-width:0" in foot_kid.group(1)
+          and bool(foot_btn) and "white-space:normal" in foot_btn.group(1)
+          and bool(foot_link) and "white-space:normal" in foot_link.group(1)
+          and "overflow-wrap:anywhere" in foot_link.group(1),
+          "every .ebook-foot child is capped to the row and wraps its label instead")
+    narrow = re.search(r"@media\(max-width:479px\)\{(.*?)\n\}", css_txt, re.S)
+    nb = narrow.group(1) if narrow else ""
+    cover_n = re.search(r"\.ebooks-grid \.ebook-cover\{flex:0 0 (\d+)px", nb)
+    check("ebooks CTAs keep a full measure on a 320px phone",
+          bool(cover_n) and int(cover_n.group(1)) <= 120
+          and ".ebooks-grid .ebook-foot .btn" in nb and "flex:1 1 100%" in nb,
+          "cover narrows and both CTAs go full width below 480px")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]
