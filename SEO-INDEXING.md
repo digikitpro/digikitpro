@@ -65,10 +65,13 @@ This uses **GitHub Actions variables**, not code edits, so you don’t break any
 
 IndexNow tells Bing, Yandex and Seznam the instant your URLs change.
 
-1. Generate any short key, example `a1b2c3d4e5f67890`.
-2. Create a repository variable **`INDEXNOW_KEY`** with that key.
-3. Build/deploy. `tools/build.py` writes `<key>.txt` to the site root automatically.
-4. The deploy workflow then calls `tools/submit_index.py`, which posts your products to IndexNow.
+It is **on by default**: `.github/workflows/deploy.yml` and `sync-payhip.yml` carry a default key
+(an IndexNow key is public by design — engines fetch it from your site — so it is not a secret).
+
+1. Nothing to configure. To rotate the key, create a repository variable **`INDEXNOW_KEY`**; it
+   overrides the default in both workflows.
+2. Build/deploy. `tools/build.py` writes `<key>.txt` to the site root automatically.
+3. The deploy workflow then calls `tools/submit_index.py`, which posts your changed pages to IndexNow.
 
 You can also run it locally:
 ```bash
