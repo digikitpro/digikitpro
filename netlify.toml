@@ -37,3 +37,33 @@
 # every URL maps to a real file, and unknown URLs get the smart 404.html
 # (which handles GitHub Pages-style directory redirects). Works the same on
 # Netlify, Cloudflare Pages and GitHub Pages.
+
+# ── SEO: redirect alternate URLs to canonical (prevents "Alternate page with proper canonical tag" duplicates) ──
+# http → https and www → apex are handled by GitHub Pages' Enforce HTTPS; these Netlify rules cover the Netlify deploy
+# and serve as documentation of the canonical behavior. GitHub Pages needs the same setting toggled in
+# Settings → Pages → Enforce HTTPS (API currently reports https_enforced:false — enable it).
+[[redirects]]
+  from = "http://digikitpro.shop/*"
+  to = "https://digikitpro.shop/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.digikitpro.shop/*"
+  to = "https://digikitpro.shop/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.digikitpro.shop/*"
+  to = "https://digikitpro.shop/:splat"
+  status = 301
+  force = true
+
+# Clean /index.html suffix → directory canonical (e.g. /blog/slug/index.html → /blog/slug/)
+[[redirects]]
+  from = "/*/index.html"
+  to = "/:splat/"
+  status = 301
+  force = true
+

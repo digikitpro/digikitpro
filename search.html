@@ -4,11 +4,28 @@
 <script>
 (function(){
   try{
-    var d=atob('Z2l0aHViLmlv');
-    if(location.hostname.slice(-d.length)===d){
-      var p=location.pathname.replace(/^\/digikitpro/,'')||'/';
+    var h=location.hostname, p=location.pathname, s=location.search, ha=location.hash;
+    var g=atob('Z2l0aHViLmlv');
+    if(h.slice(-g.length)===g){
+      var np=p.replace(/^\/digikitpro/,'')||'/';
       document.write('<meta name="robots" content="noindex,follow">');
-      location.replace('https://digikitpro.shop'+p+location.search+location.hash);
+      location.replace('https://digikitpro.shop'+np+s+ha);
+      return;
+    }
+    var isShop=h==='digikitpro.shop'||h==='www.digikitpro.shop';
+    if(isShop){
+      if(location.protocol==='http:'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(h==='www.digikitpro.shop'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(p!=='/' && p.slice(-11)==='/index.html'){
+        location.replace('https://digikitpro.shop'+p.slice(0,-10)+s+ha);
+        return;
+      }
     }
   }catch(e){}
 })();
@@ -33,8 +50,8 @@
   <meta property="og:see_also" content="https://www.pinterest.com/DigiKitProStudio/">
   <meta name="pinterest-rich-pin" content="true">
   <meta name="theme-color" content="#0A0A0C">
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="robots" content="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DigiKitPro">
   <meta property="og:title" content="Search, DigiKitPro">

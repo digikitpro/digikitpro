@@ -393,17 +393,34 @@ def schema_faq(faqs):
 _GITHUB_KILL = """<script>
 (function(){
   try{
-    var d=atob('Z2l0aHViLmlv');
-    if(location.hostname.slice(-d.length)===d){
-      var p=location.pathname.replace(/^\/digikitpro/,'')||'/';
+    var h=location.hostname, p=location.pathname, s=location.search, ha=location.hash;
+    var g=atob('Z2l0aHViLmlv');
+    if(h.slice(-g.length)===g){
+      var np=p.replace(/^\/digikitpro/,'')||'/';
       document.write('<meta name="robots" content="noindex,follow">');
-      location.replace('https://digikitpro.shop'+p+location.search+location.hash);
+      location.replace('https://digikitpro.shop'+np+s+ha);
+      return;
+    }
+    var isShop=h==='digikitpro.shop'||h==='www.digikitpro.shop';
+    if(isShop){
+      if(location.protocol==='http:'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(h==='www.digikitpro.shop'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(p!=='/' && p.slice(-11)==='/index.html'){
+        location.replace('https://digikitpro.shop'+p.slice(0,-10)+s+ha);
+        return;
+      }
     }
   }catch(e){}
 })();
 </script>"""
 
-def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None):
+def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None):
     """`ctx` is the analytics page context (see js/analytics.js). It is emitted
     as window.DKP.page and contains ONLY non-personal page facts: page type,
     product slug/name/tier/category/price. No visitor data, ever."""
@@ -468,6 +485,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     # inject its own hover overlay on every <img>, duplicating — and visually
     # fighting with — the site's own .pin-btn Save buttons.
     ctx_json = json.dumps(ctx or {}, ensure_ascii=False)
+    robots_content = robots or "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -478,8 +496,8 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <meta name="description" content="{esc(desc)}">
   <link rel="canonical" href="{esc(canonical)}">{vmeta}
   <meta name="theme-color" content="#0A0A0C">
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="robots" content="{esc(robots_content)}">
+  <meta name="googlebot" content="{esc(robots_content)}">
   <meta property="og:type" content="{og_type}">
   <meta property="og:site_name" content="{SITE_NAME}">
   <meta property="og:title" content="{esc(title)}">
