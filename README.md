@@ -58,7 +58,7 @@ The site's look is unchanged; this layer only makes it *move*. It adds: hero ent
 feedback on cards, categories, bundles and buttons, cursor parallax on the hero covers and
 bundle tiles, a 2 px scroll-progress thread, a dismissible sticky CTA (homepage only, after
 the hero, never over the footer) and the interactive **before/after slider** (homepage,
-medium-width, after the free-brushes row; the slider also ships wherever a `[data-ba]`
+medium-width, directly under the hero; the slider also ships wherever a `[data-ba]`
 stage is added).
 
 Rules it keeps:

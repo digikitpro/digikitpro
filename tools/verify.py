@@ -22,8 +22,8 @@ The three 2026-09-17 finder-combo checks were replaced on 2026-09-18 when
 the Find My Brush Kit was removed in full: the page and both scripts must be
 gone, no generated page may reference them, and the hero must offer exactly
 the two storefront CTAs (Shop All Brushes / Try Free Brushes). The two
-homepage-IA checks were re-pinned later the same day to the result-first
-order — popular → craft → bundles → master-library → free → results → ebooks → articles → newsletter — a re-pin of the same two checks, so the count is unchanged.)
+homepage-IA checks were re-pinned on 2026-09-19 to the proof-first order —
+results → ebooks → popular → craft → bundles → master-library → free → articles → newsletter — a re-pin of the same two checks, so the count is unchanged.)
 
 Lives in tools/ so it cannot be lost when a session closes. Fails the
 process (exit 1) on the first-summary of any failure; never edits
@@ -419,12 +419,12 @@ def main() -> int:
     # spine as the live brief: see → believe → find → try → start → deepen
     # → trust → learn → stay.
     ids = homepage_section_ids(home_html)
-    IA = ["popular", "craft", "bundles", "master-library", "free", "results", "ebooks", "articles", "newsletter"]
+    IA = ["results", "ebooks", "popular", "craft", "bundles", "master-library", "free", "articles", "newsletter"]
     check("homepage section order matches the result-first brief",
           ids == IA, ", ".join(ids) or "no sections found")
-    # The page must close on learning, then the one low-commitment CTA: … ebooks → Articles → newsletter as the last section.
-    check("homepage closes: ebooks → articles → email CTA",
-          ids[-3:] == ["ebooks", "articles", "newsletter"],
+    # The page must close on learning, then the one low-commitment CTA: … free → Articles → newsletter as the last section.
+    check("homepage closes: free → articles → email CTA",
+          ids[-3:] == ["free", "articles", "newsletter"],
           "final section: " + (ids[-1] if ids else "-"))
 
     products = {p["slug"]: p for p in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))}
