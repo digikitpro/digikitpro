@@ -1350,6 +1350,29 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .card-acts{display:inline-flex;align-items:center;gap:.45rem;flex-wrap:wrap;justify-content:flex-end}
 .grid.cards-4 .card-foot{flex-wrap:wrap;gap:.5rem}
 
+/* ── 2b · #popular premium row (homepage Best sellers ONLY) ────────────
+   Scoped overrides for the best-sellers row. The global .card-media
+   square + contain contract (verify checks 81–82) stays untouched; every
+   rule here is re-declared under #popular and sits AFTER that contract.
+   Artwork keeps the inherited object-fit:contain and floats centred on
+   the mat — three of the four covers are portrait renders with titles
+   baked into the artwork edge-to-edge, so nothing is ever cropped or
+   zoomed; the row's landscape banner (watercolor studio kit, 580x435 =
+   4:3) fills the medium dock exactly. */
+#popular .card{background:linear-gradient(165deg,#191920 0%,#101014 76%);border-color:rgba(201,168,106,.26);transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease}
+#popular .card:hover{border-color:rgba(201,168,106,.55);box-shadow:0 22px 50px -20px rgba(201,168,106,.26)}
+/* medium gallery dock: 4:3 with a mat inset — every cover floats whole */
+#popular .card-media{aspect-ratio:4/3;padding:1rem 1.1rem}
+#popular .card-media::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(201,168,106,.10);pointer-events:none}
+/* img already fills the dock box (w/h 100%): drop the redundant square
+   ratio, add a pedestal shadow — a filter, never a transform (no zoom) */
+#popular .card-media img{aspect-ratio:auto;filter:drop-shadow(0 14px 22px rgba(0,0,0,.42))}
+#popular .card:hover .card-media img{filter:drop-shadow(0 18px 26px rgba(0,0,0,.5)) brightness(1.05)}
+/* roomier body, gold price: the premium read without new claims */
+#popular .card-body{padding:1.15rem 1.2rem 1.25rem;gap:.5rem}
+#popular .card-title{font-size:1.08rem}
+#popular .price{font-size:1.14rem;color:var(--gold)}
+
 /* ── 3 · before/after: the "what the tools add" step chips ───────────── */
 .ba-steps{list-style:none;margin:1.2rem auto 0;padding:0;max-width:780px;
   display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem .75rem}
@@ -1436,7 +1459,7 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .ebooks-grid .ebook-card.edu-deep{position:relative;border-color:rgba(201,168,106,.42);box-shadow:0 0 0 1px rgba(201,168,106,.12),0 24px 56px -22px rgba(201,168,106,.30)}
 .ebooks-grid .ebook-card.edu-deep::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#D8BA7E,var(--gold) 55%,var(--gold-deep));z-index:2}
 /* cover dock: medium cover, centred on the shared mat */
-.ebooks-grid .ebook-cover{position:relative;flex:0 0 132px;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.9rem .55rem .9rem .9rem}
+.ebooks-grid .ebook-cover{position:relative;flex:0 0 150px;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.9rem .55rem .9rem .9rem}
 .ebooks-grid .ebook-frame{position:relative;display:block;width:100%;border-radius:5px;box-shadow:0 16px 32px -12px rgba(0,0,0,.75),0 0 0 1px rgba(201,168,106,.30);transition:box-shadow .25s,filter .25s}
 .ebooks-grid .ebook-frame img{width:100%;aspect-ratio:3/4;height:auto;object-fit:contain;object-position:center;display:block;background:none;border-radius:5px}
 .ebooks-grid .ebook-card:hover .ebook-frame{box-shadow:0 20px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,106,.55);filter:brightness(1.05)}
@@ -1453,7 +1476,7 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .ebooks-grid .ebook-foot{margin-top:auto;display:flex;align-items:center;gap:.7rem .9rem;flex-wrap:wrap;padding-top:.6rem}
 .ebooks-grid .edu-meta{margin:0;font-size:.72rem;color:#7d7a73;letter-spacing:.04em;flex-basis:100%}
 @media(min-width:640px){
-.ebooks-grid .ebook-cover{flex:0 0 190px;padding:1.1rem .65rem 1.1rem 1.1rem}
+.ebooks-grid .ebook-cover{flex:0 0 220px;padding:1.1rem .65rem 1.1rem 1.1rem}
 .ebooks-grid .ebook-body{padding:1.4rem 1.5rem 1.4rem 1.2rem}
 .ebooks-grid .ebook-body h3{font-size:1.22rem}
 .ebooks-grid .edu-desc{font-size:.9rem}

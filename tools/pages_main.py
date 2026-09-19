@@ -136,7 +136,7 @@ def build_home():
     <div class="ebooks-grid">
       <article class="ebook-card edu-start">
         <a class="ebook-cover" href="{s_u}" aria-label="{esc(starter['name'])}">
-          <span class="ebook-frame"><img src="{asset_file(0, starter['slug'], s_card)}"{img_srcset(0, starter['slug'], s_im, "(min-width: 640px) 170px, 115px")} width="{s_im.get('cardW') or 750}" height="{s_im.get('cardH') or 1000}" alt="{esc(starter['name'])}" loading="lazy" decoding="async"></span>
+          <span class="ebook-frame"><img src="{asset_file(0, starter['slug'], s_card)}"{img_srcset(0, starter['slug'], s_im, "(min-width: 640px) 195px, 130px")} width="{s_im.get('cardW') or 750}" height="{s_im.get('cardH') or 1000}" alt="{esc(starter['name'])}" loading="lazy" decoding="async"></span>
           <span class="ebook-flag flag-free">Free</span>
         </a>
         <div class="ebook-body">
@@ -153,7 +153,7 @@ def build_home():
       </article>
       <article class="ebook-card edu-deep">
         <a class="ebook-cover" href="{m_u}" aria-label="{esc(master_p['name'])}">
-          <span class="ebook-frame"><img src="{asset_file(0, master_p['slug'], m_card)}"{img_srcset(0, master_p['slug'], m_im, "(min-width: 640px) 170px, 115px")} width="{m_im.get('cardW') or 750}" height="{m_im.get('cardH') or 1000}" alt="{esc(master_p['name'])}" loading="lazy" decoding="async"></span>
+          <span class="ebook-frame"><img src="{asset_file(0, master_p['slug'], m_card)}"{img_srcset(0, master_p['slug'], m_im, "(min-width: 640px) 195px, 130px")} width="{m_im.get('cardW') or 750}" height="{m_im.get('cardH') or 1000}" alt="{esc(master_p['name'])}" loading="lazy" decoding="async"></span>
           <span class="ebook-flag flag-gold">15 chapters</span>
         </a>
         <div class="ebook-body">
