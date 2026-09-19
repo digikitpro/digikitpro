@@ -1436,7 +1436,7 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .ebooks-grid .ebook-card.edu-deep{position:relative;border-color:rgba(201,168,106,.42);box-shadow:0 0 0 1px rgba(201,168,106,.12),0 24px 56px -22px rgba(201,168,106,.30)}
 .ebooks-grid .ebook-card.edu-deep::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#D8BA7E,var(--gold) 55%,var(--gold-deep));z-index:2}
 /* cover dock: medium cover, centred on the shared mat */
-.ebooks-grid .ebook-cover{position:relative;flex:0 0 132px;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.9rem .55rem .9rem .9rem}
+.ebooks-grid .ebook-cover{position:relative;flex:0 0 150px;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.9rem .55rem .9rem .9rem}
 .ebooks-grid .ebook-frame{position:relative;display:block;width:100%;border-radius:5px;box-shadow:0 16px 32px -12px rgba(0,0,0,.75),0 0 0 1px rgba(201,168,106,.30);transition:box-shadow .25s,filter .25s}
 .ebooks-grid .ebook-frame img{width:100%;aspect-ratio:3/4;height:auto;object-fit:contain;object-position:center;display:block;background:none;border-radius:5px}
 .ebooks-grid .ebook-card:hover .ebook-frame{box-shadow:0 20px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,106,.55);filter:brightness(1.05)}
@@ -1453,7 +1453,7 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .ebooks-grid .ebook-foot{margin-top:auto;display:flex;align-items:center;gap:.7rem .9rem;flex-wrap:wrap;padding-top:.6rem}
 .ebooks-grid .edu-meta{margin:0;font-size:.72rem;color:#7d7a73;letter-spacing:.04em;flex-basis:100%}
 @media(min-width:640px){
-.ebooks-grid .ebook-cover{flex:0 0 190px;padding:1.1rem .65rem 1.1rem 1.1rem}
+.ebooks-grid .ebook-cover{flex:0 0 220px;padding:1.1rem .65rem 1.1rem 1.1rem}
 .ebooks-grid .ebook-body{padding:1.4rem 1.5rem 1.4rem 1.2rem}
 .ebooks-grid .ebook-body h3{font-size:1.22rem}
 .ebooks-grid .edu-desc{font-size:.9rem}
