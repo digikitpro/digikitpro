@@ -164,7 +164,6 @@ def build_home():
             <p class="edu-meta">PDF eBook · 15 chapters · lifetime access</p>
             <span class="price">{esc(master_p['priceText'])}</span>
             <a class="btn btn-line btn-sm" href="{m_u}">View Masterclass</a>
-            <a class="text-link" href="{esc(master_p['payhipUrl'])}" target="_blank" rel="noopener" {buy_attrs(master_p, "ebooks")}>Buy on Payhip ↗</a>
           </div>
         </div>
       </article>
