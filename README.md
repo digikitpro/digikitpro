@@ -151,8 +151,9 @@ Nothing is invented. If a product is added/removed in the store later, update
   a worldwide trust band. `tools/core.py` has `LANGUAGES` and `GEO_META` if you want to change them.
 - **Trending:** homepage and `/products.html` build auto-rotating trending product cards + trending
   search links from `data/products.json`.
-- **IndexNow:** set `INDEXNOW_KEY` as a GitHub repo variable; the build writes `<key>.txt` and the
-  deploy/sync workflows ping Bing, Yandex and Seznam.
+- **IndexNow:** on by default — the workflows carry a default key (public by design); the build
+  writes `<key>.txt` and the deploy/sync workflows ping Bing, Yandex and Seznam. Set the repo
+  variable `INDEXNOW_KEY` only to rotate it.
 
 See `SEO-INDEXING.md` for Google Search Console + Bing Webmaster + IndexNow setup and a content
 cadence that keeps the site visible on search results.

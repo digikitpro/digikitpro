@@ -130,8 +130,9 @@ Real acceleration levers (free):
   `docs/automation/payhip-auto-sync.yml` (install it as `.github/workflows/sync-payhip.yml`) detect
   new products on `payhip.com/digikitpro`, add them to `data/products.json`, rebuild the site, and
   commit. See `SEO-INDEXING.md` §3 and `docs/automation/README.md`.
-- **IndexNow instant indexing.** Add a repository variable `INDEXNOW_KEY` and the deploy workflow
-  pings Bing/Yandex/Seznam automatically.
+- **IndexNow instant indexing.** Enabled out of the box: the workflows ship a default key (public by
+  design) and the deploy pings Bing/Yandex/Seznam automatically. Set a repository variable
+  `INDEXNOW_KEY` only to rotate the key.
 - The word “New” no longer appears in the header/homepage badges or the eBook section eyebrow.
 
 > Full SEO + verification + auto-sync guide: **`SEO-INDEXING.md`**.

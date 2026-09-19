@@ -56,7 +56,9 @@ jobs:
           # unset here but set over there, a sync commit would silently flip
           # /partner/ back to invite-only until the next real deploy.
           PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}
-          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+          # Same default as deploy.yml (the key is public by design); the
+          # repository variable, if set, overrides it in both workflows.
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY || '2a0c816c785f97257c6a69f2d5cc3c47' }}
         run: python3 tools/build.py
 
       - name: Commit auto-sync results
@@ -72,8 +74,7 @@ jobs:
           git push origin HEAD:${{ github.ref_name }}
 
       - name: Ping search engines (IndexNow) for the changed URLs
-        if: ${{ vars.INDEXNOW_KEY != '' }}
         env:
-          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY || '2a0c816c785f97257c6a69f2d5cc3c47' }}
           SITE_URL: https://digikitpro.shop
         run: python3 tools/submit_index.py

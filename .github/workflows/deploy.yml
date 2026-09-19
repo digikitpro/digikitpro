@@ -57,8 +57,11 @@ jobs:
           # no third-party Pinterest script beyond the save button.
           PINTEREST_TAG_ID: ${{ vars.PINTEREST_TAG_ID }}
           # Writes <key>.txt at the site root so IndexNow can verify the ping.
-          # Harmless when unset: tools/build.py skips the key file.
-          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+          # The key is PUBLIC by design (IndexNow fetches it from the live
+          # site), so — like SITE_URL — the default lives right here rather
+          # than in a secret. Set the repository variable INDEXNOW_KEY only to
+          # rotate it without a code change. Keep in sync with the ping step.
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY || '2a0c816c785f97257c6a69f2d5cc3c47' }}
           # Partner portal (/partner/). Paste the Payhip affiliate sign-up link
           # (Payhip → Marketing → Affiliates) here and the page's primary CTA
           # becomes the real application form. Unset = the page states the
@@ -77,20 +80,22 @@ jobs:
         uses: actions/deploy-pages@v4
 
       # AFTER the site is live, so crawlers are never sent to content that is
-      # not yet deployed. Gated on INDEXNOW_KEY: with the variable unset the
-      # step is skipped and the ping stays dormant. continue-on-error so a
-      # ping failure can never fail a deploy. Does not call the retired
-      # Google/Bing sitemap-ping endpoints (both have been dead for years).
+      # not yet deployed. The key always resolves (repository variable, else
+      # the built-in default — same expression as the build step, keep them
+      # identical). continue-on-error so a ping failure can never fail a
+      # deploy. Does not call the retired Google/Bing sitemap-ping endpoints
+      # (both have been dead for years).
       - name: Ping IndexNow for URLs whose HTML actually changed
-        if: ${{ vars.INDEXNOW_KEY != '' }}
         continue-on-error: true
         env:
-          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY || '2a0c816c785f97257c6a69f2d5cc3c47' }}
           SITE_URL: https://digikitpro.shop
         run: python3 tools/submit_index.py
 
+      # Only once the ping has produced a manifest (on the very first run it
+      # exists only if the submission succeeded; afterwards it is tracked).
       - name: Commit IndexNow state manifest
-        if: ${{ vars.INDEXNOW_KEY != '' }}
+        if: ${{ hashFiles('data/indexnow-state.json') != '' }}
         continue-on-error: true
         run: |
           git config user.name "digikitpro-bot"
