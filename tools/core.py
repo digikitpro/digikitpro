@@ -506,11 +506,6 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}?v={CSS_VERSION}">
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
-  <!-- Motion layer: marks <html> before first paint so scroll-reveal elements
-       are hidden from the very first frame (no flash of visible content).
-       The timeout is a failsafe: if js/motion.js never runs, the class is
-       removed and every element is simply visible, as it is without JS. -->
-  <script>(function(h){{h.className+=" js-motion";setTimeout(function(){{if(!window.__DKP_MOTION_READY){{h.className=h.className.replace(" js-motion","");}}}},4000);}})(document.documentElement);</script>
 {pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}',analytics:{str(ANALYTICS_ENABLED).lower()},feedbackEndpoint:'{FEEDBACK_ENDPOINT}',page:{ctx_json}}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
   <script src="{rel(depth,'js/main.js')}" defer></script>
@@ -623,26 +618,7 @@ def newsletter(depth, heading="Get the Free Procreate Starter Pack",
 def footer(depth):
     social = "".join(f'<a href="{esc(v)}" target="_blank" rel="noopener">{esc(k)}</a>' for k, v in SOCIAL.items() if v)
     social_block = f'<p class="foot-label">Follow</p><div class="foot-links">{social}</div>' if social else ""
-    # ── Pinterest CTA band ──────────────────────────────────────────────
-    # Rendered only while a Pinterest profile is configured. No follower
-    # counts, no "join 10k artists" — just what the account actually posts.
-    pin_band = ""
-    if PINTEREST_URL:
-        ig_url = esc(INSTAGRAM_PROFILE)
-        pin_band = f"""
-  <div class="wrap">
-    <div class="foot-pinterest">
-      <div class="foot-pin-copy">
-        <p class="foot-label">Pinterest + Instagram</p>
-        <p class="foot-pin-title">Daily Procreate inspiration</p>
-        <p class="muted">Brush previews, artwork breakdowns and new free packs — pinned and posted as they go live. Follow along to catch them in your feed.</p>
-      </div>
-      <div class="foot-pin-act">
-        <a class="btn btn-pin" href="{esc(PINTEREST_URL)}" target="_blank" rel="noopener">Follow on Pinterest <span class="btn-arr" aria-hidden="true">↗</span></a>
-        <a class="btn btn-line" href="{ig_url}" target="_blank" rel="noopener" style="margin-top:.6rem">Follow on Instagram <span class="btn-arr" aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-  </div>"""
+
     return f"""
 <footer class="site-footer">
   <div class="wrap footer-grid">
@@ -696,7 +672,7 @@ def footer(depth):
       </div>
       {social_block}
     </nav>
-  </div>{pin_band}
+  </div>
   <div class="wrap foot-bottom">
     <p>© {date.today().year} {SITE_NAME}. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>

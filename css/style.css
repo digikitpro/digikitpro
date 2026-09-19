@@ -118,7 +118,7 @@ h3{font-size:1.15rem}
    inside a contain frame a scale past 100% is just the old crop on
    mouseover. */
 .hero-card img{width:100%;aspect-ratio:var(--hero-ar,4/5);object-fit:contain;object-position:center;display:block;background:none}
-.hero-card figcaption{position:absolute;left:0;right:0;bottom:0;padding:1rem .8rem .55rem;font-size:.68rem;color:var(--text);background:linear-gradient(transparent,rgba(5,5,7,.88));letter-spacing:.02em}
+.hero-card figcaption{position:absolute;left:0;right:0;bottom:0;padding:1rem .8rem .55rem;font-size:.68rem;color:var(--text);background:none;letter-spacing:.02em}
 .hero-card.h2{transform:translateY(18px)}
 .hero-card.h3{transform:translateY(36px)}
 @media(min-width:960px){.hero{padding:5.4rem 0 4.4rem}.hero-grid{grid-template-columns:1.05fr .95fr;gap:3.4rem}}
@@ -250,17 +250,17 @@ h3{font-size:1.15rem}
 /* ── bundles ── */
 .bundles-grid{grid-template-columns:1fr}
 @media(min-width:640px){.bundles-grid{grid-template-columns:repeat(2,1fr)}}
-.bundle-tile{position:relative;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;min-height:300px;display:flex;align-items:flex-end;color:var(--text);background:var(--surface-2)}
+.bundle-tile{position:relative;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;aspect-ratio:1/1;min-height:300px;display:flex;align-items:flex-end;color:var(--text);background:var(--mat)}
 .bundle-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;opacity:.85;transition:none;background:none}
 .bundle-tile:hover img{transform:none}
-.bundle-tile-body{position:relative;width:100%;padding:1.4rem;background:linear-gradient(transparent,rgba(8,8,10,.94) 42%)}
+.bundle-tile-body{position:relative;width:100%;padding:1.4rem;background:var(--surface)}
 .bundle-tile-body h3{margin:.5rem 0 .25rem;color:var(--text)}
 .bundles-grid .bundle-tile .badge{position:static;display:inline-block}
 @media(max-width:560px){.bundle-tile{min-height:380px}}
 .bundle-stack{display:flex;flex-direction:column;gap:2.2rem}
 .bundle-panel{display:grid;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
 @media(min-width:900px){.bundle-panel{grid-template-columns:1.1fr 1fr}}
-.bundle-media{min-height:300px;background:var(--mat);padding:1.4rem;display:flex;align-items:center;justify-content:center}
+.bundle-media{min-height:300px;aspect-ratio:1/1;background:var(--mat);padding:1.4rem;display:flex;align-items:center;justify-content:center}
 /* max-constrained auto sizing = the whole cover, always: the mat fills
    whatever is left, the panel row stays tidy, and no cover is cropped. */
 .bundle-media img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;object-position:center;display:block;background:none}
@@ -271,7 +271,7 @@ h3{font-size:1.15rem}
 .bundle-cta{display:flex;align-items:center;gap:1.1rem;margin-top:.6rem;flex-wrap:wrap}
 
 /* ── article images ── */
-.art-img{width:100%;aspect-ratio:16/9;object-fit:contain;object-position:center;display:block;background:var(--mat);border-radius:calc(var(--radius) - 6px);border-bottom:1px solid var(--border);margin-bottom:.4rem}
+.art-img{width:100%;aspect-ratio:1/1;object-fit:contain;object-position:center;display:block;background:var(--mat);border-radius:calc(var(--radius) - 6px);border-bottom:1px solid var(--border);margin-bottom:.4rem}
 .art-card:has(.art-img){padding:0;overflow:hidden}
 .art-card .art-body{padding:1.1rem 1.2rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
 .article-hero{margin:0 0 2rem;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
@@ -340,7 +340,7 @@ h3{font-size:1.15rem}
 .gal-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
 .gal-thumb{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;padding:0;background:var(--surface-2);cursor:pointer;opacity:.65;transition:opacity .2s,border-color .2s}
 .gal-thumb{background:var(--mat)}
-.gal-thumb img{width:100%;aspect-ratio:3/2;object-fit:contain;background:none}
+.gal-thumb img{width:100%;aspect-ratio:1/1;object-fit:contain;background:none}
 .gal-thumb:hover{opacity:1}
 .gal-thumb.active{opacity:1;border-color:var(--gold)}
 .pdp-info{display:flex;flex-direction:column;gap:.9rem}
@@ -423,7 +423,7 @@ h3{font-size:1.15rem}
 .empty-note{text-align:center;padding:3rem 0}
 
 /* ── reveal animation (respects reduced motion) ── */
-.rv{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.rv{opacity:1;transform:translateY(0);transition:opacity .5s ease,transform .5s ease}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 
@@ -486,7 +486,6 @@ dialog.gal-light::backdrop{background:rgba(5,5,7,.86)}
 /* ── professional polish ── */
 h1,h2,h3{text-wrap:balance}
 .lead,.hero-sub,.pdp-short{text-wrap:pretty}
-.card-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,12,0) 62%,rgba(10,10,12,.28));pointer-events:none}
 .hero-card figcaption,.bundle-tile-body{letter-spacing:.01em}
 .site-header{box-shadow:0 10px 30px -24px rgba(0,0,0,.9)}
 .nav a,.chip,.btn,.cat-pill,.trend-pill,.lang-opt{transition:transform .18s ease,color .18s ease,border-color .18s ease,background .18s ease}
@@ -586,7 +585,7 @@ body{top:0 !important}
 @media(min-width:600px){.thanks-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1040px){.thanks-grid{grid-template-columns:repeat(4,1fr)}}
 .thanks-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
-.thanks-media{display:block;background:var(--mat);aspect-ratio:3/2;overflow:hidden}
+.thanks-media{display:block;background:var(--mat);aspect-ratio:1/1;overflow:hidden}
 .thanks-media img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:none}
 .thanks-body{padding:1rem 1.05rem 1.2rem;display:flex;flex-direction:column;gap:.45rem;flex:1}
 .thanks-body .badge{position:static;align-self:flex-start}
@@ -694,11 +693,11 @@ html.js-motion .journey > .journey-step,
 html.js-motion .proof-grid > .proof-slot,
 html.js-motion .ba-figure,
 html.js-motion .ba-cta{
-  opacity:0;
+  opacity:1;
   /* `translate` (not `transform`) is used on purpose: hover lifts keep
      `transform` for themselves, so a revealed card can still rise on
      hover without the two animations fighting over one property. */
-  translate:0 var(--rv-y);
+  translate:0 0;
   transition:opacity var(--rv-d) var(--ease),translate var(--rv-d) var(--ease);
   transition-delay:var(--rv-t,0s);
 }
@@ -745,7 +744,7 @@ html.js-motion [data-wipe].rv-in::after{transform:scaleX(0);transform-origin:0 5
 /* ══ 2. HERO — entrance + ambient + cursor parallax ════════════════════ */
 @keyframes dkpRise{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
 @keyframes dkpFloat{0%,100%{translate:0 -3px}50%{translate:0 4px}}
-html.js-motion .hero-copy > *{opacity:0}
+html.js-motion .hero-copy > *{opacity:1}
 html.js-motion .hero-in .hero-copy > *{animation:dkpRise .72s var(--ease) both}
 html.js-motion .hero-in .hero-copy > *:nth-child(1){animation-delay:.06s}
 html.js-motion .hero-in .hero-copy > *:nth-child(2){animation-delay:.14s}
@@ -755,7 +754,7 @@ html.js-motion .hero-in .hero-copy > *:nth-child(5){animation-delay:.42s}
 html.js-motion .hero-in .hero-copy > *:nth-child(6){animation-delay:.5s}
 /* showcase covers: the stagger offsets live in `transform`, the entrance
    and the ambient float live in `translate` — they compose, nothing fights */
-html.js-motion .hero-showcase .hero-card{opacity:0}
+html.js-motion .hero-showcase .hero-card{opacity:1}
 html.js-motion .hero-in .hero-showcase .hero-card{animation:dkpRise .85s var(--ease) both}
 html.js-motion .hero-in .hero-card.h1{animation-delay:.2s}
 html.js-motion .hero-in .hero-card.h2{animation-delay:.33s}
@@ -1010,7 +1009,7 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 .ladder-rung{display:flex;align-items:center;gap:.5rem;padding:.9rem 1.15rem 0;font:700 .66rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
 .ladder-rung i{display:grid;place-items:center;width:1.45rem;height:1.45rem;border-radius:50%;border:1px solid rgba(201,168,106,.45);font:600 .68rem/1 var(--sans);font-style:normal;color:var(--muted);flex:none}
 .ladder-step--top .ladder-rung i{background:var(--gold);border-color:var(--gold);color:#181206}
-.ladder-media{display:block;aspect-ratio:3/2;overflow:hidden;background:var(--mat);margin-top:.9rem}
+.ladder-media{display:block;aspect-ratio:1/1;overflow:hidden;background:var(--mat);margin-top:.9rem}
 .ladder-media img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:none}
 /* the climb, drawn: a small arrow in the gutter between rungs (desktop only;
    under 1080px the row wraps, so the mark would land on a neighbour) */
@@ -1359,9 +1358,9 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .ba-steps li+li::before{content:"→";color:rgba(201,168,106,.75);letter-spacing:0}
 
 /* ── 4 · workflow cards carry one artwork each (discovery, not tiles) ── */
-.craft-art{display:block;aspect-ratio:16/9;border-radius:var(--radius-sm);overflow:hidden;
+.craft-art{display:block;aspect-ratio:1/1;border-radius:var(--radius-sm);overflow:hidden;
   background:var(--mat);border:1px solid var(--border);margin-bottom:.6rem}
-.craft-art img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:none;
+.craft-art img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:none;
   transition:transform .5s var(--ease)}
 .craft-card:hover .craft-art img{transform:scale(1.02)}
 @media(prefers-reduced-motion:reduce){.craft-card:hover .craft-art img{transform:none}}
@@ -1380,7 +1379,7 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .journey-rung i{display:grid;place-items:center;width:1.4rem;height:1.4rem;border-radius:50%;
   border:1px solid rgba(201,168,106,.45);font:600 .66rem/1 var(--sans);font-style:normal;color:var(--muted);flex:none}
 .journey-step--final .journey-rung i{background:var(--gold);border-color:var(--gold);color:#181206}
-.journey-media{display:block;aspect-ratio:3/4;overflow:hidden;background:var(--mat);margin-top:.85rem}
+.journey-media{display:block;aspect-ratio:1/1;overflow:hidden;background:var(--mat);margin-top:.85rem}
 .journey-media img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:none;transition:transform .5s var(--ease)}
 .journey-step:hover .journey-media img{transform:scale(1.02)}
 @media(prefers-reduced-motion:reduce){
@@ -1423,3 +1422,13 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .proof-slot b{color:var(--text);font:600 .95rem var(--sans)}
 .proof-slot span{font-size:.78rem;line-height:1.5;max-width:26ch}
 .proof-cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.3rem}
+
+/* ── Homepage Starter Guide & Masterclass (ebooks) ───────────
+   Two medium premium cards side-by-side in a max-width 780px container.
+   Covers use 3:4 native aspect on the dark mat -- no interior previews on index. */
+#ebooks .ebooks-grid{max-width:780px;margin:0 auto;display:grid;gap:1.4rem;grid-template-columns:1fr}
+@media(min-width:640px){#ebooks .ebooks-grid{grid-template-columns:repeat(2,1fr)}}
+.ebooks-grid .ebook-card{border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(155deg,#17171c,#101013);overflow:hidden;display:flex;flex-direction:column;transition:border-color .25s,transform .25s,box-shadow .25s}
+.ebooks-grid .ebook-card:hover{border-color:rgba(201,168,106,.55);transform:translateY(-3px);box-shadow:0 18px 44px -18px rgba(201,168,106,.22)}
+.ebooks-grid .ebook-cover{display:block;aspect-ratio:3/4;background:var(--mat)}
+.ebooks-grid .ebook-cover img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:none}

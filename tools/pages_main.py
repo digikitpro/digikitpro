@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 """Homepage, products index, bundles, freebies, thank-you page.
 
-The homepage is a result-first storefront (owner direction, 2026-09-18 exact
-reorder): hero with ONE finished artwork and the trust row → before/after
-visual proof directly under it → four best-seller cards ("Start With What
-You Actually Need") → shop-by-workflow discovery ("What Do You Create?") →
-free resources led by the Starter Guide ("Try DigiKitPro Before You Buy") →
-the portrait journey ($0 → focused kit → bundle → Masterclass) → the bundle
-ladder ("Want More Than One Kit?") → the Master Library feature → why
-DigiKitPro → the honest community-art placeholder (empty slots, never fake
-proof) → three guides → the free starter pack email CTA → footer.
-Section order is pinned by tools/verify.py.
+The homepage (2026-09-19 layout): hero → best sellers → workflow discovery →
+bundle ladder → Master Library → free resources → before/after proof →
+Starter Guide & Masterclass (ebooks, 3:4 covers, max-width 780px) → three guides →
+email CTA. Community (#proof) and Why (#why) sections removed; ebooks section
+placed immediately after results; Pinterest footer band removed. Section order
+is pinned by tools/verify.py.
 
 Buyer's path: see it (hero art) → believe it (before/after) → find it
 (best sellers + workflow cards) → try it (free) → start it (journey) → go
@@ -34,10 +30,6 @@ def build_home():
     byslug = BY_SLUG
 
     # ── Hero artwork: ONE large finished portrait, not a wall of covers ──
-    # The right half of the hero is a single piece of finished artwork (the
-    # portrait painted with the best-selling skin kit) that links straight to
-    # the product: what it is → who it is for → where to go next. Same image
-    # as the <link rel="preload"> below, so it stays the LCP element.
     hero_p = byslug.get("portrait-skin-brushes-procreate")
     hero_art = ""
     if hero_p:
@@ -54,10 +46,6 @@ def build_home():
             f'</a></div>')
 
     # ── Popular: the four leading kits, one per workflow ────────────────
-    # Best-seller spotlight + six-card wall became a 4-card gallery row
-    # (2026-09-18 reorder): the kits a new visitor actually starts with, each
-    # focused on one workflow. Cards carry View Product AND Payhip Buy Now
-    # (dual_buy, entry-tier only), badges and Pinterest Save like everywhere.
     popular = [byslug[s] for s in (
         "portrait-skin-brushes-procreate",
         "portrait-mastery-kit-46-brushes",
@@ -70,65 +58,6 @@ def build_home():
     freebies = [p for p in PRODUCTS if p["free"] and not p.get("comingSoon") and p["category"] != "Guides & eBooks"]
     free_row = ([starter] if starter else []) + freebies
 
-    # ── PORTRAIT JOURNEY: $0 → focused tool → kit → bundle → Masterclass ─
-    # One horizontal path on desktop, a vertical timeline on mobile. Every
-    # step is a real product with its live price/assets from products.json;
-    # only the stage label ("Free", "Portrait skin", ...) is merchandising
-    # copy. Rung labels kept short so the progression reads at a glance.
-    JOURNEY = [
-        ("Free", "procreate-starter-guide-free-ebook"),
-        ("Portrait skin", "portrait-skin-brushes-procreate"),
-        ("Portrait workflow", "portrait-mastery-kit-46-brushes"),
-        ("Complete", "ultimate-portrait-mastery-bundle"),
-        ("Masterclass", "procreate-portrait-masterclass-ebook"),
-    ]
-    journey_steps = ""
-    ji = 0
-    for label, slug in JOURNEY:
-        p = byslug.get(slug)
-        if not p or p.get("comingSoon"):
-            continue
-        ji += 1
-        im = p.get("images") or {}
-        card = im.get("card") or im.get("main") or ""
-        u = f"products/{p['slug']}/"
-        name = p["name"].split(" (")[0]
-        price = "Free" if p["free"] else esc(p["priceText"])
-        final = slug == JOURNEY[-1][1]
-        if p["free"]:
-            cta = (f'<a class="btn btn-line btn-sm" href="{esc(p["payhipUrl"])}" target="_blank" rel="noopener" '
-                   f'{buy_attrs(p, "journey")}>Get Free ↗</a>')
-        elif final:
-            cta = f'<a class="btn btn-gold btn-sm" href="{u}">Explore the Masterclass</a>'
-        else:
-            cta = f'<a class="btn btn-line btn-sm" href="{u}">View Product</a>'
-        journey_steps += f"""<li class="journey-step{' journey-step--final' if final else ''}">
-  <span class="journey-rung"><i aria-hidden="true">{ji}</i>{esc(label)}</span>
-  <div class="card-img">
-  <a class="journey-media" href="{u}" tabindex="-1" aria-hidden="true"{pin_attrs(p)}>
-    <img src="{asset_file(0, p['slug'], card)}"{img_srcset(0, p['slug'], im, "(min-width: 1080px) 220px, 88vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="" loading="lazy" decoding="async">
-  </a>{pin_button(p) if PINTEREST_URL else ""}
-  </div>
-  <div class="journey-body">
-    <h3><a href="{u}">{esc(name)}</a></h3>
-    <p class="journey-meta muted">{esc(p.get('assets') or '')}</p>
-    <div class="journey-foot"><span class="price">{price}</span>{cta}</div>
-  </div>
-</li>"""
-    journey_section = ""
-    if ji >= 4:
-        journey_section = f"""<section class="section section-alt" id="journey" aria-labelledby="journey-title">
-  <div class="wrap">
-    <div class="sec-head">
-      <div><p class="eyebrow">The portrait path</p><h2 id="journey-title">From First Portrait to Finished Portrait</h2></div>
-      <a class="text-link" href="blog/procreate-portrait-workflow/">Read the portrait workflow →</a>
-    </div>
-    <p class="sec-note muted">A simple path from learning the basics to building a complete portrait workflow. Start free — then add the tools when your portraits ask for them.</p>
-    <ol class="journey">{journey_steps}</ol>
-  </div>
-</section>
-"""
-
     bundle_ladder_section = bundle_ladder(
         0, section_cls="section", eyebrow="Bundles & libraries",
         title="Want More Than One Kit?",
@@ -136,11 +65,7 @@ def build_home():
                   "exactly what it adds and who it is for — a bigger library is not "
                   "automatically the better buy, the right rung is.")
 
-    # ── Before / After: the visual proof, moved directly under the hero ──
-    # Interactive comparison slider (js/motion.js + css/style.css "MOTION
-    # SYSTEM"). The visitor sees the transformation BEFORE being asked to
-    # browse a catalog. Swap assets/img/ba-before.webp / ba-after.webp for
-    # real client artwork whenever you like; keep the same size and crop.
+    # ── Before / After: the visual proof ──
     skin = byslug.get("portrait-skin-brushes-procreate")
     portrait_bundle = byslug.get("ultimate-portrait-mastery-bundle")
     skin_cta = ""
@@ -185,6 +110,65 @@ def build_home():
   </section>
 """
 
+    # ── Starter Guide & Masterclass (ebooks) — immediately after results ──
+    # Two medium premium cards side-by-side, max-width 780px, 3:4 covers on dark mat.
+    # No interior preview images on the index page (covers only).
+    ebooks_section = ""
+    master_p = byslug.get("procreate-portrait-masterclass-ebook")
+    # starter already fetched above; reuse
+    if starter and master_p:
+        # Starter card
+        s_im = starter.get("images") or {}
+        s_card = s_im.get("card") or s_im.get("main") or ""
+        s_u = f"products/{starter['slug']}/"
+        # Masterclass card
+        m_im = master_p.get("images") or {}
+        m_card = m_im.get("card") or m_im.get("main") or ""
+        m_u = f"products/{master_p['slug']}/"
+        ebooks_section = f"""<section class="section" id="ebooks" aria-labelledby="ebooks-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Learn the craft</p><h2 id="ebooks-title">Starter Guide &amp; Masterclass</h2></div>
+    </div>
+    <p class="sec-note muted">Structured portrait learning for Procreate artists. Start free with the essentials, or step into the full 15-chapter masterclass.</p>
+    <div class="ebooks-grid">
+      <article class="ebook-card">
+        <a class="ebook-cover" href="{s_u}">
+          <img src="{asset_file(0, starter['slug'], s_card)}"{img_srcset(0, starter['slug'], s_im, "(min-width: 640px) 360px, 92vw")} width="{s_im.get('cardW') or 750}" height="{s_im.get('cardH') or 1000}" alt="{esc(starter['name'])}" loading="lazy" decoding="async">
+        </a>
+        <div class="ebook-body">
+          <p class="edu-level">Beginner · Free</p>
+          <h3><a href="{s_u}">{esc(starter['name'])}</a></h3>
+          <p class="edu-desc muted">{esc(starter.get('short') or "Start your first believable portrait this week — a free visual guide from blank canvas to structured head study.")}</p>
+          <div class="ebook-foot">
+            <p class="edu-meta">PDF eBook · instant download</p>
+            <span class="price price-free">Free</span>
+            <a class="btn btn-gold btn-sm" href="{esc(starter['payhipUrl'])}" target="_blank" rel="noopener" {buy_attrs(starter, "ebooks")}>Get Free ↗</a>
+            <a class="text-link" href="{s_u}">View guide →</a>
+          </div>
+        </div>
+      </article>
+      <article class="ebook-card edu-deep">
+        <a class="ebook-cover" href="{m_u}">
+          <img src="{asset_file(0, master_p['slug'], m_card)}"{img_srcset(0, master_p['slug'], m_im, "(min-width: 640px) 360px, 92vw")} width="{m_im.get('cardW') or 750}" height="{m_im.get('cardH') or 1000}" alt="{esc(master_p['name'])}" loading="lazy" decoding="async">
+        </a>
+        <div class="ebook-body">
+          <p class="edu-level">15 chapters · 107 pages</p>
+          <h3><a href="{m_u}">{esc(master_p['name'])}</a></h3>
+          <p class="edu-desc muted">{esc(master_p.get('short') or "From blank canvas to believable portrait — a repeatable workflow you can reuse on every portrait after.")}</p>
+          <div class="ebook-foot">
+            <p class="edu-meta">PDF eBook · 15 chapters · lifetime access</p>
+            <span class="price">{esc(master_p['priceText'])}</span>
+            <a class="btn btn-line btn-sm" href="{m_u}">View Masterclass</a>
+            <a class="text-link" href="{esc(master_p['payhipUrl'])}" target="_blank" rel="noopener" {buy_attrs(master_p, "ebooks")}>Buy on Payhip ↗</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+"""
+
     # ── Articles: pinned editorial order (product-adjacent guides first) ─
     _img_articles = [a for a in load_articles() if a.get("image")]
     _by_aslug = {a.get("slug"): a for a in _img_articles}
@@ -216,9 +200,7 @@ def build_home():
     html_out += header(0, active="index.html")
     html_out += f"""
 <main id="main">
-  <!-- 1 · HERO: short and commercial — one value proposition, two CTAs
-       (Shop All Brushes / Try Free Brushes), ONE finished artwork on the
-       right, trust row under the buttons. -->
+  <!-- HERO: short and commercial — one value proposition, two CTAs, ONE finished artwork -->
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
@@ -235,13 +217,7 @@ def build_home():
     </div>
   </section>
 
-  <!-- 2 · VISUAL PROOF: before → after, directly under the hero. The
-       transformation comes before any catalog browsing. -->
-  {before_after}
-
-  <!-- 3 · POPULAR / BEST SELLERS: four focused kits, gallery-style cards
-       with View Product + Payhip Buy Now. No spotlight wall, no ten-card
-       pile — this is where "start with what you need" is answered. -->
+  <!-- POPULAR / BEST SELLERS -->
   <section class="section" id="popular" aria-labelledby="pop-title">
     <div class="wrap">
       <div class="sec-head">
@@ -253,12 +229,16 @@ def build_home():
     </div>
   </section>
 
-  <!-- 4 · SHOP BY WORKFLOW ("What Do You Create?"): discovery by intent,
-       one artwork per route. Built from data/discovery.json + CRAFT_ART. -->
+  <!-- SHOP BY WORKFLOW -->
   {craft_grid(0)}
 
-  <!-- 5 · FREE PROCREATE RESOURCES: the Starter Guide first, then the $0
-       kits. "Get Free" goes straight to Payhip — generous, not a teaser. -->
+  <!-- PROCREATE BUNDLES -->
+  {bundle_ladder_section}
+
+  <!-- MASTER LIBRARY FEATURE -->
+  {flagship_band(0, bridge=True, ladder_href="#bundles", home=True)}
+
+  <!-- FREE PROCREATE RESOURCES -->
   <section class="section" id="free" aria-labelledby="free-title">
     <div class="wrap">
       <div class="sec-head">
@@ -270,62 +250,13 @@ def build_home():
     </div>
   </section>
 
-  <!-- 6 · PORTRAIT JOURNEY: the portrait funnel as a path, not a pile —
-       free guide → focused kit → full kit → bundle → Masterclass. -->
-  {journey_section}
+  <!-- VISUAL PROOF: before → after -->
+  {before_after}
 
-  <!-- 7 · PROCREATE BUNDLES ("Want More Than One Kit?"): the value ladder
-       only AFTER the visitor has seen focused kits and the portrait path.
-       data/discovery.json → bundleLadder owns the rungs. -->
-  {bundle_ladder_section}
+  <!-- STARTER GUIDE & MASTERCLASS — immediately after results -->
+  {ebooks_section}
 
-  <!-- 8 · MASTER LIBRARY FEATURE: the advanced option — one library, nine
-       workflows as scannable chips, Compare Bundles as the second CTA. -->
-  {flagship_band(0, bridge=True, ladder_href="#bundles", home=True)}
-
-  <!-- 9 · WHY DIGIKITPRO: trust AFTER products and results, four factual
-       blocks with quiet stroke icons. -->
-  <section class="section" id="why" aria-labelledby="why-title">
-    <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">Why artists choose DigiKitPro</p><h2 id="why-title">Tools That Respect Your Craft</h2></div></div>
-      <div class="grid why-grid">
-        <div class="why"><span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.4-4.3L15.6 5.5a2.05 2.05 0 0 1 2.9 0l1 1a2.05 2.05 0 0 1 0 2.9L9.3 19.6 4 20z"/><path d="m13.8 7.4 3.8 3.8"/></svg></span><h3>Hand-tested on real artwork</h3><p class="muted">Every brush is drawn, tuned and re-tuned on actual portrait and illustration work before release, never bulk-generated.</p></div>
-        <div class="why"><span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 12.5 9 5 9-5"/><path d="m3 16.5 9 5 9-5"/></svg></span><h3>Organized by workflow</h3><p class="muted">Kits follow the order you actually paint in: sketch, ink, blend, texture, finish. Less hunting, more creating.</p></div>
-        <div class="why"><span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7 9.5 5 5 5-5"/><path d="M4 21h16"/></svg></span><h3>Instant, lifetime access</h3><p class="muted">Payhip delivers your .brushset seconds after checkout, with a permanent download link in your inbox.</p></div>
-        <div class="why"><span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="13" height="17" rx="2.5"/><path d="m19.4 8.4 1.9 1.9a1.5 1.5 0 0 1 0 2.1l-3.9 3.9-2.3.3.3-2.3 3.9-3.9a.1.1 0 0 1 .1 0z"/></svg></span><h3>Made for Apple Pencil</h3><p class="muted">Pressure and tilt behavior tuned for the iPad + Apple Pencil, on Procreate 5 and newer.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 10 · CUSTOMER ART / SOCIAL PROOF — honest placeholder, populated
-       only with genuine, permission-granted artist work.
-       STORE RULE: no invented quotes, no stock "customer" photos, no
-       manufactured ratings. tools/verify.py fails the build on fabricated
-       social proof (the empty .quote-slot figures below are its documented
-       placeholder shape and are excluded from that scan as placeholders,
-       never as proof). Until real artwork exists, the slots display the
-       invitation — an empty, clearly-marked frame beats fake proof.
-       TO PUBLISH A REAL PIECE: replace one .proof-slot figure with the
-       artwork, the artist's own handle (with their permission) and a link
-       to their profile or shop. Keep the others as slots. -->
-  <section class="section section-alt" id="proof" aria-labelledby="proof-title">
-    <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">Community</p><h2 id="proof-title">Made for Real Artwork</h2></div></div>
-      <p class="sec-note muted">This space is reserved for finished pieces painted with DigiKitPro kits. Nothing appears here until a real artist shares real work and says we may show it — we would rather keep it empty than fake proof. Painting with our brushes? Tag <b>@digikitprostudio</b> on Instagram or pin your work on Pinterest, and tell us we may feature it here.</p>
-      <div class="grid proof-grid">
-        <figure class="proof-slot quote-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg><b>Your artwork here</b><span>Reserved for a DigiKitPro artist — shared with permission.</span></figure>
-        <figure class="proof-slot quote-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg><b>Your artwork here</b><span>Reserved for a DigiKitPro artist — shared with permission.</span></figure>
-        <figure class="proof-slot quote-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg><b>Your artwork here</b><span>Reserved for a DigiKitPro artist — shared with permission.</span></figure>
-      </div>
-      <div class="proof-cta">
-        <a class="btn btn-line btn-sm" href="{esc(INSTAGRAM_PROFILE)}" target="_blank" rel="noopener">Share on Instagram ↗</a>
-        <a class="btn btn-line btn-sm" href="{esc(PINTEREST_URL)}" target="_blank" rel="noopener">Share on Pinterest ↗</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 11 · LEARN PROCREATE: three guides, beginners → line art → anime,
-       ordered to connect naturally to the products above. -->
+  <!-- LEARN PROCREATE: three guides -->
   <section class="section" id="articles" aria-labelledby="articles-title">
     <div class="wrap">
       <div class="sec-head">
@@ -336,8 +267,7 @@ def build_home():
     </div>
   </section>
 
-  <!-- 12 · FREE STARTER PACK EMAIL CTA: the final invitation — one
-       low-commitment exit after everything, never an aggressive popup. -->
+  <!-- FREE STARTER PACK EMAIL CTA -->
   {newsletter(0)}
 
 </main>
