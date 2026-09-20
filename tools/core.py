@@ -1128,7 +1128,7 @@ def craft_grid(depth=0):
             f'{art}'
             f'<span class="craft-name">{esc(c["label"])}</span>'
             f'<span class="craft-blurb">{esc(c["blurb"])}</span>'
-            f'<span class="craft-meta">{n} {"pack" if n == 1 else "packs"} →</span></a>')
+            f'<span class="craft-meta" aria-hidden="true">→</span></a>')
     return f"""<section class="section section-alt" id="craft" aria-labelledby="craft-title">
   <div class="wrap">
     <div class="sec-head">
