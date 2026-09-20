@@ -1459,20 +1459,35 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
    baked-in titles to the edge, so they are never cropped or zoomed); the
    premium read comes from the gold book frame, spine shading, cover flag
    and hover glow. No interior previews on index. */
-/* One column until 1120px. Two-up needs each card to hold the 260px cover
-   dock AND keep the price + the 145px "View Masterclass" pill (208px
-   together) on one line: at 1120px each card is ~518px, so after the dock
-   and body padding the pitch column keeps ~215px and they share a line.
-   (The dock used to be 220px and the breakpoint 1080px — the covers read
-   tiny inside the cards, ~192px of art in a ~508px card, so the dock grew
-   and the breakpoint moved to keep the one-line foot.) */
-#ebooks .ebooks-grid{max-width:1060px;margin:0 auto;display:grid;gap:1.4rem;grid-template-columns:1fr}
-@media(min-width:1120px){#ebooks .ebooks-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}}
+/* Cover-first geometry (2026-09-20). The cover is the card's subject, so the
+   dock is sized so the art fills 85–90% of the dock's own area at every
+   width from 640px up, with an even mat of --dock-pad around it and no
+   dead space: the dock resets the legacy `.ebook-cover{aspect-ratio:3/4}`
+   (which held the box 4/3 of its width whatever the padding, and left a
+   4p/3 gap above and below a p-padded cover) and lets the cover set its
+   height. Per-card pad: the Masterclass, the paid product, runs 8px and
+   fills ~90% (284×379 art in a 300×395 dock); the Starter runs 12px and
+   fills ~86% — same dock, same card height, the paid cover visibly fuller.
+   The pitch column is never squeezed for it: two-up cards are 568px on the
+   full 1160px wrap (the grid used to be a centred 1060px block, which
+   capped two-up cards at 518px and the dock at 260px — 235px of art in a
+   ~400px-tall dock, 71% of the mat), so after the 300px dock, the 2px of
+   border and the 1.2/1.5rem body padding the column keeps 222.8px — 10px
+   MORE than before — and the price + the 145px "View Masterclass" pill
+   (208px together) still share one line, with 7px to spare even behind a
+   15px classic scrollbar at the 1200px breakpoint. Card height is now set
+   by the Masterclass cover (394.7px + border), within 4px of the old
+   body-driven 400.5px, and the same for both cards (one grid row). */
+#ebooks .ebooks-grid{display:grid;gap:1.4rem;grid-template-columns:1fr}
+/* Two-up only from 1200px: the first width where the 1160px wrap gives each
+   card 568px — a 300px dock and an untouched 222.8px pitch column. Below it
+   one full-width card (up to 1159px wide) is the roomier layout. */
+@media(min-width:1200px){#ebooks .ebooks-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}}
 /* The card never crops: overflow stays visible at an auto height, so nothing a
    card holds — CTA, label, badge, cover shadow, any future element — can be
    sliced by the card edge. The two decorations that used to lean on the clip
    round themselves instead (see .ebook-cover and .edu-deep::before below). */
-.ebooks-grid .ebook-card{border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(150deg,#191920 0%,#101014 72%);overflow:visible;height:auto;display:flex;flex-direction:row;align-items:stretch;transition:border-color .25s,transform .25s,box-shadow .25s}
+.ebooks-grid .ebook-card{--dock-pad:8px;border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(150deg,#191920 0%,#101014 72%);overflow:visible;height:auto;display:flex;flex-direction:row;align-items:stretch;transition:border-color .25s,transform .25s,box-shadow .25s}
 .ebooks-grid .ebook-card:hover{border-color:rgba(201,168,106,.55);transform:translateY(-3px);box-shadow:0 22px 50px -20px rgba(201,168,106,.28)}
 .ebooks-grid .ebook-card.edu-deep{position:relative;border-color:rgba(201,168,106,.42);box-shadow:0 0 0 1px rgba(201,168,106,.12),0 24px 56px -22px rgba(201,168,106,.30)}
 /* Gold top bar: a 3px strip cannot carry a 13px corner radius — CSS scales the
@@ -1481,17 +1496,29 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
    is then the card's inner arc exactly, with no clip needed. Decoration only,
    so it never intercepts a click. */
 .ebooks-grid .ebook-card.edu-deep::before{content:"";position:absolute;top:0;left:0;right:0;height:calc(var(--radius) - 1px);border-radius:calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;background:linear-gradient(90deg,#D8BA7E,var(--gold) 55%,var(--gold-deep)) top/100% 3px no-repeat;pointer-events:none;z-index:2}
-/* cover dock: medium cover, centred on the shared mat. The mat is a child of a
-   card that no longer clips, so the dock carries the card's own corner itself:
-   inner radius = --radius minus the 1px border, left side only (its right edge
-   meets the body, not a corner). */
-.ebooks-grid .ebook-cover{position:relative;flex:0 0 156px;min-width:0;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.85rem .5rem .85rem .85rem;border-radius:calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px)}
+/* cover dock: the cover on the shared mat with an even --dock-pad mat around
+   it. Widths per range — 116px (<480, the CTAs need the measure), 176px
+   (480–639), 280px (640–899), 300px (900+) — each sized so the art holds
+   85–90% of the dock's area wherever the cover sets the card height (640px
+   up). aspect-ratio:auto drops the legacy 3:4 box so the mat hugs the
+   cover; min-width:0 binds the dock to its declared basis (a flex item's
+   automatic minimum is its content, and the 3:4 <img> would inflate it).
+   The mat is a child of a card that no longer clips, so the dock carries
+   the card's own corner itself: inner radius = --radius minus the 1px
+   border, left side only (its right edge meets the body, not a corner). */
+.ebooks-grid .ebook-cover{position:relative;flex:0 0 176px;min-width:0;aspect-ratio:auto;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:var(--dock-pad);border-radius:calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px)}
 .ebooks-grid .ebook-frame{position:relative;display:block;width:100%;border-radius:5px;box-shadow:0 16px 32px -12px rgba(0,0,0,.75),0 0 0 1px rgba(201,168,106,.30);transition:box-shadow .25s,filter .25s}
 .ebooks-grid .ebook-frame img{width:100%;aspect-ratio:3/4;height:auto;object-fit:contain;object-position:center;display:block;background:none;border-radius:5px}
 .ebooks-grid .ebook-card:hover .ebook-frame{box-shadow:0 20px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,106,.55);filter:brightness(1.05)}
+/* The paid cover is the dominant one: besides the tighter mat it carries a
+   brighter gold ring and a soft gold halo, deepening on hover. */
+.ebooks-grid .ebook-card.edu-deep .ebook-frame{box-shadow:0 18px 36px -12px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,106,.55),0 0 36px -6px rgba(201,168,106,.30)}
+.ebooks-grid .ebook-card.edu-deep:hover .ebook-frame{box-shadow:0 22px 44px -12px rgba(0,0,0,.85),0 0 0 1px rgba(201,168,106,.85),0 0 44px -4px rgba(201,168,106,.42)}
 /* spine shading + top sheen: the printed-book read, no layout cost */
 .ebooks-grid .ebook-frame::after{content:"";position:absolute;inset:0;border-radius:5px;background:linear-gradient(90deg,rgba(0,0,0,.34),transparent 12%),linear-gradient(180deg,rgba(255,255,255,.06),transparent 22%);pointer-events:none}
-.ebooks-grid .ebook-flag{position:absolute;top:.5rem;left:.5rem;z-index:2;font:700 .6rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;padding:.42rem .55rem;border-radius:999px;backdrop-filter:blur(6px)}
+/* cover flag: pinned just inside the cover's top-left corner (the mat is
+   only --dock-pad wide now), so it reads as a sticker on the book. */
+.ebooks-grid .ebook-flag{position:absolute;top:calc(var(--dock-pad) + 6px);left:calc(var(--dock-pad) + 6px);z-index:2;font:700 .6rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;padding:.42rem .55rem;border-radius:999px;backdrop-filter:blur(6px)}
 .ebooks-grid .flag-free{background:rgba(18,38,22,.88);border:1px solid rgba(140,200,140,.55);color:#9FD8A4}
 .ebooks-grid .flag-gold{background:rgba(32,25,12,.88);border:1px solid rgba(201,168,106,.55);color:var(--gold)}
 .ebooks-grid .ebook-body{padding:1.15rem 1.2rem 1.15rem 1rem;display:flex;flex-direction:column;gap:.5rem;flex:1;min-width:0}
@@ -1513,17 +1540,28 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .ebooks-grid .ebook-foot .text-link{flex:0 1 auto;white-space:normal;overflow-wrap:anywhere}
 .ebooks-grid .ebook-foot .price{flex:0 0 auto}
 /* Narrow phones: a smaller cover buys the label a full measure, and the two
-   CTAs go full width and centred so they read as one deliberate stack. */
+   CTAs go full width and centred so they read as one deliberate stack. The
+   mat pad drops to 6px so the 116px dock still shows a 104px cover. */
 @media(max-width:479px){
-.ebooks-grid .ebook-cover{flex:0 0 116px;padding:.8rem .45rem .8rem .8rem}
+.ebooks-grid .ebook-card{--dock-pad:6px}
+.ebooks-grid .ebook-cover{flex:0 0 116px;padding:var(--dock-pad)}
 .ebooks-grid .ebook-body{padding:1rem 1rem 1.05rem .9rem}
 .ebooks-grid .ebook-foot{justify-content:center;gap:.6rem .7rem}
 .ebooks-grid .ebook-foot .btn{flex:1 1 100%;justify-content:center;line-height:1.3}
 .ebooks-grid .ebook-foot .text-link{flex:0 1 auto;text-align:center}
 }
+/* From 640px the cover sets the card height, so the per-card pad is what
+   decides how full each dock reads: 8px (~90%) for the Masterclass, 12px
+   (~86%) for the Starter. 280px dock to 899px (a 600px card at 640px still
+   keeps a 274.8px pitch column), 300px from 900px. */
 @media(min-width:640px){
-.ebooks-grid .ebook-cover{flex:0 0 260px;padding:1rem .55rem 1rem 1rem}
+.ebooks-grid .ebook-card.edu-start{--dock-pad:12px}
+.ebooks-grid .ebook-card.edu-deep{--dock-pad:8px}
+.ebooks-grid .ebook-cover{flex:0 0 280px;padding:var(--dock-pad)}
 .ebooks-grid .ebook-body{padding:1.4rem 1.5rem 1.4rem 1.2rem}
 .ebooks-grid .ebook-body h3{font-size:1.22rem}
 .ebooks-grid .edu-desc{font-size:.9rem}
+}
+@media(min-width:900px){
+.ebooks-grid .ebook-cover{flex:0 0 300px}
 }

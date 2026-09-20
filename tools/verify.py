@@ -6,7 +6,11 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 88 CHECKS PASSED.
+Expects: ALL 89 CHECKS PASSED.
+(88 -> 89 on 2026-09-20: + 1 from the ebooks cover-first pass — the Starter
+Guide & Masterclass covers must fill 85–90% of their dock, the paid one
+fullest, on a full-wrap grid whose two-up engages at 1200px; check 86 was
+re-pinned from 1080px to 1200px in the same pass.)
 (Retired 90 -> 88 on 2026-09-20: the public /seo-audit/ HTML was removed,
 taking its two sitemap-presence checks with it. docs/seo-audit/ stays as
 internal markdown; nothing else about the suite changed.)
@@ -62,7 +66,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 88
+EXPECTED = 89
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -732,14 +736,20 @@ def main() -> int:
     base_grid = re.search(r"^#ebooks \.ebooks-grid\{([^}]*)\}", css_txt, re.M)
     two_up = [ln for ln in css_txt.splitlines()
               if "#ebooks .ebooks-grid{" in ln and "repeat(2,minmax(0,1fr))" in ln]
+    # 2026-09-20: the breakpoint moved 1080px → 1200px with the cover-first
+    # geometry (check 89) — 1200px is the first width where the full 1160px
+    # wrap gives each two-up card 568px: a 300px dock AND a 222.8px pitch
+    # column, which holds the price + "View Masterclass" pill on one line
+    # with room to spare behind a classic scrollbar.
     widened = [ln for ln in css_txt.splitlines()
                if ln.startswith("@media(") and "ebooks-grid" in ln
-               and "min-width:1080px" not in ln]
-    check("the ebooks grid is one column until 1080px",
+               and "min-width:1200px" not in ln]
+    check("the ebooks grid is one column until 1200px",
           bool(base_grid) and "grid-template-columns:1fr" in base_grid.group(1)
-          and len(two_up) == 1 and two_up[0].startswith("@media(min-width:1080px){")
+          and len(two_up) == 1 and two_up[0].startswith("@media(min-width:1200px){")
           and not widened,
-          "one full-width card below 1080px; two-up only from 1080px, where the CTA row holds")
+          "one full-width card below 1200px; two-up only from 1200px, where a 300px dock "
+          "still leaves the CTA row its line")
     # ── 87 the cover dock's min-width (third pass, 2026-09-19) ──────────
     # A flex item's automatic minimum is its content-based minimum, not its
     # flex-basis: the 3:4 cover <img> inside the dock lets Chrome resolve the
@@ -752,6 +762,48 @@ def main() -> int:
           bool(dock) and "min-width:0" in dock.group(1)
           and re.search(r"flex:0 0 \d+px", dock.group(1)) is not None,
           "the dock must declare min-width:0, or its cover image inflates it past its flex-basis")
+
+    # ── 89 the ebooks covers fill their dock (cover-first, 2026-09-20) ──
+    # The cover is the card's subject. Before this pass the two-up card was
+    # 518px on a centred 1060px grid, the dock 260px with a 16/8.8px inset,
+    # and the legacy `.ebook-cover{aspect-ratio:3/4}` held the dock 4/3 of
+    # its width whatever the padding — 235×314 of art in a 260×398 mat, 71%
+    # of the dock. Now the grid spans the wrap, the dock is 300px from 900px
+    # (280px from 640px, 176px from 480px, 116px below), the mat is an even
+    # --dock-pad ring (aspect-ratio:auto, so the cover sets the dock height
+    # and nothing is left over), and the paid Masterclass runs the tighter
+    # pad (8px, ~90% of the dock) against the Starter's 12px (~86%) — same
+    # dock, same card height, the paid cover visibly fuller. Pinned so a
+    # re-centred grid, a re-inflated dock or a flat pad cannot creep back;
+    # the <img sizes> hint must quote the rendered widths (dock − 2×pad) so
+    # the browser keeps picking the right srcset candidate.
+    dock_css = dock.group(1) if dock else ""
+    # the ebooks 640px block is the multi-line one whose rules are all .ebooks-grid
+    mid = re.search(r"@media\(min-width:640px\)\{\n((?:\.ebooks-grid [^\n]*\n)+)\}", css_txt)
+    mid_css = mid.group(1) if mid else ""
+    wide = re.search(r"@media\(min-width:900px\)\{\n\.ebooks-grid \.ebook-cover\{([^}]*)\}", css_txt)
+    dock_mid = re.search(r"\.ebooks-grid \.ebook-cover\{flex:0 0 (\d+)px;padding:var\(--dock-pad\)\}", mid_css)
+    dock_wide = re.search(r"flex:0 0 (\d+)px", wide.group(1)) if wide else None
+    pad_start = re.search(r"\.ebooks-grid \.ebook-card\.edu-start\{--dock-pad:(\d+)px\}", mid_css)
+    pad_deep = re.search(r"\.ebooks-grid \.ebook-card\.edu-deep\{--dock-pad:(\d+)px\}", mid_css)
+    fill = lambda dock_px, pad_px: ((dock_px - 2 * pad_px) ** 2 * 4 / 3) / (dock_px * ((dock_px - 2 * pad_px) * 4 / 3 + 2 * pad_px))
+    fills_ok = (bool(dock_mid) and bool(dock_wide) and bool(pad_start) and bool(pad_deep)
+                and int(pad_deep.group(1)) < int(pad_start.group(1))
+                and all(0.85 <= fill(int(d), int(pd)) <= 0.92
+                        for d in (dock_mid.group(1), dock_wide.group(1))
+                        for pd in (pad_start.group(1), pad_deep.group(1))))
+    sizes_hint = re.findall(r'class="ebook-frame"><img [^>]*sizes="([^"]+)"', home_html)
+    hint_ok = (len(sizes_hint) == 2 and len(set(sizes_hint)) == 1 and bool(dock_wide) and bool(pad_deep)
+               and f"(min-width: 900px) {int(dock_wide.group(1)) - 2 * int(pad_deep.group(1))}px" in sizes_hint[0]
+               and bool(dock_mid) and f"(min-width: 640px) {int(dock_mid.group(1)) - 2 * int(pad_deep.group(1))}px" in sizes_hint[0])
+    check("ebooks covers fill 85–90% of their dock, the paid one fullest",
+          bool(base_grid) and "max-width" not in base_grid.group(1)
+          and "aspect-ratio:auto" in dock_css and "padding:var(--dock-pad)" in dock_css
+          and "--dock-pad:" in card_css and fills_ok and hint_ok,
+          "full-wrap grid; dock resets the legacy 3:4 box and wears an even --dock-pad mat; "
+          f"dock {dock_mid.group(1) if dock_mid else '?'}/{dock_wide.group(1) if dock_wide else '?'}px, "
+          f"pad Starter {pad_start.group(1) if pad_start else '?'}px / Masterclass {pad_deep.group(1) if pad_deep else '?'}px; "
+          "img sizes quote dock − 2×pad")
 
     # ── 88 the best-sellers row keeps the shared square (2026-09-19) ────
     # #popular is a scoped FINISH — gradient shell, gold hairline, pedestal
