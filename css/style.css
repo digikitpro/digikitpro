@@ -1454,18 +1454,20 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .proof-cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.3rem}
 
 /* ── Homepage Starter Guide & Masterclass (ebooks) ───────────
-   Two horizontal book-feature cards: medium 3:4 cover left on the dark mat,
+   Two horizontal book-feature cards: large 3:4 cover left on the dark mat,
    pitch + price + CTAs right. Covers are shown whole (contain — both carry
    baked-in titles to the edge, so they are never cropped or zoomed); the
    premium read comes from the gold book frame, spine shading, cover flag
    and hover glow. No interior previews on index. */
-/* One column until 1080px. Below that a two-up card is ~460px with a ~193px
-   pitch column, and the price + the 145px "View Masterclass" pill need 208px
-   together — they stacked into a 4-line foot. From 1080px each card is ~508px
-   with a ~243px column: price and pill share a line, and the description wraps
-   to 5 lines instead of 6. */
+/* One column until 1120px. Two-up needs each card to hold the 260px cover
+   dock AND keep the price + the 145px "View Masterclass" pill (208px
+   together) on one line: at 1120px each card is ~518px, so after the dock
+   and body padding the pitch column keeps ~215px and they share a line.
+   (The dock used to be 220px and the breakpoint 1080px — the covers read
+   tiny inside the cards, ~192px of art in a ~508px card, so the dock grew
+   and the breakpoint moved to keep the one-line foot.) */
 #ebooks .ebooks-grid{max-width:1060px;margin:0 auto;display:grid;gap:1.4rem;grid-template-columns:1fr}
-@media(min-width:1080px){#ebooks .ebooks-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}}
+@media(min-width:1120px){#ebooks .ebooks-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}}
 /* The card never crops: overflow stays visible at an auto height, so nothing a
    card holds — CTA, label, badge, cover shadow, any future element — can be
    sliced by the card edge. The two decorations that used to lean on the clip
@@ -1483,7 +1485,7 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
    card that no longer clips, so the dock carries the card's own corner itself:
    inner radius = --radius minus the 1px border, left side only (its right edge
    meets the body, not a corner). */
-.ebooks-grid .ebook-cover{position:relative;flex:0 0 150px;min-width:0;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.9rem .55rem .9rem .9rem;border-radius:calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px)}
+.ebooks-grid .ebook-cover{position:relative;flex:0 0 156px;min-width:0;display:flex;align-items:center;justify-content:center;background:var(--mat);padding:.85rem .5rem .85rem .85rem;border-radius:calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px)}
 .ebooks-grid .ebook-frame{position:relative;display:block;width:100%;border-radius:5px;box-shadow:0 16px 32px -12px rgba(0,0,0,.75),0 0 0 1px rgba(201,168,106,.30);transition:box-shadow .25s,filter .25s}
 .ebooks-grid .ebook-frame img{width:100%;aspect-ratio:3/4;height:auto;object-fit:contain;object-position:center;display:block;background:none;border-radius:5px}
 .ebooks-grid .ebook-card:hover .ebook-frame{box-shadow:0 20px 40px -12px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,106,.55);filter:brightness(1.05)}
@@ -1520,7 +1522,7 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .ebooks-grid .ebook-foot .text-link{flex:0 1 auto;text-align:center}
 }
 @media(min-width:640px){
-.ebooks-grid .ebook-cover{flex:0 0 220px;padding:1.1rem .65rem 1.1rem 1.1rem}
+.ebooks-grid .ebook-cover{flex:0 0 260px;padding:1rem .55rem 1rem 1rem}
 .ebooks-grid .ebook-body{padding:1.4rem 1.5rem 1.4rem 1.2rem}
 .ebooks-grid .ebook-body h3{font-size:1.22rem}
 .ebooks-grid .edu-desc{font-size:.9rem}
