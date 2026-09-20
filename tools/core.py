@@ -813,6 +813,10 @@ def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
     im = p.get("images") or {}
     card = im.get("card", "")
     w, h = im.get("cardW") or 750, im.get("cardH") or 500
+    # Portrait covers (ratio < 0.95) wear the ebook-style ring + shadow on the
+    # 4:3 mat instead of being shrunk into the corner of the frame.
+    _ratio = (w / h) if h else 1
+    portrait_class = " portrait-cover" if _ratio < 0.95 else ""
     u = rel(depth, f"products/{p['slug']}/")
     coming = bool(p.get("comingSoon"))
     label, kind = cta_for(p)
@@ -846,10 +850,12 @@ def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
     loading = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw") if card else ""
     img_src = asset_file(depth, p["slug"], card) if card else rel(depth, "assets/img/coming-soon.svg")
-    # Card media is a uniform square filled edge-to-edge (object-fit: cover),
-    # so every artwork renders at full card width — no letterbox bars, no
-    # shrunken contain-fit thumbnails. Intrinsic width/height stay on the tag
-    # for layout stability before CSS loads.
+    # Card media is a uniform 4:3 frame with object-fit:contain, so no artwork
+    # is ever cropped; the 41 landscape covers fill ~89% of the frame. The 9
+    # portrait covers (ratio < 0.95) are flagged portrait-cover and wear the
+    # ebook-style ring on the mat. Intrinsic width/height stay on the tag for
+    # layout stability before CSS loads. The corner badge now lives in the card
+    # body (top-right) so it never sits on the artwork.
     cslug = CATEGORY_SLUGS.get(p.get("category"))
     cat_url = rel(depth, f"category/{cslug}/") if cslug else (rel(depth, "bundles.html") if p.get("category") == "Bundles" else rel(depth, f"products.html#cat-{esc(p['category'].replace(' ','%20'))}"))
     _tier = tier_of(p); _line = line_of(p)
@@ -863,13 +869,15 @@ def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
     _pin_btn = ("\n    " + pin_button(p)) if _pin_ok and PINTEREST_URL else ""
     return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}" data-tier="{esc(_tier)}" data-line="{esc(_line)}" data-dkp-slug="{esc(p['slug'])}" data-dkp-name="{esc(p['name'])}" data-dkp-price="{p.get('price',0):.2f}" data-dkp-tier="{esc(_tier)}" data-dkp-free="{1 if p['free'] else 0}" data-dkp-loc="card">
   <div class="card-img">
-  <a class="card-media" href="{u}"{_pin_attrs}>
+  <a class="card-media{portrait_class}" href="{u}"{_pin_attrs}>
     <img src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
-    {badge}
   </a>{_pin_btn}
   </div>
   <div class="card-body">
-    <a class="card-cat" href="{cat_url}">{esc(p['category'])}</a>
+    <div class="card-top">
+      <a class="card-cat" href="{cat_url}">{esc(p['category'])}</a>
+      {badge}
+    </div>
     <h3 class="card-title"><a href="{u}">{esc(p['name'])}</a></h3>
     <p class="card-short">{esc(p['short'])}</p>
     <div class="card-foot">

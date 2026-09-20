@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 93 CHECKS PASSED.
+Expects: ALL 94 CHECKS PASSED.
 (89 -> 93 on 2026-09-20: + 4 from the product image gallery repair — every
 product page ships js/gallery.js with [data-product-gallery], #product-main-image
 and a data-full-image per tile; a tile can never hand the frame the -card crop;
@@ -14,6 +14,13 @@ no frame keeps a srcset that belongs to another image (that override is what mad
 the thumbnails look dead) and js/main.js holds no gallery code any more; the CSS
 carries the active-tile ring, the prev/next pair, the modal viewer with its scroll
 lock and the sideways-scrolling tiles on a phone. Page design itself: untouched.)
+(93 -> 94 on 2026-09-20, merged on top of the above: + 1 from the product-card
+frame pass — the cards' shared .card-media frame moves 1:1 -> 4:3 (check 81
+re-pinned from `aspect-ratio:1/1` to `aspect-ratio:4/3`) and a new check asserts
+the 4:3 geometry leaves exactly 40/51 covers at >=85% fill, and that no .badge
+sits inside any .card-media anywhere on the built site. Both halves are computed
+against the real 51-product cardW/cardH ratios in data/products.json, not a
+hard-coded expectation.)
 (88 -> 89 on 2026-09-20: + 1 from the ebooks cover-first pass — the Starter
 Guide & Masterclass covers must fill 85–90% of their dock, the paid one
 fullest, on a full-wrap grid whose two-up engages at 1200px; check 86 was
@@ -31,7 +38,7 @@ checkout links, site-wide footer link, no dead application CTA while the
 sign-up variable is unset, no unpublished commission rate, the variable
 reaching BOTH build workflows, and the CTA flipping when it is set + 2 from
 the 2026-09-17 card-media uncrop: product cards must frame the artwork whole
-inside one uniform square, and the mat behind it must not be painted over.
+inside one uniform 4:3 frame, and the mat behind it must not be painted over.
 The three 2026-09-17 finder-combo checks were replaced on 2026-09-18 when
 the Find My Brush Kit was removed in full: the page and both scripts must be
 gone, no generated page may reference them, and the hero must offer exactly
@@ -73,7 +80,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 93
+EXPECTED = 94
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -232,7 +239,7 @@ def esc_price(t: str) -> str:
 
 
 def main() -> int:
-    print("DigiKitPro verify — 93 checks\n")
+    print("DigiKitPro verify — 94 checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -677,16 +684,52 @@ def main() -> int:
     css_txt = read("css/style.css")
     cm = re.search(r"\.card-media\{([^}]*)\}", css_txt)
     ci = re.search(r"\.card-media img\{([^}]*)\}", css_txt)
-    check("product cards frame the artwork whole, in a uniform square",
+    check("product cards frame the artwork whole, in a uniform 4:3 frame",
           bool(ci) and "object-fit:contain" in ci.group(1)
           and "object-fit:cover" not in ci.group(1)
-          and bool(cm) and "aspect-ratio:1/1" in cm.group(1),
-          "no crop inside one fixed frame ratio")
+          and bool(cm) and "aspect-ratio:4/3" in cm.group(1),
+          "no crop inside one fixed 4:3 frame")
     # The global `img{background:var(--surface-2)}` rule paints on the ELEMENT
     # box, so a contained <img> would cover its own mat with a flat panel.
     check("card media mat is not painted over by the global img background",
           bool(ci) and "background:none" in ci.group(1),
           ".card-media img must reset the inherited img background")
+    # ── 82b product-card fill (4:3 frame, 2026-09-20) ──
+    # With the frame at 4:3 and object-fit:contain, a cover of ratio R fills
+    # min(4/3,R)/max(4/3,R) of the frame — the same number the browser
+    # computes for object-fit:contain. That is ~89% for the 3:2 landscape
+    # banners (41 of 51 covers), 100% for the 4:3 banners, ~75% for the lone
+    # 16:9 banner, and 42–61% for the 9 portrait covers. The portrait covers
+    # are not a failure: they wear the ebook-style ring on the mat (see
+    # .card-media.portrait-cover), so the small cover reads as a framed book.
+    # Assert exactly 40/51 covers reach >=85% fill (the 41 landscapes minus the
+    # 16:9 one) — matching the prototype measurement
+    # (shots/product-cards-frame-prototype-1440.png: 4:3 -> 40/51 >=85%).
+    FR = 4/3
+    fills = []
+    for _p in products.values():
+        _im = _p.get("images") or {}
+        _w = _im.get("cardW") or 0; _h = _im.get("cardH") or 0
+        if not _w or not _h:
+            continue
+        _R = _w / _h
+        fills.append(min(FR, _R) / max(FR, _R))
+    ge85 = sum(1 for f in fills if f >= 0.85)
+    # The badge must be OUT of the frame: a contained image reaches the frame's
+    # own corners, so any in-frame corner badge would sit on the artwork. It now
+    # lives in the card body's top row (.card-top), built from product_card.
+    cards_html = "\n".join(read(str(p.relative_to(ROOT))) for p in html_files)
+    media_els = re.findall(r'<a class="card-media[^"]*"[^>]*>.*?</a>', cards_html, re.S)
+    badge_in_media = sum(1 for m in media_els if 'class="badge' in m)
+    card_top_ok = ('<div class="card-top">' in cards_html
+                   and re.search(r'\.card-top\{[^}]*display:flex', css_txt) is not None
+                   and re.search(r'\.card \.card-top \.badge\{([^}]*)\}', css_txt) is not None
+                   and "position:static" in (re.search(r'\.card \.card-top \.badge\{([^}]*)\}', css_txt).group(1)))
+    check("4:3 product cards leave 40/51 covers at >=85% fill (landscapes whole, portraits ringed)",
+          ge85 == 40 and badge_in_media == 0 and card_top_ok,
+          f"{ge85}/51 covers at >=85% fill under object-fit:contain in a 4:3 frame "
+          f"(41 landscapes ~89%, 9 portrait covers ringed on the mat); badge out of the frame "
+          f"(no .badge inside .card-media, pinned in the .card-top body row)")
 
     # ── 83–84 ebooks CTA row (see .ebooks-grid .ebook-foot in css/style.css) ──
     # The Starter Guide & Masterclass cards are horizontal at every width, so
@@ -812,7 +855,7 @@ def main() -> int:
           f"pad Starter {pad_start.group(1) if pad_start else '?'}px / Masterclass {pad_deep.group(1) if pad_deep else '?'}px; "
           "img sizes quote dock − 2×pad")
 
-    # ── 88 the best-sellers row keeps the shared square (2026-09-19) ────
+    # ── 88 the best-sellers row keeps the shared 4:3 frame (2026-09-19) ────
     # #popular is a scoped FINISH — gradient shell, gold hairline, pedestal
     # shadow, roomier body, gold price — and must never become a second
     # frame. The premium pass had re-docked the row in a 4:3 box with a
@@ -839,7 +882,7 @@ def main() -> int:
     fit_props = frame_props | {"object-fit", "object-position", "transform", "scale", "zoom"}
     redocked = [sel.strip() for sel, body in pop_rules if "::" not in sel
                 and props(body) & (fit_props if sel.rstrip().endswith("img") else frame_props)]
-    check("homepage best-sellers row keeps the shared square card frame",
+    check("homepage best-sellers row keeps the shared 4:3 card frame",
           bool(pop_sec) and pop_cards >= 1
           and "#popular .card-media{aspect-ratio:4/3" not in css_txt
           and not redocked,
