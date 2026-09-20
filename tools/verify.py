@@ -7,6 +7,9 @@ Run after a successful `python3 tools/build.py`:
     python3 tools/verify.py
 
 Expects: ALL 88 CHECKS PASSED.
+(Retired 90 -> 88 on 2026-09-20: the public /seo-audit/ HTML was removed,
+taking its two sitemap-presence checks with it. docs/seo-audit/ stays as
+internal markdown; nothing else about the suite changed.)
 (57 baseline + 5 from the 2026-09-14 homepage IA rework: section order,
 ladder completeness x2, no fake-strikethrough pricing + 8 from the
 2026-09-16 buyer-guides buildout: pages built, sitemap coverage x2, slug
@@ -59,7 +62,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 90
+EXPECTED = 88
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -309,26 +312,17 @@ def main() -> int:
         page_locs = re.findall(r"<url><loc>([^<]+)</loc>", sm_xml)
     # 99 = 11 static + 10 categories + 2 seasons + 6 buyer guides +
     # 1 partner portal + 51 products + 18 blog articles (after cleanup of 4 orphaned drafts).
-    # Plus 11 audit pages (index + 10 docs) = 110 total when audit is enabled.
-    # The check allows >=99 to accommodate audit pages and future safe additions.
-    check("sitemap.xml has 99+ page URLs (including audit)",
+    # The check allows >=99 to accommodate SEO tools and future safe additions.
+    # The 11 /seo-audit/ URLs were removed on 2026-09-20; the site now sits at 101.
+    check("sitemap.xml has 99+ page URLs",
           len(page_locs) >= 99, str(len(page_locs)))
-    # Audit URLs should be present when docs/seo-audit/ exists
-    has_audit = any("/seo-audit/" in u for u in page_locs)
-    check("sitemap.xml includes seo-audit index when audit docs exist",
-          has_audit or not (ROOT / "docs/seo-audit").exists(),
-          f"audit in sitemap: {has_audit}")
     check("sitemap.xml all locs on digikitpro.shop",
           bool(page_locs) and all(u.startswith(HOST) for u in page_locs)
           and not any("github.io" in u for u in page_locs))
 
     sm_txt = read("sitemap.txt") if exists("sitemap.txt") else ""
     txt_urls = [ln.strip() for ln in sm_txt.splitlines() if ln.strip()]
-    check("sitemap.txt has 99+ URLs (including audit)", len(txt_urls) >= 99, str(len(txt_urls)))
-    has_audit_txt = any("/seo-audit/" in u for u in txt_urls)
-    check("sitemap.txt includes seo-audit when audit docs exist",
-          has_audit_txt or not (ROOT / "docs/seo-audit").exists(),
-          f"audit in txt: {has_audit_txt}")
+    check("sitemap.txt has 99+ URLs", len(txt_urls) >= 99, str(len(txt_urls)))
     check("sitemap.txt all on digikitpro.shop",
           bool(txt_urls) and all(u.startswith(HOST) for u in txt_urls)
           and not any("github.io" in u for u in txt_urls))
@@ -353,8 +347,6 @@ def main() -> int:
 
     # ── 32–39 HTML quality ────────────────────────────────────────────
     html_files = iter_html()
-    # Exclude seo-audit from github.io check — audit docs intentionally mention github.io
-    # as part of documenting duplicate-variant handling (see 01-platform-and-safeguards).
     gio = 0
     bad_canon = 0
     broken = 0
@@ -363,10 +355,7 @@ def main() -> int:
     h1_bad = 0
     for p in html_files:
         text = p.read_text(encoding="utf-8", errors="replace")
-        if "seo-audit" in str(p):
-            # Skip github.io count for audit docs, but still check other quality for them
-            pass
-        elif "github.io" in text:
+        if "github.io" in text:
             gio += 1
         parser = HrefParser()
         try:
@@ -466,11 +455,9 @@ def main() -> int:
           "ladder prices are live store prices only")
 
     # ── 47–53 honesty + dead ping endpoints ───────────────────────────
-    # Exclude seo-audit from honesty checks — audit docs document the honesty guard itself
-    # and mention words like "testimonial" as part of explaining what is forbidden.
     html_blob = "\n".join(
         p.read_text(encoding="utf-8", errors="replace")
-        for p in html_files if not is_verification_page(p) and "seo-audit" not in str(p)
+        for p in html_files if not is_verification_page(p)
     )
     # Empty review slots (class "quote-slot") are deliberate placeholders,
     # not social-proof claims, and the owner fill-in instructions live in

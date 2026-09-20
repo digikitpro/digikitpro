@@ -11,7 +11,6 @@ pages_product.load_articles = pages_blog.load_articles
 pages_category.load_articles = pages_blog.load_articles
 pages_season.load_articles = pages_blog.load_articles
 pages_guides.load_articles = pages_blog.load_articles
-pages_audit.load_articles = pages_blog.load_articles
 pages_tools.load_articles = pages_blog.load_articles
 
 def main():
@@ -27,7 +26,6 @@ def main():
     pages_product.build_product_pages()
     pages_blog.build_blog()
     pages_tools.build_tools()  # SEO tools: /tools/ + /tools/canvas-calculator/
-    pages_audit.build_audit()  # SEO audit browsable HTML at /seo-audit/ (from docs/seo-audit/*.md)
     pages_misc.build_misc()
     pages_misc.build_pinterest_feed()
     untagged = untagged_products()
