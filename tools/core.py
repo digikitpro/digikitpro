@@ -536,9 +536,12 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
 """
 
+# ── Tools (SEO engine) ──────────────────────────────────────────────────
+TOOLS_DIR = "tools"
+
 NAV = [("Free Brushes","freebies.html"),
        ("Products","products.html"),("Bundles","bundles.html"),
-       ("Articles","blog.html"),("About","about.html")]
+       ("Articles","blog.html"),("Tools","tools/"),("About","about.html")]
 
 def header(depth, active=None):
     links = ""

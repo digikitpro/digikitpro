@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Blog: markdown -> article pages + index."""
+"""Blog: markdown -> article pages + index. MD-only (18 original articles)."""
 import re, os, glob
 from core import *
 
@@ -33,15 +33,12 @@ def md_to_html(body, depth=2):
             i += 1; continue
         if ln.startswith("{{products}}"):
             out.append("__PRODUCTS__"); i += 1; continue
-        # Small pipe-table parser for article comparisons. It intentionally
-        # requires a Markdown separator row so ordinary prose containing a
-        # vertical bar is not turned into a table.
         if "|" in ln and i + 1 < len(lines) and re.match(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$", lines[i + 1]):
             def table_cells(row):
                 row = row.strip().strip("|")
                 return [cell.strip() for cell in row.split("|")]
             headers = table_cells(ln)
-            i += 2  # skip header and Markdown separator
+            i += 2
             rows = []
             while i < len(lines) and lines[i].strip() and "|" in lines[i] and not lines[i].startswith("#"):
                 rows.append(table_cells(lines[i])); i += 1
@@ -80,16 +77,13 @@ def md_to_html(body, depth=2):
     return "\n".join(out)
 
 def _plain_md(text):
-    """Flatten an inline markdown fragment to plain text for structured data."""
-    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"\1", text)   # [label](url) -> label
+    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"\1", text)
     text = text.replace("**", "").replace("__", "")
-    text = re.sub(r"(?<!\w)\*([^*]+)\*(?!\w)", r"\1", text)  # *emphasis*
-    text = re.sub(r"^\s*[-*]\s+", "", text, flags=re.M)      # bullet markers
+    text = re.sub(r"(?<!\w)\*([^*]+)\*(?!\w)", r"\1", text)
+    text = re.sub(r"^\s*[-*]\s+", "", text, flags=re.M)
     return " ".join(text.split())
 
 def extract_faq(body):
-    """Pull (question, answer) pairs out of a `## FAQ` section built from
-    `### Question` / following-paragraph blocks. Returns [] when absent."""
     m = re.search(r"^##\s+FAQ\s*$(.*?)(?=^##\s+|\Z)", body, re.S | re.M)
     if not m:
         return []
@@ -107,8 +101,6 @@ def extract_faq(body):
     return faqs
 
 def extract_howto_steps(body):
-    """Pull ordered (name, text) steps from `## Step N: title` sections.
-    Each step's text runs until the next level-2 heading."""
     steps = []
     for m in re.finditer(r"^##\s+Step\b[^\n]*\n(.*?)(?=^##\s+|\Z)", body, re.S | re.M):
         heading = m.group(0).splitlines()[0]
@@ -123,75 +115,15 @@ def _truthy(v):
 
 _ARTICLES = None
 
-def _parse_html_only_article(slug: str, html_path: str):
-    """Parse an HTML-only blog article (no md source) for index/sitemap inclusion.
-    Extracts title, description, date, category from the existing HTML so the
-    blog index can list it without overwriting its content."""
-    try:
-        raw = open(html_path, encoding="utf-8", errors="replace").read()
-    except Exception:
-        return None
-    # title
-    m = re.search(r"<title>(.*?)</title>", raw, re.I | re.S)
-    title = m.group(1).strip() if m else slug.replace("-", " ").title()
-    title = re.sub(r"\s*\|\s*DigiKitPro.*$", "", title).strip()
-    # description
-    m = re.search(r'<meta name="description" content="([^"]+)"', raw, re.I)
-    desc = m.group(1).strip() if m else title
-    # datePublished from JSON-LD or <time datetime>
-    date = ""
-    m = re.search(r'"datePublished"\s*:\s*"([^"]+)"', raw)
-    if m:
-        date = m.group(1).strip()
-    else:
-        m = re.search(r'<time datetime="([^"]+)"', raw)
-        if m:
-            date = m.group(1).strip()
-    if not date:
-        date = "2026-09-20"
-    # category
-    m = re.search(r'<span class="art-cat">([^<]+)</span>', raw)
-    cat = m.group(1).strip() if m else "Guide"
-    # image: og:image
-    m = re.search(r'<meta property="og:image" content="([^"]+)"', raw)
-    og_img = m.group(1).strip() if m else ""
-    # Build fm dict compatible with md articles
-    fm = {
-        "slug": slug,
-        "title": title,
-        "description": desc,
-        "date": date,
-        "category": cat,
-        "products": [],
-        "related": [],
-        "body": "",  # no md body — HTML file is kept as-is
-        "_src": f"{slug}.html-only",
-        "_html_only": True,
-        "_og_image": og_img,
-    }
-    # image fallback — use og image path if local, else branded fallback
-    if og_img and og_img.startswith(SITE_URL):
-        rel_img = og_img.replace(SITE_URL + "/", "")
-        fm["image"] = rel_img
-        fm["hero"] = rel_img
-    else:
-        fm["image"] = "assets/img/og-cover.jpg"
-        fm["hero"] = "assets/img/og-cover.jpg"
-    fm["imgW"], fm["imgH"] = 1200, 630
-    fm["heroW"], fm["heroH"] = 1200, 630
-    fm["_pslug"] = ""
-    fm["_im"] = {}
-    return fm
-
 def load_articles():
     global _ARTICLES
-    if _ARTICLES is not None: return _ARTICLES
+    if _ARTICLES is not None:
+        return _ARTICLES
     arts = []
     for path in glob.glob(os.path.join(ROOT, "content/blog/*.md")):
         fm, body = parse_md(path)
         fm["body"] = body
-        fm["_src"] = os.path.basename(path)   # deterministic tiebreaker, see sort below
-        # hero image: the primary linked product's artwork
+        fm["_src"] = os.path.basename(path)
         prods = [s for s in (fm.get("products") or []) if s in BY_SLUG]
         if prods:
             im = BY_SLUG[prods[0]]["images"] or {}
@@ -201,28 +133,10 @@ def load_articles():
             fm["imgW"], fm["imgH"] = im.get("cardW") or 750, im.get("cardH") or 500
             fm["hero"] = main_url if is_abs(main_url) else f"assets/products/{prods[0]}/{main_url}"
             fm["heroW"], fm["heroH"] = im.get("fullW") or 1200, im.get("fullH") or 800
-        else: # every article card MUST have a thumbnail → branded fallback
+        else:
             fm["image"] = "assets/img/og-cover.jpg"
             fm["imgW"], fm["imgH"] = 1200, 630
         arts.append(fm)
-    # HTML-only articles: blog/<slug>/index.html with no md source.
-    # These were added directly as HTML in PR #55 (10 SEO articles). They must
-    # still appear in blog.html, sitemap.xml, feed.xml and search-index.
-    md_slugs = {a.get("slug") for a in arts}
-    for html_path in glob.glob(os.path.join(ROOT, "blog/*/index.html")):
-        slug = os.path.basename(os.path.dirname(html_path))
-        if slug in md_slugs:
-            continue
-        # skip seo-audit and other non-blog dirs that happen to live under blog/?
-        # only include if file exists and slug looks like a blog post
-        fm = _parse_html_only_article(slug, html_path)
-        if fm:
-            arts.append(fm)
-    # Two-pass stable sort. Articles published on the same date previously fell
-    # back to glob order, which follows the filesystem and differs between runs,
-    # so every rebuild reshuffled the blog list in feed.xml, sitemap and the
-    # homepage. Sorting by filename first makes the date-descending order
-    # reproducible, which keeps the daily auto-sync commit clean.
     arts.sort(key=lambda a: a.get("_src", ""))
     arts.sort(key=lambda a: a.get("date", ""), reverse=True)
     _ARTICLES = arts
@@ -230,7 +144,8 @@ def load_articles():
 
 def tools_mention(fm, depth=2):
     prods = [BY_SLUG[s] for s in fm.get("products", []) if s in BY_SLUG]
-    if not prods: return ""
+    if not prods:
+        return ""
     return f"""<aside class="article-products" aria-labelledby="ap-title">
     <p class="eyebrow">Tools mentioned in this guide</p>
     <h2 id="ap-title">Get the brushes</h2>
@@ -239,7 +154,6 @@ def tools_mention(fm, depth=2):
 
 def build_blog():
     arts = load_articles()
-    # index
     cards = ""
     for a in arts:
         ss = img_srcset(0, a.get("_pslug", ""), a.get("_im") or {}, "(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw")
@@ -269,10 +183,7 @@ def build_blog():
 {footer(0)}"""
     write("blog.html", html_out)
 
-    # articles — md-based only; HTML-only articles are kept as-is
     for a in arts:
-        if a.get("_html_only"):
-            continue
         depth = 2
         body_html = md_to_html(a["body"].strip(), depth)
         marker = "__PRODUCTS__"
@@ -281,8 +192,6 @@ def build_blog():
             body_html = body_html.replace(f"<p>{marker}</p>", tools).replace(marker, tools)
         else:
             body_html += tools
-        # Share row: guides are the most-pinned kind of content here, and the
-        # hero image is the right artwork for the pin.
         share_row = share_buttons(absurl(f"blog/{a['slug']}/"), a["title"],
                                   (a.get("hero") if is_abs(a.get("hero")) else absurl(a.get("hero") or "assets/img/og-cover.jpg")),
                                   a.get("description", ""), heading="Save or share this guide")
@@ -293,19 +202,17 @@ def build_blog():
             rel_html = """<nav class="article-related" aria-label="Related articles"><p class="eyebrow">Keep reading</p><div class="rel-arts">""" + "".join(
                 f'<a class="text-link" href="../{r["slug"]}/">{esc(r["title"])}</a>' for r in rel_arts) + "</div></nav>"
         schemas = schema_article(a) + schema_breadcrumb([("Home","/"),("Blog","/blog.html"),(a["title"], f"/blog/{a['slug']}/")])
-        # FAQPage: auto-generated from a `## FAQ` / `### Question` block when present.
         faqs = extract_faq(a["body"])
         if faqs:
             schemas += schema_faq(faqs)
-        # HowTo: only for articles flagged `howto: true` with `## Step N:` sections.
         if _truthy(a.get("howto")):
             steps = extract_howto_steps(a["body"])
             if steps:
                 tool_names = [BY_SLUG[s]["name"] for s in (a.get("products") or []) if s in BY_SLUG][:4]
-                tools = ["Procreate (iPad)", "Apple Pencil"] + tool_names
+                tools_list = ["Procreate (iPad)", "Apple Pencil"] + tool_names
                 schemas += schema_howto(
                     a["title"], a["description"], steps,
-                    total_time=a.get("totaltime") or None, tools=tools)
+                    total_time=a.get("totaltime") or None, tools=tools_list)
         hero_ss = img_srcset(depth, a.get("_pslug",""), a.get("_im") or {}, "(min-width: 860px) 760px, 94vw")
         og_img = (asset_abs(a["products"][0], BY_SLUG[a["products"][0]]["images"]["card"])
                   if a.get("products") and a["products"][0] in BY_SLUG else None)
