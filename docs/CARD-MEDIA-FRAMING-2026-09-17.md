@@ -168,3 +168,39 @@ rules (`#popular .card-media`, `#popular .card-media img`).
 PASSED`; a second build leaves the tree clean; the 102 rebuilt HTML files differ
 from `HEAD` only by the stylesheet cache-buster (`?v=e8d96474… → ?v=35fce012…`).
 Roll back: restore the two `#popular` declarations and set `EXPECTED` back to 87.
+
+## 2026-09-20 addendum — the frame ratio becomes 4:3 (the ratio argument reversed)
+
+The no-crop contract this note established is untouched and still enforced
+(`object-fit:contain` on `.card-media img`, no `cover`, mat not painted over —
+verify #81–82). What changed is the *frame ratio*: the shared frame is now
+**4:3**, not 1:1. See `docs/PRODUCT-CARDS-4X3-FRAME-2026-09-20.md` for the full
+measurement.
+
+Why the ratio argument above was wrong. This note rejected 4:3 on the grounds
+that it "pushes portrait loss from 21% to 40% … the flagship packs are the
+portrait ones". Two things about that reasoning did not survive contact with the
+numbers:
+
+1. It weighed the 9 portrait covers against the catalog's *pixels* rather than
+   its *coverage*. A square frame gives a 3:2 banner 66.7% of the frame, and
+   **41 of 51 covers are landscape banners** — the square was the worst available
+   ratio for four fifths of the storefront, chosen to protect one fifth. Measured:
+   **1 of 51 covers reached 85% fill in the square; 40 of 51 do in 4:3** (mean
+   fill 69.7% → 83.9%).
+2. It treated the portrait covers' leftover area as the only thing to manage,
+   and had no answer for it beyond "the fix is a taller art render, not a CSS
+   exception". That answer is still right, but it is not a reason to hold the
+   whole catalog at the wrong ratio: those covers now fill the frame's full
+   height and wear the eBook-style gold ring + pedestal shadow
+   (`.card-media.portrait-cover`), so a narrower cover reads as a framed book
+   rather than a shrunken thumbnail.
+
+Cost of the reversal, stated plainly: the 9 portrait covers render ~25% smaller
+linearly than they did in the square (a portrait cover is height-bound and the
+frame is shorter). The landscape banners' rendered pixels are unchanged — a 3:2
+banner was width-bound in the square too; what shrank was the mat above and below
+it. `verify.py` #82b pins both halves of that trade: exactly 40/51 covers at >=85%
+fill, and the badge out of the artwork (it moved to the card body's first row,
+`.card-top`) because a contained image reaches the frame's own corners and no
+in-frame corner can hold a badge without covering art.
