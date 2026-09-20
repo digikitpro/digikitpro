@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 96 CHECKS PASSED.
+Expects: ALL 98 CHECKS PASSED.
 (89 -> 93 on 2026-09-20: + 4 from the product image gallery repair — every
 product page ships js/gallery.js with [data-product-gallery], #product-main-image
 and a data-full-image per tile; a tile can never hand the frame the -card crop;
@@ -92,7 +92,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 96
+EXPECTED = 98
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -251,7 +251,7 @@ def esc_price(t: str) -> str:
 
 
 def main() -> int:
-    print("DigiKitPro verify — 96 checks\n")
+    print(f"DigiKitPro verify — {EXPECTED} checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -785,14 +785,8 @@ def main() -> int:
           else f"{len(media_els)} card-media elements across the built site each carry their own cover's "
                f"rung; {badge_in_media} badges inside a frame (the badge row lives in .card-top)")
 
-    # ── 83–84 ebooks CTA row (see .ebooks-grid .ebook-foot in css/style.css) ──
-    # The Starter Guide & Masterclass cards are horizontal at every width, so
-    # the fixed cover used to starve the pitch column on a phone and the card's
-    # own overflow sliced the CTA pill. Two halves, each of which has a
-    # plausible wrong fix: capping the foot children (so a CTA may wrap or move
-    # to its own line, but never outgrow its card) and buying the label a real
-    # measure below 480px. The card itself stopped clipping in the no-clip
-    # second pass — checks 85–86 below.
+    # Full-bleed cards: artwork above the copy rather than a tiny side dock.
+    # Keep the CTA wrapping guarantees while pinning the new responsive layout.
     foot_kid = re.search(r"\.ebooks-grid \.ebook-foot>\*\{([^}]*)\}", css_txt)
     foot_btn = re.search(r"\.ebooks-grid \.ebook-foot \.btn\{([^}]*)\}", css_txt)
     foot_link = re.search(r"\.ebooks-grid \.ebook-foot \.text-link\{([^}]*)\}", css_txt)
@@ -805,109 +799,66 @@ def main() -> int:
           "every .ebook-foot child is capped to the row and wraps its label instead")
     narrow = re.search(r"@media\(max-width:479px\)\{(.*?)\n\}", css_txt, re.S)
     nb = narrow.group(1) if narrow else ""
-    cover_n = re.search(r"\.ebooks-grid \.ebook-cover\{flex:0 0 (\d+)px", nb)
-    check("ebooks CTAs keep a full measure on a 320px phone",
-          bool(cover_n) and int(cover_n.group(1)) <= 120
-          and ".ebooks-grid .ebook-foot .btn" in nb and "flex:1 1 100%" in nb,
-          "cover narrows and both CTAs go full width below 480px")
+    def css_rule(selector):
+        match = re.search(re.escape(selector) + r"\{([^}]*)\}", css_txt)
+        return match.group(1) if match else ""
 
-    # ── 85–86 the no-clip second pass (see .ebooks-grid in css/style.css) ──
-    # Round 1 made the CTA fit; this pass removes the mechanism instead of the
-    # symptom — the card itself no longer clips, so no descendant (CTA, label,
-    # badge, cover shadow, or anything added later) can be sliced by the card
-    # edge. The two decorations that used to lean on that clip must therefore
-    # round themselves, and a bare `overflow:visible` without them is exactly
-    # the wrong fix: the mat would square off the card's corners and the gold
-    # bar would spill past them. Both are pinned here, as is the grid width
-    # where a two-up card can still hold its own CTA row.
-    card = re.search(r"\.ebooks-grid \.ebook-card\{([^}]*)\}", css_txt)
-    card_css = card.group(1) if card else ""
-    frame_img = re.search(r"\.ebooks-grid \.ebook-frame img\{([^}]*)\}", css_txt)
-    dock = re.search(r"\.ebooks-grid \.ebook-cover\{([^}]*)\}", css_txt)
-    gold = re.search(r"\.ebooks-grid \.ebook-card\.edu-deep::before\{([^}]*)\}", css_txt)
-    gold_css = gold.group(1) if gold else ""
-    corner = "calc(var(--radius) - 1px)"      # the card's inner corner: --radius - 1px border
-    check("ebooks cards crop nothing, by construction",
-          "overflow:visible" in card_css and "overflow:hidden" not in card_css
-          and card_css.count("height:") == 1 and "height:auto" in card_css
-          and bool(frame_img) and "object-fit:contain" in frame_img.group(1)
-          and "object-fit:cover" not in frame_img.group(1)
-          and bool(dock) and corner in dock.group(1)
-          and f"height:{corner}" in gold_css and corner in gold_css
-          and "100% 3px" in gold_css and "pointer-events:none" in gold_css,
-          "card is overflow:visible at an auto height and the covers stay contain; the "
-          "cover mat and the gold bar carry the card's own corners instead of a clip")
-    base_grid = re.search(r"^#ebooks \.ebooks-grid\{([^}]*)\}", css_txt, re.M)
+    card_css = css_rule(".ebooks-grid .ebook-card")
+    dock_css = css_rule(".ebooks-grid .ebook-cover")
+    image_css = css_rule(".ebooks-grid .ebook-frame img")
+    check("ebooks CTAs keep a full measure on a 320px phone",
+          "flex-direction:column" in card_css
+          and ".ebooks-grid .ebook-foot .btn" in nb and "flex:1 1 100%" in nb,
+          "cover sits above the full-width copy; primary CTAs stretch below 480px")
+
+    corner = "calc(var(--radius) - 1px)"
+    gold_css = css_rule(".ebooks-grid .ebook-card.edu-deep::before")
+    check("ebooks preserve the complete cover and never clip copy or CTAs",
+          "overflow:visible" in card_css and "height:auto" in card_css
+          and "height:auto" in image_css and "aspect-ratio:auto" in image_css
+          and f"border-radius:{corner} {corner} 0 0" in dock_css
+          and "pointer-events:none" in gold_css,
+          "natural image height, rounded cover corners, and unclipped card content")
+
+    base_grid = css_rule("#ebooks .ebooks-grid")
     two_up = [ln for ln in css_txt.splitlines()
               if "#ebooks .ebooks-grid{" in ln and "repeat(2,minmax(0,1fr))" in ln]
-    # 2026-09-20: the breakpoint moved 1080px → 1200px with the cover-first
-    # geometry (check 89) — 1200px is the first width where the full 1160px
-    # wrap gives each two-up card 568px: a 300px dock AND a 222.8px pitch
-    # column, which holds the price + "View Masterclass" pill on one line
-    # with room to spare behind a classic scrollbar.
-    widened = [ln for ln in css_txt.splitlines()
-               if ln.startswith("@media(") and "ebooks-grid" in ln
-               and "min-width:1200px" not in ln]
-    check("the ebooks grid is one column until 1200px",
-          bool(base_grid) and "grid-template-columns:1fr" in base_grid.group(1)
-          and len(two_up) == 1 and two_up[0].startswith("@media(min-width:1200px){")
-          and not widened,
-          "one full-width card below 1200px; two-up only from 1200px, where a 300px dock "
-          "still leaves the CTA row its line")
-    # ── 87 the cover dock's min-width (third pass, 2026-09-19) ──────────
-    # A flex item's automatic minimum is its content-based minimum, not its
-    # flex-basis: the 3:4 cover <img> inside the dock lets Chrome resolve the
-    # dock wider than its declared basis (264px measured against the 220px
-    # rule), the body column absorbs the loss, its text wraps taller than the
-    # cover-driven card height, and the foot row renders below the card's
-    # frame. min-width:0 on the base rule binds the dock to its basis at all
-    # three widths — the 479px/640px variants only override flex and padding.
-    check("ebooks cover dock holds its declared width",
-          bool(dock) and "min-width:0" in dock.group(1)
-          and re.search(r"flex:0 0 \d+px", dock.group(1)) is not None,
-          "the dock must declare min-width:0, or its cover image inflates it past its flex-basis")
+    check("ebooks use one column on phones and two from 640px",
+          "grid-template-columns:1fr" in base_grid and "max-width" not in base_grid
+          and len(two_up) == 1 and two_up[0].startswith("@media(min-width:640px){"),
+          "full-wrap grid without narrow thumbnail columns")
 
-    # ── 89 the ebooks covers fill their dock (cover-first, 2026-09-20) ──
-    # The cover is the card's subject. Before this pass the two-up card was
-    # 518px on a centred 1060px grid, the dock 260px with a 16/8.8px inset,
-    # and the legacy `.ebook-cover{aspect-ratio:3/4}` held the dock 4/3 of
-    # its width whatever the padding — 235×314 of art in a 260×398 mat, 71%
-    # of the dock. Now the grid spans the wrap, the dock is 300px from 900px
-    # (280px from 640px, 176px from 480px, 116px below), the mat is an even
-    # --dock-pad ring (aspect-ratio:auto, so the cover sets the dock height
-    # and nothing is left over), and the paid Masterclass runs the tighter
-    # pad (8px, ~90% of the dock) against the Starter's 12px (~86%) — same
-    # dock, same card height, the paid cover visibly fuller. Pinned so a
-    # re-centred grid, a re-inflated dock or a flat pad cannot creep back;
-    # the <img sizes> hint must quote the rendered widths (dock − 2×pad) so
-    # the browser keeps picking the right srcset candidate.
-    dock_css = dock.group(1) if dock else ""
-    # the ebooks 640px block is the multi-line one whose rules are all .ebooks-grid
-    mid = re.search(r"@media\(min-width:640px\)\{\n((?:\.ebooks-grid [^\n]*\n)+)\}", css_txt)
-    mid_css = mid.group(1) if mid else ""
-    wide = re.search(r"@media\(min-width:900px\)\{\n\.ebooks-grid \.ebook-cover\{([^}]*)\}", css_txt)
-    dock_mid = re.search(r"\.ebooks-grid \.ebook-cover\{flex:0 0 (\d+)px;padding:var\(--dock-pad\)\}", mid_css)
-    dock_wide = re.search(r"flex:0 0 (\d+)px", wide.group(1)) if wide else None
-    pad_start = re.search(r"\.ebooks-grid \.ebook-card\.edu-start\{--dock-pad:(\d+)px\}", mid_css)
-    pad_deep = re.search(r"\.ebooks-grid \.ebook-card\.edu-deep\{--dock-pad:(\d+)px\}", mid_css)
-    fill = lambda dock_px, pad_px: ((dock_px - 2 * pad_px) ** 2 * 4 / 3) / (dock_px * ((dock_px - 2 * pad_px) * 4 / 3 + 2 * pad_px))
-    fills_ok = (bool(dock_mid) and bool(dock_wide) and bool(pad_start) and bool(pad_deep)
-                and int(pad_deep.group(1)) < int(pad_start.group(1))
-                and all(0.85 <= fill(int(d), int(pd)) <= 0.92
-                        for d in (dock_mid.group(1), dock_wide.group(1))
-                        for pd in (pad_start.group(1), pad_deep.group(1))))
+    check("ebook covers fill their card width without any inset mat",
+          all(rule in dock_css for rule in ("width:100%", "min-width:0", "padding:0", "flex:none"))
+          and "width:100%" in css_rule(".ebooks-grid .ebook-frame")
+          and "width:100%" in image_css and "--dock-pad" not in css_txt
+          and len(re.findall(r"\.ebooks-grid \.ebook-cover\{", css_txt)) == 1,
+          "no breakpoint can restore a fixed-width dock or cover padding")
+
     sizes_hint = re.findall(r'class="ebook-frame"><img [^>]*sizes="([^"]+)"', home_html)
-    hint_ok = (len(sizes_hint) == 2 and len(set(sizes_hint)) == 1 and bool(dock_wide) and bool(pad_deep)
-               and f"(min-width: 900px) {int(dock_wide.group(1)) - 2 * int(pad_deep.group(1))}px" in sizes_hint[0]
-               and bool(dock_mid) and f"(min-width: 640px) {int(dock_mid.group(1)) - 2 * int(pad_deep.group(1))}px" in sizes_hint[0])
-    check("ebooks covers fill 85–90% of their dock, the paid one fullest",
-          bool(base_grid) and "max-width" not in base_grid.group(1)
-          and "aspect-ratio:auto" in dock_css and "padding:var(--dock-pad)" in dock_css
-          and "--dock-pad:" in card_css and fills_ok and hint_ok,
-          "full-wrap grid; dock resets the legacy 3:4 box and wears an even --dock-pad mat; "
-          f"dock {dock_mid.group(1) if dock_mid else '?'}/{dock_wide.group(1) if dock_wide else '?'}px, "
-          f"pad Starter {pad_start.group(1) if pad_start else '?'}px / Masterclass {pad_deep.group(1) if pad_deep else '?'}px; "
-          "img sizes quote dock − 2×pad")
+    expected_sizes = "(min-width: 1200px) 566px, (min-width: 640px) calc((100vw - 68px) / 2), calc(100vw - 42px)"
+    check("ebook image sizes match full-width responsive covers",
+          sizes_hint == [expected_sizes, expected_sizes],
+          "sizes include the wrap, grid gap and borders, not the former tiny dock")
+
+    body_css = css_rule(".card-body")
+    top_css = css_rule(".card-top")
+    check("card body and header rows span the shell, including best sellers",
+          all(rule in body_css for rule in ("width:100%", "padding:0", "min-width:0"))
+          and "width:100%" in top_css and "flex-wrap:wrap" in top_css
+          and "padding:0" in css_rule("#popular .card-body")
+          and "padding:0 .75rem" in css_rule(".card-body>.card-title,.card-body>.card-short"),
+          "no outer body inset; small reading insets belong only to text")
+
+    craft_css = css_rule(".craft-art")
+    craft_img = css_rule(".craft-art img")
+    craft_cards = re.findall(r"\.craft-card\{([^}]*)\}", css_txt)
+    check("craft artwork is full bleed at every breakpoint without cropping",
+          all(rule in craft_css for rule in ("width:100%", "padding:0", "border:0", "border-radius:0"))
+          and "width:100%" in craft_img and "height:auto" in craft_img
+          and all("padding:" not in rule or "padding:0 0 .9rem" in rule for rule in craft_cards)
+          and ".craft-card:hover .craft-art img" not in css_txt,
+          "no outer card gutters, square letterbox, nested frame or hover zoom")
 
     # ── 88 the best-sellers row keeps the shared card frame (2026-09-19) ───
     # #popular is a scoped FINISH — gradient shell, gold hairline, roomier
