@@ -420,11 +420,16 @@ _GITHUB_KILL = """<script>
 })();
 </script>"""
 
-def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None):
+def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False):
     """`ctx` is the analytics page context (see js/analytics.js). It is emitted
     as window.DKP.page and contains ONLY non-personal page facts: page type,
     product slug/name/tier/category/price. No visitor data, ever."""
     s = ""
+    # The gallery module ships only where there is a gallery to run: it is a
+    # self-contained file (js/gallery.js) that returns immediately on any page
+    # without [data-product-gallery], and keeping it off every other page is
+    # one less request for them.
+    gs = ('\n  <script src="' + rel(depth, 'js/gallery.js') + '" defer></script>') if gallery else ""
     if schemas:
         for sc in schemas:
             s += f' <script type="application/ld+json">{json.dumps(sc, ensure_ascii=False)}</script>\n'
@@ -526,7 +531,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
 {pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}',analytics:{str(ANALYTICS_ENABLED).lower()},feedbackEndpoint:'{FEEDBACK_ENDPOINT}',page:{ctx_json}}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
-  <script src="{rel(depth,'js/main.js')}" defer></script>
+  <script src="{rel(depth,'js/main.js')}" defer></script>{gs}
   <script src="{rel(depth,'js/motion.js')}" defer></script>
   <script src="{rel(depth,'js/analytics.js')}" defer></script>
   <script src="{rel(depth,'js/feedback.js')}" defer></script>
@@ -740,6 +745,38 @@ def img_srcset(depth, slug, im, sizes):
     base = f"assets/products/{slug}"
     return (f' srcset="{rel(depth, f"{base}/{card}")} {im.get("cardW") or 750}w, '
             f'{rel(depth, f"{base}/{main}")} {im.get("fullW") or 1200}w" sizes="{sizes}"')
+
+# The gallery frame's own measure on a product page. It is the string the
+# generated gallery already used, so nothing about how the artwork lays out
+# moves — only which file the browser is allowed to pick for it.
+GAL_SIZES = "(min-width: 960px) 46vw, 100vw"
+
+def gal_pair(depth, slug, card, full, card_w, full_w, sizes=GAL_SIZES):
+    """(srcset, sizes) for ONE product-gallery image, or ("", "").
+
+    Emitted only when the pair really offers two widths. A card crop and a
+    full file of the same pixel width would give two identical `Nw`
+    descriptors, and the browser would answer by painting the crop in the
+    big frame — an enlarged thumbnail standing in for the artwork.
+
+    The gallery rewrites srcset and sizes together with src on every thumbnail
+    click (js/gallery.js), so no image can ever be served the srcset of
+    another image. Writing `src` alone does nothing at all when a srcset is
+    present: a matching srcset candidate always wins. That is the exact bug
+    this pair exists to prevent.
+    """
+    if not card or not full or card == full or is_abs(card) or is_abs(full):
+        return "", ""
+    if str(card).endswith(".svg") or str(full).endswith(".svg"):
+        return "", ""
+    try:
+        cw, fw = int(card_w or 0), int(full_w or 0)
+    except (TypeError, ValueError):
+        return "", ""
+    if cw <= 0 or fw <= 0 or cw >= fw:
+        return "", ""
+    base = f"assets/products/{slug}"
+    return (f"{rel(depth, f'{base}/{card}')} {cw}w, {rel(depth, f'{base}/{full}')} {fw}w", sizes)
 
 def cta_for(p):
     """Standard CTA verb + target for a product, by tier.
