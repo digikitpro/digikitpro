@@ -154,77 +154,60 @@ h3{font-size:1.15rem}
 @media(min-width:1280px){.cards{grid-template-columns:repeat(4,1fr)}}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s ease,transform .2s ease}
 .card:hover{border-color:rgba(201,168,106,.5);transform:translateY(-3px)}
-/* Card media: one uniform 4:3 frame per card, artwork shown whole.
-   HISTORY, because both previous ratios were reached by measurement:
-   1. The frame was once filled with object-fit:cover, on the grounds that the
-      alternative letterboxed the art. Measured over the real catalog
-      (cardW x cardH in data/products.json, 51 products), that crop is not the
-      "mild top/bottom trim of a 4:5 cover" it was described as: it hides 30.3%
-      of the artwork on average, and on most of the catalog it cuts the SIDES,
-      because 41 of 51 card renders are LANDSCAPE banners (3:2 and 16:9) that
-      lost 24-44% of their width, while the 9 portrait pack covers lost 19-44%
-      of their height. Every cover carries its product name, a brand lockup or
-      a feature-icon row BAKED INTO THE ARTWORK, so the crop sliced them off —
-      the Master Library ribbon arrived as "PICK". `contain` is non-negotiable
-      since then, and two alternatives were measured and rejected:
-      • each card at its own natural ratio crops nothing, but across the site's
-        94 product-card grids a third of the rows would mix media heights by
-        more than 1.75x (2.67x on the catalog). Uniform frame or the grid falls
-        apart.
-      • painting a blurred copy of the artwork behind the img fills the
-        leftover area with colour at no layout cost, but a CSS background is
-        never lazy-loaded: it pulls all 51 catalog artworks at first paint,
-        undoing the loading="lazy" that 47 of them carry.
-   2. The frame then became a 1:1 square (2026-09-17). Nothing was sliced, but
-      the leftover area was treated as a deliberate MAT (a soft sweep in the
-      site's own palette) — and a square frame is the frame ratio that suits
-      the catalog LEAST: 41 of 51 covers are landscape, and a 3:2 banner can
-      fill only 66.7% of a square (a 1.6:1 letterbox of mat above and below it).
-      Measured: 1 of 51 covers reached 85% fill.
-   3. 2026-09-20 — the frame is now 4:3, which is where the catalog's real
-      artwork distribution sits. Same contain, same zero crop, same uniform row
-      heights and CLS. The 41 landscape covers now fill 88.9% (3:2), 93-100%
-      (the 4:3 banners) and 75% (the single 16:9 planner) of a shorter frame;
-      their rendered PIXEL size is unchanged, because a landscape banner was
-      width-bound in the square too — what shrank is the mat above and below it,
-      which is the whole point. 40 of 51 covers now reach 85% fill (was 1 of 51),
-      mean fill 69.7% -> 83.9%.
-      The 9 portrait covers (ratio < 0.95) are the cost of that trade and are
-      treated as a first-class case rather than a leftover: they hug their own
-      ratio, fill the frame's full height, and wear the ebook-style gold ring +
-      pedestal shadow on the mat (.card-media.portrait-cover) so a narrower
-      cover reads as a framed book, not a shrunken thumbnail. See
-      docs/PRODUCT-CARDS-4X3-FRAME-2026-09-20.md for the full measurement. */
+/* Card media: one full-bleed frame per card — the artwork touches all four edges,
+   and the frame takes the ratio that costs THIS cover the least.
+   HISTORY, because every previous rule in this block was reached by measurement:
+   1. object-fit:cover inside ONE hard frame is the original sin and is still what
+      this block is built to route around. Measured over the real catalog
+      (cardW x cardH in data/products.json, 51 products), cover in a single 4:3
+      frame eats 1 - min(F,R)/max(F,R) of every cover: 16.1% of the cover's box on
+      average (13.5% of its painted content), and 25-58% for the 10 covers whose
+      ratio sits furthest from 4:3.
+      Every cover carries its product name, a brand lockup or a feature-icon row
+      BAKED INTO THE ARTWORK edges, so a blind crop slices them off — the Master
+      Library ribbon arrived as "PICK" (docs/CARD-MEDIA-FRAMING-2026-09-17.md).
+   2. The answer was a uniform frame with object-fit:contain (1:1 on 2026-09-17,
+      4:3 on 2026-09-20, docs/PRODUCT-CARDS-4X3-FRAME-2026-09-20.md). Nothing was
+      sliced and mean fill reached 83.9% — but the 16.1% that was left was MAT,
+      and that is what the storefront then read as "the product images are tiny":
+      the 41 landscape banners sat in 5.6% letterboxes above and below them, and
+      the 9 portrait covers reached only 42-61% of the frame with a dark gutter
+      down each side. A blurred copy of the artwork behind the img was measured
+      and rejected on this pass too: a CSS background is never lazy-loaded, so it
+      pulls all 51 catalog artworks at first paint and undoes the loading="lazy"
+      that 47 of them carry.
+   3. 2026-09-20 — full bleed, by ladder. Keep `cover` (the complaint was the
+      gutter, not the crop) and stop forcing one ratio onto 51 different ones:
+      each card's frame takes the rung of a 7-step ladder closest to its own
+      artwork ratio — 16:9, 3:2, 4:3, 1:1, 4:5, 3:4, 2:3 — picked by media_rung()
+      in tools/core.py, so the crop costs what it has to and no more. Mean crop
+      16.1% -> 0.6% of the cover's box (13.5% -> 0.4% of its painted content): 50
+      of 51 covers lose under 5%, and only the Morocco itinerary (0.563, so its
+      own 2:3 rung) reaches 15.6%. No mat
+      anywhere, and the frame is still a shelf, not a thumbnail. Row rhythm
+      survives because the rungs are shared, not per-card: 35 covers land on 3:2,
+      5 on 4:3, 5 on 4:5, 3 on 3:4. A row that mixes bands keeps ONE card height
+      (the grid stretches each card and .card-foot is pinned to the bottom); only
+      the text block absorbs the difference. A cover with no recorded sizes falls
+      back to 4:3, the frame this site shipped before. */
 .card-media{position:relative;display:block;width:100%;padding:0;margin:0;aspect-ratio:4/3;overflow:hidden;background:var(--mat)}
+/* THE LADDER — one aspect-ratio per rung and nothing else, so the fit, the mat
+   and every other card rule stay in the two lines above and the one below. */
+.card-media.media-16x9{aspect-ratio:16/9}
+.card-media.media-3x2{aspect-ratio:3/2}
+.card-media.media-4x3{aspect-ratio:4/3}
+.card-media.media-1x1{aspect-ratio:1/1}
+.card-media.media-4x5{aspect-ratio:4/5}
+.card-media.media-3x4{aspect-ratio:3/4}
+.card-media.media-2x3{aspect-ratio:2/3}
 /* background:none is load-bearing: the global img{background:var(--surface-2)}
-   paints on the ELEMENT box, and a contained img box is the whole frame, so
-   leaving it on would cover the mat with a flat panel. There is deliberately no
-   transform on this img: once the fit is `contain`, any hover zoom past 100% is
-   just the old crop arriving on mouseover.
-   2026-09-20: the catalog frame moves from a 1:1 square to 4:3. The 41
-   landscape covers (3:2 and 4:3 banners) then fill ~89% of the frame instead
-   of the 67% a square allowed (the old square only centred the banner with a
-   tall 4:3 letterbox above and below); object-fit:contain still crops nothing.
-   The 9 portrait covers (ratio < 0.95 — the two ebooks, the four portrait
-   brush packs and the two portrait bundles, plus the Morocco itinerary) are
-   letterboxed on the mat but get the ebook-style gold ring + soft shadow so the
-   small cover reads as a deliberate, framed book rather than a shrunken thumb.
-   The corner badge moves into the card body (top-right) so it never sits on the
-   artwork: a contained image always reaches the frame corners, so no in-frame
-   corner is ever mat enough to hold it without covering the art. */
-.card-media img{width:100%;height:100%;aspect-ratio:4/3;object-fit:contain;object-position:center;display:block;background:none}
-/* Portrait covers: the image hugs its own 3:4-ish ratio (height fills the 4:3
-   frame, width follows the artwork) and wears the ebook-style gold ring +
-   pedestal shadow on the site mat. overflow:visible lets that shadow fall
-   across the body's top padding like a book resting on the card. */
-.card-media.portrait-cover{display:flex;align-items:center;justify-content:center;overflow:visible}
-.card-media.portrait-cover img{width:auto;height:100%;max-width:100%;aspect-ratio:auto;object-fit:contain;background:none;border-radius:6px;box-shadow:0 16px 34px -14px rgba(0,0,0,.72),0 0 0 1px rgba(201,168,106,.45)}
-.card-media.portrait-cover:hover img{box-shadow:0 20px 40px -14px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,106,.72)}
-/* the homepage best-sellers row gives every cover a pedestal drop-shadow;
-   keep it off the ringed portrait covers (rest and hover) so the gold ring is
-   the only edge they carry. */
-#popular .card-media.portrait-cover img,
-#popular .card:hover .card-media.portrait-cover img{filter:none}
+   paints on the ELEMENT box, so the coming-soon placeholder (a vector cover, no
+   rung class, 4:3 fallback) would sit on a flat panel instead of the mat.
+   object-position:center keeps the crop symmetrical: the covers whose artwork is
+   full-bleed by design (title row + feature row at the edges) lose the same few
+   percent top and bottom, and the ladder keeps that number under 5% for 50 of
+   51 of them. Deliberately no hover transform: a zoom past 100% is a crop. */
+.card-media img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:none}
 .badge{position:absolute;top:10px;left:10px;background:rgba(12,12,14,.82);backdrop-filter:blur(6px);border:1px solid rgba(201,168,106,.45);color:var(--gold);font:600 .66rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:.42rem .6rem;border-radius:999px}
 .badge-free{border-color:rgba(140,200,140,.5);color:#9FD8A4}
 .badge-soon{border-style:dashed;border-color:rgba(201,168,106,.75);color:var(--gold);background:rgba(201,168,106,.1)}
@@ -902,11 +885,14 @@ html.js-motion .hero-in .hero-card.h3{animation-delay:.44s}
 
 /* ══ 4. PRODUCT CARDS — "this is something I can click" ════════════════ */
 .card:hover{transform:translateY(-6px);border-color:rgba(201,168,106,.55);box-shadow:0 26px 50px -28px rgba(0,0,0,.85),0 0 0 1px rgba(201,168,106,.08)}
-/* Both card-media hover zooms that used to live here are gone: inside a
-   `contain` frame a 6% zoom simply re-crops the artwork, which is the whole
-   point of this card. The card still lifts (above) with its border, shadow,
-   badge, title and button, so the affordance is intact — and the dead
-   `img.fit.contain` override, whose classes no template emits, went with them. */
+/* Both card-media hover zooms that used to live here stay gone: the media is
+   `cover` now, so a 6% zoom is 6% of the artwork's own edge cropped off — the
+   exact slicing docs/CARD-MEDIA-FRAMING-2026-09-17.md exists to prevent, just
+   deferred to mouseover. The ladder already spends what it must (under 5% for
+   50 of 51 covers); the frame does not also take a hover tax. The card still
+   lifts (above) with its border, shadow, badge, title and button, so the
+   affordance is intact — and the dead `img.fit.contain` override, whose classes
+   no template emits, went with them. */
 .card:active{transform:translateY(-2px) scale(.995)}
 .card:hover .card-title a{color:var(--gold)}
 .card:hover .card-foot .btn{border-color:var(--gold);color:var(--gold);background:var(--gold-soft)}
@@ -1466,30 +1452,28 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 .grid.cards-4 .card-foot{flex-wrap:wrap;gap:.5rem}
 
 /* ── 2b · #popular premium row (homepage Best sellers ONLY) ────────────
-   Scoped FINISH for the best-sellers row — shell, hairline, pedestal
-   shadow, type, price — never the frame. The four cards use the same
-   .card-media square + contain contract as every other product card on
-   the site (verify checks 81–82; check 88 pins THIS row to it): no
-   #popular rule may set an aspect-ratio, a padding, a height or a fit on
-   the media or its img. Three of the four covers are portrait renders
-   (750x946 / 750x928) with titles baked into the artwork edge-to-edge
-   and the fourth is a 4:3 landscape banner (580x435); contained in the
-   shared square each shows whole at the frame's full height or width,
-   the site mat filling the rest — the same read as the free row further
-   down the page. An earlier pass re-docked this row in a 4:3 box with
-   a 1rem/1.1rem inset: it cropped nothing, but it made the storefront's
-   lead row the one grid that did not share the square (shorter tiles,
-   portrait covers ~37% smaller than the same artwork on any other card,
-   and the very frame ratio docs/CARD-MEDIA-FRAMING-2026-09-17.md had
-   already rejected for the catalog). Dropped 2026-09-19. */
+   Scoped FINISH for the best-sellers row — shell, hairline, type, price —
+   never the frame. The four cards use the same full-bleed .card-media ladder as
+   every other product card on the site (verify checks 81–82; check 88 pins THIS
+   row to it): no #popular rule may set an aspect-ratio, a padding, a height or
+   a fit on the media or its img. Three of the four covers are portrait renders
+   (750x946 / 750x928) that now sit on the 4:5 rung edge to edge, and the fourth
+   is a 4:3 landscape banner (580x435) on its own rung — no card in this row is
+   letterboxed on a mat any more, which is what made the lead row of the
+   storefront read as small artwork. An earlier pass re-docked this row in a 4:3
+   box with a 1rem/1.1rem inset: it cropped nothing, but it made the storefront's
+   lead row the one grid that did not share the frame (shorter tiles and the very
+   ratio docs/CARD-MEDIA-FRAMING-2026-09-17.md had already rejected for the
+   catalog). Dropped 2026-09-19. */
 #popular .card{background:linear-gradient(165deg,#191920 0%,#101014 76%);border-color:rgba(201,168,106,.26);transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease}
 #popular .card:hover{border-color:rgba(201,168,106,.55);box-shadow:0 22px 50px -20px rgba(201,168,106,.26)}
 /* gold hairline on the media edge: an overlay, adds no geometry */
 #popular .card-media::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(201,168,106,.10);pointer-events:none}
-/* pedestal shadow on the artwork — a filter, never a transform (no zoom);
-   width/height/aspect-ratio/object-fit stay exactly the globals' */
-#popular .card-media img{filter:drop-shadow(0 14px 22px rgba(0,0,0,.42))}
-#popular .card:hover .card-media img{filter:drop-shadow(0 18px 26px rgba(0,0,0,.5)) brightness(1.05)}
+/* The pedestal drop-shadow this row used to put on the media img is gone: the
+   media clips (overflow:hidden) and the artwork now fills it edge to edge, so a
+   shadow outside the image box had nothing left to fall on. The brightness on
+   hover stays — it reads on the pixels, not around them. */
+#popular .card:hover .card-media img{filter:brightness(1.05)}
 /* roomier body, gold price: the premium read without new claims */
 #popular .card-body{padding:1.15rem 1.2rem 1.25rem;gap:.5rem}
 #popular .card-title{font-size:1.08rem}

@@ -809,14 +809,54 @@ def trust_bridge(depth=0, free=False):
     return (f'<p class="trust-bridge">Secure checkout via Payhip · instant download · '
             f'{terms} · <a href="{rel(depth, "refunds.html")}">Refund policy</a></p>')
 
+# ── product-card media: the frame ladder ─────────────────────────────────
+# Every product card is ONE full-bleed image: the media box takes the ratio of
+# the rung that costs this cover the least, and object-fit:cover makes the
+# artwork touch all four edges of it. No mat gutter, anywhere. See
+# docs/PRODUCT-CARDS-EDGE-TO-EDGE-2026-09-20.md.
+#
+# Why a ladder and not one hard frame: the catalogue is not one ratio. Measured
+# over data/products.json (51 products) the covers run from 0.563 (a tall
+# itinerary page) to 1.778 (a 16:9 planner banner). Inside a frame of ratio F a
+# cover of ratio R loses 1 - min(F,R)/max(F,R) of its area to the crop, so a
+# single 4:3 frame would eat 25-58% of 10 of the 51 covers — and those covers
+# carry their product name and their feature-icon row baked into the artwork
+# edges, which is exactly what docs/CARD-MEDIA-FRAMING-2026-09-17.md was written
+# against. Snapping each cover to its nearest rung keeps the full-bleed read the
+# storefront wanted and drops the mean crop from 13.5% to 0.4% of the artwork:
+# 50 of 51 covers lose under 5%, and only the Morocco itinerary (0.563, so its
+# own 2:3 rung) reaches 15.6%.
+# (ratio as a number, the class it earns on .card-media, the same ratio as CSS
+#  writes it — the last form is what css/style.css spells in its frame rule)
+MEDIA_RUNGS = ((16 / 9, "16x9", "16/9"), (3 / 2, "3x2", "3/2"), (4 / 3, "4x3", "4/3"),
+               (1 / 1, "1x1", "1/1"), (4 / 5, "4x5", "4/5"), (3 / 4, "3x4", "3/4"),
+               (2 / 3, "2x3", "2/3"))
+MEDIA_FRAME_FALLBACK = "4x3"   # the widest-of-the-old frame, for a cover with no sizes
+
+
+def media_rung(w, h):
+    """The card-media frame class for a cover of w x h — the cheapest rung to crop.
+
+    Ties go to the wider rung, which keeps a row's frames shorter.
+    """
+    if not w or not h:
+        return MEDIA_FRAME_FALLBACK
+    r = w / h
+    best = None
+    for f, name, _css in MEDIA_RUNGS:
+        key = (round(1 - min(f, r) / max(f, r), 6), -f)
+        if best is None or key < best[0]:
+            best = (key, name)
+    return best[1]
+
+
 def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
     im = p.get("images") or {}
     card = im.get("card", "")
     w, h = im.get("cardW") or 750, im.get("cardH") or 500
-    # Portrait covers (ratio < 0.95) wear the ebook-style ring + shadow on the
-    # 4:3 mat instead of being shrunk into the corner of the frame.
-    _ratio = (w / h) if h else 1
-    portrait_class = " portrait-cover" if _ratio < 0.95 else ""
+    # The media frame's ratio, per cover, from the ladder above. A vector or
+    # unknown cover falls back to 4:3 (the frame the site shipped before).
+    media_cls = media_rung(w, h)
     u = rel(depth, f"products/{p['slug']}/")
     coming = bool(p.get("comingSoon"))
     label, kind = cta_for(p)
@@ -850,12 +890,13 @@ def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
     loading = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
     srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw") if card else ""
     img_src = asset_file(depth, p["slug"], card) if card else rel(depth, "assets/img/coming-soon.svg")
-    # Card media is a uniform 4:3 frame with object-fit:contain, so no artwork
-    # is ever cropped; the 41 landscape covers fill ~89% of the frame. The 9
-    # portrait covers (ratio < 0.95) are flagged portrait-cover and wear the
-    # ebook-style ring on the mat. Intrinsic width/height stay on the tag for
-    # layout stability before CSS loads. The corner badge now lives in the card
-    # body (top-right) so it never sits on the artwork.
+    # Card media is one full-bleed frame per cover: the box takes the rung
+    # closest to the artwork's own ratio (media_rung) and object-fit:cover paints
+    # it edge to edge, so nothing sits on a mat gutter and almost nothing is
+    # cropped — 0.4% of the artwork on average over the 51 covers. Intrinsic
+    # width/height stay on the tag for layout stability before CSS loads. The
+    # corner badge lives in the card body (top-right) so it never sits on the
+    # artwork, which a full-bleed image would otherwise guarantee.
     cslug = CATEGORY_SLUGS.get(p.get("category"))
     cat_url = rel(depth, f"category/{cslug}/") if cslug else (rel(depth, "bundles.html") if p.get("category") == "Bundles" else rel(depth, f"products.html#cat-{esc(p['category'].replace(' ','%20'))}"))
     _tier = tier_of(p); _line = line_of(p)
@@ -869,7 +910,7 @@ def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
     _pin_btn = ("\n    " + pin_button(p)) if _pin_ok and PINTEREST_URL else ""
     return f"""<article class="card" data-category="{esc(p['category'])}" data-name="{esc(p['name'].lower())}" data-tags="{esc(' '.join(p.get('tags',[])).lower())}" data-free="{1 if p["free"] else 0}" data-featured="{1 if (p.get("featured") or p.get("badge")) else 0}" data-tier="{esc(_tier)}" data-line="{esc(_line)}" data-dkp-slug="{esc(p['slug'])}" data-dkp-name="{esc(p['name'])}" data-dkp-price="{p.get('price',0):.2f}" data-dkp-tier="{esc(_tier)}" data-dkp-free="{1 if p['free'] else 0}" data-dkp-loc="card">
   <div class="card-img">
-  <a class="card-media{portrait_class}" href="{u}"{_pin_attrs}>
+  <a class="card-media media-{media_cls}" href="{u}"{_pin_attrs}>
     <img src="{img_src}"{srcset} width="{w}" height="{h}" alt="{esc(p['name'])}: {esc(p.get('short') or p['category'])}" {loading} decoding="async">
   </a>{_pin_btn}
   </div>

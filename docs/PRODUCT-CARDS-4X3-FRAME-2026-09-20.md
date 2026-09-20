@@ -1,5 +1,11 @@
 # Product cards frame the artwork whole — the frame moves 1:1 → 4:3
 
+> **Superseded on one point the same day:** the 4:3 *single* ratio and its
+> `object-fit:contain` are replaced by a full-bleed 7-rung ladder (each cover gets the
+> frame that costs its own artwork least). The no-blind-crop contract this note protects
+> is kept whole, and its numbers are the baseline the replacement measures against.
+> See `docs/PRODUCT-CARDS-EDGE-TO-EDGE-2026-09-20.md`.
+
 **Date:** 2026-09-20 · **Files:** `css/style.css` (`.card-media` block, `.card-top`),
 `tools/core.py` (`product_card`), `tools/verify.py` (check 81 re-pinned, + check 82b
 fill/badge),

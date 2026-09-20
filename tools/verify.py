@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 94 CHECKS PASSED.
+Expects: ALL 96 CHECKS PASSED.
 (89 -> 93 on 2026-09-20: + 4 from the product image gallery repair — every
 product page ships js/gallery.js with [data-product-gallery], #product-main-image
 and a data-full-image per tile; a tile can never hand the frame the -card crop;
@@ -21,6 +21,18 @@ the 4:3 geometry leaves exactly 40/51 covers at >=85% fill, and that no .badge
 sits inside any .card-media anywhere on the built site. Both halves are computed
 against the real 51-product cardW/cardH ratios in data/products.json, not a
 hard-coded expectation.)
+(94 -> 96 on 2026-09-20, same day, same block: the storefront then read as
+"product images are tiny" because the artwork did not reach the frame's edges, so
+.card-media goes full bleed. Check 81 is re-pinned from `object-fit:contain` in
+one 4:3 frame to `object-fit:cover` in a 7-rung ladder (16:9, 3:2, 4:3, 1:1, 4:5,
+3:4, 2:3) whose frame a cover takes from its own cardW/cardH, with 4:3 kept as the
+fallback; + 1 checks every rung the builder can name has its frame rule at that
+exact ratio; the 82b fill assertion becomes a crop-cost assertion (mean 0.4% of
+the artwork, 49/51 covers under 5%, worst 15.6%) because a fixed 4:3 cover frame
+would have cost 13.5% mean and 57.8% worst; + 1 checks each built card carries the
+rung its own cover picked and that no badge moved back into the frame. All three
+are computed from data/products.json + the built HTML, never from a hard-coded
+expectation.)
 (88 -> 89 on 2026-09-20: + 1 from the ebooks cover-first pass — the Starter
 Guide & Masterclass covers must fill 85–90% of their dock, the paid one
 fullest, on a full-wrap grid whose two-up engages at 1200px; check 86 was
@@ -80,7 +92,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 94
+EXPECTED = 96
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -239,7 +251,7 @@ def esc_price(t: str) -> str:
 
 
 def main() -> int:
-    print("DigiKitPro verify — 94 checks\n")
+    print("DigiKitPro verify — 96 checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -677,59 +689,101 @@ def main() -> int:
           "application CTA + status copy follow the variable, and the artifact is rebuilt without it")
 
     # ── 81–82 product card framing (see .card-media in css/style.css) ──
-    # Card artwork must never be cropped, and the frame must stay a uniform
-    # square: both halves are deliberate and each has already been "fixed"
-    # the wrong way once (contain inside a 3:2 frame = shrunken art; cover
-    # inside a 1:1 frame = 30% of every cover sliced off).
+    # Two invariants, each learned the hard way. (a) The artwork must FILL its
+    # container edge to edge — a frame that letterboxes on the site mat is what
+    # read as "the product images are tiny" (docs/PRODUCT-CARDS-4X3-FRAME-2026-09-20.md
+    # raised mean fill to 83.9% and left the other 16.1% as mat, gutters and all).
+    # (b) The crop that buys that fill may not slice the artwork's own edges:
+    # every cover carries its product name, a brand lockup or a feature-icon row
+    # baked into the image, and one hard frame ratio over 51 different ones costs
+    # 13.5% of the artwork on average and 25-58% for 10 covers
+    # (docs/CARD-MEDIA-FRAMING-2026-09-17.md — the Master Library ribbon arriving
+    # as "PICK"). The 2026-09-20 fix is a LADDER: each card's frame takes the rung
+    # closest to its own cover's ratio, so object-fit:cover is nearly free.
     css_txt = read("css/style.css")
     cm = re.search(r"\.card-media\{([^}]*)\}", css_txt)
     ci = re.search(r"\.card-media img\{([^}]*)\}", css_txt)
-    check("product cards frame the artwork whole, in a uniform 4:3 frame",
-          bool(ci) and "object-fit:contain" in ci.group(1)
-          and "object-fit:cover" not in ci.group(1)
-          and bool(cm) and "aspect-ratio:4/3" in cm.group(1),
-          "no crop inside one fixed 4:3 frame")
-    # The global `img{background:var(--surface-2)}` rule paints on the ELEMENT
-    # box, so a contained <img> would cover its own mat with a flat panel.
+    check("product cards fill their media frame edge to edge, rung by rung",
+          bool(ci) and "object-fit:cover" in ci.group(1)
+          and "object-fit:contain" not in ci.group(1)
+          and "transform" not in ci.group(1)
+          and bool(cm) and "aspect-ratio:4/3" in cm.group(1)
+          and "overflow:hidden" in cm.group(1) and "padding:0" in cm.group(1),
+          "full bleed, no inset, no hover zoom to re-crop; 4/3 only as the fallback frame")
+    # The ladder itself: every rung core.media_rung() can name must have a frame
+    # rule at that exact ratio, or that cover silently renders in the fallback
+    # 4:3 and its gutter comes back.
+    from core import MEDIA_RUNGS as _RUNGS, media_rung as _media_rung
+    RUNG_CSS = dict((n, css) for f, n, css in _RUNGS)
+    rung_bad = [n for n, f in RUNG_CSS.items()
+                if not (m := re.search(r"\.card-media\.media-%s\{([^}]*)\}" % n, css_txt))
+                or "aspect-ratio:%s" % f not in m.group(1)]
+    check("every media rung the builder can emit has a frame rule, at the right ratio",
+          len(RUNG_CSS) == 7 and not rung_bad,
+          "7 rungs: " + ", ".join("%s=%s" % (n, f) for n, f in RUNG_CSS.items()) if not rung_bad
+          else "rung rules missing or wrong at: " + ", ".join(rung_bad))
+    # background:none is load-bearing: the global `img{background:var(--surface-2)}`
+    # paints on the ELEMENT box, so a cover with no recorded sizes (the vector
+    # coming-soon placeholder, which keeps the fallback frame) would sit on a flat
+    # panel instead of the mat.
     check("card media mat is not painted over by the global img background",
           bool(ci) and "background:none" in ci.group(1),
           ".card-media img must reset the inherited img background")
-    # ── 82b product-card fill (4:3 frame, 2026-09-20) ──
-    # With the frame at 4:3 and object-fit:contain, a cover of ratio R fills
-    # min(4/3,R)/max(4/3,R) of the frame — the same number the browser
-    # computes for object-fit:contain. That is ~89% for the 3:2 landscape
-    # banners (41 of 51 covers), 100% for the 4:3 banners, ~75% for the lone
-    # 16:9 banner, and 42–61% for the 9 portrait covers. The portrait covers
-    # are not a failure: they wear the ebook-style ring on the mat (see
-    # .card-media.portrait-cover), so the small cover reads as a framed book.
-    # Assert exactly 40/51 covers reach >=85% fill (the 41 landscapes minus the
-    # 16:9 one) — matching the prototype measurement
-    # (shots/product-cards-frame-prototype-1440.png: 4:3 -> 40/51 >=85%).
-    FR = 4/3
-    fills = []
+    # ── 82b what the ladder's crop costs, per cover (2026-09-20) ──
+    # A cover of ratio R inside a frame of ratio F keeps min(F,R)/max(F,R) of its
+    # area, the same arithmetic object-fit:cover performs. Computed from the real
+    # cardW/cardH in data/products.json (51 products), with each cover in the rung
+    # core.media_rung() picks for it: 0.6% of the cover's own box on average
+    # (0.4% of its painted content, measured with a content bounding box over the
+    # .webp files in tools/card_frame_mock.py's lab), 50 of 51 covers under 5%,
+    # worst 15.6% (morocco-7-day-itinerary at 0.563 — the one cover the ladder
+    # cannot serve better, it owns the 2:3 rung by itself). For comparison, over
+    # the same 51: one 4:3 frame + cover costs 16.1% mean and 57.8% worst, and the
+    # rule this pass replaced (one 4:3 frame + contain) cost no artwork at all and
+    # 16.1% of the frame as mat, with the 9 portrait covers down at 42-61% fill.
+    RUNG_F = dict((n, f) for f, n, css in _RUNGS)
+    losses = []
     for _p in products.values():
         _im = _p.get("images") or {}
         _w = _im.get("cardW") or 0; _h = _im.get("cardH") or 0
         if not _w or not _h:
             continue
-        _R = _w / _h
-        fills.append(min(FR, _R) / max(FR, _R))
-    ge85 = sum(1 for f in fills if f >= 0.85)
-    # The badge must be OUT of the frame: a contained image reaches the frame's
-    # own corners, so any in-frame corner badge would sit on the artwork. It now
-    # lives in the card body's top row (.card-top), built from product_card.
-    cards_html = "\n".join(read(str(p.relative_to(ROOT))) for p in html_files)
-    media_els = re.findall(r'<a class="card-media[^"]*"[^>]*>.*?</a>', cards_html, re.S)
+        _F, _R = RUNG_F[_media_rung(_w, _h)], _w / _h
+        losses.append(1 - min(_F, _R) / max(_F, _R))
+    mean_loss = sum(losses) / len(losses)
+    lt5 = sum(1 for x in losses if x < 0.05)
+    check("the rung each cover is framed in costs its artwork almost nothing",
+          len(losses) == 51 and mean_loss <= 0.02 and lt5 >= 50 and max(losses) <= 0.17,
+          f"mean {100*mean_loss:.1f}% of the cover cropped, {lt5}/{len(losses)} covers under 5%, "
+          f"worst {100*max(losses):.1f}% (one 4:3 frame for all of them: "
+          f"16.1% mean, 5/51 under 5%, 57.8% worst)")
+    # And the built pages must agree with the builder: every card-media element
+    # carries the rung its own cover picked, and no badge sits inside the frame
+    # (with full bleed there is no mat corner left for one anyway).
+    cards_html = "\n".join(read(str(pth.relative_to(ROOT))) for pth in html_files)
+    media_els = re.findall(r'<a class="card-media([^"]*)"[^>]*>.*?</a>', cards_html, re.S)
+    unframed = sum(1 for m in media_els if "media-" not in m)
+    wrong_rung = []
+    for _p in products.values():
+        _im = _p.get("images") or {}
+        _want = "media-" + _media_rung(_im.get("cardW") or 750, _im.get("cardH") or 500)
+        if not re.search(r'<a class="card-media %s" href="[^"]*products/%s/' % (_want, re.escape(_p["slug"])),
+                         cards_html):
+            wrong_rung.append(_p["slug"])
     badge_in_media = sum(1 for m in media_els if 'class="badge' in m)
     card_top_ok = ('<div class="card-top">' in cards_html
-                   and re.search(r'\.card-top\{[^}]*display:flex', css_txt) is not None
-                   and re.search(r'\.card \.card-top \.badge\{([^}]*)\}', css_txt) is not None
-                   and "position:static" in (re.search(r'\.card \.card-top \.badge\{([^}]*)\}', css_txt).group(1)))
-    check("4:3 product cards leave 40/51 covers at >=85% fill (landscapes whole, portraits ringed)",
-          ge85 == 40 and badge_in_media == 0 and card_top_ok,
-          f"{ge85}/51 covers at >=85% fill under object-fit:contain in a 4:3 frame "
-          f"(41 landscapes ~89%, 9 portrait covers ringed on the mat); badge out of the frame "
-          f"(no .badge inside .card-media, pinned in the .card-top body row)")
+                   and re.search(r"\.card-top\{[^}]*display:flex", css_txt) is not None
+                   and re.search(r"\.card \.card-top \.badge\{([^}]*)\}", css_txt) is not None
+                   and "position:static" in (re.search(r"\.card \.card-top \.badge\{([^}]*)\}", css_txt).group(1)))
+    check("every built card frames its own cover, and no badge sits on the artwork",
+          bool(media_els) and unframed == 0 and not wrong_rung and badge_in_media == 0 and card_top_ok,
+          (f"{len(media_els)} card-media elements, {unframed} without a rung"
+           + (f", wrong rung on: {', '.join(wrong_rung[:4])}" if wrong_rung else "")
+           + (f", {badge_in_media} badges inside the frame" if badge_in_media else "")
+           + ("" if card_top_ok else ", badge row (.card-top) not pinned in the body"))
+          if (unframed or wrong_rung or badge_in_media or not card_top_ok)
+          else f"{len(media_els)} card-media elements across the built site each carry their own cover's "
+               f"rung; {badge_in_media} badges inside a frame (the badge row lives in .card-top)")
 
     # ── 83–84 ebooks CTA row (see .ebooks-grid .ebook-foot in css/style.css) ──
     # The Starter Guide & Masterclass cards are horizontal at every width, so
@@ -855,25 +909,27 @@ def main() -> int:
           f"pad Starter {pad_start.group(1) if pad_start else '?'}px / Masterclass {pad_deep.group(1) if pad_deep else '?'}px; "
           "img sizes quote dock − 2×pad")
 
-    # ── 88 the best-sellers row keeps the shared 4:3 frame (2026-09-19) ────
-    # #popular is a scoped FINISH — gradient shell, gold hairline, pedestal
-    # shadow, roomier body, gold price — and must never become a second
-    # frame. The premium pass had re-docked the row in a 4:3 box with a
-    # 1rem/1.1rem inset: nothing was cropped, but the storefront's lead row
-    # became the one product grid whose cards did not share the .card-media
-    # square that 81–82 pin — shorter tiles than the free row, and the three
-    # portrait covers about a third smaller than the same artwork on any
-    # other card. Both halves are pinned: the built homepage still renders
-    # #popular as .card-media cards (so the globals reach it at all), and
-    # every #popular rule that touches the media carries no geometry and no
-    # fit — the square, the contain and the zero padding all come from the
-    # globals. ::after is exempt: an absolutely positioned overlay adds no
-    # box of its own. Property names are compared whole, so max-width or
-    # line-height can never trip (or hide behind) the width/height guards,
-    # and the selector scan is not line-anchored, so a one-line @media
-    # block cannot smuggle the dock back in either.
+    # ── 88 the best-sellers row keeps the shared card frame (2026-09-19) ───
+    # #popular is a scoped FINISH — gradient shell, gold hairline, roomier
+    # body, gold price — and must never become a second frame. The premium
+    # pass had re-docked the row in a 4:3 box with a 1rem/1.1rem inset: nothing
+    # was cropped, but the storefront's lead row became the one product grid
+    # whose cards did not share the .card-media frame that 81–82 pin — shorter
+    # tiles than the free row, and the three portrait covers about a third
+    # smaller than the same artwork on any other card. Both halves are pinned:
+    # the built homepage still renders #popular as .card-media cards (so the
+    # globals reach it at all, rungs included — each of these four covers takes
+    # the same rung it would take anywhere else on the site), and every
+    # #popular rule that touches the media carries no geometry and no fit — the
+    # ladder, the cover and the zero padding all come from the globals. ::after
+    # is exempt: an absolutely positioned overlay adds no box of its own.
+    # Property names are compared whole, so max-width or line-height can never
+    # trip (or hide behind) the width/height guards, and the selector scan is
+    # not line-anchored, so a one-line @media block cannot smuggle the dock back
+    # in either.
     pop_sec = re.search(r'<section[^>]*id="popular".*?</section>', home_html, re.S)
-    pop_cards = pop_sec.group(0).count('class="card-media"') if pop_sec else 0
+    # the rung class rides on the same element, so match the class prefix
+    pop_cards = len(re.findall(r'class="card-media[ "]', pop_sec.group(0))) if pop_sec else 0
     pop_rules = re.findall(r"(#popular[^{}\n]*\.card-media[^{}\n]*)\{([^}]*)\}", css_txt)
     props = lambda body: {d.split(":", 1)[0].strip() for d in body.split(";") if ":" in d}
     frame_props = {"aspect-ratio", "padding", "padding-top", "padding-right", "padding-bottom",
@@ -882,12 +938,12 @@ def main() -> int:
     fit_props = frame_props | {"object-fit", "object-position", "transform", "scale", "zoom"}
     redocked = [sel.strip() for sel, body in pop_rules if "::" not in sel
                 and props(body) & (fit_props if sel.rstrip().endswith("img") else frame_props)]
-    check("homepage best-sellers row keeps the shared 4:3 card frame",
+    check("homepage best-sellers row keeps the shared card frame and its rung",
           bool(pop_sec) and pop_cards >= 1
           and "#popular .card-media{aspect-ratio:4/3" not in css_txt
           and not redocked,
           ("re-docked by: " + ", ".join(redocked)) if redocked
-          else f"{pop_cards} #popular cards inherit the global .card-media square + contain; "
+          else f"{pop_cards} #popular cards inherit the global .card-media ladder + cover; "
                "no #popular geometry or fit override")
 
     # ── 90–93 product image gallery (js/gallery.js, tools/pages_product.py) ──
