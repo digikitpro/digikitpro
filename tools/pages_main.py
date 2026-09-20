@@ -519,6 +519,10 @@ def build_bundles():
             for b in p["bundleContents"]:
                 rows += f"<li><span>{esc(b['name'])}</span><span class=\"muted\">{esc(b['count'])}</span></li>"
             rows = f'<ul class="bundle-list">{rows}</ul>'
+        if p.get("id") != "G2N8m" and p.get("slug") != "master-library-2000-brushes" and p.get("payhipUrl") != "https://payhip.com/b/G2N8m":
+            buy_payhip = f'\n      <a class="text-link" href="{p["payhipUrl"]}" target="_blank" rel="noopener" {buy_attrs(p, "bundles-page")}>Buy on Payhip ↗</a>'
+        else:
+            buy_payhip = ""
         tiles += f"""<article class="bundle-panel">
   <div class="bundle-media"{pin_attrs(p)}>
     <img src="{asset_file(0, p['slug'], im.get('main',''))}" width="{im.get('fullW') or 1200}" height="{im.get('fullH') or 800}" alt="{esc(p['name'])}" loading="lazy" decoding="async">{pin_button(p)}
@@ -530,8 +534,7 @@ def build_bundles():
     {rows}
     <div class="bundle-cta">
       <span class="price price-lg">{p['priceText']}</span>
-      <a class="btn btn-gold" href="products/{p['slug']}/">View Product</a>
-      <a class="text-link" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'bundles-page')}>Buy on Payhip ↗</a>
+      <a class="btn btn-gold" href="products/{p['slug']}/">View Product</a>{buy_payhip}
     </div>
     {trust_bridge(0)}
   </div>
