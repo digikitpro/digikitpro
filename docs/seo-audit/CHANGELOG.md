@@ -18,6 +18,18 @@
 
 ---
 
+## 2026-09-20 — Retire the public /seo-audit/ HTML (docs stay internal)
+
+- **Date:** 2026-09-20
+- **Change:** Removed the 11 published audit pages (`/seo-audit/` index + 10 sub-pages: 00-executive-summary … 08-approval-gate + changelog). `tools/build.py` no longer imports `pages_audit` or calls `build_audit()`; `tools/pages_misc.py` no longer injects audit URLs into `sitemap.xml` / `sitemap.txt`. `tools/verify.py` went 90 → 88 checks: the two sitemap-presence checks retired with the pages, and the `seo-audit` carve-outs in the github.io and honesty scans were dropped. `tools/pages_audit.py` is kept on disk but is no longer invoked.
+- **Reason:** The audit deliverable is an internal working document, not storefront content — it should not be crawlable, indexed, or competing with commercial pages.
+- **Files affected:** `seo-audit/**` (11 HTML files deleted), `tools/build.py`, `tools/pages_misc.py`, `tools/verify.py`, `sitemap.xml`, `sitemap.txt`. `docs/seo-audit/*.md` (10 documents + this changelog) are unchanged and remain the internal source of truth.
+- **Risk:** Low — reversible via git. The retired URLs were never in the main navigation; nothing else linked to them.
+- **Validation:** `python3 tools/build.py` → `sitemap.xml` and `sitemap.txt` at 101 URLs each, 0 `/seo-audit/` entries (was 112 with 11 audit URLs); `python3 tools/verify.py` → ALL 88 CHECKS PASSED.
+- **Safeguards:** 18 blog articles, 51 product pages, 10 categories, 2 season hubs, 6 buyer guides, the partner portal and both SEO tools (`/tools/` + `/tools/canvas-calculator/`) are untouched. No existing URL, canonical, redirect, analytics tag, structured-data block or Pinterest feed changed.
+
+---
+
 ## Future Changes (Template)
 
 ### Example entry for safe fix
