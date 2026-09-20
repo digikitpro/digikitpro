@@ -199,48 +199,16 @@
  }
 
  /* ---------- product gallery ---------- */
- var mainImg = $("[data-gal-main]");
- if (mainImg) {
- $$("[data-gal-thumb]").forEach(function (btn) {
- btn.addEventListener("click", function () {
- $$("[data-gal-thumb]").forEach(function (b) { b.classList.remove("active"); });
- btn.classList.add("active");
- var tmp = new Image();
- tmp.onload = function () {
-        mainImg.src = btn.getAttribute("data-full");
-        mainImg.width = parseInt(btn.getAttribute("data-w"), 10) || mainImg.width;
-        mainImg.height = parseInt(btn.getAttribute("data-h"), 10) || mainImg.height;
-        mainImg.alt = btn.getAttribute("data-alt") || mainImg.alt;
-        // Keep the Pinterest save target in sync with what is on screen:
-        // the visible image is the one a pin must capture.
-        var pinMedia = btn.getAttribute("data-pin-media");
-        var pinAnchor = mainImg.parentNode.querySelector("[data-pin-anchor]");
-        if (pinMedia) {
-          mainImg.setAttribute("data-pin-media", pinMedia);
-          if (pinAnchor && window.URL) {
-            try {
-              var pinUrl = new URL(pinAnchor.href);
-              pinUrl.searchParams.set("media", pinMedia);
-              pinAnchor.href = pinUrl.toString();
-            } catch (err) { /* keep the first image's pin target */ }
-          }
-        }
- };
- tmp.src = btn.getAttribute("data-full");
- });
- });
- // lightbox
- var dlg = document.createElement("dialog");
- dlg.className = "gal-light";
- var dImg = document.createElement("img");
- dlg.appendChild(dImg);
- document.body.appendChild(dlg);
- dlg.addEventListener("click", function () { dlg.close(); });
- mainImg.addEventListener("click", function () {
- dImg.src = mainImg.src; dImg.alt = mainImg.alt;
- if (dlg.showModal) dlg.showModal();
- });
- }
+ // The gallery lives in its own file now: js/gallery.js. It is a
+ // self-contained module that reads [data-product-gallery] and initialises
+ // itself, so nav, search, filters, forms and the Pin/checkout links above
+ // and below stay exactly as they were.
+ // Why it moved: the swap used to write `img.src` alone, and the main <img>
+ // carries a srcset built from image #1 — a matching srcset candidate always
+ // wins over src, so every thumbnail click changed the attribute and the
+ // browser kept painting the first picture. js/gallery.js rewrites srcset,
+ // sizes, src, width, height and alt together, and adds prev/next, keyboard,
+ // swipe, preloading and a real lightbox. See that file's header.
 
  /* ---------- newsletter: real capture via FormSubmit (AJAX, no page reload) ---------- */
  // Submissions are delivered to the configured inbox (EMAIL_TO in tools/core.py).

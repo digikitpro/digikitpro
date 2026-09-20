@@ -6,7 +6,14 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 89 CHECKS PASSED.
+Expects: ALL 93 CHECKS PASSED.
+(89 -> 93 on 2026-09-20: + 4 from the product image gallery repair — every
+product page ships js/gallery.js with [data-product-gallery], #product-main-image
+and a data-full-image per tile; a tile can never hand the frame the -card crop;
+no frame keeps a srcset that belongs to another image (that override is what made
+the thumbnails look dead) and js/main.js holds no gallery code any more; the CSS
+carries the active-tile ring, the prev/next pair, the modal viewer with its scroll
+lock and the sideways-scrolling tiles on a phone. Page design itself: untouched.)
 (88 -> 89 on 2026-09-20: + 1 from the ebooks cover-first pass — the Starter
 Guide & Masterclass covers must fill 85–90% of their dock, the paid one
 fullest, on a full-wrap grid whose two-up engages at 1200px; check 86 was
@@ -66,7 +73,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 89
+EXPECTED = 93
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -225,7 +232,7 @@ def esc_price(t: str) -> str:
 
 
 def main() -> int:
-    print("DigiKitPro verify — 90 checks\n")
+    print("DigiKitPro verify — 93 checks\n")
 
     # ── 1–12 workflows ────────────────────────────────────────────────
     deploy = read(".github/workflows/deploy.yml")
@@ -839,6 +846,94 @@ def main() -> int:
           ("re-docked by: " + ", ".join(redocked)) if redocked
           else f"{pop_cards} #popular cards inherit the global .card-media square + contain; "
                "no #popular geometry or fit override")
+
+    # ── 90–93 product image gallery (js/gallery.js, tools/pages_product.py) ──
+    # The bug this suite now polices: the big frame kept a srcset generated
+    # from image #1, and in the HTML image-selection algorithm a matching
+    # srcset candidate ALWAYS wins over `src` — so every thumbnail click
+    # updated the attribute while the browser kept painting the first picture,
+    # and the tiles looked dead. Hence: srcset, sizes, src, width, height and
+    # alt move together, and a srcset may only ever name the image it shows.
+    gal_css = read("css/style.css")
+    gal_js = read("js/gallery.js")
+    site_js = read("js/main.js")
+    gal_pages = sorted((ROOT / "products").glob("*/index.html"))
+    gal_txt = {p_: p_.read_text(encoding="utf-8") for p_ in gal_pages}
+
+    def _stem(url: str) -> str:
+        """assets/.../kit-2-card.webp -> kit-2 : the image a source belongs to."""
+        name = url.split("?")[0].split("#")[0].rsplit("/", 1)[-1]
+        return re.sub(r"-(card|thumb)(?=\.[a-z0-9]+$)", "", name)
+
+    nohook = [p_.parent.name for p_, t in gal_txt.items()
+              if "data-product-gallery" not in t
+              or 'id="product-main-image"' not in t
+              or "js/gallery.js" not in t]
+    check("90 product gallery: every product page ships the module and its hooks",
+          bool(gal_pages) and not nohook,
+          f"{len(gal_pages)} product pages carry [data-product-gallery] + #product-main-image "
+          f"+ the deferred js/gallery.js" if not nohook else f"missing on: {nohook[:5]}")
+
+    bad_tile: list[str] = []
+    n_tiles = 0
+    for p_, t in gal_txt.items():
+        btns = re.findall(r'<button class="gal-thumb[^"]*"[^>]*>', t)
+        n_tiles += len(btns)
+        if len(btns) != t.count("data-full-image="):
+            bad_tile.append(f"{p_.parent.name}: {len(btns)} tiles but {t.count('data-full-image=')} full-size references")
+        for btn in btns:
+            m = re.search(r'data-full-image="([^"]+)"', btn)
+            if not m:
+                bad_tile.append(f"{p_.parent.name}: a tile with no data-full-image")
+            elif re.search(r"-(card|thumb)\.[a-z0-9]+$", m.group(1)):
+                bad_tile.append(f"{p_.parent.name}: tile hands the frame a crop ({m.group(1)})")
+    check("91 gallery tiles reference the full-size file, never the card crop",
+          not bad_tile and n_tiles >= 100,
+          f"{n_tiles} tiles across the catalogue, each pointing the frame at its own full-size "
+          "file; the -card crop stays where it belongs, inside the tile"
+          if not bad_tile else f"{bad_tile[:4]}")
+
+    srcset_bad: list[str] = []
+    for p_, t in gal_txt.items():
+        mm = re.search(r'<img id="product-main-image"[^>]*>', t)
+        if not mm:
+            continue
+        src = re.search(r'src="([^"]+)"', mm.group(0))
+        ss = re.search(r'srcset="([^"]+)"', mm.group(0))
+        if not src or not ss:
+            continue
+        cands = [c.strip() for c in ss.group(1).split(",") if c.strip()]
+        if len({c.rsplit(" ", 1)[-1] for c in cands}) != len(cands):
+            srcset_bad.append(f"{p_.parent.name}: two candidates share one width descriptor")
+        if any(_stem(c.split()[0]) != _stem(src.group(1)) for c in cands):
+            srcset_bad.append(f"{p_.parent.name}: srcset names another image than the frame shows")
+    check("92 a gallery srcset can never override the clicked image",
+          not srcset_bad and "data-gal-main" not in site_js and "gal-light" not in site_js
+          and 'mainImage.setAttribute("srcset"' in gal_js
+          and 'mainImage.removeAttribute("srcset")' in gal_js,
+          "every frame's srcset is that image's own pair (no duplicated widths, no foreign file); "
+          "js/main.js holds no gallery code any more, and js/gallery.js rewrites "
+          "srcset+sizes+src+width+height+alt in one move"
+          if not srcset_bad else f"{srcset_bad[:4]}")
+
+    gal_css_need = {
+        "the active tile is outlined and marked": ".product-gallery-thumb.active{outline:2px solid currentColor",
+        "aria-current is styled, not only set": '.gal-thumb[aria-current="true"]',
+        "prev/next sit over the artwork": ".gal-nav{position:absolute",
+        "the viewer is a modal, not a link": ".dkp-lb{position:fixed",
+        "the page behind cannot scroll": "html.dkp-lb-open",
+        "the viewer has a close button": ".dkp-lb-x",
+        "the viewer has arrows": ".dkp-lb-nav",
+        "tiles stay tappable": ".gal-thumb{min-height:44px",
+    }
+    missing = [why for why, rule in gal_css_need.items() if rule not in gal_css]
+    strip_mobile = re.search(r"@media\(max-width:600px\)\{[\s\S]{0,400}?\.gal-thumbs\{[^}]*overflow-x:auto", gal_css)
+    check("93 gallery CSS keeps the active tile, the arrows and the lightbox real",
+          not missing and bool(strip_mobile),
+          "active outline + aria-current styling, prev/next over the artwork, dark modal viewer "
+          "with close button, arrows and a scroll-locked page, sideways-scrolling tiles on a phone "
+          "— with the existing frame, grid, type and colours untouched"
+          if not missing and strip_mobile else f"missing: {missing + (['tiles do not scroll sideways on a phone'] if not strip_mobile else [])}")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]

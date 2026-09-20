@@ -14,3 +14,7 @@ __pycache__/
 # os cruft
 .DS_Store
 Thumbs.db
+# QA harness dependency (node tools/qa_gallery.mjs)
+node_modules/
+package.json
+package-lock.json
