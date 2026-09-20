@@ -53,7 +53,11 @@ WRAP_PAD = 20            # .wrap{padding:0 20px}
 CARD_BORDER = 1          # .card{border:1px solid var(--border)} — each side
 FRAME_BEFORE = 1 / 1     # the old .card-media{aspect-ratio:1/1}
 FRAME_AFTER = 4 / 3      # the shipped .card-media{aspect-ratio:4/3}
-PORTRAIT_MAX = 0.95      # .card-media.portrait-cover threshold (cardW/cardH)
+PORTRAIT_MAX = 0.95      # the retired .card-media.portrait-cover threshold
+FRAME_LADDER = True      # 2026-09-20: sections 1-4 describe the frames this block
+                         # replaced; section 5 measures the shipped one (a 7-rung
+                         # ladder + object-fit:cover). See
+                         # docs/PRODUCT-CARDS-EDGE-TO-EDGE-2026-09-20.md.
 FILL_TARGET = 0.85       # "fills the frame" — the prototype's >=85% bar
 
 # ── the grids that carry product cards ───────────────────────────────────
@@ -155,7 +159,7 @@ def main(argv: list[str]) -> int:
           f"viewports {', '.join(str(v) for v in views)}\n")
 
     # ── 1. frame geometry per viewport ───────────────────────────────────
-    print("1. FRAME GEOMETRY (shipped 4:3 frame)\n")
+    print("1. FRAME GEOMETRY (the replaced 4:3 frame; the shipped ladder is section 5)\n")
     for label, rules, _gap in SURFACES:
         print(f"  {label}")
         print(f"    {'vw':>6} {'cols':>5} {'card':>8} {'frame w×h':>16} "
@@ -215,7 +219,7 @@ def main(argv: list[str]) -> int:
     print()
 
     # ── 4. absolute sizes at each viewport ───────────────────────────────
-    print("4. RENDERED ARTWORK PX (catalog grid, 3:2 landscape vs portrait 0.793)\n")
+    print("4. RENDERED ARTWORK PX, replaced 4:3 frame (3:2 landscape vs portrait 0.793)\n")
     rules = SURFACES[0][1]
     print(f"  {'layout':>8} {'cols':>5} {'frame':>14} {'3:2 artwork':>16} "
           f"{'portrait artwork':>18}")
@@ -236,6 +240,61 @@ def main(argv: list[str]) -> int:
     print("   Note: a contained 3:2 banner is width-bound in the 4:3 frame, so it "
           "paints the\n   frame's full width; a portrait cover is height-bound, so it "
           "paints the frame's\n   full height and wears the ring at its own width.")
+
+    # ── 5. the shipped rule (2026-09-20): full bleed, by ladder ───────────
+    # .card-media is `cover` now, so the frame always paints edge to edge and
+    # "fill" is 100% by construction. What the rule costs instead is the crop,
+    # 1 - min(F,R)/max(F,R) of the artwork, and the ladder exists to keep that
+    # number near zero without giving up a small set of shared frames.
+    sys.path.insert(0, str(ROOT / "tools"))
+    from core import MEDIA_RUNGS, media_rung                      # noqa: E402
+    RUNG_F = dict((n, f) for f, n, _css in MEDIA_RUNGS)
+    rows = []
+    for q in products:
+        rung = media_rung(q["w"], q["h"])
+        f = RUNG_F[rung]
+        rows.append((q, rung, 1 - min(f, q["r"]) / max(f, q["r"])))
+    hard = [1 - min(FRAME_AFTER, q["r"]) / max(FRAME_AFTER, q["r"]) for q in products]
+    mean_ladder = sum(x[2] for x in rows) / len(rows)
+    print("5. SHIPPED - FULL BLEED BY LADDER (cover; the cost is the crop, not the mat)\n")
+    print(f"  cropped artwork: ladder mean {mean_ladder * 100:.1f}%, worst "
+          f"{max(x[2] for x in rows) * 100:.1f}%  |  one hard 4:3 frame mean "
+          f"{sum(hard) / len(hard) * 100:.1f}%, worst {max(hard) * 100:.1f}%")
+    print(f"  covers under 5% cropped: {sum(1 for x in rows if x[2] < 0.05)}/{len(rows)} (ladder)"
+          f" vs {sum(1 for x in hard if x < 0.05)}/{len(hard)} (one 4:3 frame); mat gutter: none either way\n")
+    usage: dict[str, list[float]] = {}
+    for q, rung, loss in rows:
+        usage.setdefault(rung, []).append(loss)
+    print(f"  {'rung':<6} {'n':>3} {'frame h (×media w)':>19} {'worst crop':>11}   example")
+    for f, name, css in MEDIA_RUNGS:
+        if name not in usage:
+            continue
+        ex = next(q["slug"] for q, r, _l in rows if r == name)
+        print(f"  {css:<6} {len(usage[name]):>3} {1 / f:>19.3f} "
+              f"{max(usage[name]) * 100:>10.1f}%   {ex}")
+    print("\n  row rhythm (catalog grid, cards in catalogue order):")
+    for _label, rules, _gap in SURFACES[:1]:
+        for vw in (768, 1024, 1440):
+            cols = cols_for(rules, vw)
+            uni = 0
+            tot = 0
+            for i in range(0, len(rows) - len(rows) % cols, cols):
+                chunk = [r for _q, r, _l in rows[i:i + cols]]
+                if len(chunk) < cols:
+                    continue
+                tot += 1
+                hs = [1 / RUNG_F[r] for r in chunk]
+                if len(set(chunk)) == 1:
+                    uni += 1
+                elif max(hs) / min(hs) > 1.5:
+                    uni += 0
+            print(f"    {vw}px / {cols}-up: {uni}/{tot} rows share one rung exactly "
+                  f"(a row that mixes still keeps one CARD height — the grid stretches "
+                  f"each card and .card-foot is pinned to its bottom)")
+    print("\n   Note: the crop is centred (object-position:center), which is why the rungs "
+          "stay\n   close to the covers' own ratios: the artwork's baked-in title and feature "
+          "rows\n   sit at those edges, and only the 0.563 Morocco itinerary pays more than "
+          "5% for\n   full bleed (15.6%, on the 2:3 rung it owns by itself).")
     return 0
 
 
