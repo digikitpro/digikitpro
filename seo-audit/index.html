@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    var h=location.hostname, p=location.pathname, s=location.search, ha=location.hash;
+    var g=atob('Z2l0aHViLmlv');
+    if(h.slice(-g.length)===g){
+      var np=p.replace(/^\/digikitpro/,'')||'/';
+      document.write('<meta name="robots" content="noindex,follow">');
+      location.replace('https://digikitpro.shop'+np+s+ha);
+      return;
+    }
+    var isShop=h==='digikitpro.shop'||h==='www.digikitpro.shop';
+    if(isShop){
+      if(location.protocol==='http:'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(h==='www.digikitpro.shop'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(p!=='/' && p.slice(-11)==='/index.html'){
+        location.replace('https://digikitpro.shop'+p.slice(0,-10)+s+ha);
+        return;
+      }
+    }
+  }catch(e){}
+})();
+</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5MFQFHNB6B');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>DigiKitPro SEO Audit — Baseline 2026-09-19</title>
+  <meta name="description" content="Complete SEO baseline audit for DigiKitPro: platform, URL inventory, issue register, metadata gaps, assumptions, proposed architecture, monitoring report and approval gate.">
+  <link rel="canonical" href="https://digikitpro.shop/seo-audit/">
+  <meta name="google-site-verification" content="1e87093669a800cb">
+  <meta name="msvalidate.01" content="52B8ABC07828BE6CE77B297D3F2E50A3">
+  <meta name="yandex-verification" content="48977a1d04865b21">
+  <meta name="p:domain_verify" content="990d08b5349bfcbb0171eab3d6f8f2d2"/>
+  <meta property="og:see_also" content="https://www.pinterest.com/DigiKitProStudio/">
+  <meta name="pinterest-rich-pin" content="true">
+  <meta name="theme-color" content="#0A0A0C">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DigiKitPro">
+  <meta property="og:title" content="DigiKitPro SEO Audit — Baseline 2026-09-19">
+  <meta property="og:description" content="Complete SEO baseline audit for DigiKitPro: platform, URL inventory, issue register, metadata gaps, assumptions, proposed architecture, monitoring report and approval gate.">
+  <meta property="og:url" content="https://digikitpro.shop/seo-audit/">
+  <meta property="og:image" content="https://digikitpro.shop/assets/img/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DigiKitPro SEO Audit — Baseline 2026-09-19">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DigiKitPro SEO Audit — Baseline 2026-09-19">
+  <meta name="twitter:description" content="Complete SEO baseline audit for DigiKitPro: platform, URL inventory, issue register, metadata gaps, assumptions, proposed architecture, monitoring report and approval gate.">
+  <meta name="twitter:image" content="https://digikitpro.shop/assets/img/og-cover.jpg">
+  <meta name="twitter:image:alt" content="DigiKitPro SEO Audit — Baseline 2026-09-19">
+  <meta name="geo.placename" content="DigiKitPro">
+  <meta name="content-language" content="en">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/img/favicon-48.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://payhip.com" crossorigin>
+  <link rel="dns-prefetch" href="https://pe56d.s3.amazonaws.com">
+  <link rel="dns-prefetch" href="https://translate.google.com">
+  <link rel="preload" href="../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css?v=35fce012b32c50dacd1ca6bcab8dc255">
+  <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../feed.xml">
+ <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "audit_index"}};</script>
+  <script src="../js/search-index.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/motion.js" defer></script>
+  <script src="../js/analytics.js" defer></script>
+  <script src="../js/feedback.js" defer></script>
+  <script src="../js/translate.js" defer></script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "SEO Audit", "item": "https://digikitpro.shop/seo-audit/"}]}</script>
+</head>
+<body>
+<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="wrap header-inner">
+    <a class="brand" href="../index.html" aria-label="DigiKitPro home">
+      <svg class="brand-mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="15" stroke="#C9A86A" stroke-width="1.4"/><path d="M11 22.5V9.5h4.4c3.9 0 6.6 2.7 6.6 6.5s-2.7 6.5-6.6 6.5H11Zm2.5-2.2h1.8c2.6 0 4.1-1.8 4.1-4.3s-1.5-4.3-4.1-4.3h-1.8v8.6Z" fill="#C9A86A"/></svg>
+      <span class="brand-name">DigiKit<em>Pro</em></span>
+    </a>
+    <nav class="main-nav" aria-label="Primary"><a href="../freebies.html">Free Brushes</a><a href="../products.html">Products</a><a href="../bundles.html">Bundles</a><a href="../blog.html">Articles</a><a href="../about.html">About</a></nav>
+    <div class="header-actions">
+      <div class="lang-wrap" data-lang-wrap>
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+          <span class="lang-cd">EN</span>
+        </button>
+        <div class="lang-menu" data-lang-menu hidden>
+          <p class="lang-title">Translate this page</p>
+          <button class="lang-opt" type="button" data-lang="en" data-lang-name="English">English<span class="lang-code">EN</span></button><button class="lang-opt" type="button" data-lang="es" data-lang-name="Español">Español<span class="lang-code">ES</span></button><button class="lang-opt" type="button" data-lang="fr" data-lang-name="Français">Français<span class="lang-code">FR</span></button><button class="lang-opt" type="button" data-lang="de" data-lang-name="Deutsch">Deutsch<span class="lang-code">DE</span></button><button class="lang-opt" type="button" data-lang="it" data-lang-name="Italiano">Italiano<span class="lang-code">IT</span></button><button class="lang-opt" type="button" data-lang="pt" data-lang-name="Português">Português<span class="lang-code">PT</span></button><button class="lang-opt" type="button" data-lang="nl" data-lang-name="Nederlands">Nederlands<span class="lang-code">NL</span></button>
+        </div>
+      </div>
+      <button class="icon-btn" type="button" data-search-open aria-label="Search products and articles">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <a class="icon-btn" href="https://www.instagram.com/digikitprostudio/" target="_blank" rel="noopener" aria-label="DigiKitPro on Instagram">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="btn btn-gold btn-sm" href="../products.html" rel="noopener">Browse kits</a>
+      <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile"><a href="../freebies.html">Free Brushes</a><a href="../products.html">Products</a><a href="../bundles.html">Bundles</a><a href="../blog.html">Articles</a><a href="../about.html">About</a><a class="btn btn-gold" href="../products.html" rel="noopener">Browse kits</a></nav>
+  <div id="google_translate_element" class="gt-holder" aria-hidden="true"></div>
+</header>
+<div class="search-overlay" data-search-overlay hidden>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="Site search">
+    <div class="search-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" placeholder="Search brushes, kits, articles…" data-search-input aria-label="Search">
+      <button type="button" class="icon-btn" data-search-close aria-label="Close search">✕</button>
+    </div>
+    <div class="search-results" data-search-results></div>
+  </div>
+</div>
+
+<main id="main">
+  <section class="page-head"><div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">Home</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">SEO Audit</span></nav>
+    <p class="eyebrow">Internal documentation</p>
+    <h1>DigiKitPro SEO Audit</h1>
+    <p class="lead">Baseline audit from 2026-09-19 — platform, URL inventory, prioritized issues, metadata/schema gaps, assumptions, proposed SEO-engine architecture, monitoring report and approval gate. This is the same documentation from <code>docs/seo-audit/</code> rendered as browsable HTML on digikitpro.shop.</p>
+    <p class="muted">No production code was changed during Phase 1 — only documentation. This section exists so you can view the audit directly on your domain: <code>https://digikitpro.shop/seo-audit/</code></p>
+  </div></section>
+  <section class="section"><div class="wrap">
+    <div class="grid arts-grid"><a class="art-card" href="00-executive-summary/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro SEO Engine — Phase 1 Baseline Audit Executive Summary</h2>
+      <p class="muted">Date: 2026-09-19 Branch: arena/01a0bbfa-digikitpro Site: https://digikitpro.shop/ Auditor: Arena AI Agent (Phase 1 — Audit only, no implementation) --- Build…</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="01-platform-and-safeguards/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro SEO Engine — Phase 1 Baseline Audit</h2>
+      <p class="muted">Date: 2026-09-19 (UTC) Branch: arena/01a0bbfa-digikitpro Site: https://digikitpro.shop/ Repo: digikitpro/digikitpro (GitHub Pages) --- Type: 100% static…</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="02-url-inventory/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro — URL &amp; Template Inventory (Baseline 2026-09-19)</h2>
+      <p class="muted">Total sitemap URLs: 99 (sitemap.xml + sitemap.txt) Image sitemap: 51 pages, 173 full-size images Generated HTML files (excluding .git): ~108+ (including 4…</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="03-issue-register/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro — Prioritized Issue Register (Baseline Audit 2026-09-19)</h2>
+      <p class="muted">Severity scale: Critical (blocks indexing/revenue), High (significant SEO/UX risk), Medium (should fix soon), Low (polish), Info (observation).</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="04-metadata-schema-linking-gaps/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro — Metadata / Schema / Internal-Linking Gap Report (2026-09-19)</h2>
+      <p class="muted">--- Current implementation: `tools/core.py:head()` generates `&lt;title&gt;{esc(title)}&lt;/title&gt;` from page-specific title passed by each builder.</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="05-assumptions-and-manual-review/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro — Assumptions, Unavailable Data, Manual Review Items (2026-09-19)</h2>
+      <p class="muted">--- A-01: Site is hosted on GitHub Pages with custom domain digikitpro.shop, CNAME file present and tracked by git.</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="06-proposed-architecture/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro — Proposed SEO-Engine Architecture &amp; Implementation Plan (Phase 1 Audit Deliverable)</h2>
+      <p class="muted">Date: 2026-09-19 Status: Awaiting approval (per brief section 4) Branch: arena/01a0bbfa-digikitpro --- Build scalable, maintainable, template-driven SEO…</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="07-monitoring-report/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro — Lightweight Monitoring Report (Baseline 2026-09-19)</h2>
+      <p class="muted">Generated: 2026-09-19 via custom audit script (no external dependencies) Sitemap URLs: 99 Products: 51 (all have seoTitle, seoDesc, alt, tags) Blog md: 18…</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="08-approval-gate/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro — Approval Gate (Phase 1 Audit → Phase 2 Implementation)</h2>
+      <p class="muted">Date: 2026-09-19 Branch: arena/01a0bbfa-digikitpro Status: Audit complete, awaiting owner approval before any production code changes.</p>
+      <span class="text-link">Read report →</span></div>
+    </a><a class="art-card" href="changelog/">
+      <div class="art-body"><span class="art-cat">SEO Audit</span>
+      <h2>DigiKitPro SEO Engine — Change Log</h2>
+      <p class="muted">Purpose: Maintain reversible changes and audit trail per brief non-negotiable safeguard.</p>
+      <span class="text-link">Read report →</span></div>
+    </a></div>
+    <div class="prose" style="margin-top:3rem">
+      <h2>How to use this audit</h2>
+      <ol>
+        <li><strong>Start with 00-executive-summary</strong> — high-level findings and approval gate.</li>
+        <li><strong>Check 03-issue-register</strong> — prioritized issues with severity, evidence, fix, effort, risk.</li>
+        <li><strong>Review 08-approval-gate</strong> — safe fixes vs review required vs blocked, and decision needed on 4 orphaned blog drafts.</li>
+        <li><strong>Approve</strong> — safe fixes can proceed, review required needs owner input, blocked needs manual steps (Enforce HTTPS, Search Console Domain property).</li>
+      </ol>
+      <h3>Live URLs</h3>
+      <ul>
+        <li>Index: <code>/seo-audit/</code> → <a href="https://digikitpro.shop/seo-audit/">https://digikitpro.shop/seo-audit/</a></li>
+        <li>Each report: <code>/seo-audit/&lt;slug&gt;/</code> e.g. <code>/seo-audit/00-executive-summary/</code></li>
+      </ul>
+      <p class="muted">These pages are generated from <code>docs/seo-audit/*.md</code> via <code>tools/pages_audit.py</code> and included in sitemap with low priority (0.3). They are intentionally not linked from main navigation to avoid clutter, but accessible via direct URL and this index.</p>
+    </div>
+  </div></section>
+  <section class="newsletter" id="newsletter">
+  <div class="wrap">
+    <div class="nl-card">
+      <p class="eyebrow">Free starter pack</p>
+      <h2>Get the Free Procreate Starter Pack</h2>
+      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
+      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
+           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
+           Source/lead fields allow future email provider to trigger the right sequence. -->
+      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="../thank-you.html" action="" method="POST">
+        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
+        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
+        <input type="hidden" name="source" value="site">
+        <label class="sr-only" for="nl-email">Email address</label>
+        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
+        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
+      </form>
+      <p class="nl-caption">Prefer to grab them now? <a href="../freebies.html">Browse the free brush packs</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="foot-brand">
+      <a class="brand" href="../index.html"><span class="brand-name">DigiKit<em>Pro</em></span></a>
+      <p class="muted">Procreate brushes for iPad artists.</p>
+      <p class="foot-label">Store</p>
+      <div class="foot-links"><a href="https://payhip.com/digikitpro" target="_blank" rel="noopener">Payhip ↗</a></div>
+    </div>
+    <nav aria-label="Footer shop">
+      <p class="foot-label">Shop</p>
+      <div class="foot-links">
+        <a href="../freebies.html">Free Brushes</a>
+        <a href="../products.html">All Products</a>
+        <a href="../bundles.html">Bundles</a>
+        <a href="../season/halloween/">Halloween Art</a>
+        <a href="../season/christmas/">Christmas Art</a>
+        <a href="../category/portrait/">Portrait Brushes</a>
+        <a href="../category/skin-texture/">Skin Texture</a>
+        <a href="../category/line-art/">Line Art</a>
+        <a href="../category/watercolor/">Watercolor</a>
+        <a href="../category/anime/">Anime Brushes</a>
+      </div>
+    </nav>
+    <nav aria-label="Footer learn and buyer guides">
+      <p class="foot-label">Learn</p>
+      <div class="foot-links">
+        <a href="../blog.html">Articles</a>
+        <a href="../blog/best-procreate-brushes-for-portraits/">Best Portrait Brushes</a>
+        <a href="../blog/how-to-create-realistic-skin-in-procreate/">Realistic Skin Guide</a>
+        <a href="../about.html">About</a>
+      </div>
+      <p class="foot-label">Buyer Guides</p>
+      <div class="foot-links">
+        <a href="../guides/procreate-starter-kits/">Starter Kits</a>
+        <a href="../guides/procreate-pencil-brushes/">Pencil Brushes</a>
+        <a href="../guides/procreate-texture-brushes/">Texture Brushes</a>
+        <a href="../guides/procreate-animation-brushes/">Animation Brushes</a>
+        <a href="../guides/procreate-bundles-compared/">Bundles Compared</a>
+      </div>
+    </nav>
+    <nav aria-label="Footer legal">
+      <p class="foot-label">Company</p>
+      <div class="foot-links">
+        <a href="../faq.html">FAQ</a>
+        <a href="../contact.html">Contact</a>
+        <a href="../partner/">Partner Program</a>
+        <a href="../refunds.html">Refund Policy</a>
+        <a href="../privacy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms</a>
+      </div>
+      <p class="foot-label">Follow</p><div class="foot-links"><a href="https://www.pinterest.com/DigiKitProStudio/" target="_blank" rel="noopener">Pinterest</a><a href="https://www.instagram.com/digikitprostudio/" target="_blank" rel="noopener">Instagram</a></div>
+    </nav>
+  </div>
+  <div class="wrap foot-bottom">
+    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+  </div>
+</footer>
+</body>
+</html>
+

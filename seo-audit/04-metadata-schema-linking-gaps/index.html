@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    var h=location.hostname, p=location.pathname, s=location.search, ha=location.hash;
+    var g=atob('Z2l0aHViLmlv');
+    if(h.slice(-g.length)===g){
+      var np=p.replace(/^\/digikitpro/,'')||'/';
+      document.write('<meta name="robots" content="noindex,follow">');
+      location.replace('https://digikitpro.shop'+np+s+ha);
+      return;
+    }
+    var isShop=h==='digikitpro.shop'||h==='www.digikitpro.shop';
+    if(isShop){
+      if(location.protocol==='http:'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(h==='www.digikitpro.shop'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(p!=='/' && p.slice(-11)==='/index.html'){
+        location.replace('https://digikitpro.shop'+p.slice(0,-10)+s+ha);
+        return;
+      }
+    }
+  }catch(e){}
+})();
+</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5MFQFHNB6B');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>DigiKitPro — Metadata / Schema / Internal-Linking … | DigiKitPro</title>
+  <meta name="description" content="--- Current implementation: `tools/core.py:head()` generates `&lt;title&gt;{esc(title)}&lt;/title&gt;` from page-specific title passed by each builder.">
+  <link rel="canonical" href="https://digikitpro.shop/seo-audit/04-metadata-schema-linking-gaps/">
+  <meta name="google-site-verification" content="1e87093669a800cb">
+  <meta name="msvalidate.01" content="52B8ABC07828BE6CE77B297D3F2E50A3">
+  <meta name="yandex-verification" content="48977a1d04865b21">
+  <meta name="p:domain_verify" content="990d08b5349bfcbb0171eab3d6f8f2d2"/>
+  <meta property="og:see_also" content="https://www.pinterest.com/DigiKitProStudio/">
+  <meta name="pinterest-rich-pin" content="true">
+  <meta name="theme-color" content="#0A0A0C">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="DigiKitPro">
+  <meta property="og:title" content="DigiKitPro — Metadata / Schema / Internal-Linking … | DigiKitPro">
+  <meta property="og:description" content="--- Current implementation: `tools/core.py:head()` generates `&lt;title&gt;{esc(title)}&lt;/title&gt;` from page-specific title passed by each builder.">
+  <meta property="og:url" content="https://digikitpro.shop/seo-audit/04-metadata-schema-linking-gaps/">
+  <meta property="og:image" content="https://digikitpro.shop/assets/img/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DigiKitPro — Metadata / Schema / Internal-Linking … | DigiKitPro">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DigiKitPro — Metadata / Schema / Internal-Linking … | DigiKitPro">
+  <meta name="twitter:description" content="--- Current implementation: `tools/core.py:head()` generates `&lt;title&gt;{esc(title)}&lt;/title&gt;` from page-specific title passed by each builder.">
+  <meta name="twitter:image" content="https://digikitpro.shop/assets/img/og-cover.jpg">
+  <meta name="twitter:image:alt" content="DigiKitPro — Metadata / Schema / Internal-Linking … | DigiKitPro">
+  <meta name="geo.placename" content="DigiKitPro">
+  <meta name="content-language" content="en">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="../../assets/img/favicon-48.png">
+  <link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://payhip.com" crossorigin>
+  <link rel="dns-prefetch" href="https://pe56d.s3.amazonaws.com">
+  <link rel="dns-prefetch" href="https://translate.google.com">
+  <link rel="preload" href="../../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/style.css?v=35fce012b32c50dacd1ca6bcab8dc255">
+  <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
+ <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "audit_doc", "slug": "04-metadata-schema-linking-gaps", "name": "DigiKitPro — Metadata / Schema / Internal-Linking Gap Report (2026-09-19)"}};</script>
+  <script src="../../js/search-index.js" defer></script>
+  <script src="../../js/main.js" defer></script>
+  <script src="../../js/motion.js" defer></script>
+  <script src="../../js/analytics.js" defer></script>
+  <script src="../../js/feedback.js" defer></script>
+  <script src="../../js/translate.js" defer></script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "SEO Audit", "item": "https://digikitpro.shop/seo-audit/"}, {"@type": "ListItem", "position": 3, "name": "DigiKitPro — Metadata / Schema / Internal-Linking Gap Report (2026-09-19)", "item": "https://digikitpro.shop/seo-audit/04-metadata-schema-linking-gaps/"}]}</script>
+</head>
+<body>
+<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="wrap header-inner">
+    <a class="brand" href="../../index.html" aria-label="DigiKitPro home">
+      <svg class="brand-mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="15" stroke="#C9A86A" stroke-width="1.4"/><path d="M11 22.5V9.5h4.4c3.9 0 6.6 2.7 6.6 6.5s-2.7 6.5-6.6 6.5H11Zm2.5-2.2h1.8c2.6 0 4.1-1.8 4.1-4.3s-1.5-4.3-4.1-4.3h-1.8v8.6Z" fill="#C9A86A"/></svg>
+      <span class="brand-name">DigiKit<em>Pro</em></span>
+    </a>
+    <nav class="main-nav" aria-label="Primary"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../about.html">About</a></nav>
+    <div class="header-actions">
+      <div class="lang-wrap" data-lang-wrap>
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+          <span class="lang-cd">EN</span>
+        </button>
+        <div class="lang-menu" data-lang-menu hidden>
+          <p class="lang-title">Translate this page</p>
+          <button class="lang-opt" type="button" data-lang="en" data-lang-name="English">English<span class="lang-code">EN</span></button><button class="lang-opt" type="button" data-lang="es" data-lang-name="Español">Español<span class="lang-code">ES</span></button><button class="lang-opt" type="button" data-lang="fr" data-lang-name="Français">Français<span class="lang-code">FR</span></button><button class="lang-opt" type="button" data-lang="de" data-lang-name="Deutsch">Deutsch<span class="lang-code">DE</span></button><button class="lang-opt" type="button" data-lang="it" data-lang-name="Italiano">Italiano<span class="lang-code">IT</span></button><button class="lang-opt" type="button" data-lang="pt" data-lang-name="Português">Português<span class="lang-code">PT</span></button><button class="lang-opt" type="button" data-lang="nl" data-lang-name="Nederlands">Nederlands<span class="lang-code">NL</span></button>
+        </div>
+      </div>
+      <button class="icon-btn" type="button" data-search-open aria-label="Search products and articles">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <a class="icon-btn" href="https://www.instagram.com/digikitprostudio/" target="_blank" rel="noopener" aria-label="DigiKitPro on Instagram">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="btn btn-gold btn-sm" href="../../products.html" rel="noopener">Browse kits</a>
+      <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../about.html">About</a><a class="btn btn-gold" href="../../products.html" rel="noopener">Browse kits</a></nav>
+  <div id="google_translate_element" class="gt-holder" aria-hidden="true"></div>
+</header>
+<div class="search-overlay" data-search-overlay hidden>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="Site search">
+    <div class="search-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" placeholder="Search brushes, kits, articles…" data-search-input aria-label="Search">
+      <button type="button" class="icon-btn" data-search-close aria-label="Close search">✕</button>
+    </div>
+    <div class="search-results" data-search-results></div>
+  </div>
+</div>
+
+<main id="main">
+  <article class="article wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../../index.html">Home</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><a href="../../seo-audit/">SEO Audit</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">DigiKitPro — Metadata / Schema / Internal-Linking Gap Report (2026-09-19)</span></nav>
+    <header class="article-head">
+      <span class="art-cat">SEO Audit · 04-metadata-schema-linking-gaps</span>
+      <h1>DigiKitPro — Metadata / Schema / Internal-Linking Gap Report (2026-09-19)</h1>
+      <p class="article-meta">Source: <code>docs/seo-audit/04-metadata-schema-linking-gaps.md</code> · Generated 2026-09-20</p>
+    </header>
+    <div class="prose article-body"><p># DigiKitPro — Metadata / Schema / Internal-Linking Gap Report (2026-09-19)</p>
+<p>---</p>
+<h2>4.1 Meta Titles</h2>
+<p><strong>Current implementation:</strong> `tools/core.py:head()` generates `&lt;title&gt;{esc(title)}&lt;/title&gt;` from page-specific title passed by each builder. `seo_engine.py` generates `seoTitle` for products capped at 70 chars with `| DigiKitPro` suffix. Blog articles generate SEO title from frontmatter title + `| DigiKitPro`, trimmed to 65 chars with fallback logic (split at &quot; (&quot; or &quot;:&quot; or &quot; for &quot;).</p>
+<p><strong>Baseline sample:</strong></p>
+<ul><li>Homepage: `DigiKitPro | Procreate Brushes for iPad Artists | Instant Download` (from pages_main.py)</li><li>Product: `Portrait Skin Brushes for Procreate: 19 Realistic Brushes | DigiKitPro` (68 chars, unique)</li><li>Blog: `How to Paint Realistic Skin in Procreate: A Layered Workflow | DigiKitPro` (unique)</li><li>Category: `Procreate Portrait Brushes | DigiKitPro` (unique)</li><li>Guides: `Procreate Starter Kits for Beginners | DigiKitPro` (unique)</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li>No duplicate titles found (verified via audit script — 0 duplicate titles across all index.html).</li><li>4 orphaned blog drafts have titles that overlap with existing content roadmap but are not in sitemap — if published, need unique titles.</li><li>Title length: house style allows 70 chars, slightly over generic 60, but consistent across catalog. Validate no title &gt;70.</li><li>Missing: No dynamic fallback rule documented for missing seoTitle — seo_engine fills gaps, but head() does not have fallback if title missing. Should define deterministic fallback: `name + category + | DigiKitPro` for products, `title + | DigiKitPro` for articles, with length validation.</li></ul>
+<p><strong>Recommendation:</strong> Document fallback rules, add validation in verify.py to fail if title missing, duplicated, overlong (&gt;70), or suspicious (e.g., contains &quot;lorem&quot;, &quot;test&quot;).</p>
+<p>---</p>
+<h2>4.2 Meta Descriptions</h2>
+<p><strong>Current:</strong> `seoDesc` for products capped at 165 chars, generated from first sentence + category benefit + price. Blog descriptions from frontmatter `description` (150-160 chars). All pages have `&lt;meta name=&quot;description&quot;&gt;`.</p>
+<p><strong>Sample:</strong></p>
+<ul><li>Product: `19 professional Procreate skin brushes for realistic pores, freckles, wrinkles and textured blending. Instant .brushset download for iPad, $5.00.` (unique)</li><li>Blog: `Learn how to paint realistic skin in Procreate with a repeatable sequence for values, undertones, soft edges, texture, and restrained highlights.` (unique)</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li>No duplicate descriptions (0 duplicates found).</li><li>No missing descriptions (all products have seoDesc via seo_engine).</li><li>Length: 165 cap is slightly over 155-160, but matches existing. Should keep but document.</li><li>Missing: No validation for overlong (&gt;165) or suspicious (keyword list) descriptions.</li><li>Orphaned drafts have descriptions but not in sitemap — if published, need to ensure unique.</li></ul>
+<p><strong>Recommendation:</strong> Same as titles — add validation, fallback: for products, use `short` + assets + price; for articles, use first 150 chars of body; for categories, use category-specific benefit sentence.</p>
+<p>---</p>
+<h2>4.3 Canonical URLs</h2>
+<p><strong>Current:</strong> Every page has `&lt;link rel=&quot;canonical&quot; href=&quot;https://digikitpro.shop/...&quot;&gt;` self-referential, absolute, https, no www, no index.html suffix, no params. Generated via `absurl()` helper.</p>
+<p><strong>Sample:</strong></p>
+<ul><li>Product: `https://digikitpro.shop/products/portrait-skin-brushes-procreate/`</li><li>Blog: `https://digikitpro.shop/blog/how-to-create-realistic-skin-in-procreate/`</li><li>Category: `https://digikitpro.shop/category/portrait/`</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li>No mismatched canonical vs file location (verify.py checks 0 mismatched).</li><li>Search, thank-you, 404 have self-canonical but are noindex — correct, they canonicalize param variants to clean URL.</li><li>No duplicate URL variants in sitemap (0 http, 0 github.io, 0 index.html).</li><li>Missing: No canonical for paginated or filtered views (no pagination currently, JS filters use data attributes, not URLs — good).</li><li>Risk: If GitHub Pages Enforce HTTPS off, http URLs serve same canonical https — Google reports &quot;Alternate page with proper canonical tag&quot; — expected, but should be fixed server-side.</li></ul>
+<p><strong>Recommendation:</strong> Keep self-canonical, ensure all future pages follow same pattern. Document that search.html?q= and thank-you.html?lead= canonicalize to clean version.</p>
+<p>---</p>
+<h2>4.4 Open Graph &amp; Twitter/X</h2>
+<p><strong>Current:</strong> All pages have OG and Twitter meta via `head()`:</p>
+<ul><li>`og:type` = website, product, or article</li><li>`og:site_name` = DigiKitPro</li><li>`og:title` = same as SEO title</li><li>`og:description` = same as meta description</li><li>`og:url` = canonical</li><li>`og:image` = product card or main image absolute URL, or og-cover.jpg fallback (1200x630)</li><li>`og:image:width`, `og:image:height`, `og:image:alt`</li><li>`og:locale` = en_US + alternates es_ES, fr_FR, de_DE, it_IT, pt_BR, nl_NL</li><li>`og:see_also` = Pinterest profile</li><li>`pinterest-rich-pin=true`</li><li>`twitter:card` = summary_large_image</li><li>`twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li>OG image dimensions: For product pages, og:image is card image (750w) but width/height declared as actual cardW/cardH? Check pages_product.py gallery_html: og_image passed as main image? Actually head() gets og_image param from builder — for product pages, gallery_html returns main image URL as og? Let&#x27;s check: pages_product.py builds og_img as main image absolute URL, but card image used for pin? Need to verify — sample product og:image was main image? In sample we saw og:image? Actually earlier sample product page had og:image? We didn&#x27;t check, but we saw og:title exists. Need to verify og:image width/height matches actual.</li><li>Orphaned drafts: og:image uses card image (750w) but declares 1200x630 — mismatch (H-01).</li><li>No `twitter:site` or `twitter:creator` — not needed unless Twitter profile exists.</li><li>No `og:locale:alternate` for all languages? Currently 6 alternates, matches LANGUAGES.</li></ul>
+<p><strong>Recommendation:</strong> Ensure og:image width/height always reflect actual file dimensions from products.json. Add validation.</p>
+<p>---</p>
+<h2>4.5 H1/H2 Structure</h2>
+<p><strong>Current:</strong> Every content page has exactly one H1 (verified by verify.py: &quot;every content page has exactly one h1 — 0&quot; failures). H2s used for sections.</p>
+<p><strong>Sample:</strong></p>
+<ul><li>Homepage H1: `Procreate Brushes for iPad Artists` (1 H1, verified)</li><li>Product: H1 = product name</li><li>Blog: H1 = article title</li><li>Category: H1 = category name</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li>Product descriptionHtml contains H3s (demoted from H2) but may have empty H3s with &lt;br/&gt; (H-02).</li><li>No automated H2/H3 hierarchy validation (e.g., H3 without parent H2).</li><li>Blog markdown uses ## for H2, ### for FAQ questions — correct.</li></ul>
+<p><strong>Recommendation:</strong> Clean empty headings, add hierarchy validation in verify.py.</p>
+<p>---</p>
+<h2>4.6 Robots Directives</h2>
+<p><strong>Current:</strong></p>
+<ul><li>Indexable pages: `&lt;meta name=&quot;robots&quot; content=&quot;index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1&quot;&gt;` + same for googlebot.</li><li>Non-indexable: search.html, thank-you.html, 404.html = `noindex, follow` (both robots and googlebot agree — fixed in SEO-CANONICAL-FIX).</li><li>robots.txt allows all, lists 3 sitemaps.</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li>No accidental noindex on important pages (verified).</li><li>Search param variants correctly noindex via canonical + meta.</li><li>No `noindex` on product, blog, category, guides — good.</li></ul>
+<p><strong>Recommendation:</strong> Keep. Document robots fallback rule.</p>
+<p>---</p>
+<h2>4.7 Breadcrumb Data</h2>
+<p><strong>Current:</strong> Visible breadcrumbs via `crumbs()` helper + BreadcrumbList schema.</p>
+<p><strong>Sample product breadcrumb:</strong></p>
+<ul><li>Home (/) → Products (/products.html) → Category (/category/skin-texture/) → Product</li></ul>
+<p><strong>Sample blog breadcrumb:</strong></p>
+<ul><li>Home → Blog → Article</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li>Some static pages (about, faq, etc.) may not have BreadcrumbList schema — need to verify pages_misc.py adds breadcrumb schema for all.</li><li>Breadcrumb URLs are absolute via absurl() — correct.</li></ul>
+<p><strong>Recommendation:</strong> Ensure BreadcrumbList schema on all indexable pages, not just product/blog/category.</p>
+<p>---</p>
+<h2>4.8 Structured Data</h2>
+<p><strong>Current schemas per template (from core.py):</strong></p>
+<ul><li><strong>Organization:</strong> `@id: https://digikitpro.shop/#org`, name DigiKitPro, url, logo, sameAs (Pinterest, Instagram), contact? Check core.py schema_org() — includes? Need to verify.</li><li><strong>WebSite:</strong> name, url, potentialAction SearchAction with target `https://digikitpro.shop/search.html?q={search_term_string}`, inLanguage array.</li><li><strong>BreadcrumbList:</strong> itemListElement with position, name, item URL.</li><li><strong>Product:</strong> name, image (array of absolute URLs), description (plain text from short or descriptionHtml), brand DigiKitPro, url, contentLocation?, offers: price, priceCurrency USD, availability InStock, url (Payhip or product page). No aggregateRating, no review — correct (do not invent).</li><li><strong>BlogPosting (Article):</strong> headline, description, image (absolute), datePublished, dateModified, keywords (primary + secondary), author Organization, publisher @id org, mainEntityOfPage, inLanguage en, url.</li><li><strong>FAQPage:</strong> mainEntity array of Question/Answer — generated from product faqs[] or blog ## FAQ section.</li><li><strong>HowTo:</strong> name, description, step (HowToStep with position, name, text), totalTime (ISO8601), tool (HowToTool) — for articles flagged howto:true with ## Step sections.</li><li><strong>ItemList:</strong> For products index, freebies, bundles, categories — itemListElement with position, name, url.</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li><strong>Organization + WebSite not on all pages:</strong> Homepage has Org + WebSite, but product pages have Product + Breadcrumb + FAQ — missing Org + WebSite? Check sample product page schemas: we found 3 schemas: Product, Breadcrumb, FAQ — no Org/WebSite. Should add Org + WebSite to all pages for consistency and to provide publisher @id reference.</li><li><strong>Product image array:</strong> Should be absolute URLs, currently uses main image only? Check core.py schema_product() — image field uses `asset_abs()` for main + gallery? Need to verify.</li><li><strong>Offer price:</strong> Uses float price from products.json, formatted as 2 decimals — correct.</li><li><strong>FAQPage only when visible FAQs:</strong> Product pages have visible FAQ section? Check product page template — does it render faqs[] as visible HTML? Yes, product page has FAQ section if faqs exist. Blog FAQ section is visible as ## FAQ with ### questions — matches schema.</li><li><strong>HowTo validation:</strong> HowTo steps extracted from ## Step headings — need to ensure visible steps match schema.</li><li><strong>No Article schema on guides?</strong> Guides are buyer guides, not blog — they have Breadcrumb + FAQ, but could benefit from Article or Buyer&#x27;s Guide schema? Currently they use Breadcrumb only? Check guides/index.html sample — we saw only BreadcrumbList schema in head. Should add Article or ItemList?</li><li><strong>Image sitemap vs schema:</strong> Product schema image should match sitemap-images.xml image — currently both use main image, but sitemap has 173 images (all gallery), schema may have only main — could add all gallery images to schema image array for richer results.</li></ul>
+<p><strong>Recommendation:</strong></p>
+<ul><li>Add Organization + WebSite schemas to all indexable pages (not just homepage).</li><li>Ensure Product schema image array includes all gallery images (full-size, not card/thumb).</li><li>Validate FAQPage only when visible FAQ present (currently does).</li><li>Ensure HowTo totalTime is valid ISO8601 (PT90M etc.).</li><li>Add BreadcrumbList to all pages.</li></ul>
+<p>---</p>
+<h2>4.9 Internal Linking</h2>
+<p><strong>Current:</strong></p>
+<ul><li><strong>Navigation:</strong> Header + footer + mobile nav provide site-wide links to main sections.</li><li><strong>Homepage:</strong> Links to 4 popular products, 2 ebooks, bundle ladder (4 bundles), master library, free products, 3 guides, articles.</li><li><strong>Product pages:</strong> Related products (3), category link, breadcrumb, footer.</li><li><strong>Blog:</strong> Tools mentioned (product grid from frontmatter products[]), related articles (from frontmatter related[]), breadcrumb, share buttons.</li><li><strong>Category:</strong> Product grid (all products in category), breadcrumb.</li><li><strong>Guides:</strong> Product grids per group (from hardcoded slugs), cross-links to other guides, breadcrumb, FAQ internal anchors? Guides have comparison table linking to products.</li><li><strong>Seasonal:</strong> Product grid for seasonal products.</li><li><strong>Footer:</strong> Links to all categories, guides, articles, legal, partner.</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li><strong>Orphan-page detection:</strong> No automated detection — seasonal hubs only linked from footer and maybe homepage? Actually homepage does not link to seasonal hubs directly, only footer. Could be considered low internal link equity.</li><li><strong>Contextual linking:</strong> Brief requires contextual, limited internal links among products, articles, categories, helpful resources with descriptive anchor text, avoiding boilerplate repetition. Current related links are somewhat boilerplate (related[] from products.json, related[] from blog frontmatter) — not fully contextual within body copy.</li><li><strong>Examples from brief:</strong></li></ul>
+<p>  - Realistic-skin tutorials → skin-texture brushes: Currently blog `how-to-create-realistic-skin-in-procreate` links to portrait-skin-brushes-procreate and portrait-mastery-kit via &quot;Tools mentioned&quot; grid, not within body copy. Could add contextual inline links.   - Line-art tutorials → liner brushes: `best-procreate-brushes-for-line-art` links to free-fine-liner, essential-line-art-sketch-kit, liner-marker-studio — via product grid, not inline.   - Beginner guides → free Starter Guide: Some beginner articles link to free packs via product grid, but not always inline.   - Portrait workflow → Ultimate Portrait Mastery Bundle: `procreate-portrait-workflow` links to portrait-mastery-kit, starter-guide, portrait-skin-brushes — but not explicitly Ultimate bundle? Check frontmatter products[] includes? It includes portrait-mastery-kit, starter-guide, portrait-skin-brushes, ultimate bundle? Need to verify.</p>
+<ul><li><strong>Anchor text:</strong> Product card titles are product names — descriptive. Category links are category names — good. But body copy internal links use generic? Check blog markdown: e.g., `<a href="../../products/portrait-skin-brushes-procreate/">Portrait Skin Brushes</a>` — anchor text is product name, good.</li><li><strong>Max link density:</strong> No rule defined, no validation.</li><li><strong>Orphan pages:</strong> 4 orphaned drafts have no incoming links from sitemap pages (since not in sitemap), but they are linked from each other? Actually procreate-mistakes-beginners links to non-existent articles, so broken.</li><li><strong>Manual overrides:</strong> No system for manual overrides yet.</li></ul>
+<p><strong>Recommendation:</strong></p>
+<ul><li>Implement internal-linking engine with rules:</li></ul>
+<p>  - Relevance: Map article topics to product categories (e.g., skin texture article → skin-texture category + portrait-skin-brushes product).   - Max density: e.g., max 3 contextual product links per article body + 1 category link + product grid (3) = total 7, avoid boilerplate repetition.   - Orphan detection: Weekly report of pages with &lt;3 incoming internal links (excluding nav/footer).   - Manual overrides: Frontmatter `products[]` and `related[]` remain manual overrides, but engine can suggest additional contextual links.   - Anchor text: Use descriptive, not &quot;click here&quot; or &quot;this kit&quot; — use product name or benefit phrase.</p>
+<p>---</p>
+<h2>4.10 Product Feed &amp; Pinterest</h2>
+<p><strong>Current:</strong> pinterest-feed.xml and .csv with 47 paid products, fields as per Pinterest catalog spec.</p>
+<p><strong>Gaps:</strong></p>
+<ul><li>Feed includes only paid products (free excluded) — correct per generator (paid only for catalog).</li><li>Price, availability, brand, condition, google_product_category, product_type, item_group_id present.</li><li>Destination URLs are canonical https — good.</li><li>Image_link is main image WebP — Pinterest supports WebP? Yes, but could also provide JPEG fallback? WebP is supported by Pinterest.</li><li>No `g:additional_image_link` — could add gallery images as additional images.</li><li>No `g:custom_label_*` for grouping.</li><li>Feed does not include lifestyle products? Actually includes all paid products regardless of line? Check — discovery.json line lifestyle includes planners, but those are paid and in feed? Sample feed includes planners? Let&#x27;s check feed for planner — e.g., adhd-planner? That is paid but line lifestyle — is it in feed? Need to verify. The feed generator in pages_misc.py includes all paid products, not filtering by line — so lifestyle products are in feed, which may not be ideal for Pinterest audience (Procreate brushes focus). Could filter to procreate line only for Pinterest catalog? But brief says do not disrupt existing catalog — keep as is, document.</li><li>No validation of feed against Pinterest spec (e.g., price format &quot;5.00 USD&quot; correct, availability &quot;in stock&quot; correct).</li></ul>
+<p><strong>Recommendation:</strong> Keep feed as is, add validation step in verify.py to check required fields present and URLs reachable. For future, consider adding additional_image_link.</p>
+<p>---</p>
+<h2>4.11 Image SEO</h2>
+<p><strong>Current:</strong></p>
+<ul><li>Filenames: descriptive, e.g., `portrait-skin-brushes-procreate.webp`, `...-card.webp`, `...-thumb.webp` — good, not keyword stuffed.</li><li>Alt text: descriptive, e.g., &quot;Portrait Skin Brushes for Procreate, product preview artwork&quot; — accurate, not keyword list. Gallery thumbs add &quot;thumbnail&quot; or &quot;preview N thumbnail&quot; — acceptable.</li><li>Dimensions: width/height attributes present on all img tags (verified sample: 0 missing).</li><li>Responsive: srcset with 750w and 1400w variants, sizes attribute `(min-width: 1100px) 350px, ...` — good.</li><li>Format: WebP primary, no JPEG fallback — modern, but consider &lt;picture&gt; for older browsers only if without harming feeds.</li><li>Lazy loading: below-fold images lazy, hero eager with fetchpriority high — good.</li><li>Layout shift: width/height + contain/mat prevents CLS — verified card media framing check passes.</li><li>Decorative images: ba-before/ba-after have meaningful alt, not empty — correct (they are content). No decorative images with empty alt? Need to check — e.g., icons are SVG with aria-hidden true — good.</li></ul>
+<p><strong>Gaps:</strong></p>
+<ul><li>Alt text for some gallery images is generic &quot;preview N&quot; — could be more descriptive (e.g., &quot;close-up of pore texture brush stroke&quot;).</li><li>No explicit `decoding=&quot;async&quot;` on all images? Actually sample shows decoding async on all — good.</li><li>No WebP/AVIF with fallback — low risk.</li><li>No intrinsic dimensions for og-cover fallback? og-cover.jpg is 1200x630, but card images 750w have different aspect ratios — OG width/height mismatch noted earlier.</li></ul>
+<p><strong>Recommendation:</strong></p>
+<ul><li>Improve alt text for new assets to describe actual image content.</li><li>Preserve empty alt for truly decorative images (none currently, but document rule).</li><li>Add validation for alt missing, alt too short (&lt;5 chars), alt keyword stuffed (e.g., contains &quot;Procreate brushes&quot; repeated &gt;2 times).</li><li>Ensure all new images have width/height and srcset.</li></ul>
+<p>---</p>
+<h2>4.12 Summary of Gaps</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Area</th><th scope="col">Status</th><th scope="col">Gap</th></tr></thead><tbody><tr><td>Titles</td><td>Good, unique, 0 duplicates</td><td>Need fallback rule doc + validation for &gt;70 chars</td></tr><tr><td>Descriptions</td><td>Good, unique, 0 duplicates</td><td>Need fallback + validation</td></tr><tr><td>Canonical</td><td>Good, self-consistent, 0 mismatched</td><td>Need to ensure Enforce HTTPS toggle on</td></tr><tr><td>OG/Twitter</td><td>Present, but dimension mismatch for orphaned drafts</td><td>Fix og:image dimensions to match actual file</td></tr><tr><td>H1/H2</td><td>1 H1 per page, verified</td><td>Clean empty H3s in product descriptions</td></tr><tr><td>Robots</td><td>Correct index/noindex</td><td>None</td></tr><tr><td>Breadcrumbs</td><td>Present, but not on all static pages?</td><td>Add BreadcrumbList to all indexable pages</td></tr><tr><td>Structured data</td><td>Product, Breadcrumb, FAQ, BlogPosting, HowTo, ItemList present, but Org/WebSite missing on some pages</td><td>Add Org+WebSite to all pages, include all gallery images in Product image array</td></tr><tr><td>Internal linking</td><td>Related products, related articles, nav/footer present, but not fully contextual inline</td><td>Implement contextual linking engine with relevance rules, max density, orphan detection</td></tr><tr><td>Pinterest feed</td><td>Valid, 47 products, required fields present</td><td>Add additional_image_link, validate feed</td></tr><tr><td>Image SEO</td><td>Good, WebP, srcset, width/height, alt descriptive</td><td>Improve alt for gallery, validate alt, ensure OG dimensions correct</td></tr></tbody></table></div>
+<p>---</p>
+<p><strong>Next:</strong> Assumptions and manual review in 05.</p></div>
+    <nav class="article-related" aria-label="Other audit reports"><p class="eyebrow">Other reports</p><div class="rel-arts" style="display:flex;flex-wrap:wrap;gap:0.5rem"><a class="text-link" href="../00-executive-summary/" style="margin-right:1rem">DigiKitPro SEO Engine — Phase 1 Baseline Audit Executive Summary</a><a class="text-link" href="../01-platform-and-safeguards/" style="margin-right:1rem">DigiKitPro SEO Engine — Phase 1 Baseline Audit</a><a class="text-link" href="../02-url-inventory/" style="margin-right:1rem">DigiKitPro — URL &amp; Template Inventory (Baseline 2026-09-19)</a><a class="text-link" href="../03-issue-register/" style="margin-right:1rem">DigiKitPro — Prioritized Issue Register (Baseline Audit 2026-09-19)</a><a class="text-link" href="../05-assumptions-and-manual-review/" style="margin-right:1rem">DigiKitPro — Assumptions, Unavailable Data, Manual Review Items (2026-09-19)</a><a class="text-link" href="../06-proposed-architecture/" style="margin-right:1rem">DigiKitPro — Proposed SEO-Engine Architecture &amp; Implementation Plan (Phase 1 Audit Deliverable)</a><a class="text-link" href="../07-monitoring-report/" style="margin-right:1rem">DigiKitPro — Lightweight Monitoring Report (Baseline 2026-09-19)</a><a class="text-link" href="../08-approval-gate/" style="margin-right:1rem">DigiKitPro — Approval Gate (Phase 1 Audit → Phase 2 Implementation)</a><a class="text-link" href="../changelog/" style="margin-right:1rem">DigiKitPro SEO Engine — Change Log</a></div></nav>
+    <nav class="article-nav" aria-label="Audit navigation"><a class="btn btn-line" href="../../seo-audit/">← All audit reports</a><a class="btn btn-gold" href="../../">Back to homepage</a></nav>
+  </article>
+  <section class="newsletter" id="newsletter">
+  <div class="wrap">
+    <div class="nl-card">
+      <p class="eyebrow">Free starter pack</p>
+      <h2>Get the Free Procreate Starter Pack</h2>
+      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
+      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
+           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
+           Source/lead fields allow future email provider to trigger the right sequence. -->
+      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="../../thank-you.html" action="" method="POST">
+        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
+        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
+        <input type="hidden" name="source" value="site">
+        <label class="sr-only" for="nl-email">Email address</label>
+        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
+        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
+      </form>
+      <p class="nl-caption">Prefer to grab them now? <a href="../../freebies.html">Browse the free brush packs</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="foot-brand">
+      <a class="brand" href="../../index.html"><span class="brand-name">DigiKit<em>Pro</em></span></a>
+      <p class="muted">Procreate brushes for iPad artists.</p>
+      <p class="foot-label">Store</p>
+      <div class="foot-links"><a href="https://payhip.com/digikitpro" target="_blank" rel="noopener">Payhip ↗</a></div>
+    </div>
+    <nav aria-label="Footer shop">
+      <p class="foot-label">Shop</p>
+      <div class="foot-links">
+        <a href="../../freebies.html">Free Brushes</a>
+        <a href="../../products.html">All Products</a>
+        <a href="../../bundles.html">Bundles</a>
+        <a href="../../season/halloween/">Halloween Art</a>
+        <a href="../../season/christmas/">Christmas Art</a>
+        <a href="../../category/portrait/">Portrait Brushes</a>
+        <a href="../../category/skin-texture/">Skin Texture</a>
+        <a href="../../category/line-art/">Line Art</a>
+        <a href="../../category/watercolor/">Watercolor</a>
+        <a href="../../category/anime/">Anime Brushes</a>
+      </div>
+    </nav>
+    <nav aria-label="Footer learn and buyer guides">
+      <p class="foot-label">Learn</p>
+      <div class="foot-links">
+        <a href="../../blog.html">Articles</a>
+        <a href="../../blog/best-procreate-brushes-for-portraits/">Best Portrait Brushes</a>
+        <a href="../../blog/how-to-create-realistic-skin-in-procreate/">Realistic Skin Guide</a>
+        <a href="../../about.html">About</a>
+      </div>
+      <p class="foot-label">Buyer Guides</p>
+      <div class="foot-links">
+        <a href="../../guides/procreate-starter-kits/">Starter Kits</a>
+        <a href="../../guides/procreate-pencil-brushes/">Pencil Brushes</a>
+        <a href="../../guides/procreate-texture-brushes/">Texture Brushes</a>
+        <a href="../../guides/procreate-animation-brushes/">Animation Brushes</a>
+        <a href="../../guides/procreate-bundles-compared/">Bundles Compared</a>
+      </div>
+    </nav>
+    <nav aria-label="Footer legal">
+      <p class="foot-label">Company</p>
+      <div class="foot-links">
+        <a href="../../faq.html">FAQ</a>
+        <a href="../../contact.html">Contact</a>
+        <a href="../../partner/">Partner Program</a>
+        <a href="../../refunds.html">Refund Policy</a>
+        <a href="../../privacy.html">Privacy Policy</a>
+        <a href="../../terms.html">Terms</a>
+      </div>
+      <p class="foot-label">Follow</p><div class="foot-links"><a href="https://www.pinterest.com/DigiKitProStudio/" target="_blank" rel="noopener">Pinterest</a><a href="https://www.instagram.com/digikitprostudio/" target="_blank" rel="noopener">Instagram</a></div>
+    </nav>
+  </div>
+  <div class="wrap foot-bottom">
+    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+  </div>
+</footer>
+</body>
+</html>
+

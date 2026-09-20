@@ -6,6 +6,11 @@ from pages_guides import GUIDES_DIR, GUIDE_URLS, GUIDE_DEFS, GUIDES_INDEX
 from pages_partner import PARTNER_DIR, PARTNER_URL
 from datetime import datetime
 from email.utils import format_datetime
+# SEO audit pages (browsable HTML version at /seo-audit/)
+try:
+    from pages_audit import load_audit_docs as _load_audit_docs
+except Exception:
+    _load_audit_docs = lambda: []
 
 
 def _rfc822(d):
@@ -483,6 +488,17 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     # product or a buyer guide in the crawl budget.
     sm += f" <url><loc>{SITE_URL}{PARTNER_URL}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>\n"
 
+    # SEO audit browsable HTML (docs/seo-audit/ -> /seo-audit/)
+    # Low priority (0.3), not linked from main nav, but accessible via direct URL and sitemap
+    try:
+        _audit_docs = _load_audit_docs()
+        if _audit_docs:
+            sm += f" <url><loc>{SITE_URL}/seo-audit/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.3</priority></url>\n"
+            for _ad in _audit_docs:
+                sm += f" <url><loc>{SITE_URL}/seo-audit/{_ad['slug']}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.3</priority></url>\n"
+    except Exception as e:
+        print(f"Warning: could not add audit URLs to sitemap.xml: {e}")
+
     for p in PRODUCTS:
         slug = p["slug"]
         im = p.get("images") or {}
@@ -523,6 +539,14 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     txt_urls += [f"{SITE_URL}/season/{sdef['slug']}/" for sdef in SEASON_DEFS]
     txt_urls += [f"{SITE_URL}/{GUIDES_DIR}/"] + [f"{SITE_URL}/{u}" for u in GUIDE_URLS]
     txt_urls += [f"{SITE_URL}{PARTNER_URL}"]
+    # SEO audit browsable HTML
+    try:
+        _audit_docs_txt = _load_audit_docs()
+        if _audit_docs_txt:
+            txt_urls += [f"{SITE_URL}/seo-audit/"]
+            txt_urls += [f"{SITE_URL}/seo-audit/{_ad['slug']}/" for _ad in _audit_docs_txt]
+    except Exception as e:
+        print(f"Warning: could not add audit URLs to sitemap.txt: {e}")
     txt_urls += [f"{SITE_URL}/products/{p['slug']}/" for p in PRODUCTS]
     txt_urls += [f"{SITE_URL}/blog/{a['slug']}/" for a in load_articles()]
     write("sitemap.txt", "\n".join(txt_urls) + "\n")
