@@ -105,7 +105,7 @@
 
 ### Pages Lacking Contextual Internal Links
 
-- **Blog articles:** Have product grid (3) and related articles (2-3) but lack inline contextual links within body copy (e.g., "realistic-skin tutorials to relevant skin-texture brushes" should be inline, not just grid). Currently some articles have inline links like `[Portrait Skin Brushes](/products/...)` but not consistently.
+- **Blog articles:** Have product grid (3) and related articles (2-3) but lack inline contextual links within body copy (e.g., "realistic-skin tutorials to relevant skin-texture brushes" should be inline, not just grid). Currently some articles have inline links like `[Portrait Skin Brushes](/products/portrait-skin-brushes-procreate/)` but not consistently.
 - **Product pages:** Have related products (3) and category link, but lack links to relevant articles that mention product (reverse index).
 - **Category pages:** Product grid only, no links to relevant guides or articles.
 - **Guides:** Product grids per group, cross-links to other guides, but no links to blog articles.
