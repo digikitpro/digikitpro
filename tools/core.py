@@ -1335,7 +1335,6 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
         <span class="price price-lg">{esc(f['priceText'])}</span>
         <a class="btn btn-gold" href="{rel(depth, 'products/' + f['slug'] + '/')}">View the Master Library</a>
         <a class="btn btn-line" href="{rel(depth, 'guides/procreate-bundles-compared/')}">Compare Bundles</a>
-        <a class="text-link" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'flagship-band')}>Buy on Payhip ↗</a>
       </div>
       {trust_bridge(depth) if bridge else ""}
       {f'<p class="flag-ladder muted">Top rung of the bundle ladder — <a href="{esc(ladder_href)}">see Starter → Advanced → Ultimate → Master Library</a>.</p>' if ladder_href else ""}
@@ -1361,7 +1360,6 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
       <div class="flag-cta">
         <span class="price price-lg">{esc(f['priceText'])}</span>
         <a class="btn btn-gold" href="{rel(depth, 'products/' + f['slug'] + '/')}">View Product</a>
-        <a class="text-link" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'flagship-band')}>Buy on Payhip ↗</a>
       </div>
       {trust_bridge(depth) if bridge else ""}
       {f'<p class="flag-ladder muted">Top rung of the bundle ladder — <a href="{esc(ladder_href)}">see Starter → Advanced → Ultimate → Master Library</a>.</p>' if ladder_href else ""}
@@ -1414,7 +1412,6 @@ def upgrade_panel(p, depth):
         <a class="btn btn-line btn-sm" href="{rel(depth, 'products/' + f['slug'] + '/')}"
            data-dkp-event="upgrade_clicked" data-dkp-from-product-id="{esc(p['slug'])}"
            data-dkp-to-product-id="{esc(f['slug'])}" data-dkp-price-delta="{diff:.2f}">View Product</a>
-        <a class="text-link" href="{f['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(f, 'pdp-upgrade')}>Buy on Payhip ↗</a>
       </div>
       {trust_bridge(depth)}
     </div>
