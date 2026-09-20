@@ -38,7 +38,8 @@ Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 | **Merchandising** (product hierarchy, who each pack is for, Brush Finder answers) | `data/discovery.json` | `python3 tools/build.py` |
 | Blog articles | `content/blog/*.md` (front-matter + markdown) | `python3 tools/build.py` |
 | Design / colors | `css/style.css` (variables at top) | - (no rebuild) |
-| Behavior (search, filters, gallery) | `js/main.js` | - |
+| Behavior (search, filters, forms) | `js/main.js` | - |
+| Product image gallery (tiles, arrows, swipe, lightbox) | `js/gallery.js` (+ its rules in `css/style.css`) | - |
 | Motion (reveals, hover states, before/after slider, sticky CTA) | `js/motion.js` + the `MOTION SYSTEM` block at the end of `css/style.css` | - |
 
 `data/products.json` is the single source of truth - 51 products, each with
@@ -50,6 +51,71 @@ entry are created.
 **Adding a new product image:** drop WebP/JPG/PNG into `assets/products/<slug>/` and point
 `images.card` / `images.main` in `data/products.json` at it (regenerate variants with any
 image tool; `scraped/images.py` shows the exact pipeline used originally).
+
+### Product image gallery (`js/gallery.js` — self-contained, no libraries)
+
+Every product page's gallery is one module and one markup contract. It is what
+makes a thumbnail click change the big image, and it is deliberately strict about
+*how*: the frame's `srcset`, `sizes`, `src`, `width`, `height` and `alt` are always
+rewritten together. Writing `src` alone does nothing at all while a `srcset` is
+present (a matching srcset candidate always wins over `src`), which is precisely
+the bug that made the tiles look dead — and why a tile must carry its own
+full-size file rather than let the frame keep image #1's candidates:
+
+```html
+<div class="pdp-media" data-product-gallery>
+  <figure class="gal-main">
+    <img id="product-main-image" data-gallery-main src="kit.webp"
+         srcset="kit-card.webp 750w, kit.webp 1160w" sizes="(min-width: 960px) 46vw, 100vw"
+         width="1160" height="774" alt="…" fetchpriority="high">
+  </figure>
+  <div class="gal-thumbs" role="group" aria-label="Product image previews">
+    <button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb
+            data-full-image="kit.webp" data-srcset="…" data-sizes="…" data-alt="…"
+            data-w="1160" data-h="774" data-pin-media="https://…/kit.webp"
+            aria-label="View product image 1" aria-current="true">
+      <img src="kit-card.webp" width="750" height="500" alt="… thumbnail" loading="lazy">
+    </button>
+    …
+  </div>
+</div>
+```
+
+All of it is emitted by `gallery_html()` in `tools/pages_product.py` from
+`data/products.json`, so there is no per-product list and no special case: a
+product with one image gets a zoomable frame and no arrows, a product with nine
+gets nine tiles, and `python3 tools/build.py` keeps every page in step. The module
+also still reads the older `data-gal-main` / `data-gal-thumb` / `data-full` hooks,
+so a page cached by a CDN before a rebuild behaves like the new one.
+
+What it adds, and what it never does:
+* tiles, `←`/`→` over the artwork, `ArrowLeft`/`ArrowRight`/`Home`/`End` while focus
+  is inside the gallery, wrap-around at both ends, and a swipe on touch;
+* a modal viewer on the big image: dark scrim, close button, arrows, `Esc`,
+  click-outside, arrow keys, and the page behind it cannot scroll;
+* the active tile is marked with `.active`, `aria-current="true"` and an outline, and
+  the counter (`2 / 4`) is a polite live region;
+* full-size images are warmed on idle after `load` (skipped on `saveData`/2G), and a
+  file that fails to load puts back the image that was on screen — never a broken
+  frame, never a placeholder;
+* it never reloads or navigates, never scrolls the window, and touches no element
+  outside `[data-product-gallery]`; search, filters, nav, translation, Payhip and
+  Pinterest links are left as `js/main.js` had them — the gallery block was lifted
+  out of that file whole, and checks 90–93 in `tools/verify.py` police the module,
+  the markup contract and the CSS that makes them visible.
+
+The behaviour, not just the markup, is policed by `tools/qa_gallery.mjs`: it loads
+the real built pages, runs the real scripts in `<script>` order through jsdom (no
+browser download, works offline) and asserts 134 checks - the click, the arrows,
+the keyboard, the viewer, touch and swipe, a failing image, a 1-image product, the
+page that already has its own look-inside slider, Payhip-synced absolute image URLs,
+`<a>` tiles from before this contract, and stale HTML / stale `js/main.js` caches.
+
+```bash
+python3 tools/build.py            # regenerate
+python3 tools/verify.py           # 93 static checks, incl. 90-93 for the gallery
+node tools/qa_gallery.mjs         # behaviour (needs: npm i --no-save jsdom)
+```
 
 ### Motion system (`js/motion.js` — 19 KB raw / 5.6 KB gzipped, no libraries)
 
@@ -118,7 +184,7 @@ guides/index.html + guides/<slug>/index.html   ← 5 buyer guides (see §9)
 partner/index.html                             ← partner portal (see §10)
 assets/products/<slug>/*.webp     × 174 original product images (3 size variants)
 assets/img/                       brand assets (favicon / OG cover)
-css/style.css  js/main.js  js/search-index.js
+css/style.css  js/main.js  js/gallery.js  js/search-index.js
 data/products.json                ← master product data (edit me)
 data/discovery.json               ← merchandising model (edit me; see §8)
 content/blog/*.md                 ← article source (edit me)

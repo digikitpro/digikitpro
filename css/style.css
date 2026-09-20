@@ -343,6 +343,40 @@ h3{font-size:1.15rem}
 .gal-thumb img{width:100%;aspect-ratio:1/1;object-fit:contain;background:none}
 .gal-thumb:hover{opacity:1}
 .gal-thumb.active{opacity:1;border-color:var(--gold)}
+
+/* ── product gallery chrome (js/gallery.js) ──
+   Behaviour only. The frame, the mat, the type and the 4-up tile grid above
+   are untouched, so the gallery keeps its proportions and its palette; these
+   rules just make the interaction legible. The controls are injected by the
+   script, which is why nothing here is visible on a page without JS. */
+.gal-main img{touch-action:pan-y;-webkit-tap-highlight-color:transparent}
+.gal-thumb{min-height:44px;-webkit-tap-highlight-color:transparent}
+/* the tile whose picture is on screen: the site's gold border, plus the
+   explicit focus ring the spec asks for, so "active" reads at a glance */
+.gal-thumb.active,.product-gallery-thumb.active{outline:2px solid currentColor;outline-offset:2px}
+.gal-thumb[aria-current="true"]{opacity:1;border-color:var(--gold)}
+.gal-thumb:focus-visible,.gal-nav:focus-visible,.gal-main img:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:var(--radius-sm)}
+.gal-main img:focus-visible{border-radius:var(--radius)}
+/* prev / next over the artwork — same button idiom as the Masterclass
+   "look inside" slider (.look-nav-btn), so it is native to the site */
+.gal-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(245,242,235,.2);border-radius:999px;background:rgba(10,10,12,.45);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);color:#F7F2E6;cursor:pointer;opacity:0;pointer-events:none;transition:opacity var(--tap) var(--ease),background var(--tap) var(--ease),border-color var(--tap) var(--ease),color var(--tap) var(--ease)}
+.gal-nav-prev{left:10px}
+.gal-nav-next{right:10px}
+.gal-main:hover .gal-nav,.gal-main:focus-within .gal-nav{opacity:1;pointer-events:auto}
+.gal-nav:hover{background:rgba(10,10,12,.78);border-color:var(--gold);color:var(--gold)}
+.gal-nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* on touch, and whenever the artwork is the narrow column, the arrows stay put */
+@media(hover:none),(max-width:959px){.gal-nav{opacity:1;pointer-events:auto}}
+/* image counter: 2 / 4 — lives where the frame has no other furniture */
+.gal-count{position:absolute;left:10px;bottom:10px;z-index:3;padding:.32rem .55rem;border:1px solid rgba(245,242,235,.16);border-radius:999px;background:rgba(10,10,12,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font:600 .66rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+[data-gallery-single] .gal-nav,[data-gallery-single] .gal-count{display:none}
+@media(max-width:600px){
+/* one row of comfortably tappable tiles that scrolls sideways, instead of
+   four columns squeezed to nothing on a phone */
+.gal-thumbs{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding-bottom:2px}
+.gal-thumb{flex:0 0 clamp(74px,22%,96px);scroll-snap-align:center}
+.gal-nav{width:40px;height:40px}
+}
 .pdp-info{display:flex;flex-direction:column;gap:.9rem}
 .pdp-meta{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
 .pdp-info h1{font-size:clamp(1.7rem,3.4vw,2.5rem)}
@@ -427,10 +461,40 @@ h3{font-size:1.15rem}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 
-/* ── dialog (image zoom) ── */
-dialog.gal-light{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);max-width:min(92vw,1100px);padding:0}
-dialog.gal-light img{max-height:82vh;width:auto;max-width:92vw}
-dialog.gal-light::backdrop{background:rgba(5,5,7,.86)}
+/* ── product gallery lightbox (js/gallery.js) ──
+   Retired here: the old dialog.gal-light that js/main.js built. It had no
+   close button, no arrows and no scroll lock — one click anywhere closed it,
+   including a click on the artwork. This is the real viewer: dark translucent
+   scrim, full-resolution image, close button, prev/next, arrow keys, Esc,
+   click-outside-to-close, and the page behind it cannot scroll. */
+.dkp-lb{position:fixed;inset:0;z-index:180;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;padding:clamp(12px,4vw,44px);background:rgba(5,5,7,.93);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .18s var(--ease)}
+.dkp-lb.is-open{opacity:1}
+.dkp-lb[hidden]{display:none}
+html.dkp-lb-open,html.dkp-lb-open body{overflow:hidden}
+.dkp-lb-bar{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem clamp(.7rem,3vw,1.4rem)}
+.dkp-lb-count{font:600 .7rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.dkp-lb-x{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(245,242,235,.2);border-radius:999px;background:rgba(20,20,23,.6);color:#F5F2EB;cursor:pointer;transition:border-color var(--tap) var(--ease),color var(--tap) var(--ease),background var(--tap) var(--ease)}
+.dkp-lb-x:hover{border-color:var(--gold);color:var(--gold);background:rgba(20,20,23,.85)}
+.dkp-lb-x svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+.dkp-lb-stage{display:grid;place-items:center;width:100%;height:100%;min-height:0;padding:2.6rem 0 1.4rem;cursor:zoom-out}
+.dkp-lb-img{max-width:min(96vw,1400px);max-height:min(76vh,940px);width:auto;height:auto;object-fit:contain;border:1px solid var(--border);border-radius:var(--radius);background:var(--mat);box-shadow:var(--shadow);cursor:zoom-out;touch-action:pan-y}
+.dkp-lb-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;display:grid;place-items:center;width:46px;height:46px;padding:0;border:1px solid rgba(245,242,235,.2);border-radius:999px;background:rgba(10,10,12,.5);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);color:#F7F2E6;cursor:pointer;transition:border-color var(--tap) var(--ease),color var(--tap) var(--ease),background var(--tap) var(--ease)}
+.dkp-lb-nav:hover{border-color:var(--gold);color:var(--gold)}
+.dkp-lb-prev{left:clamp(8px,2vw,22px)}
+.dkp-lb-next{right:clamp(8px,2vw,22px)}
+.dkp-lb-nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dkp-lb-hint{margin:0;font:500 .66rem/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:rgba(170,167,160,.7);text-align:center}
+.dkp-lb-x:focus-visible,.dkp-lb-nav:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:600px){
+.dkp-lb-hint{display:none}
+.dkp-lb-nav{width:40px;height:40px}
+.dkp-lb-stage{padding:3.1rem 0 .4rem}
+}
+@media(prefers-reduced-motion:reduce){
+.dkp-lb{transition:none}
+.gal-thumb,.gal-nav,.dkp-lb-nav,.dkp-lb-x{transition:none}
+.gal-thumbs{scroll-behavior:auto}
+}
 
 /* ══════════════════════════════════════════════════════════
    DigiKitPro v2 - international translation, worldwide trust,
