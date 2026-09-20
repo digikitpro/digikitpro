@@ -122,6 +122,67 @@ def _truthy(v):
     return str(v or "").strip().lower() in ("true", "yes", "1")
 
 _ARTICLES = None
+
+def _parse_html_only_article(slug: str, html_path: str):
+    """Parse an HTML-only blog article (no md source) for index/sitemap inclusion.
+    Extracts title, description, date, category from the existing HTML so the
+    blog index can list it without overwriting its content."""
+    try:
+        raw = open(html_path, encoding="utf-8", errors="replace").read()
+    except Exception:
+        return None
+    # title
+    m = re.search(r"<title>(.*?)</title>", raw, re.I | re.S)
+    title = m.group(1).strip() if m else slug.replace("-", " ").title()
+    title = re.sub(r"\s*\|\s*DigiKitPro.*$", "", title).strip()
+    # description
+    m = re.search(r'<meta name="description" content="([^"]+)"', raw, re.I)
+    desc = m.group(1).strip() if m else title
+    # datePublished from JSON-LD or <time datetime>
+    date = ""
+    m = re.search(r'"datePublished"\s*:\s*"([^"]+)"', raw)
+    if m:
+        date = m.group(1).strip()
+    else:
+        m = re.search(r'<time datetime="([^"]+)"', raw)
+        if m:
+            date = m.group(1).strip()
+    if not date:
+        date = "2026-09-20"
+    # category
+    m = re.search(r'<span class="art-cat">([^<]+)</span>', raw)
+    cat = m.group(1).strip() if m else "Guide"
+    # image: og:image
+    m = re.search(r'<meta property="og:image" content="([^"]+)"', raw)
+    og_img = m.group(1).strip() if m else ""
+    # Build fm dict compatible with md articles
+    fm = {
+        "slug": slug,
+        "title": title,
+        "description": desc,
+        "date": date,
+        "category": cat,
+        "products": [],
+        "related": [],
+        "body": "",  # no md body — HTML file is kept as-is
+        "_src": f"{slug}.html-only",
+        "_html_only": True,
+        "_og_image": og_img,
+    }
+    # image fallback — use og image path if local, else branded fallback
+    if og_img and og_img.startswith(SITE_URL):
+        rel_img = og_img.replace(SITE_URL + "/", "")
+        fm["image"] = rel_img
+        fm["hero"] = rel_img
+    else:
+        fm["image"] = "assets/img/og-cover.jpg"
+        fm["hero"] = "assets/img/og-cover.jpg"
+    fm["imgW"], fm["imgH"] = 1200, 630
+    fm["heroW"], fm["heroH"] = 1200, 630
+    fm["_pslug"] = ""
+    fm["_im"] = {}
+    return fm
+
 def load_articles():
     global _ARTICLES
     if _ARTICLES is not None: return _ARTICLES
@@ -144,6 +205,19 @@ def load_articles():
             fm["image"] = "assets/img/og-cover.jpg"
             fm["imgW"], fm["imgH"] = 1200, 630
         arts.append(fm)
+    # HTML-only articles: blog/<slug>/index.html with no md source.
+    # These were added directly as HTML in PR #55 (10 SEO articles). They must
+    # still appear in blog.html, sitemap.xml, feed.xml and search-index.
+    md_slugs = {a.get("slug") for a in arts}
+    for html_path in glob.glob(os.path.join(ROOT, "blog/*/index.html")):
+        slug = os.path.basename(os.path.dirname(html_path))
+        if slug in md_slugs:
+            continue
+        # skip seo-audit and other non-blog dirs that happen to live under blog/?
+        # only include if file exists and slug looks like a blog post
+        fm = _parse_html_only_article(slug, html_path)
+        if fm:
+            arts.append(fm)
     # Two-pass stable sort. Articles published on the same date previously fell
     # back to glob order, which follows the filesystem and differs between runs,
     # so every rebuild reshuffled the blog list in feed.xml, sitemap and the
@@ -195,8 +269,10 @@ def build_blog():
 {footer(0)}"""
     write("blog.html", html_out)
 
-    # articles
+    # articles — md-based only; HTML-only articles are kept as-is
     for a in arts:
+        if a.get("_html_only"):
+            continue
         depth = 2
         body_html = md_to_html(a["body"].strip(), depth)
         marker = "__PRODUCTS__"
