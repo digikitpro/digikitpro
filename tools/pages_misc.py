@@ -11,6 +11,12 @@ try:
     from pages_audit import load_audit_docs as _load_audit_docs
 except Exception:
     _load_audit_docs = lambda: []
+# SEO tools ( /tools/ + /tools/canvas-calculator/ )
+try:
+    from pages_tools import TOOL_DEFS as _TOOL_DEFS, TOOLS_DIR as _TOOLS_DIR
+except Exception:
+    _TOOL_DEFS = []
+    _TOOLS_DIR = "tools"
 
 
 def _rfc822(d):
@@ -488,6 +494,12 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     # product or a buyer guide in the crawl budget.
     sm += f" <url><loc>{SITE_URL}{PARTNER_URL}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>\n"
 
+    # SEO tools (tools/pages_tools.py) — high-intent utility pages
+    # /tools/ landing + individual tools like /tools/canvas-calculator/
+    sm += f" <url><loc>{SITE_URL}/{_TOOLS_DIR}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>\n"
+    for _td in _TOOL_DEFS:
+        sm += f" <url><loc>{SITE_URL}/{_TOOLS_DIR}/{_td['slug']}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>\n"
+
     # SEO audit browsable HTML (docs/seo-audit/ -> /seo-audit/)
     # Low priority (0.3), not linked from main nav, but accessible via direct URL and sitemap
     try:
@@ -539,6 +551,9 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     txt_urls += [f"{SITE_URL}/season/{sdef['slug']}/" for sdef in SEASON_DEFS]
     txt_urls += [f"{SITE_URL}/{GUIDES_DIR}/"] + [f"{SITE_URL}/{u}" for u in GUIDE_URLS]
     txt_urls += [f"{SITE_URL}{PARTNER_URL}"]
+    # SEO tools
+    txt_urls += [f"{SITE_URL}/{_TOOLS_DIR}/"]
+    txt_urls += [f"{SITE_URL}/{_TOOLS_DIR}/{_td['slug']}/" for _td in _TOOL_DEFS]
     # SEO audit browsable HTML
     try:
         _audit_docs_txt = _load_audit_docs()
@@ -630,6 +645,11 @@ Sitemap: {SITE_URL}/sitemap-images.xml
                      for g in GUIDE_DEFS]
     idx_articles.append({"t": GUIDES_INDEX["h1"], "u": f"{GUIDES_DIR}/", "d": GUIDES_INDEX["lead"][:140],
                          "k": (GUIDES_INDEX["h1"] + " buyer guides shopping " + GUIDES_INDEX["seo_desc"]).lower()})
+    # Tools in search index so ⌘K finds the calculator
+    for _td in _TOOL_DEFS:
+        idx_articles.append({"t": _td["title"], "u": f"{_TOOLS_DIR}/{_td['slug']}/", "d": _td["short"][:140],
+                             "k": (_td["title"] + " " + _td["short"] + " tool calculator " + _td["slug"].replace("-", " ")).lower()})
+    idx_articles.append({"t": "Procreate Tools", "u": f"{_TOOLS_DIR}/", "d": "Free interactive tools for Procreate artists", "k": "tools canvas calculator procreate"})
     js = "window.DKP_INDEX=" + json.dumps({"products": idx_products, "articles": idx_articles}, ensure_ascii=False) + ";"
     write("js/search-index.js", js)
     print("misc pages + sitemap + search index done")
