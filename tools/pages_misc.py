@@ -211,6 +211,90 @@ def build_pinterest_feed():
     print(f"Pinterest catalog feed: {len(rows)} paid products -> pinterest-feed.csv / pinterest-feed.xml")
 
 
+def _google_merchant_book(p):
+    """Books/eBooks are held out of the initial Merchant feed until their
+    identifiers and destination eligibility have been reviewed separately.
+    Google treats eBooks specially for Shopping ads; do not leak them into a
+    broad automatic source just because their pages share the product schema.
+    """
+    return p.get("category") == "Guides & eBooks" or "ebook" in p.get("slug", "").lower()
+
+
+def build_google_merchant_feed():
+    """Build a dedicated Google Merchant Center XML source from the catalog.
+
+    This is intentionally not a copy of the Pinterest feed: that feed excludes
+    free items and marks them out of stock because it only covers paid Pins.
+    The Merchant feed contains all currently available non-book products,
+    including free downloads (price 0, in stock), while keeping product links
+    on the claimed DigiKitPro domain. Ebooks are excluded pending a separate
+    Google policy/identifier review.
+
+    Only GTINs and MPNs explicitly present in products.json are emitted. When
+    neither is supplied, identifier_exists=no accurately says that the catalog
+    has no assigned unique item identifier; it never reuses a Payhip ID or SKU
+    slug as a GTIN/MPN. Generate this file on every site build; Merchant Center
+    can fetch its public URL on a schedule.
+    """
+    products = [p for p in PRODUCTS
+                if not p.get("comingSoon") and not _google_merchant_book(p)]
+    items = []
+    for p in products:
+        slug = p["slug"]
+        product_url = absurl(f"products/{slug}/")
+        im = p.get("images") or {}
+        full_images = [url for url, _ in _fullsize_product_images(p)]
+        if not full_images:
+            fallback = im.get("main") or im.get("card") or ""
+            if fallback:
+                full_images = [asset_abs(slug, fallback)]
+        image_url = full_images[0] if full_images else absurl("assets/img/og-cover.jpg")
+        desc = (p.get("short") or p.get("seoDesc") or p["name"]).strip()
+        currency = p.get("currency", "USD").upper()
+        price = f"{float(p['price']):.2f} {currency}"
+        gtin = str(p.get("gtin") or "").strip()
+        mpn = str(p.get("mpn") or "").strip()
+        brand = str(p.get("brand") or SITE_NAME).strip()
+        identifier_exists = "yes" if gtin or (mpn and brand) else "no"
+        product_type = " > ".join(x for x in (SITE_NAME, p.get("category", "Digital downloads")) if x)
+        extra_images = "\n".join(
+            f"    <g:additional_image_link>{esc(url)}</g:additional_image_link>"
+            for url in full_images[1:11]
+        )
+        identifiers = []
+        if gtin:
+            identifiers.append(f"    <g:gtin>{esc(gtin)}</g:gtin>")
+        if mpn:
+            identifiers.append(f"    <g:mpn>{esc(mpn)}</g:mpn>")
+        identifiers.append(f"    <g:identifier_exists>{identifier_exists}</g:identifier_exists>")
+        items.append(f"""  <item>
+    <g:id>{esc(slug)}</g:id>
+    <g:title>{esc(p['name'])}</g:title>
+    <g:description>{esc(desc)}</g:description>
+    <g:link>{esc(product_url)}</g:link>
+    <g:image_link>{esc(image_url)}</g:image_link>
+{extra_images}
+    <g:availability>in_stock</g:availability>
+    <g:price>{esc(price)}</g:price>
+    <g:brand>{esc(brand)}</g:brand>
+    <g:condition>new</g:condition>
+    <g:product_type>{esc(product_type)}</g:product_type>
+{chr(10).join(identifiers)}
+  </item>""")
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+  <title>{esc(SITE_NAME)} Google Merchant Center products</title>
+  <link>{esc(SITE_URL)}</link>
+  <description>Available DigiKitPro digital products. Product landing pages, prices and images are generated from the live catalog.</description>
+{chr(10).join(items)}
+</channel>
+</rss>
+"""
+    write("google-merchant-feed.xml", xml)
+    print(f"Google Merchant feed: {len(products)} available non-book products -> google-merchant-feed.xml")
+
+
 def build_misc():
     # ── CONTACT ──
     # A real, working form. It posts to the same FormSubmit endpoint as the

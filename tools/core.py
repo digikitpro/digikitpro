@@ -333,15 +333,31 @@ def schema_org_home():
 
 def schema_product(p):
     im = p.get("images") or {}
-    img = im.get("card", "")
-    return [{"@context":"https://schema.org","@type":"Product",
+    # Merchant Center and Search should see the full product artwork, not the
+    # downscaled card crop. The stable catalog slug is this store's SKU; it is
+    # not a GTIN or manufacturer part number.
+    img = im.get("main") or im.get("card", "")
+    product_url = absurl(f"products/{p['slug']}/")
+    availability = "https://schema.org/OutOfStock" if p.get("comingSoon") else "https://schema.org/InStock"
+    product = {"@context":"https://schema.org","@type":"Product",
        "name":p["name"],"image":(asset_abs(p["slug"], img) if img else absurl("assets/img/og-cover.jpg")),
        "description":p["short"],"brand":{"@type":"Brand","name":SITE_NAME},
-       "url":absurl(f"products/{p['slug']}/"),"contentLocation":{"@type":"Place","name":"Worldwide"},
-       "offers":{"@type":"Offer","price":f"{p['price']:.2f}","priceCurrency":"USD",
-                 "availability":"https://schema.org/InStock","url":p["payhipUrl"],
+       "sku":p["slug"],"url":product_url,
+       "contentLocation":{"@type":"Place","name":"Worldwide"},
+       "offers":{"@type":"Offer","price":f"{p['price']:.2f}","priceCurrency":p.get("currency", "USD"),
+                 "availability":availability,"itemCondition":"https://schema.org/NewCondition",
+                 # Offer.url must describe the landing page in this schema;
+                 # the actual Buy button can still send shoppers to Payhip.
+                 "url":product_url,
                  "priceValidUntil":f"{date.today().year+1}-12-31",
-                 "seller":{"@type":"Organization","name":SITE_NAME}}}]
+                 "seller":{"@type":"Organization","name":SITE_NAME}}}
+    # Only publish identifiers explicitly assigned in the catalog. In
+    # particular, never treat a Payhip ID or our SKU slug as a GTIN/MPN.
+    if p.get("gtin"):
+        product["gtin"] = str(p["gtin"])
+    if p.get("mpn"):
+        product["mpn"] = str(p["mpn"])
+    return [product]
 
 def schema_itemlist(items):
     """ItemList / OfferCatalog used on the products index for richer Google snippets."""
