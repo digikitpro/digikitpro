@@ -334,6 +334,16 @@ and destination:
 
 Editorial plan and the 30-day posting calendar: **`docs/PINTEREST-30-DAY-PLAN.md`**.
 
+### Google Merchant Center — `google-merchant-feed.xml`
+
+`tools/build.py` generates a dedicated scheduled-fetch feed at
+`https://digikitpro.shop/google-merchant-feed.xml`; it is not the Pinterest feed
+and does not connect to or modify a Merchant Center account. The initial source
+includes available non-book products (including free downloads), links to
+DigiKitPro product pages, and excludes the two eBooks pending a separate policy
+review. Setup steps, shipping/market prerequisites, and the catalog's identifier
+caveat are in **`docs/GOOGLE-MERCHANT.md`**.
+
 ### Freebie funnel
 `freebies.html` leads with an email gate; the direct Payhip link stays visible
 underneath so a promised free file is never held hostage. On a real provider

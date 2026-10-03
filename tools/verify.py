@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 98 CHECKS PASSED.
+Expects: ALL 105 CHECKS PASSED.
 (89 -> 93 on 2026-09-20: + 4 from the product image gallery repair — every
 product page ships js/gallery.js with [data-product-gallery], #product-main-image
 and a data-full-image per tile; a tile can never hand the frame the -card crop;
@@ -87,12 +87,13 @@ from html.parser import HTMLParser
 from pathlib import Path
 from html import escape as html_escape
 from urllib.parse import urlparse
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 98
+EXPECTED = 105
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -663,6 +664,17 @@ def main() -> int:
           "PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}" in build_step
           and "PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}" in sync_build_step)
 
+    commit_sync_pos = sync.find("name: Commit auto-sync results")
+    deploy_sync_pos = sync.find("name: Queue Pages deployment")
+    check("Payhip catalog changes queue a Pages deploy after feed generation",
+          "actions: write" in sync
+          and "changed=true" in sync and "changed=false" in sync
+          and "if: steps.commit.outputs.changed == 'true'" in sync
+          and "github.rest.actions.createWorkflowDispatch" in sync
+          and 'workflow_id: "deploy.yml"' in sync
+          and 0 <= commit_sync_pos < deploy_sync_pos,
+          "changed catalog/feed commits explicitly dispatch deploy.yml; unchanged runs do not")
+
     # With the variable set, the CTA must really become the sign-up link and
     # the invite-only copy must go. Renders the page in-process, then rebuilds
     # it from the pinned (unset) environment so the artifact on disk always
@@ -984,6 +996,128 @@ def main() -> int:
           "with close button, arrows and a scroll-locked page, sideways-scrolling tiles on a phone "
           "— with the existing frame, grid, type and colours untouched"
           if not missing and strip_mobile else f"missing: {missing + (['tiles do not scroll sideways on a phone'] if not strip_mobile else [])}")
+
+    # ── 94–99 Google Merchant Center source + structured data ──────────
+    # The feed is separate from Pinterest's paid-only catalog: Merchant gets
+    # free downloads as in-stock, keeps product links on the claimed site, and
+    # holds eBooks outside this first source until their identifiers/destinations
+    # are reviewed. Product pages carry matching SKU/condition/offer URL data.
+    merchant_xml = read("google-merchant-feed.xml") if exists("google-merchant-feed.xml") else ""
+    merchant_root = None
+    try:
+        merchant_root = ET.fromstring(merchant_xml) if merchant_xml else None
+    except ET.ParseError:
+        merchant_root = None
+    gns = {"g": "http://base.google.com/ns/1.0"}
+    merchant_items = (merchant_root.findall("./channel/item")
+                      if merchant_root is not None else [])
+    catalog = json.loads(read("data/products.json"))
+    merchant_eligible = [p for p in catalog
+                         if p.get("category") != "Guides & eBooks"
+                         and "ebook" not in p.get("slug", "").lower()
+                         and not p.get("comingSoon")]
+    merchant_ids = [x.findtext("g:id", namespaces=gns) for x in merchant_items]
+    merchant_by_id = {x.findtext("g:id", namespaces=gns): x for x in merchant_items}
+    check("94 Google Merchant feed is well-formed RSS/XML with the Google namespace",
+          merchant_root is not None and merchant_root.tag == "rss"
+          and merchant_root.get("version") == "2.0"
+          and bool(merchant_items)
+          and merchant_items[0].find("g:id", namespaces=gns) is not None
+          and len(merchant_items) == len(merchant_eligible),
+          f"{len(merchant_items)} XML items; expected {len(merchant_eligible)} eligible catalog products")
+
+    expected_merchant_ids = {p["slug"] for p in merchant_eligible}
+    check("95 Merchant feed covers the eligible catalog and excludes eBooks",
+          set(merchant_ids) == expected_merchant_ids
+          and len(merchant_ids) == len(set(merchant_ids))
+          and not any(_google_slug for _google_slug in merchant_ids
+                      if _google_slug and "ebook" in _google_slug.lower()),
+          f"{len(merchant_ids)} stable unique IDs; no book products")
+
+    merchant_required = ("id", "title", "description", "link", "image_link",
+                         "availability", "price", "brand", "condition", "product_type")
+    merchant_bad = []
+    for p in merchant_eligible:
+        row = merchant_by_id.get(p["slug"])
+        if row is None:
+            merchant_bad.append(f"{p['slug']}: missing")
+            continue
+        values = {name: row.findtext("g:" + name, namespaces=gns) for name in merchant_required}
+        if any(not values[name] for name in merchant_required):
+            merchant_bad.append(f"{p['slug']}: missing required feed field")
+            continue
+        if values["link"] != f"{HOST}/products/{p['slug']}/":
+            merchant_bad.append(f"{p['slug']}: link is not its DigiKitPro landing page")
+        if not values["image_link"].startswith("https://"):
+            merchant_bad.append(f"{p['slug']}: image is not an HTTPS URL")
+        if values["availability"] != "in_stock" or values["condition"] != "new":
+            merchant_bad.append(f"{p['slug']}: incorrect availability/condition")
+        if values["price"] != f"{p['price']:.2f} {p.get('currency', 'USD').upper()}":
+            merchant_bad.append(f"{p['slug']}: feed price differs from catalog")
+    check("96 Merchant feed has complete, matching product fields and first-party links",
+          not merchant_bad,
+          f"{len(merchant_eligible)} products: prices match, image URLs are HTTPS, and links stay on {HOST}"
+          if not merchant_bad else "; ".join(merchant_bad[:5]))
+
+    merchant_free = [p for p in merchant_eligible if p.get("free")]
+    free_bad = []
+    for p in merchant_free:
+        row = merchant_by_id.get(p["slug"])
+        if not row or row.findtext("g:availability", namespaces=gns) != "in_stock" \
+                or row.findtext("g:price", namespaces=gns) != "0.00 USD":
+            free_bad.append(p["slug"])
+    check("97 free downloads are in stock at a zero price in the Merchant feed",
+          len(merchant_free) > 0 and not free_bad,
+          f"{len(merchant_free)} free products included" if not free_bad else f"incorrect: {free_bad}")
+
+    identifier_bad = []
+    for p in merchant_eligible:
+        row = merchant_by_id.get(p["slug"])
+        if row is None:
+            identifier_bad.append(f"{p['slug']}: missing")
+            continue
+        expected_exists = "yes" if p.get("gtin") or (p.get("mpn") and p.get("brand", "DigiKitPro")) else "no"
+        actual_exists = row.findtext("g:identifier_exists", namespaces=gns)
+        actual_gtin = row.findtext("g:gtin", namespaces=gns)
+        actual_mpn = row.findtext("g:mpn", namespaces=gns)
+        if actual_exists != expected_exists:
+            identifier_bad.append(f"{p['slug']}: identifier_exists={actual_exists}")
+        if actual_gtin != (str(p["gtin"]) if p.get("gtin") else None):
+            identifier_bad.append(f"{p['slug']}: fabricated/missing GTIN")
+        if actual_mpn != (str(p["mpn"]) if p.get("mpn") else None):
+            identifier_bad.append(f"{p['slug']}: fabricated/missing MPN")
+    check("98 Merchant feed emits only catalog-assigned identifiers",
+          not identifier_bad,
+          "missing identifiers are flagged no; no Payhip IDs or slugs are passed off as GTIN/MPN"
+          if not identifier_bad else "; ".join(identifier_bad[:5]))
+
+    schema_bad = []
+    for p in catalog:
+        page = ROOT / "products" / p["slug"] / "index.html"
+        if not page.is_file():
+            schema_bad.append(f"{p['slug']}: missing product page")
+            continue
+        page_text = page.read_text(encoding="utf-8")
+        nodes = []
+        for raw in re.findall(r'<script type="application/ld\+json">([\s\S]*?)</script>', page_text):
+            try:
+                node = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(node, dict) and node.get("@type") == "Product":
+                nodes.append(node)
+        expected_url = f"{HOST}/products/{p['slug']}/"
+        node = nodes[0] if nodes else {}
+        offer = node.get("offers") or {}
+        if (node.get("sku") != p["slug"] or node.get("url") != expected_url
+                or offer.get("url") != expected_url
+                or offer.get("itemCondition") != "https://schema.org/NewCondition"
+                or offer.get("priceCurrency") != p.get("currency", "USD")):
+            schema_bad.append(p["slug"])
+    check("99 product structured data matches Merchant landing URLs, SKU, condition and currency",
+          not schema_bad,
+          f"all {len(catalog)} product pages align with their landing pages and catalog data"
+          if not schema_bad else f"mismatch: {schema_bad[:5]}")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]
