@@ -1,12 +1,11 @@
 ---
 title: How to Paint Realistic Skin in Procreate: A Layered Workflow
 slug: how-to-create-realistic-skin-in-procreate
-description: Learn how to paint realistic skin in Procreate with a repeatable sequence for values, undertones, soft edges, texture, and restrained highlights.
+description: Paint realistic skin in Procreate with a guide to values, undertones, blending and texture. Built-in brushes work; specialist tools are optional.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-10-28
 category: Tutorials
 howto: true
-totaltime: PT90M
 primary_keyword: how to paint realistic skin in Procreate
 secondary_keywords: [realistic skin Procreate tutorial, Procreate skin painting, digital skin tones, portrait skin rendering]
 search_intent: Informational
@@ -19,6 +18,14 @@ related: [how-to-create-realistic-skin-texture-in-procreate, best-procreate-brus
 Realistic skin in Procreate is not a matter of covering a face with a pore texture. It is a sequence of large decisions: proportion, value, colour temperature, edge control, and only then surface detail. If the first shapes are unclear, adding freckles or noise will make the wrong forms more convincing rather than fixing them.
 
 This tutorial uses suggested starting points rather than fixed settings. Brush size, opacity, layer count, and colour depend on your canvas, reference, iPad, and style. Work from a well-lit reference and keep the reference visible while you paint.
+
+## Diagnose the problem before adding texture
+
+- **The face looks flat:** compare the largest light and shadow shapes with your reference before changing brushes.
+- **Transitions look muddy:** repaint a clear mid-tone, then soften only the edge that needs it.
+- **The surface feels too smooth:** preserve some paint marks and add a little texture on a separate layer after the form reads.
+
+If head construction is the harder part, start with the [free Portrait Starter Guide](/products/procreate-starter-guide-free-ebook/). It is a PDF to practise with your existing tools, not a required purchase or a brush pack.
 
 ## What you need
 

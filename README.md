@@ -1,9 +1,10 @@
 # DigiKitPro - Website
 
-A complete, production-ready static ecommerce-content site for the **DigiKitPro** digital art store
-(Procreate brushes & digital art resources). 100% static HTML/CSS/JS - no backend, no database,
-no build dependencies. **All product data, images and prices are the real store data from
-https://payhip.com/digikitpro** (scraped and verified on 2026-08-11).
+A static ecommerce-content site for **DigiKitPro** (Procreate brushes and digital resources).
+HTML is generated from local catalog and content files; Payhip handles the actual storefront.
+The catalog was initially imported from Payhip on 2026-08-11 and requires ongoing reconciliation.
+
+Current conversion audit, local changes, limitations and next steps: **`docs/CONVERSION-AUDIT-2026-10-28.md`**. Changes in a working branch are not automatically live.
 
 ---
 
@@ -21,12 +22,12 @@ The site works as-is on any static host:
 Works from a subdomain, apex domain **or** a sub-path (e.g. `user.github.io/repo/`) -
 all links are relative.
 
-**Before going live:** open `tools/build.py` and set
-- `SITE_URL = "https://your-domain.com"` → then run `python3 tools/build.py`
-  (regenerates canonical URLs, Open Graph URLs and `sitemap.xml`)
-- `SOCIAL = {...}` → your Instagram / TikTok URLs (hidden while empty - we never fake links).
-  Pinterest is already live (`PINTEREST_PROFILE`) together with the domain-claim tag,
-  the save buttons and the 30-day posting plan in `docs/PINTEREST-30-DAY-PLAN.md`
+**Before going live:** review the configured domain and social profiles in
+`tools/core.py`. `SITE_URL=https://your-domain.com python3 tools/build.py` changes
+canonical, Open Graph and sitemap URLs for a local build; the deployment workflows
+currently set the domain to `https://digikitpro.shop` and must also be updated if the
+owner approves a domain change. Pinterest and Instagram have configured defaults;
+TikTok is hidden while empty. Review profile ownership and account settings separately.
 
 Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 
@@ -35,12 +36,13 @@ Then submit `sitemap.xml` in Google Search Console & Bing Webmaster Tools.
 | To change… | Edit | Then run |
 |---|---|---|
 | Products (name, price, images, descriptions, Payhip URL, categories…) | `data/products.json` | `python3 tools/build.py` |
-| **Merchandising** (product hierarchy, who each pack is for, Brush Finder answers) | `data/discovery.json` | `python3 tools/build.py` |
+| **Merchandising** (product hierarchy and related products) | `data/discovery.json` | `python3 tools/build.py` |
+| Free-resource exercises and comparisons | `data/free-journeys.json` | `python3 tools/build.py` |
 | Blog articles | `content/blog/*.md` (front-matter + markdown) | `python3 tools/build.py` |
-| Design / colors | `css/style.css` (variables at top) | - (no rebuild) |
-| Behavior (search, filters, forms) | `js/main.js` | - |
-| Product image gallery (tiles, arrows, swipe, lightbox) | `js/gallery.js` (+ its rules in `css/style.css`) | - |
-| Motion (reveals, hover states, before/after slider, sticky CTA) | `js/motion.js` + the `MOTION SYSTEM` block at the end of `css/style.css` | - |
+| Design / colors | `css/style.css` (variables at top) | `python3 tools/build.py` to refresh stylesheet fingerprint |
+| Behavior (search, filters, forms) | `js/main.js` | `python3 tools/build.py` to refresh script fingerprint |
+| Product image gallery (tiles, arrows, swipe, lightbox) | `js/gallery.js` (+ its rules in `css/style.css`) | Rebuild if CSS changes |
+| Motion (before/after slider and scroll indicator) | `js/motion.js` + the `MOTION SYSTEM` block in `css/style.css` | `python3 tools/build.py` to refresh fingerprints |
 
 `data/products.json` is the single source of truth - 51 products, each with
 `name, slug, price, category, short, descriptionHtml, included[], features[], technical[],
@@ -113,69 +115,42 @@ page that already has its own look-inside slider, Payhip-synced absolute image U
 
 ```bash
 python3 tools/build.py            # regenerate
-python3 tools/verify.py           # 93 static checks, incl. 90-93 for the gallery
-node tools/qa_gallery.mjs         # behaviour (needs: npm i --no-save jsdom)
+python3 tools/verify.py           # 114 static checks
+node tools/qa_gallery.mjs         # gallery (needs: npm i --no-save jsdom)
+python3 tools/qa_form.py          # offline default form-state check, sends nothing
+python3 tools/qa_assets.py        # local HTML asset references
+# For Chromium regression QA, see tools/qa_conversion.mjs and tools/qa_accessibility.mjs.
 ```
 
-### Motion system (`js/motion.js` — 19 KB raw / 5.6 KB gzipped, no libraries)
+### Motion and imagery
 
-The site's look is unchanged; this layer only makes it *move*. It adds: hero entrance
-(headline → copy → CTAs → artwork), scroll reveals with a short stagger, hover/press
-feedback on cards, categories, bundles and buttons, cursor parallax on the hero covers and
-bundle tiles, a 2 px scroll-progress thread, a dismissible sticky CTA (homepage only, after
-the hero, never over the footer) and the interactive **before/after slider** (homepage,
-medium-width, directly under the hero; the slider also ships wherever a `[data-ba]`
-stage is added).
+`js/motion.js` provides the keyboard/touch-operable before/after control and a
+scroll-progress indicator. The hero copy and product artwork are visible on
+first paint; hero entrance/float, decorative parallax, autoplay and the
+unsolicited sticky promotional bar are not enabled. The before/after pair
+(`assets/img/ba-before.webp` and `ba-after.webp`) is illustrative: do not claim
+it was made with a particular pack without verifying provenance.
 
-Rules it keeps:
+## 3. Email capture — not configured
 
-- only `opacity`, `transform`/`translate` and `clip-path` are animated, and only while an
-  element is on screen (IntersectionObserver unobserves after firing);
-- one shared `requestAnimationFrame` loop for every scroll-driven effect;
-- `prefers-reduced-motion: reduce` → no parallax, no looping, no travel (a 200 ms fade at
-  most);
-- phones → shorter reveals, no cursor parallax, nothing that needs hover;
-- progressive enhancement: without JS the `js-motion` class is never set, nothing is ever
-  hidden, and the page works exactly as before. A 4 s failsafe removes the class if
-  `js/motion.js` fails to load, and an 8 s failsafe reveals anything not yet revealed.
+`EMAIL_ENDPOINT` in `tools/core.py` is empty. The site renders free-resource
+links, not a signup form; it does not send welcome messages or run an email
+sequence. Direct downloads continue to be handled by Payhip, which may request
+an email for delivery. A free download or order email is not marketing consent.
 
-**Swapping the before/after artwork:** replace `assets/img/ba-before.webp` (flat base) and
-`assets/img/ba-after.webp` (finished) — same size, same crop, ideally 1200×800. The current
-pair is **demonstration artwork** (labelled as such in the caption); real client work with a
-proper before/after will sell harder. Nothing else needs editing.
-
-**Adding a reveal to a new component:** add the selector to *both* the `MOTION SYSTEM →
-SCROLL REVEAL` list in `css/style.css` (hide rule and `.rv-in` rule — both, or specificity
-will keep it invisible) and `REVEAL_SELECTORS` in `js/motion.js`.
-
-## 3. Email capture ✅ configured
-
-Newsletter forms (home, blog, products, freebies…) post **real submissions to
-`digikitprostudio@gmail.com`** via FormSubmit - visitors never leave the page (AJAX),
-and a genuine success/error message is shown for each attempt.
-
-**One-time activation (required):** check the `digikitprostudio@gmail.com` inbox (and spam)
-for an email from FormSubmit titled *"Confirm your email"* / containing an
-**"Activate Form"** link - click it once. From then on, every signup arrives in
-that inbox with subject **"New DigiKitPro subscriber"**.
-
-To move to another provider later (Brevo, MailerLite, ConvertKit…): replace
-`EMAIL_TO`/`EMAIL_ENDPOINT` in `tools/core.py` (via `tools/build.py`) with the
-provider's form-action URL and rebuild.
-
-> Note: browsers strip the identity of pages opened by double-clicking an HTML
-> file (`file://`), so mail services refuse those submissions by design. The
-> form shows an honest "offline preview" message there; signups work from the
-> hosted site and from `python -m http.server`.
-(ConvertKit / MailerLite / Brevo all provide one) and rebuild - forms will POST to it.
-Until then, submits gracefully deep-link to the store's Freebies collection.
+Before activating a future signup provider, review jurisdiction-specific
+requirements, implement and test explicit opt-in/confirmation, consent records,
+unsubscribe/suppression, provider responses, delivery and privacy disclosures.
+The optional form template includes a consent checkbox, but changing a URL alone
+is **not** a complete or tested provider integration. Never put a secret in the
+static site's HTML. The audit contains a proposed sequence; no campaign is live.
 
 ## 4. Structure
 
 ```
 index.html  products.html  bundles.html  freebies.html  blog.html  about.html
 faq.html  contact.html  refunds.html  search.html  privacy.html  terms.html  404.html
-thank-you.html              ← post-signup delivery + first starter offer (noindex)
+thank-you.html              ← optional free-resource practice and comparisons (noindex)
 products/<slug>/index.html        × 51 product pages
 blog/<slug>/index.html            × 18 articles
 category/<slug>/index.html        × 10 category landing pages
@@ -187,9 +162,10 @@ assets/img/                       brand assets (favicon / OG cover)
 css/style.css  js/main.js  js/gallery.js  js/search-index.js
 data/products.json                ← master product data (edit me)
 data/discovery.json               ← merchandising model (edit me; see §8)
+data/free-journeys.json            ← four resource-specific optional comparisons
 content/blog/*.md                 ← article source (edit me)
 tools/build.py  tools/core.py …   ← generator (run: python3 tools/build.py)
-js/analytics.js  js/feedback.js   ← conversion layer (no build needed)
+js/analytics.js  js/feedback.js   ← conversion layer (rebuild when fingerprinted scripts change)
 robots.txt  sitemap.xml
 scraped/                          ← original scraper + Payhip source data (reference only)
 ```
@@ -198,8 +174,22 @@ scraped/                          ← original scraper + Payhip source data (ref
 
 Unique title/meta per page · canonicals · Open Graph + Twitter cards · Product + Offer JSON-LD
 with real Payhip prices · Article schema · BreadcrumbList · Organization + WebSite (SearchAction) ·
-FAQPage schema on product pages · `sitemap.xml` (100 URLs) · `robots.txt` · semantic HTML5 ·
-lazy-loading responsive WebP · descriptive alt text · clean URLs.
+FAQPage schema on product pages · `sitemap.xml` · `robots.txt` · semantic HTML5 ·
+lazy-loading responsive WebP · descriptive alt text · clean URLs. Structured data
+and meta tags do not guarantee a particular Google result, ranking or indexing.
+
+After building, run `python3 tools/qa_seo.py` to check generated canonicals,
+indexability, sitemaps, JSON-LD, article dates and local Open Graph image sizes.
+The deploy and catalog-sync workflows run this offline check before publishing;
+use Search Console separately to inspect Google's selected canonicals and indexing.
+For article authors, the optional `seo_title` frontmatter is an **unbranded**
+human-written search title; the generator appends ` | DigiKitPro`. Set `modified`
+only when the visible article has actually changed, not merely on every build.
+
+GitHub Pages serves `404.html` at the missing URL. Its root `<base>` keeps assets
+and navigation working at nested paths even without JavaScript; it does not
+redirect missing pages to the homepage. The canvas calculator's layer numbers
+are illustrative assumptions, not measured Procreate limits.
 
 ## 6. Where the data came from
 
@@ -210,13 +200,14 @@ Nothing is invented. If a product is added/removed in the store later, update
 
 ## 7. Auto-sync from Payhip, translation & trending (v2)
 
-- **Payhip → site:** run `python3 tools/payhip_sync.py` (or install
-  `docs/automation/payhip-auto-sync.yml` as `.github/workflows/sync-payhip.yml` to run it daily) to
-  detect and add new products automatically. It never overwrites hand-written SEO copy.
+- **Payhip → site:** `tools/payhip_sync.py` can detect and add new products. Existing
+  product facts are updated only for records marked `auto: true`; the current 51
+  manually maintained records need owner reconciliation with Payhip. Review the
+  workflow and the generated diff before publishing any catalog changes.
 - **International:** the header includes a 7-language Google Translate switcher and the homepage has
   a worldwide trust band. `tools/core.py` has `LANGUAGES` and `GEO_META` if you want to change them.
-- **Trending:** homepage and `/products.html` build auto-rotating trending product cards + trending
-  search links from `data/products.json`.
+- **Discovery:** product cards and suggestions use catalog data and editorial
+  priorities; they do not measure or claim actual search or sales popularity.
 - **IndexNow:** on by default — the workflows carry a default key (public by design); the build
   writes `<key>.txt` and the deploy/sync workflows ping Bing, Yandex and Seznam. Set the repo
   variable `INDEXNOW_KEY` only to rotate it.
@@ -227,19 +218,18 @@ cadence that keeps the site visible on search results.
 
 ## 8. Sales engine (Phase 1) — how the new parts work
 
-Full audit and the phased plan: **`docs/AUDIT-AND-PLAN.md`**.
+Current conversion findings and plan: **`docs/CONVERSION-AUDIT-2026-10-28.md`**.
+The previous Phase-1 document `docs/AUDIT-AND-PLAN.md` is historical.
 
-> **Status note (2026-09-18):** two Phase-1 features were later RETIRED at the
+> **Historical note (2026-09-18; superseded where contradicted by the current audit):** two Phase-1 features were later RETIRED at the
 > owner's request: the **Brush Finder** (`find-my-brushes.html`, `js/finder.js`,
 > `js/finder-index.js`, `tools/pages_finder.py` — removed in full on 2026-09-18,
 > no traces left anywhere in the build) and the visible **store email address**
 > (contact now runs through the Payhip store form). The "Brush Finder" section
-> below is kept for the design rationale only. Everything else in §8 — value
-> ladder, homepage IA, bundle ladder, conversion events, freebie funnel,
-> feedback prompt — is live. The buyer-intent counterpart of the retired finder
-> is the buyer-guide set in §9.
+> below is kept for the design rationale only. The next three sections describe
+> historical design, not the current page order, signup flow or deployment.
 
-### The value ladder
+### Historical value ladder
 Every product now carries a **tier** in `data/discovery.json`, and the homepage,
 catalog and Brush Finder all read it:
 
@@ -251,7 +241,7 @@ catalog and Brush Finder all read it:
 | 4 | `flagship` | **Master Library, 2,000+ brushes, $19** | Homepage ladder (top rung) + dedicated feature band + upgrade panel on 37 product pages |
 | 5 | `education` | Free starter guide + $19 Portrait Masterclass | Homepage free row + journey (first/last step), PDPs |
 
-### Homepage information architecture — 2026-09-18 exact reorder
+### Historical homepage information architecture — 2026-09-18
 
 The order below is the merchandising decision — each section answers the one before it
 (see → believe → find → try → start → go deeper → trust → learn → stay connected):
@@ -304,17 +294,25 @@ a "Browse by what you create" section below gives the same recommendations as
 plain HTML, so it works with JavaScript off and is fully crawlable.
 
 ### Conversion events — `js/analytics.js`
-One entry point, `dkp.track(name, params)`. Forwards to GA4 and keeps a
-first-party count-only summary in `localStorage`. Events: `homepage_view`,
-`product_view`, `category_view`, `bundle_view`, `master_library_view`,
-`masterclass_view`, `free_download_click`, `email_signup`, `product_buy_click`,
-`outbound_payhip_click`, `upgrade_clicked`, `craft_card_click`, `search_query`,
-`scroll_depth`, `feedback_reason`.
 
-Debug in the browser console: `dkp.report()` · `dkp.clear()`.
-Turn it off entirely: visit any page with `#dkp-analytics=off`, or build with
-`DKP_ANALYTICS=false`. `Do Not Track` is honoured as a full opt-out.
-No PII, no new cookies, no cross-site identifier. Disclosed in `privacy.html`.
+`dkp.track(name, params)` forwards custom events to GA4 when enabled and keeps
+browser-local event counts (`dkp.report()` / `dkp.clear()`). Events include
+`product_view`, `free_download_click`, `product_buy_click`,
+`outbound_payhip_click`, `free_next_step_click`, `free_next_step_view`,
+`premium_product_click`, `kit_comparison_click` and `email_signup_request`.
+Clicks and signup **requests** are not confirmed downloads, purchases or
+subscriptions. The local summary is not an aggregate dashboard.
+
+The production Google tag is not loaded on preview or localhost hosts. The tag
+and local counting are disabled by `#dkp-analytics=off`, Do Not Track,
+Global Privacy Control, or a build with `DKP_ANALYTICS=false` (set that GitHub
+repository variable to `false` for both deployment workflows). The tag can set
+cookies. DNT/GPC and opt-out are not a substitute for a jurisdiction-appropriate
+consent assessment. The site's event payloads exclude query strings and search
+text. The GA page URL is query-free; limited non-personal UTM campaign labels
+are forwarded as separate config fields. Use no personal information in UTM
+values, and verify attribution and cross-domain tracking in GA/Payhip before
+relying on them. Ads click-ID attribution has not been validated.
 
 ### Pinterest — `tools/core.py` (Pinterest block)
 
@@ -344,42 +342,28 @@ DigiKitPro product pages, and excludes the two eBooks pending a separate policy
 review. Setup steps, shipping/market prerequisites, and the catalog's identifier
 caveat are in **`docs/GOOGLE-MERCHANT.md`**.
 
-### Freebie funnel
-`freebies.html` leads with an email gate; the direct Payhip link stays visible
-underneath so a promised free file is never held hostage. On a real provider
-response `js/main.js` sends the visitor to `thank-you.html?lead=<slug>`, which
-puts the pack they asked for first, links every free download directly, then
-makes **one** starter offer and shows the Master Library.
+### Free-resource journeys
 
-To wire a real email sequence (MailerLite / Brevo / ConvertKit), set
-`EMAIL_ENDPOINT` in `tools/core.py` to the provider's form-action URL and
-rebuild. The 5-email sequence is specified in `docs/AUDIT-AND-PLAN.md` §9.
-No API key ever goes in frontend code.
+`freebies.html` and the free product pages keep their direct Payhip links.
+Each of the four resources has a relevant, optional exercise and comparison
+configured in `data/free-journeys.json`. The visible "After downloading" link
+opens `thank-you.html?lead=<slug>` if the visitor chooses it; this page is not
+an automatic Payhip redirect and does not prove a download or signup. An unknown
+slug or JavaScript-disabled browser sees all four suggestions. No email sequence
+is running.
 
-### "What stopped you from choosing a brush today?" — `js/feedback.js`
-Product/catalog pages only, after ≥60 % scroll **and** ≥25 s, and never once a
-visitor has clicked a buy link. Once per visit; dismissed means never again.
-Every answer returns something useful to the visitor (Finder, bundles, guides).
-Fires `feedback_reason`. To collect answers in your own store, set the
-`DKP_FEEDBACK_ENDPOINT` build variable — empty by default, so nothing is posted
-anywhere until you point it at a Cloudflare Worker or Vercel function.
+### Feedback prompt
 
-### Owner decisions currently in force (2026-09-13)
+`js/feedback.js` is not included in generated pages while
+`DKP_FEEDBACK_ENDPOINT` is empty. A future collector needs a separate review of
+consent, security, accessibility and provider delivery before enabling it.
 
-- **Email:** FormSubmit → `digikitprostudio@gmail.com`. No ESP yet, so there is
-  no automated drip — but `thank-you.html` delivers every free file directly and
-  makes the starter offer, so the funnel works. The `source` and `lead_magnet`
-  fields are already captured on every form, so connecting MailerLite/Brevo later
-  is a one-line `EMAIL_ENDPOINT` swap plus building the sequence in the ESP.
-- **Catalog:** planners, journals, templates and the travel guide stay **mixed
-  into the single catalog**. No separate filter or page. They are excluded from
-  *brush* recommendations only because they carry no craft/goal tags in
-  `data/discovery.json` — tag one and it becomes recommendable, no code change.
-- **Analytics:** GA4 `G-5MFQFHNB6B` stays on, disclosed accurately in
-  `privacy.html`, with `#dkp-analytics=off` and Do Not Track both honoured.
+### Historical catalog and analytics notes
 
-Full rationale and the review point for the catalog decision:
-`docs/AUDIT-AND-PLAN.md` → "OWNER DECISIONS".
+Planners, journals, templates and the travel guide remain in the catalog.
+The GA measurement ID remains configured; verify consent, account settings and
+cross-domain measurement before drawing conclusions from reports. Older
+strategy documents are historical and can describe retired functionality.
 
 ### Social proof — the "Made for Real Artwork" placeholder
 The homepage carries a **Made for Real Artwork** strip between "Why DigiKitPro" and
@@ -413,8 +397,8 @@ Tag it properly when you see that notice so the Brush Finder can recommend it.
 ### Build determinism
 The homepage used to rotate its "Trending" section by calendar day, so every
 deploy rewrote the homepage and handed Google a different page on each crawl.
-That is gone: two consecutive builds of all generated files are now
-**byte-identical**. The section is now "Popular Starting Points", ordered by
+That is gone: two consecutive builds on the same date and with the same inputs are
+**byte-identical** (some generated RSS/audit metadata can change with the date). The section is now "Popular Starting Points", ordered by
 the editorial priority you set in `data/discovery.json` — and it no longer
 claims to reflect search demand, because nothing on a static site measures that.
 
@@ -479,9 +463,8 @@ Affiliates** hands out a single sign-up link. Set it as a repository variable
 (**Settings → Secrets and variables → Actions → Variables → New variable**,
 name `PARTNER_SIGNUP_URL`) and both workflows pass it to the build: the
 primary CTA becomes the real application form. Left empty, the page says the
-program is invite-only and routes applicants to the Payhip store contact form
-— the only channel that reaches the owner, since `EMAIL_ENDPOINT` is unset and
-a form on this site would deliver nothing. It never renders a dead button.
+program is invite-only and routes applicants to the Payhip store contact form.
+`EMAIL_ENDPOINT` is unset, and actual message routing has not been verified. It never renders a dead button.
 
 Contract (enforced by `tools/verify.py`, checks 71–80):
 

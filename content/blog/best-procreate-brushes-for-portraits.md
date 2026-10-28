@@ -1,9 +1,9 @@
 ---
 title: Best Procreate Brushes for Portraits: A Workflow-Based Guide
 slug: best-procreate-brushes-for-portraits
-description: Choose Procreate portrait brushes by job: sketching, skin, blending, hair, facial detail, and finish. Includes focused DigiKitPro options and honest limits.
+description: Compare Procreate portrait brushes for sketching, skin, hair and detail. See when a free guide, focused skin set or broader kit may fit.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-10-28
 category: Procreate Brushes
 primary_keyword: best Procreate brushes for portraits
 secondary_keywords: [Procreate portrait brushes, portrait painting brushes for iPad, Procreate skin brushes, digital portrait brush set]
@@ -17,6 +17,15 @@ related: [procreate-portrait-workflow, how-to-create-realistic-skin-in-procreate
 Portrait painting needs more than a “realistic” brush. You need a tool for construction, one for controlled edges, something that can build soft colour without flattening the form, and a way to place texture only where it helps. The best Procreate portrait brushes are therefore the ones that fit a sequence from drawing to finish.
 
 This guide evaluates brush categories by the jobs they perform. DigiKitPro products appear where their current catalogue descriptions match those jobs. No brush pack can correct weak proportions, lighting, or observation, and the product grid is not a ranking of every portrait resource on the market.
+
+## Start with the need, not the brush count
+
+- **Learning portrait fundamentals:** use built-in brushes and the [free Portrait Starter Guide](/products/procreate-starter-guide-free-ebook/), a PDF rather than a brush set.
+- **Adding skin detail to an existing workflow:** compare the focused [Portrait Skin Brushes](/products/portrait-skin-brushes-procreate/).
+- **Organising more of a portrait workflow:** the [Portrait Mastery Kit](/products/portrait-mastery-kit-46-brushes/) includes sketch, blend, hair and detail categories.
+- **Working across subjects as well as portraits:** the [Artista Studio Kit](/products/artista-studio-kit-76-brushes/) is a broader sketching, linework and shading collection, not a portrait-only kit.
+
+These are different resources, not required steps in a series. Choose only the one that addresses a real gap in your work.
 
 ## The portrait brush categories that matter
 

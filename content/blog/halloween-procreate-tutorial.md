@@ -6,7 +6,6 @@ date: 2026-09-14
 modified: 2026-09-14
 category: Tutorials
 howto: true
-totaltime: PT45M
 primary_keyword: Halloween Procreate tutorial
 secondary_keywords: [Halloween art Procreate, spooky Procreate tutorial, pumpkin digital art, Procreate smoke brushes]
 search_intent: Informational with commercial investigation

@@ -44,6 +44,9 @@ jobs:
           # absolute URL the build emits — canonicals, sitemaps, robots.txt,
           # schema.org, OG tags — is derived from this value.
           SITE_URL: https://digikitpro.shop
+          # Optional kill switch for both GA loading and first-party event counts.
+          # Set repository variable DKP_ANALYTICS to false to disable in builds.
+          DKP_ANALYTICS: ${{ vars.DKP_ANALYTICS || 'true' }}
           # Optional: paste verification tokens here once Search Console issues them
           GOOGLE_VERIFY: ${{ vars.GOOGLE_VERIFY }}
           BING_VERIFY: ${{ vars.BING_VERIFY }}
@@ -69,6 +72,11 @@ jobs:
           # form, so it never renders a dead button.
           PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}
         run: python3 tools/build.py
+
+      - name: Check generated search markup and sitemaps
+        env:
+          SITE_URL: https://digikitpro.shop
+        run: python3 tools/qa_seo.py
 
       - uses: actions/configure-pages@v5
 

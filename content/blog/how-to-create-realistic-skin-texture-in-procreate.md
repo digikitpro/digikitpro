@@ -6,7 +6,6 @@ date: 2026-09-14
 modified: 2026-09-14
 category: Tutorials
 howto: true
-totaltime: PT45M
 primary_keyword: how to create realistic skin texture in Procreate
 secondary_keywords: [Procreate pores brush, digital skin texture, realistic freckles Procreate, Procreate wrinkles brush]
 search_intent: Informational

@@ -6,7 +6,6 @@ date: 2026-09-14
 modified: 2026-09-14
 category: Guides
 howto: true
-totaltime: PT10M
 primary_keyword: how to install Procreate brushes on iPad
 secondary_keywords: [how to import Procreate brushes, install .brushset on iPad, Procreate brush ZIP file, Procreate brush library]
 search_intent: Informational

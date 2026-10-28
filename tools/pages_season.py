@@ -37,7 +37,7 @@ SEASON_DEFS = [
             ("Do I need Procreate to use the Halloween PNG pack?",
              "No. The Halloween pack ships as PNG image files, so you can import them into Procreate or any other app that accepts images, such as Canva, Photoshop or Affinity. The brush kits sold on DigiKitPro do require Procreate on iPad."),
             ("How are the Halloween files delivered?",
-             "Checkout is handled by Payhip and the files are delivered as an instant digital download after payment. There is no shipping and no physical product. A download link is emailed to you and is also available from your Payhip account."),
+             "Payhip handles checkout and digital delivery. Check the Payhip confirmation and receipt for access details, and contact the store if you need help. No physical item is shipped."),
             ("Can I use these assets in commercial Halloween designs?",
              "DigiKitPro digital products include a license for use in personal and commercial artwork under the terms on the Terms page. You may not resell, redistribute or share the image files themselves."),
         ],

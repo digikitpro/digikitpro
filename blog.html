@@ -30,13 +30,49 @@
   }catch(e){}
 })();
 </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5MFQFHNB6B');
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -84,15 +120,15 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=fe430ede6b736c200057bdbd2cc61f8e">
+  <link rel="stylesheet" href="css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="feed.xml">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "blog_index"}};</script>
   <script src="js/search-index.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/motion.js" defer></script>
-  <script src="js/analytics.js" defer></script>
-  <script src="js/feedback.js" defer></script>
-  <script src="js/translate.js" defer></script>
+  <script src="js/main.js?v=33a4a6e4ad79" defer></script>
+  <script src="js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="js/analytics.js?v=610c164ea071" defer></script>
+  <script src="js/translate.js?v=8877305ddd24" defer></script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://digikitpro.shop/blog.html"}]}</script>
 </head>
 <body>
@@ -107,7 +143,7 @@
     <nav class="main-nav" aria-label="Primary"><a href="freebies.html">Free Brushes</a><a href="products.html">Products</a><a href="bundles.html">Bundles</a><a href="blog.html" class="active">Articles</a><a href="tools/">Tools</a><a href="about.html">About</a></nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -152,7 +188,7 @@
   <section class="section"><div class="wrap"><div class="grid arts-grid"><a class="art-card" href="blog/best-procreate-brushes-for-anime/"><img class="art-img" src="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp" srcset="assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit-card.webp 580w, assets/products/anime-soft-style-studio-kit/anime-soft-style-studio-kit.webp 580w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="580" height="387" alt="Best Procreate Brushes for Anime and Manga: Lines, Shading, and Texture" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Procreate Brushes</span>
       <h2>Best Procreate Brushes for Anime and Manga: Lines, Shading, and Texture</h2>
-      <p class="muted">Choose Procreate brushes for anime and manga by line control, soft shading, washes, and finishing texture. A practical guide to focused DigiKitPro options.</p>
+      <p class="muted">Compare DigiKitPro anime and manga brushes for linework, cel shading and texture, with a free line-art option and a practical brush test.</p>
       <span class="text-link">Read article →</span></div>
     </a><a class="art-card" href="blog/best-procreate-brushes-for-beginners/"><img class="art-img" src="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" srcset="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp 580w, assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp 580w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="580" height="387" alt="Best Procreate Brushes for Beginners: A Simple Starter Kit" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Guides</span>
@@ -162,12 +198,12 @@
     </a><a class="art-card" href="blog/best-procreate-brushes-for-line-art/"><img class="art-img" src="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" srcset="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp 580w, assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp 580w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="580" height="387" alt="Best Procreate Brushes for Line Art: How to Choose a Liner" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Procreate Brushes</span>
       <h2>Best Procreate Brushes for Line Art: How to Choose a Liner</h2>
-      <p class="muted">Find Procreate brushes for line art by comparing taper, pressure response, texture, stabilisation, and workflow. Includes free and specialist options.</p>
+      <p class="muted">Compare Procreate line-art brushes by taper, pressure, texture and stabilisation. Try a simple liner test with free or specialist tools.</p>
       <span class="text-link">Read article →</span></div>
     </a><a class="art-card" href="blog/best-procreate-brushes-for-portraits/"><img class="art-img" src="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="750" height="928" alt="Best Procreate Brushes for Portraits: A Workflow-Based Guide" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Procreate Brushes</span>
       <h2>Best Procreate Brushes for Portraits: A Workflow-Based Guide</h2>
-      <p class="muted">Choose Procreate portrait brushes by job: sketching, skin, blending, hair, facial detail, and finish. Includes focused DigiKitPro options and honest limits.</p>
+      <p class="muted">Compare Procreate portrait brushes for sketching, skin, hair and detail. See when a free guide, focused skin set or broader kit may fit.</p>
       <span class="text-link">Read article →</span></div>
     </a><a class="art-card" href="blog/christmas-procreate-tutorial/"><img class="art-img" src="assets/products/christmas-brushes-bundle/christmas-brushes-bundle-card.webp" srcset="assets/products/christmas-brushes-bundle/christmas-brushes-bundle-card.webp 750w, assets/products/christmas-brushes-bundle/christmas-brushes-bundle.webp 1400w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="750" height="525" alt="Christmas Procreate Tutorial: Design a Holiday Card with Brushes" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Tutorials</span>
@@ -182,12 +218,12 @@
     </a><a class="art-card" href="blog/how-to-choose-procreate-brushes/"><img class="art-img" src="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="750" height="928" alt="How to Choose Procreate Brushes: A Practical Buying Guide" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Guides</span>
       <h2>How to Choose Procreate Brushes: A Practical Buying Guide</h2>
-      <p class="muted">Learn how to choose Procreate brushes by subject, stroke behaviour, file format, workflow, and licence instead of buying packs you never use.</p>
+      <p class="muted">Compare Procreate brushes by stroke, subject, file format and licence. Try a simple brush test and find a free or paid option for your workflow.</p>
       <span class="text-link">Read article →</span></div>
     </a><a class="art-card" href="blog/how-to-create-realistic-skin-in-procreate/"><img class="art-img" src="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="750" height="946" alt="How to Paint Realistic Skin in Procreate: A Layered Workflow" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Tutorials</span>
       <h2>How to Paint Realistic Skin in Procreate: A Layered Workflow</h2>
-      <p class="muted">Learn how to paint realistic skin in Procreate with a repeatable sequence for values, undertones, soft edges, texture, and restrained highlights.</p>
+      <p class="muted">Paint realistic skin in Procreate with a guide to values, undertones, blending and texture. Built-in brushes work; specialist tools are optional.</p>
       <span class="text-link">Read article →</span></div>
     </a><a class="art-card" href="blog/how-to-create-realistic-skin-texture-in-procreate/"><img class="art-img" src="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="750" height="946" alt="How to Create Realistic Skin Texture in Procreate" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Tutorials</span>
@@ -207,17 +243,17 @@
     </a><a class="art-card" href="blog/how-to-make-digital-art-look-traditional/"><img class="art-img" src="assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp" srcset="assets/products/professional-digital-sketchbook/professional-digital-sketchbook-card.webp 580w, assets/products/professional-digital-sketchbook/professional-digital-sketchbook.webp 580w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="580" height="387" alt="How to Make Digital Art Look Traditional: 7 Practical Techniques" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Tutorials</span>
       <h2>How to Make Digital Art Look Traditional: 7 Practical Techniques</h2>
-      <p class="muted">Make digital art look traditional in Procreate with paper tooth, broken edges, limited colour, layered marks, and medium-specific workflows.</p>
+      <p class="muted">Give Procreate art a traditional feel with paper texture, broken edges and layered marks. Compare dry-media and watercolor techniques.</p>
       <span class="text-link">Read article →</span></div>
     </a><a class="art-card" href="blog/how-to-paint-realistic-hair-in-procreate/"><img class="art-img" src="assets/products/professional-hair-brushes/professional-hair-brushes-card.webp" srcset="assets/products/professional-hair-brushes/professional-hair-brushes-card.webp 580w, assets/products/professional-hair-brushes/professional-hair-brushes.webp 580w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="580" height="387" alt="How to Paint Realistic Hair in Procreate Without Drawing Every Strand" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Tutorials</span>
       <h2>How to Paint Realistic Hair in Procreate Without Drawing Every Strand</h2>
-      <p class="muted">Learn how to paint realistic hair in Procreate with a mass-first process for silhouette, clumps, highlights, strands, and flyaways.</p>
+      <p class="muted">Paint realistic hair in Procreate by building the silhouette, values, clumps and selected strands—without drawing every individual hair.</p>
       <span class="text-link">Read article →</span></div>
     </a><a class="art-card" href="blog/procreate-blending-brushes-guide/"><img class="art-img" src="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="750" height="946" alt="Procreate Blending Brushes: How to Blend Without Plastic Skin" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Tutorials</span>
       <h2>Procreate Blending Brushes: How to Blend Without Plastic Skin</h2>
-      <p class="muted">Learn how Procreate blending brushes work, when to use Smudge, and how to keep texture while building soft digital-paint transitions.</p>
+      <p class="muted">Compare Smudge, textured blenders and painting over transitions in Procreate. Practise soft edges without losing the texture of your art.</p>
       <span class="text-link">Read article →</span></div>
     </a><a class="art-card" href="blog/procreate-canvas-size-dpi-guide/"><img class="art-img" src="assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" srcset="assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" sizes="(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw" width="750" height="928" alt="Best Procreate Canvas Size and DPI for Digital Art" loading="lazy" decoding="async">
       <div class="art-body"><span class="art-cat">Guides</span>
@@ -241,31 +277,14 @@
       <span class="text-link">Read article →</span></div>
     </a></div></div></section>
   <section class="newsletter" id="newsletter">
-  <div class="wrap">
-    <div class="nl-card">
-      <p class="eyebrow">Free starter pack</p>
-      <h2>Get the Free Procreate Starter Pack</h2>
-      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
-      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
-           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
-           Source/lead fields allow future email provider to trigger the right sequence. -->
-      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="thank-you.html" action="" method="POST">
-        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
-        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
-        <input type="hidden" name="source" value="site">
-        <label class="sr-only" for="nl-email">Email address</label>
-        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
-        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
-      </form>
-      <p class="nl-caption">Prefer to grab them now? <a href="freebies.html">Browse the free brush packs</a>.</p>
-    </div>
-  </div>
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="products/procreate-starter-guide-free-ebook/">Explore the free guide</a>
+    <a class="btn btn-line" href="freebies.html">See all free resources</a></div>
+  </div></div>
 </section>
-
 </main>
 
 <footer class="site-footer">
@@ -322,7 +341,7 @@
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>

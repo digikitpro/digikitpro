@@ -24,12 +24,12 @@ TOOL_DEFS = [
         "slug": "canvas-calculator",
         "nav": "Canvas Calculator",
         "title": "Procreate Canvas Size & DPI Calculator",
-        "short": "Calculate pixels, print size, file size and Procreate layer limits for any canvas.",
+        "short": "Convert canvas dimensions and estimate uncompressed layer size and illustrative layer counts.",
         "seo_title": "Procreate Canvas Size & DPI Calculator | DigiKitPro Tools",
-        "seo_desc": "Free Procreate canvas size calculator: enter width, height, unit and DPI to get pixels, print size, file size and layer estimates for 4GB, 6GB and 8GB iPads. Presets for Instagram, A4, A3, Letter, 4K and Portrait HD.",
+        "seo_desc": "Convert Procreate canvas dimensions between pixels and print sizes. Estimate uncompressed layer size and compare illustrative layer counts.",
         "eyebrow": "Free tool · Procreate",
         "h1": "Procreate Canvas Size & DPI Calculator",
-        "lead": "Set your canvas in inches, cm, mm or pixels, pick a DPI, and see the real pixel dimensions, print size, file size and how many layers Procreate will give you on 4GB, 6GB and 8GB iPads. Built for the question every beginner asks: what size should my canvas be?",
+        "lead": "Convert canvas dimensions between pixels and print sizes, estimate uncompressed layer size, and compare illustrative layer budgets. Check actual canvas and layer limits in Procreate on your device.",
     }
 ]
 
@@ -39,7 +39,7 @@ def _collection_schema():
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         "name": "Procreate Tools | DigiKitPro",
-        "description": "Free interactive tools for Procreate artists: canvas size and DPI calculator, with more tools coming.",
+        "description": "Free canvas size and DPI calculator for Procreate artists.",
         "url": absurl(f"{TOOLS_DIR}/"),
         "isPartOf": {"@id": SITE_URL + "/#website"},
         "mainEntity": {
@@ -72,8 +72,8 @@ def _canvas_schemas():
         "featureList": [
             "Convert width, height, unit and DPI to pixels",
             "Print size in inches and centimeters",
-            "File size estimate (uncompressed PSD/TIFF)",
-            "Procreate layer estimates for 4GB, 6GB, 8GB iPads",
+            "Uncompressed 8-bit RGBA pixel data per layer (estimate)",
+            "Illustrative layer estimates for three assumed memory budgets",
             "Presets for Instagram, A4, A3, Letter, 4K, Portrait HD"
         ],
         "publisher": {"@id": SITE_URL + "/#org"},
@@ -82,17 +82,15 @@ def _canvas_schemas():
     }
     howto_steps = [
         ("Choose a preset or enter custom size", "Pick a preset like Instagram Square, A4, 4K, or type your own width and height. Select the unit: pixels, inches, centimeters or millimeters."),
-        ("Set your DPI", "Use 72 DPI for screen-only work, 150 DPI for quick prints, 300 DPI for high-quality prints and client work. The calculator converts to pixels instantly."),
-        ("Read pixels, print size and file size", "The tool shows exact pixel dimensions, print size in inches and centimeters, megapixels and estimated uncompressed file size so you know what you're saving."),
-        ("Check layer estimates for your iPad", "Procreate limits layers by canvas size and RAM. See estimates for 4GB, 6GB and 8GB iPads so you don't start a portrait you can't finish."),
+        ("Set your DPI", "For physical-size conversions, choose the required DPI; 300 is a common starting point for print. At fixed pixel dimensions, DPI changes the calculated print size."),
+        ("Read pixels, print size and layer size", "See rounded pixel dimensions, print size and an estimated uncompressed 8-bit RGBA pixel size per layer. Exported files vary."),
+        ("Compare illustrative layer estimates", "Compare three assumed memory budgets, then check the actual canvas and layer limits in Procreate on your device."),
     ]
     howto = {
         "@context": "https://schema.org",
         "@type": "HowTo",
         "name": f"How to use the {td['title']}",
         "description": "Calculate the right Procreate canvas size for your print or screen project in four steps.",
-        "totalTime": "PT2M",
-        "tool": [{"@type": "HowToTool", "name": "Procreate"}, {"@type": "HowToTool", "name": "iPad"}, {"@type": "HowToTool", "name": "DigiKitPro Canvas Calculator"}],
         "step": [
             {"@type": "HowToStep", "position": i+1, "name": name, "text": text}
             for i, (name, text) in enumerate(howto_steps)
@@ -100,15 +98,15 @@ def _canvas_schemas():
     }
     faqs = [
         ("What canvas size should I use in Procreate for Instagram?",
-         "Instagram feed squares are 1080×1080 px, portraits 1080×1350 px and stories 1080×1920 px. All are 72 DPI because Instagram is screen-only. Use the Instagram presets in the calculator to get exact pixels."),
+         "Common starting dimensions are 1080×1080 px for a square, 1080×1350 px for a portrait and 1080×1920 px for a story. Screen display uses pixel dimensions; DPI metadata does not change a fixed pixel canvas."),
         ("What DPI should I use for Procreate prints?",
-         "72 DPI for screen-only, 150 DPI for quick drafts and 300 DPI for high-quality prints, client work and art prints. Higher DPI means more pixels for the same print size, so files get larger and Procreate gives you fewer layers."),
+         "For print, 300 DPI is a common starting point; confirm the requirements with your printer. At a fixed physical size, a higher DPI produces more pixels. For a fixed pixel canvas, changing DPI changes the calculated print size, not the pixel count."),
         ("How does Procreate calculate layer limits?",
-         "Procreate limits layers by total pixels and available RAM. A larger canvas or higher DPI means more pixels per layer, so fewer layers fit in memory. The calculator estimates layers for 4GB (older iPads), 6GB (M1 iPad Air, older Pros) and 8GB+ (M1/M2 iPad Pro) using Procreate's real memory model: layer memory = width × height × 4 bytes."),
+         "Actual layer limits depend on the canvas, device and app. This calculator uses assumed memory budgets to illustrate how size affects a rough estimate; it is not Procreate's internal model. Check the layer limit shown in Procreate on your iPad."),
         ("Why is my Procreate file so big?",
-         "Uncompressed file size is width × height × 4 bytes per layer for RGBA. A 300 DPI A4 canvas (2480×3508 px) is ~33 MB per layer uncompressed. PSD and TIFF add overhead. The calculator shows this so you can choose a smaller canvas if you need more layers."),
+         "For an 8-bit RGBA layer, width × height × 4 bytes is an uncompressed pixel estimate. A 2480×3508 px layer is about 33.2 MiB. Actual exported size varies with format, compression, bit depth and layer content."),
         ("What is the best canvas size for portraits in Procreate?",
-         "For detailed portraits that will print, 3000×4000 px at 300 DPI is a solid starting point (10×13.3 in print). For screen-only portraits, 2500×3500 px at 132–150 DPI gives you more layers. Use the Portrait HD preset to start."),
+         "For a portrait intended to print, 3000×4000 px at 300 DPI gives a print size of roughly 10×13.3 inches. For screen work, choose the pixel dimensions needed for the destination. Check Procreate's actual layer limit before you begin."),
         ("Does canvas size affect Apple Pencil performance?",
          "Yes. Larger canvases use more RAM and can slow down brush strokes and blending, especially on 4GB iPads. If Procreate feels laggy, try a smaller canvas or merge layers you no longer need to edit."),
     ]
@@ -138,7 +136,7 @@ def build_tools_index():
     </a>"""
     html_out = head(
         "Procreate Tools: Canvas Calculator & More | DigiKitPro",
-        "Free interactive tools for Procreate artists: canvas size and DPI calculator, layer estimates for every iPad, presets for Instagram, A4, A3, 4K and more.",
+        "Free canvas calculator for Procreate artists: convert pixels and print sizes, estimate uncompressed layer size, and explore common presets.",
         absurl(f"{TOOLS_DIR}/"),
         depth,
         schemas=schemas,
@@ -151,15 +149,14 @@ def build_tools_index():
     {crumbs(depth, [("Tools", f"{TOOLS_DIR}/")])}
     <p class="eyebrow">Free tools for iPad artists</p>
     <h1>Procreate Tools</h1>
-    <p class="lead">Interactive utilities that answer the questions you actually search for — built as real tools, not blog posts. More tools coming soon.</p>
+    <p class="lead">Free calculations to help plan canvas dimensions and print sizes for your digital artwork.</p>
   </div></section>
   <section class="section"><div class="wrap">
     <div class="grid arts-grid">{cards}</div>
   </div></section>
   <section class="section section-alt"><div class="wrap narrow prose">
-    <h2>Why tools, not just articles?</h2>
-    <p>Articles explain. Tools calculate. A canvas size calculator saves you 10 minutes of math and prevents the mistake of starting a 6000×8000 px canvas on a 4GB iPad and discovering you have 3 layers left. That is the kind of utility that earns a bookmark, a share and a backlink — the SEO engine that mass-produced articles never become.</p>
-    <p>Every tool here is free, works offline after load, and states its assumptions plainly so you can judge the numbers.</p>
+    <h2>Plan before you start</h2>
+    <p>Use the canvas calculator to convert print dimensions into pixels and estimate the uncompressed size of a layer. The layer counts are illustrative assumptions, not measured Procreate limits; check your actual canvas in the app before starting.</p>
   </div></section>
   {newsletter(depth, source="tools", lead="tools-index", uid="tools")}
 </main>
@@ -223,11 +220,11 @@ def build_canvas_calculator():
           <div class="calc-grid">
             <label class="calc-field">
               <span>Width</span>
-              <input type="number" id="calc-w" value="3000" min="1" max="16000" step="1" inputmode="numeric">
+              <input type="number" id="calc-w" value="3000" min="0.01" step="any" inputmode="numeric">
             </label>
             <label class="calc-field">
               <span>Height</span>
-              <input type="number" id="calc-h" value="4000" min="1" max="16000" step="1" inputmode="numeric">
+              <input type="number" id="calc-h" value="4000" min="0.01" step="any" inputmode="numeric">
             </label>
             <label class="calc-field">
               <span>Unit</span>
@@ -241,10 +238,11 @@ def build_canvas_calculator():
             <label class="calc-field">
               <span>DPI</span>
               <input type="number" id="calc-dpi" value="300" min="1" max="1200" step="1" inputmode="numeric">
-              <small class="muted">72 screen, 150 draft, 300 print</small>
+              <small class="muted">For print size; 300 is a common starting point.</small>
             </label>
           </div>
 
+          <p class="muted">Enter positive dimensions and DPI. Results do not guarantee that your device supports a canvas size.</p>
           <div class="calc-outputs">
             <div class="out-card">
               <p class="out-label">Pixel dimensions</p>
@@ -257,33 +255,33 @@ def build_canvas_calculator():
               <p class="out-sub" id="out-print-cm">25.4 × 33.87 cm</p>
             </div>
             <div class="out-card">
-              <p class="out-label">File size (uncompressed)</p>
-              <p class="out-value" id="out-filesize">45.8 MB per layer</p>
-              <p class="out-sub">RGBA 4 bytes/px · PSD/TIFF adds ~10–20%</p>
+              <p class="out-label">Pixel data per layer (uncompressed)</p>
+              <p class="out-value" id="out-filesize">45.8 MiB per layer</p>
+              <p class="out-sub">8-bit RGBA, 4 bytes/px · exports vary by format</p>
             </div>
           </div>
 
           <div class="calc-layers">
-            <h3>Procreate layer estimates</h3>
-            <p class="muted" style="margin-top:-0.5rem">Based on Procreate's memory model: each layer ≈ width×height×4 bytes. Available RAM for layers ≈ 60% of device RAM. Estimates are conservative.</p>
+            <h3>Illustrative layer estimates</h3>
+            <p class="muted" style="margin-top:-0.5rem">These estimates use assumed layer budgets of 800, 1,500 and 2,500 MiB, capped at 120 layers. They are not Procreate's internal model or a compatibility check. Actual limits vary; confirm them in the app on your device.</p>
             <div class="layer-grid">
               <div class="layer-card">
                 <p class="layer-ram">4GB iPad</p>
                 <p class="layer-count" id="out-layers-4">~17 layers</p>
-                <p class="muted">older iPads, iPad Air 4, mini 6</p>
+                <p class="muted">Assumed budget: 800 MiB</p>
               </div>
               <div class="layer-card">
                 <p class="layer-ram">6GB iPad</p>
                 <p class="layer-count" id="out-layers-6">~32 layers</p>
-                <p class="muted">M1 Air, 2020 Pro, 2021 Pro 128GB</p>
+                <p class="muted">Assumed budget: 1,500 MiB</p>
               </div>
               <div class="layer-card layer-card--highlight">
                 <p class="layer-ram">8GB+ iPad</p>
-                <p class="layer-count" id="out-layers-8">~53 layers</p>
-                <p class="muted">M1/M2/M4 Pro 256GB+, Air M2</p>
+                <p class="layer-count" id="out-layers-8">~54 layers</p>
+                <p class="muted">Assumed budget: 2,500 MiB</p>
               </div>
             </div>
-            <p class="calc-note muted">Real Procreate counts vary by iPadOS version and background apps. Keep 1–2 layers free for export and undo. If you hit the limit, merge finished groups or work at 150 DPI for sketches.</p>
+            <p class="calc-note muted">If the app's limit is too low for your project, consider a smaller pixel canvas or merge only layers you no longer need to edit.</p>
           </div>
         </div>
       </div>
@@ -317,11 +315,11 @@ def build_canvas_calculator():
 
   <section class="section section-alt"><div class="wrap narrow prose">
     <h2>What canvas size should I use in Procreate?</h2>
-    <p>There is no single best size. Screen-only work (Instagram, portfolio, Twitch overlays) can be 1080–1920 px on the long edge at 72–150 DPI. Print work needs 300 DPI, so an A4 print is 2480×3508 px, A3 is 3508×4961 px and US Letter is 2550×3300 px. Bigger than 4000 px on the long edge gives you sharp prints up to ~13 inches, but costs you layers — especially on 4GB iPads.</p>
+    <p>There is no single best size. For screen work, start with the pixel dimensions required by the destination; DPI metadata does not change a fixed pixel canvas. For print, 300 DPI is a common starting point: at that resolution A4 is about 2480×3508 px, A3 is 3508×4961 px and US Letter is 2550×3300 px. Confirm the print dimensions and resolution with your printer.</p>
     <h3>Instagram, A4, A3, Letter, 4K, Portrait HD — when to use what</h3>
     <ul>
-      <li><strong>Instagram Square (1080×1080):</strong> feed posts, 72 DPI, fastest to paint, most layers.</li>
-      <li><strong>Instagram Portrait (1080×1350):</strong> best reach on feed, same DPI, slightly more vertical space.</li>
+      <li><strong>Instagram Square (1080×1080):</strong> a square starting format for feed posts.</li>
+      <li><strong>Instagram Portrait (1080×1350):</strong> a vertical starting format for feed posts.</li>
       <li><strong>Instagram Story / Reels cover (1080×1920):</strong> full-screen vertical, 72 DPI.</li>
       <li><strong>A4 at 300 DPI (2480×3508):</strong> prints, zines, client proofs — 8.27×11.69 in.</li>
       <li><strong>A3 at 300 DPI (3508×4961):</strong> posters, large prints — 11.69×16.54 in.</li>
@@ -330,7 +328,7 @@ def build_canvas_calculator():
       <li><strong>Portrait HD (3000×4000):</strong> detailed portraits that may print, 300 DPI, balanced layers.</li>
     </ul>
     <h3>How file size and layers work</h3>
-    <p>Each Procreate layer stores 4 bytes per pixel (RGBA). So file size per layer is <code>width × height × 4</code> bytes. A 3000×4000 px canvas is 12 MP, ~45.8 MB per layer uncompressed. PSD and TIFF add 10–20% overhead. Procreate keeps undo history and compositing buffers, so it reserves RAM and limits layers to keep painting smooth. That is why the same canvas gives you ~17 layers on a 4GB iPad and ~53 on an 8GB iPad Pro.</p>
+    <p>An uncompressed 8-bit RGBA layer uses roughly <code>width × height × 4</code> bytes of pixel data. A 3000×4000 px layer is about 45.8 MiB before export. Actual file size varies with layers, compression, format and bit depth. The layer budgets above are illustrative assumptions, not verified Procreate limits.</p>
   </div></section>
 
   <section class="section"><div class="wrap narrow">
@@ -344,17 +342,17 @@ def build_canvas_calculator():
 <style>
 .tool-layout{{display:grid;grid-template-columns:1.2fr 0.8fr;gap:2rem;align-items:start}}
 @media(max-width:900px){{.tool-layout{{grid-template-columns:1fr}}}}
-.calc-card{{background:var(--card-bg,#fff);border:1px solid var(--border,#e6e0d8);border-radius:16px;padding:1.5rem}}
+.calc-card{{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem}}
 .calc-presets{{margin-bottom:1.25rem}}
 .calc-label{{font-weight:600;margin:0 0 0.5rem;display:block}}
 .preset-row{{display:flex;flex-wrap:wrap;gap:0.5rem}}
-.preset-btn{{border:1px solid var(--border,#e6e0d8);background:var(--bg,#faf7f2);padding:0.45rem 0.75rem;border-radius:999px;font-size:0.85rem;cursor:pointer}}
+.preset-btn{{border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;padding:0.45rem 0.75rem;border-radius:999px;font-size:0.85rem;cursor:pointer}}
 .preset-btn:hover{{border-color:#C9A86A}}
 .calc-grid{{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}}
 @media(max-width:600px){{.calc-grid{{grid-template-columns:1fr}}}}
 .calc-field{{display:flex;flex-direction:column;gap:0.35rem}}
 .calc-field span{{font-weight:600;font-size:0.9rem}}
-.calc-field input,.calc-field select{{padding:0.65rem 0.75rem;border:1px solid var(--border,#ddd);border-radius:10px;font-size:1rem;background:#fff}}
+.calc-field input,.calc-field select{{padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:10px;font-size:1rem;background:var(--bg);color:var(--text);color-scheme:dark}}
 .calc-outputs{{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.25rem 0}}
 @media(max-width:700px){{.calc-outputs{{grid-template-columns:1fr}}}}
 .out-card{{background:var(--bg,#faf7f2);border-radius:12px;padding:1rem;border:1px solid var(--border,#eee)}}
@@ -364,13 +362,13 @@ def build_canvas_calculator():
 .calc-layers{{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border,#eee)}}
 .layer-grid{{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin:0.75rem 0}}
 @media(max-width:600px){{.layer-grid{{grid-template-columns:1fr}}}}
-.layer-card{{border:1px solid var(--border,#eee);border-radius:12px;padding:0.9rem;background:#fff}}
+.layer-card{{border:1px solid var(--border);border-radius:12px;padding:0.9rem;background:var(--surface-2)}}
 .layer-card--highlight{{border-color:#C9A86A;box-shadow:0 0 0 1px #C9A86A inset}}
 .layer-ram{{font-weight:700;margin:0 0 0.25rem}}
 .layer-count{{font-size:1.25rem;font-weight:800;margin:0}}
 .calc-note{{font-size:0.85rem;margin-top:0.5rem}}
 .tool-aside{{display:flex;flex-direction:column;gap:1rem;position:sticky;top:1rem}}
-.aside-card{{background:#fff;border:1px solid var(--border,#e6e0d8);border-radius:16px;padding:1.25rem}}
+.aside-card{{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.25rem}}
 .aside-steps{{margin:0.5rem 0 0;padding-left:1.1rem}}
 .aside-steps li{{margin:0.4rem 0}}
 .aside-links{{list-style:none;padding:0;margin:0.5rem 0 0}}
@@ -388,8 +386,8 @@ def build_canvas_calculator():
     'ig-square': {{w:1080,h:1080,unit:'px',dpi:72}},
     'ig-portrait': {{w:1080,h:1350,unit:'px',dpi:72}},
     'ig-story': {{w:1080,h:1920,unit:'px',dpi:72}},
-    'a4': {{w:8.27,h:11.69,unit:'in',dpi:300}},
-    'a3': {{w:11.69,h:16.54,unit:'in',dpi:300}},
+    'a4': {{w:210,h:297,unit:'mm',dpi:300}},
+    'a3': {{w:297,h:420,unit:'mm',dpi:300}},
     'letter': {{w:8.5,h:11,unit:'in',dpi:300}},
     '4k': {{w:3840,h:2160,unit:'px',dpi:72}},
     'portrait-hd': {{w:3000,h:4000,unit:'px',dpi:300}},
@@ -410,40 +408,44 @@ def build_canvas_calculator():
     return (Math.round(n*100)/100).toString();
   }}
   function calc(){{
-    let w = parseFloat(wEl.value)||0, h = parseFloat(hEl.value)||0;
-    let unit = unitEl.value, dpi = parseFloat(dpiEl.value)||72;
-    if(w<=0||h<=0) return;
-    let pxW = toPixels(w, unit, dpi);
-    let pxH = toPixels(h, unit, dpi);
-    // clamp to Procreate max 16384
-    pxW = Math.min(16384, Math.max(1, Math.round(pxW)));
-    pxH = Math.min(16384, Math.max(1, Math.round(pxH)));
+    const w = Number(wEl.value), h = Number(hEl.value), dpi = Number(dpiEl.value);
+    const unit = unitEl.value;
+    const outputs = [outPx, outMp, outIn, outCm, outFs, outL4, outL6, outL8];
+    if (![w, h, dpi].every(Number.isFinite) || w <= 0 || h <= 0 || dpi <= 0) {{
+      outputs.forEach(el => {{ el.textContent = '—'; }});
+      return;
+    }}
+    // Convert the requested dimensions without silently clipping them; the
+    // device's actual Procreate limits must be checked in the app.
+    let pxW = Math.max(1, Math.round(toPixels(w, unit, dpi)));
+    let pxH = Math.max(1, Math.round(toPixels(h, unit, dpi)));
+    if (!Number.isSafeInteger(pxW) || !Number.isSafeInteger(pxH) || !Number.isSafeInteger(pxW * pxH * 4)) {{
+      outputs.forEach(el => {{ el.textContent = '—'; }});
+      return;
+    }}
     let mp = (pxW*pxH)/1e6;
     let printWIn = pxW/dpi, printHIn = pxH/dpi;
     let printWCm = printWIn*2.54, printHCm = printHIn*2.54;
     let bytesPerLayer = pxW*pxH*4;
     let mbPerLayer = bytesPerLayer/(1024*1024);
 
-    // layer estimates: available RAM for layers ~60% of total
-    // 4GB: 0.6*4096=2457 MB, but iPadOS takes ~1.5GB, Procreate overhead ~0.5GB → ~800 MB for layers (conservative)
-    // 6GB: ~1500 MB, 8GB: ~2500 MB — tuned to match real Procreate reports
+    // Illustrative assumptions only, not measured Procreate memory budgets.
     const avail = {{4:800,6:1500,8:2500}};
     function layersFor(ramGB){{
       let availMB = avail[ramGB];
       let l = Math.floor(availMB / mbPerLayer);
-      // Procreate minimum 1, maximum practical ~120, plus keep 1 for background
-      l = Math.max(1, Math.min(120, l));
-      return l;
+      // Do not claim the device can support a layer if this model returns 0.
+      return l > 0 ? `~${{Math.min(120, l)}} layers` : 'Not estimated';
     }}
 
     outPx.textContent = `${{formatNum(pxW)}} × ${{formatNum(pxH)}} px`;
     outMp.textContent = `${{mp.toFixed(1)}} MP`;
     outIn.textContent = `${{printWIn.toFixed(2)}} × ${{printHIn.toFixed(2)}} in`;
     outCm.textContent = `${{printWCm.toFixed(2)}} × ${{printHCm.toFixed(2)}} cm`;
-    outFs.textContent = `${{mbPerLayer.toFixed(1)}} MB per layer`;
-    outL4.textContent = `~${{layersFor(4)}} layers`;
-    outL6.textContent = `~${{layersFor(6)}} layers`;
-    outL8.textContent = `~${{layersFor(8)}} layers`;
+    outFs.textContent = `${{mbPerLayer.toFixed(1)}} MiB per layer`;
+    outL4.textContent = layersFor(4);
+    outL6.textContent = layersFor(6);
+    outL8.textContent = layersFor(8);
   }}
 
   document.querySelectorAll('.preset-btn').forEach(btn=>{{
@@ -455,7 +457,9 @@ def build_canvas_calculator():
       unitEl.value = p.unit;
       dpiEl.value = p.dpi;
       calc();
-      window.DKP && window.DKP.page && gtag && gtag('event','tool_preset_click',{{preset:btn.dataset.preset}});
+      if (window.DKP && window.DKP.page && typeof window.gtag === 'function') {{
+        window.gtag('event', 'tool_preset_click', {{preset:btn.dataset.preset}});
+      }}
     }});
   }});
   [wEl,hEl,unitEl,dpiEl].forEach(el=>el.addEventListener('input', calc));

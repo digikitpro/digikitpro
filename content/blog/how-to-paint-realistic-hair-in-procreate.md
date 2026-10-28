@@ -1,12 +1,12 @@
 ---
 title: How to Paint Realistic Hair in Procreate Without Drawing Every Strand
+seo_title: How to Paint Realistic Hair in Procreate
 slug: how-to-paint-realistic-hair-in-procreate
-description: Learn how to paint realistic hair in Procreate with a mass-first process for silhouette, clumps, highlights, strands, and flyaways.
+description: Paint realistic hair in Procreate by building the silhouette, values, clumps and selected strands—without drawing every individual hair.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-10-28
 category: Tutorials
 howto: true
-totaltime: PT90M
 primary_keyword: how to paint realistic hair in Procreate
 secondary_keywords: [Procreate hair tutorial, realistic digital hair, hair brushes for Procreate, paint hair on iPad]
 search_intent: Informational
@@ -69,6 +69,12 @@ Return to the large mass if the edge becomes too noisy. Realistic hair needs bot
 Hide the texture layer and compare the hair mass to the face. The hair should frame the features without competing with the eyes unless the reference calls for that emphasis. At thumbnail size, you should still see the main light direction and shape.
 
 The [Portrait Mastery Kit](/products/portrait-mastery-kit-46-brushes/) includes hair, detail, texture, and finish categories according to its current product description, which can support keeping the stages separate.
+
+## Adapt the process to the reference
+
+Straight, wavy, curly and coily hair do not all form the same shapes. For straighter hair, look for broad directional groups and breaks in the silhouette. For curls or coils, observe the larger outline and the pattern of overlapping groups before placing individual marks. Vary the size and spacing of those groups instead of repeating one stamp across the head.
+
+Lighting, styling and texture vary within each category, so use a specific reference rather than one fixed recipe. For a simplified character approach, see the [anime and manga brush guide](/blog/best-procreate-brushes-for-anime/).
 
 ## Common mistakes
 

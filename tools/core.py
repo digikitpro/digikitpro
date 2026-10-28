@@ -7,7 +7,7 @@
 ║ • Products → edit /data/products.json, then run: python3 tools/build.py
 ║ • Articles → edit/add markdown files in /content/blog/, run build ║
 ║ • Domain → change SITE_URL below before publishing ║
-║ • Email → set EMAIL_ENDPOINT below (or data-endpoint in HTML) ║
+║ • Email → see README; no provider or consent flow is configured ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """
 import json, os, re, shutil, html, urllib.parse, hashlib
@@ -34,14 +34,13 @@ STORE_URL = "https://payhip.com/digikitpro"
 # "message us" to the real application link, with no other edit needed.
 #
 # EMPTY = the program is invite-only: the page says so plainly and routes
-# applicants to the Payhip store contact form, which is the only message
-# channel that actually reaches the owner (EMAIL_ENDPOINT below is unset, so a
-# form on this site would deliver nothing).
+# applicants to the Payhip store contact form; actual message routing has not
+# been independently verified. EMAIL_ENDPOINT below is unset.
 PARTNER_SIGNUP_URL = (os.environ.get("PARTNER_SIGNUP_URL") or "").strip()
 EMAIL_TO = "" # email hidden, contact via Payhip store only
-EMAIL_ENDPOINT = "" # no direct email endpoint, newsletter falls back to Payhip freebies collection
-# To switch providers later (Brevo/MailerLite/ConvertKit), paste their form-action URL here
-# and the same form keeps working.
+EMAIL_ENDPOINT = "" # no signup provider configured; render free-resource links instead
+# A future provider requires a tested consent, confirmation and unsubscribe flow;
+# changing this value alone is not a complete email-marketing implementation.
 # ── Search Console verification tokens (paste once Google/Bing give them to you) ──
 # `or <default>` (not os.environ.get's default arg): the deploy workflow always
 # passes these variables, so an UNSET GitHub variable arrives here as an empty
@@ -58,9 +57,8 @@ GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "G-5MFQFHNB6B") # Google
 # Kill-switch for the owner; nothing else on the site depends on it.
 ANALYTICS_ENABLED = os.environ.get("DKP_ANALYTICS", "true").strip().lower() not in ("0", "false", "no")
 # Optional collector for the "What stopped you from choosing a brush today?"
-# answers. EMPTY BY DEFAULT = nothing is posted anywhere; answers are only
-# counted as an analytics event. Point it at a Cloudflare Worker / Vercel
-# function when (and only when) the owner wants them in their own store.
+# answers. EMPTY BY DEFAULT = the feedback script is not included. Only enable
+# a collector after reviewing consent, privacy, security and accessibility.
 # Never put a secret in this value: it is printed into public HTML.
 FEEDBACK_ENDPOINT = os.environ.get("DKP_FEEDBACK_ENDPOINT", "")
 BUILD_DATE = date.today().isoformat()
@@ -119,6 +117,8 @@ CATEGORY_SLUGS = {
 
 PRODUCTS = json.load(open(os.path.join(ROOT, "data/products.json"), encoding="utf-8"))
 BY_SLUG = {p["slug"]: p for p in PRODUCTS}
+_FREE_JOURNEYS_PATH = os.path.join(ROOT, "data/free-journeys.json")
+FREE_JOURNEYS = json.load(open(_FREE_JOURNEYS_PATH, encoding="utf-8")) if os.path.exists(_FREE_JOURNEYS_PATH) else {}
 
 # ── MERCHANDISING MODEL ─────────────────────────────────────────────────
 # data/discovery.json is deliberately SEPARATE from data/products.json:
@@ -224,6 +224,21 @@ def _css_fingerprint():
 
 CSS_VERSION = _css_fingerprint()
 
+# Version changed scripts so deployed HTML does not keep using a cached copy of
+# old checkout, privacy or search behavior. The search index is generated later
+# in the build and is intentionally not fingerprinted here.
+def _script_fingerprint(name):
+    try:
+        with open(os.path.join(ROOT, "js", name), "rb") as f:
+            return hashlib.sha256(f.read()).hexdigest()[:12]
+    except OSError:
+        return "0"
+
+SCRIPT_VERSIONS = {name: _script_fingerprint(name) for name in ("main.js", "motion.js", "analytics.js", "translate.js")}
+
+def script_src(depth, name):
+    return rel(depth, "js/" + name) + "?v=" + SCRIPT_VERSIONS[name]
+
 def money(p): return p["priceText"]
 
 def is_abs(u):
@@ -299,7 +314,7 @@ def share_buttons(url, title, media="", description="", heading="Share this"):
     btns = []
     if PINTEREST_URL:
         btns.append(f'<a class="share-btn share-pin" href="{esc(pin_create_url(url, media, text))}"'
-                    f' target="_blank" rel="noopener" aria-label="Pin this to Pinterest">📌 <span>Pin it</span></a>')
+                    f' target="_blank" rel="noopener" aria-label="Pin it on Pinterest"><span aria-hidden="true">📌</span> <span>Pin it</span></a>')
     btns.append(f'<a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={urllib.parse.quote(url, safe="")}"'
                 f' target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a>')
     btns.append(f'<a class="share-btn" href="https://twitter.com/intent/tweet?url={urllib.parse.quote(url, safe="")}'
@@ -321,7 +336,7 @@ def schema_org_home():
        "image":{"@type":"ImageObject","url":absurl("assets/img/og-cover.jpg"),"width":"1200","height":"630"},
        "brand":{"@type":"Brand","name":SITE_NAME},
        "contactPoint":[{"@type":"ContactPoint","contactType":"customer support","areaServed":{"@type":"Place","name":"Worldwide"},"availableLanguage":["en"]}],
-       "description":"DigiKitPro creates premium Procreate brushes and digital art resources for iPad artists. Worldwide instant digital delivery.",
+       "description":"DigiKitPro creates Procreate brushes and digital art resources, sold as digital products through Payhip.",
        "areaServed":"Worldwide","knowsLanguage":["en","es","fr","de","it","pt","nl"],
        "sameAs":[STORE_URL]+[v for v in SOCIAL.values() if v]},
       {"@context":"https://schema.org","@type":"WebSite","@id":SITE_URL+"/#website",
@@ -349,7 +364,6 @@ def schema_product(p):
                  # Offer.url must describe the landing page in this schema;
                  # the actual Buy button can still send shoppers to Payhip.
                  "url":product_url,
-                 "priceValidUntil":f"{date.today().year+1}-12-31",
                  "seller":{"@type":"Organization","name":SITE_NAME}}}
     # Only publish identifiers explicitly assigned in the catalog. In
     # particular, never treat a Payhip ID or our SKU slug as a GTIN/MPN.
@@ -370,22 +384,24 @@ def schema_breadcrumb(items):
              "itemListElement":[{"@type":"ListItem","position":i+1,"name":n,"item":absurl(u)} for i,(n,u) in enumerate(items)]}]
 
 def schema_article(a):
-    """BlogPosting (richer than the generic Article: eligible for blog/article
-    rich results). Image is always an absolute URL, required by BlogPosting."""
-    img = a.get("image") or "assets/img/og-cover.jpg"
-    img = img if is_abs(img) else absurl(img)
-    return [{"@context":"https://schema.org","@type":"BlogPosting","headline":a["title"],
-             "description":a["description"],"image":[img],
-             "datePublished":a["date"],"dateModified":a.get("modified") or a["date"],
-             "keywords":", ".join([a.get("primary_keyword", "")] + (a.get("secondary_keywords") or [])),
-             "author":{"@type":"Organization","name":SITE_NAME,"url":SITE_URL},
-             "publisher":{"@id":SITE_URL+"/#org"},
-             "mainEntityOfPage":absurl(f"blog/{a['slug']}/"),
-             "inLanguage":"en","url":absurl(f"blog/{a['slug']}/")}]
+    """BlogPosting metadata. Search features and image selection aren't guaranteed."""
+    node = {"@context":"https://schema.org","@type":"BlogPosting","headline":a["title"],
+            "description":a["description"],
+            "datePublished":a["date"],"dateModified":a.get("modified") or a["date"],
+            "keywords":", ".join([a.get("primary_keyword", "")] + (a.get("secondary_keywords") or [])),
+            "author":{"@type":"Organization","name":SITE_NAME,"url":SITE_URL},
+            "publisher":{"@id":SITE_URL+"/#org"},
+            "mainEntityOfPage":absurl(f"blog/{a['slug']}/"),
+            "inLanguage":"en","url":absurl(f"blog/{a['slug']}/")}
+    # The visible hero is the larger source image; cards use a smaller crop.
+    # Omit the optional image when an article has no visible hero.
+    if a.get("hero"):
+        node["image"] = [a["hero"] if is_abs(a["hero"]) else absurl(a["hero"])]
+    return [node]
 
 def schema_howto(name, description, steps, total_time=None, tools=None):
-    """HowTo rich result. `steps` = list of (name, text) tuples; each becomes a
-    HowToStep. `tools` is an optional list of Procreate/tool names (HowToTool)."""
+    """Schema.org HowTo metadata; this does not guarantee a search feature.
+    `steps` is a list of (name, text) tuples; tools and time are optional."""
     step_nodes = [{"@type":"HowToStep","position":i+1,"name":n,"text":t}
                   for i,(n,t) in enumerate(steps)]
     node = {"@context":"https://schema.org","@type":"HowTo","name":name,
@@ -436,7 +452,7 @@ _GITHUB_KILL = """<script>
 })();
 </script>"""
 
-def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False):
+def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False, base_href=None, og_size=None):
     """`ctx` is the analytics page context (see js/analytics.js). It is emitted
     as window.DKP.page and contains ONLY non-personal page facts: page type,
     product slug/name/tier/category/price. No visitor data, ever."""
@@ -446,12 +462,22 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     # without [data-product-gallery], and keeping it off every other page is
     # one less request for them.
     gs = ('\n  <script src="' + rel(depth, 'js/gallery.js') + '" defer></script>') if gallery else ""
+    # Avoid an unsolicited survey when there is no collector to receive it.
+    feedback_script = ('\n  <script src="' + rel(depth, 'js/feedback.js') + '" defer></script>') if FEEDBACK_ENDPOINT else ""
     if schemas:
         for sc in schemas:
             s += f' <script type="application/ld+json">{json.dumps(sc, ensure_ascii=False)}</script>\n'
     pl = (f' <link rel="preload" as="image" href="{preload if is_abs(preload) else rel(depth, preload)}" fetchpriority="high">\n'
           if preload else "")
     ogimg = og_image if is_abs(og_image) else absurl(og_image or "assets/img/og-cover.jpg")
+    # Custom artwork has varying dimensions; publish catalog dimensions when
+    # known, or omit these optional tags rather than claim the default size.
+    size = og_size if og_image else (1200, 630)
+    og_dimensions = ""
+    if size and all(isinstance(n, int) and n > 0 for n in size) and len(size) == 2:
+        og_dimensions = (f'\n  <meta property="og:image:width" content="{size[0]}">'
+                         f'\n  <meta property="og:image:height" content="{size[1]}">')
+    base_tag = f'  <base href="{esc(base_href)}">\n' if base_href else ""
     vmeta = ""
     if GOOGLE_VERIFY: vmeta += f'\n  <meta name="google-site-verification" content="{esc(GOOGLE_VERIFY)}">'
     if BING_VERIFY: vmeta += f'\n  <meta name="msvalidate.01" content="{esc(BING_VERIFY)}">'
@@ -475,14 +501,54 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     locales = "".join(f'\n  <meta property="og:locale:alternate" content="{loc}">' for loc in
                       ["es_ES", "fr_FR", "de_DE", "it_IT", "pt_BR", "nl_NL"])
     ga = ""
-    if GA_MEASUREMENT_ID:
-        ga = f"""  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={esc(GA_MEASUREMENT_ID)}"></script>
+    if GA_MEASUREMENT_ID and ANALYTICS_ENABLED:
+        # Check the opt-out *before* loading Google's script: suppressing only
+        # custom events still allowed its automatic page_view to be sent.
+        ga_id = json.dumps(GA_MEASUREMENT_ID)
+        ga_host = json.dumps(urllib.parse.urlparse(SITE_URL).hostname or "")
+        ga = f"""  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){{
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = {ga_host};
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {{
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    }} catch (e) {{ off = hash.indexOf('dkp-analytics=off') !== -1; }}
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = {ga_id};
     window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', '{esc(GA_MEASUREMENT_ID)}');
+    window.gtag = function(){{ window.dataLayer.push(arguments); }};
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {{page_location: location.origin + location.pathname}};
+    try {{
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {{
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{{0,63}}$/.test(value) ? value : '';
+      }}
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {{
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }}
+    }} catch (e) {{ /* attribution fields are optional */ }}
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  }})();
   </script>
 """
     # ── Pinterest Tag: ONLY rendered when PINTEREST_TAG_ID is set ────────
@@ -510,7 +576,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-{_GITHUB_KILL}
+{base_tag}{_GITHUB_KILL}
 {ga}{pin_tag}  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{esc(title)}</title>
@@ -524,9 +590,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <meta property="og:title" content="{esc(title)}">
   <meta property="og:description" content="{esc(desc)}">
   <meta property="og:url" content="{esc(canonical)}">
-  <meta property="og:image" content="{ogimg}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image" content="{ogimg}">{og_dimensions}
   <meta property="og:image:alt" content="{esc(title)}">
   <meta property="og:locale" content="en_US">{locales}
   <meta name="twitter:card" content="summary_large_image">
@@ -544,14 +608,14 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}?v={CSS_VERSION}">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{{display:none}}@media(max-width:959px){{.mobile-nav{{display:flex}}.menu-btn{{display:none}}}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
 {pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}',analytics:{str(ANALYTICS_ENABLED).lower()},feedbackEndpoint:'{FEEDBACK_ENDPOINT}',page:{ctx_json}}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
-  <script src="{rel(depth,'js/main.js')}" defer></script>{gs}
-  <script src="{rel(depth,'js/motion.js')}" defer></script>
-  <script src="{rel(depth,'js/analytics.js')}" defer></script>
-  <script src="{rel(depth,'js/feedback.js')}" defer></script>
-  <script src="{rel(depth,'js/translate.js')}" defer></script>
+  <script src="{script_src(depth,'main.js')}" defer></script>{gs}
+  <script src="{script_src(depth,'motion.js')}" defer></script>
+  <script src="{script_src(depth,'analytics.js')}" defer></script>{feedback_script}
+  <script src="{script_src(depth,'translate.js')}" defer></script>
 {s}</head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
@@ -581,7 +645,7 @@ def header(depth, active=None):
     <nav class="main-nav" aria-label="Primary">{links}</nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -617,9 +681,9 @@ def header(depth, active=None):
 </div>
 """
 
-def newsletter(depth, heading="Get the Free Procreate Starter Pack",
-               sub="Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.",
-               source="site", lead="", uid="nl", cta="Send me the Starter Pack", eyebrow="Free starter pack"):
+def newsletter(depth, heading="DigiKitPro news and art tips",
+               sub="Receive optional DigiKitPro product news and art tips. Free resources are available without subscribing; Payhip may ask for delivery details.",
+               source="site", lead="", uid="nl", cta="Subscribe", eyebrow="Optional newsletter"):
     """Email capture block.
 
     `source` and `lead` are sent to the inbox alongside the address (and to the
@@ -628,6 +692,18 @@ def newsletter(depth, heading="Get the Free Procreate Starter Pack",
     pack, not a generic welcome. `uid` keeps element ids unique when a page
     carries more than one form.
     """
+    # Do not render a form that cannot accept signups. This is the default:
+    # the current store has no configured email provider or delivery sequence.
+    if not EMAIL_ENDPOINT:
+        return f"""<section class="newsletter" id="newsletter">
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="{rel(depth, 'products/procreate-starter-guide-free-ebook/')}">Explore the free guide</a>
+    <a class="btn btn-line" href="{rel(depth, 'freebies.html')}">See all free resources</a></div>
+  </div></div>
+</section>"""
     subject = f"New DigiKitPro subscriber ({lead})" if lead else "New DigiKitPro subscriber"
     lead_field = f'\n        <input type="hidden" name="lead_magnet" value="{esc(lead)}">' if lead else ""
     return f"""<section class="newsletter" id="newsletter">
@@ -636,20 +712,19 @@ def newsletter(depth, heading="Get the Free Procreate Starter Pack",
       <p class="eyebrow">{esc(eyebrow)}</p>
       <h2>{esc(heading)}</h2>
       <p class="muted nl-sub">{esc(sub)}</p>
-      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
-           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
-           Source/lead fields allow future email provider to trigger the right sequence. -->
+      <!-- A provider must be configured and tested before enabling this form. -->
       <form class="nl-form" data-nl-form data-dkp-source="{esc(source)}" data-dkp-lead="{esc(lead)}" data-dkp-thanks="{rel(depth,'thank-you.html')}" action="{EMAIL_ENDPOINT}" method="POST">
         <input type="hidden" name="_subject" value="{esc(subject)}">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
+        <!-- Provider-specific _next behaviour must be tested before launch. -->
         <input type="hidden" name="_next" value="{absurl('thank-you.html')}">
         <input type="hidden" name="source" value="{esc(source)}">{lead_field}
         <label class="sr-only" for="{uid}-email">Email address</label>
         <input id="{uid}-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <label class="email-consent"><input type="checkbox" name="marketing_consent" value="yes" required> I agree to receive DigiKitPro product news and art tips. I can unsubscribe at any time. <a href="{rel(depth,'privacy.html')}">Privacy policy</a>.</label>
         <button class="btn btn-gold" type="submit">{esc(cta)}</button>
-        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
+        <p class="nl-note" data-nl-note>Signing up is optional; free resources are available without subscribing.</p>
       </form>
       <p class="nl-caption">Prefer to grab them now? <a href="{rel(depth,'freebies.html')}">Browse the free brush packs</a>.</p>
     </div>
@@ -716,7 +791,7 @@ def footer(depth):
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© {date.today().year} {SITE_NAME}. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© {date.today().year} {SITE_NAME}. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>
@@ -749,6 +824,9 @@ HIDDEN_BADGES = {"new", "masterclass"}
 def badge_text(p):
     """Visible badge label for a product, or '' when that label is hidden."""
     b = str((p or {}).get("badge") or "").strip()
+    # Editorially selected, not verified as a sales ranking.
+    if b.lower() in ("best seller", "bestseller"):
+        return "Featured"
     return "" if b.lower() in HIDDEN_BADGES else b
 
 # ── product cards ───────────────────────────────────────────────────────
@@ -820,9 +898,9 @@ def trust_bridge(depth=0, free=False):
     files have been downloaded" + "technical problems are resolved") so the
     claim never drifts from the policy page.
     """
-    terms = ("$0 now and forever, no card needed" if free
+    terms = ("free resource · Payhip may request delivery details" if free
              else "all sales final once downloaded, faulty files always resolved")
-    return (f'<p class="trust-bridge">Secure checkout via Payhip · instant download · '
+    return (f'<p class="trust-bridge">Checkout and digital delivery via Payhip · '
             f'{terms} · <a href="{rel(depth, "refunds.html")}">Refund policy</a></p>')
 
 # ── product-card media: the frame ladder ─────────────────────────────────
@@ -958,16 +1036,15 @@ def trust_band(depth=0):
     """Buying-assurance bar directly under the hero.
 
     Every line is a statement the store already makes on its legal pages or
-    in data/products.json — secure Payhip checkout, instant worldwide
-    delivery, the permanent download link, and the live count of free packs.
-    No invented social proof, no numbers that cannot be verified in-repo.
+    in data/products.json — Payhip checkout and delivery, support, and the
+    catalog count of free resources. No invented social proof.
     """
     free_n = sum(1 for p in PRODUCTS if p["free"])
     items = [
-        ("Secure checkout", "PayPal, cards &amp; Apple Pay — processed by Payhip"),
-        ("Instant delivery", "Worldwide, seconds after checkout"),
-        ("Lifetime access", "A permanent download link in your inbox"),
-        (f"{free_n} free packs", "$0 forever, no email needed to download"),
+        ("Secure checkout", "Payments processed by Payhip"),
+        ("Digital delivery", "Downloads handled by Payhip"),
+        ("Support", "Contact the store if a file needs attention"),
+        (f"{free_n} free resources", "$0 on Payhip; newsletter signup is optional"),
     ]
     cells = "".join(f'<div class="tb-item"><span>{title}</span><p>{sub}</p></div>' for title, sub in items)
     return f'<div class="trust-band" role="region" aria-label="Why buy from DigiKitPro"><div class="wrap trust-inner">{cells}</div></div>'
@@ -986,7 +1063,7 @@ def trend_topics(depth=0):
         ("Starter guide", rel(depth, "blog/best-procreate-brushes-for-beginners/")),
     ]
     pills = "".join(f'<a class="trend-pill" href="{u}">{n}</a>' for n, u in topics)
-    return f'<p class="trend-label">Trending now in Procreate &amp; digital art</p><div class="trend-pills">{pills}</div>'
+    return f'<p class="trend-label">Explore by topic</p><div class="trend-pills">{pills}</div>'
 
 # ── CONVERSION COMPONENTS (Phase 1 sales foundation) ────────────────────
 # Every component below reuses the existing design tokens (.btn, .badge,
@@ -998,7 +1075,7 @@ def best_seller():
     """The single product the homepage feature band is built around:
     the first live "Best Seller"-badged pack, else the top featured pack."""
     for p in PRODUCTS:
-        if badge_text(p).lower() == "best seller" and not p.get("comingSoon"):
+        if str(p.get("badge") or "").lower() == "best seller" and not p.get("comingSoon"):
             return p
     feat = sorted([p for p in PRODUCTS if p.get("featured") and not p.get("comingSoon")],
                   key=lambda x: x["featured"])
@@ -1046,7 +1123,7 @@ def feature_band(depth=0):
       </a>{pin_button(p)}
       </div>
       <div class="bs-body">
-        <p class="bs-kicker"><span class="bs-badge">Best Seller</span></p>
+        <p class="bs-kicker"><span class="bs-badge">Featured</span></p>
         <h2 id="bs-title">{esc(main_title)} {sub_html}</h2>
         <p class="lead-sm">{esc(p.get('spotPitch') or p['short'])}</p>
         <ul class="bs-points">{chips}</ul>
@@ -1082,16 +1159,17 @@ def freebie_download_row(depth=0):
       <span class="price price-free">Free</span>
       <a class="btn btn-gold" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-direct')}>Get Free <span class="btn-arr">↗</span></a>
     </div>
-    <p class="dl-note">No email required · instant download · keep forever</p>
+    <p class="dl-note">Free via Payhip · newsletter signup not required</p>
+    <a class="dl-next" href="{rel(depth, 'thank-you.html')}?lead={urllib.parse.quote(p['slug'])}" data-dkp-event="free_next_step_click" data-dkp-source-product-id="{esc(p['slug'])}" data-dkp-surface="freebies">After downloading: your next step →</a>
   </div>
 </article>"""
     return f"""<section class="section" id="direct" aria-labelledby="direct-title">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="eyebrow">No email, no wait</p><h2 id="direct-title">Download Them Right Now</h2></div>
-      <a class="text-link" href="#get-free">Or get new drops by email ↓</a>
+      <div><p class="eyebrow">Free on Payhip</p><h2 id="direct-title">Choose a Free Resource</h2></div>
+      <a class="text-link" href="{rel(depth, 'products.html')}">Explore the full shop →</a>
     </div>
-    <p class="sec-note muted">Every button goes straight to Payhip's free checkout. Nothing is gated: take the packs first, decide about email later.</p>
+    <p class="sec-note muted">Each button opens its free product on Payhip. Payhip handles delivery and may request your email; a DigiKitPro newsletter signup is not required.</p>
     <div class="grid dl-grid">{cards}</div>
     {trust_bridge(depth, free=True)}
   </div>
@@ -1151,7 +1229,7 @@ def craft_grid(depth=0):
       <div><p class="eyebrow">Kits for the way you create</p><h2 id="craft-title">What Do You Create?</h2></div>
       <a class="text-link" href="{rel(depth,'products.html')}">Browse all products →</a>
     </div>
-    <p class="sec-note muted">Find the right tools for your style and workflow — every card routes to a real category of finished, hand-tested kits.</p>
+    <p class="sec-note muted">Find the right tools for your style and workflow — explore kits organized around different creative workflows.</p>
     <div class="grid craft-grid">{tiles}</div>
   </div>
 </section>
@@ -1343,7 +1421,7 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
       <p class="lead-sm">2,000+ organized Procreate brushes — affordable, organized and ready for every workflow, from portraits and skin to line art, watercolor and anime.</p>
       <ul class="flag-points">
         <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> in organised category folders — no more hunting for the right tool</li>
-        <li>One organized download, lifetime access, built for how you actually create</li>
+        <li>Organized tools for a range of Procreate workflows</li>
       </ul>
       <ul class="flag-chips">{chips}</ul>
       <p class="flag-compare muted">{compare}</p>
@@ -1370,7 +1448,7 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
       <ul class="flag-points">
         <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> in organised category folders — no more hunting for the right tool</li>
         <li>Portrait, skin, hair, linework, watercolour, traditional media, character &amp; anatomy, texture and effects</li>
-        <li>One organized download, lifetime access, built for how you actually create</li>
+        <li>Organized tools for a range of Procreate workflows</li>
       </ul>
       <p class="flag-compare muted">{compare}</p>
       <div class="flag-cta">
@@ -1401,13 +1479,13 @@ def upgrade_panel(p, depth):
     diff = f["price"] - p.get("price", 0)
     if tier == "bundle":
         head_txt = "Already looking at a bundle?"
-        body = (f"The Master Library adds the rest of the catalog on top of it: "
+        body = (f"For a broader collection, compare the Master Library: "
                 f"{esc(f.get('assets') or '2,000+ brushes')} in one organised download.")
     else:
         head_txt = "Looking for more than one pack?"
         body = (f"This pack solves one problem well for {esc(p['priceText'])}. "
                 f"If you paint across several styles, the Master Library covers all of them "
-                f"for {esc(f['priceText'])} — +${diff:.2f} over this pack.")
+                f"for {esc(f['priceText'])}. These are separate purchases; compare what each includes before buying.")
     im = f.get("images") or {}
     thumb = im.get("card") or im.get("main") or ""
     return f"""<section class="psec upgrade-panel" aria-labelledby="p-upgrade">
@@ -1462,8 +1540,8 @@ def licence_line(p=None):
     Wording follows the product format so an eBook is never described as if
     it were a brush pack (and vice versa)."""
     if p is not None and _is_ebook(p):
-        body = ('You may create your own artwork while following the Masterclass and use your artwork '
-                'personally or commercially. The Masterclass PDF, text, illustrations, images and educational '
+        body = ('You may create your own artwork while following the guide and use your artwork '
+                'personally or commercially. The PDF, text, illustrations, images and educational '
                 'materials may not be resold, redistributed, publicly shared, repackaged or presented as your own product.')
     else:
         body = ('Yes — commercial use is allowed. Finished artwork you create is yours to use in '
@@ -1475,39 +1553,99 @@ def licence_line(p=None):
 
 
 def install_steps(p=None):
-    """How do I get it onto my device? Format-aware.
+    """Format-aware download guidance; never present a ZIP as a brushset.
 
-    Brush packs → .brushset install into Procreate.
-    PDF eBooks  → open-in-any-reader path (no brush installation).
-    Passing no product keeps the historical brush default.
+    Only render steps when the catalog identifies a PDF, .brushset/.brush,
+    or .swatches file. Other digital products have different requirements.
     """
-    if p is not None and _is_ebook(p):
-        steps = [
-            "Purchase the Masterclass.",
-            "Your PDF eBook is delivered after checkout.",
-            "Open the PDF on your iPad, tablet, computer or phone using a PDF reader.",
-            "Keep Procreate open on your iPad while following the lessons and exercises.<br><b>No brush installation is required</b> — every technique works with Procreate's built-in brushes; DigiKitPro brush kits are optional accelerators.",
-        ]
-        note = ('This is a PDF eBook, not a .brushset — no brushes are installed. The Masterclass is an educational guide. '
-                'Looking for brush install steps for DigiKitPro kits? '
-                '<a href="../../blog/how-to-install-procreate-brushes/">'
-                'How to install Procreate brushes</a>.')
+    if not p:
+        return ""
+    hay = " ".join((p.get("technical") or []) + (p.get("requirements") or [])
+                   + [p.get("assets") or ""]).lower()
+    if _is_ebook(p):
         heading = "How to use it"
-    else:
         steps = [
-            "Buy or download on Payhip — the .brushset file arrives by email instantly.",
-            "Get the file onto your iPad (AirDrop from a Mac, or any file transfer on Windows).",
-            "Tap the .brushset file in the Files app and choose <b>Open in Procreate</b>.",
-            "The set installs automatically and appears in your Brushes panel, ready to use.",
+            "Complete the download on Payhip and follow its delivery instructions.",
+            "Open the PDF in a reader such as Books or Files on your iPad, tablet, phone or computer.",
+            "Use Procreate on your iPad to follow along; the guide is a PDF, not a brush pack.",
         ]
-        note = ('Full walkthrough with screenshots: '
-                '<a href="../../blog/how-to-install-procreate-brushes/">'
-                'How to install Procreate brushes</a>.')
+        note = "Procreate's built-in brushes are enough to practise the lessons."
+    elif ".brushset" in hay or ".brush " in hay:
         heading = "How to install it"
-    lis = "".join(f"<li>{s}</li>" for s in steps)
+        steps = [
+            "Complete your order on Payhip, then download the files to your iPad.",
+            "If the download is a ZIP, tap it in the Files app to extract the folder first.",
+            "Open the extracted folder and tap the .brushset or .brush file to import it into Procreate.",
+            "Find the imported set in the Brushes panel. Paper textures, if included, are separate files.",
+        ]
+        note = ('Full walkthrough: <a href="../../blog/how-to-install-procreate-brushes/">'
+                'How to install Procreate brushes</a>.')
+    elif ".swatches" in hay:
+        heading = "How to install it"
+        steps = [
+            "Complete the free download on Payhip and save the files to your iPad.",
+            "If the download is a ZIP, tap it in Files to extract the folder.",
+            "Tap a .swatches file to import the palette into Procreate, then find it in the Palettes panel.",
+        ]
+        note = "Swatches are colour palettes, not brushes."
+    else:
+        return ""
+    lis = "".join(f"<li>{step}</li>" for step in steps)
     return (f'<section class="psec install-steps" aria-labelledby="p-install">'
             f'<h2 id="p-install">{heading}</h2><ol class="steps-list">{lis}</ol>'
             f'<p class="muted install-note">{note}</p></section>')
+
+
+def free_next_step(p, depth, delivery=False):
+    """A truthful, product-specific free → paid comparison.
+
+    The free product remains fully useful on its own. Prices, names, images
+    and URLs always come from the catalog; missing products suppress the card.
+    """
+    if not p or not p.get("free"):
+        return ""
+    plan = FREE_JOURNEYS.get(p["slug"]) or {}
+    paid = BY_SLUG.get(plan.get("paid"))
+    if not plan or not paid or paid.get("free") or paid.get("comingSoon"):
+        return ""
+    slug = p["slug"]
+    image = paid.get("images") or {}
+    thumb = image.get("card") or image.get("main") or ""
+    surface = "next_step_page" if delivery else "free_product"
+    free_link = (f'<a class="btn btn-line btn-sm" href="{esc(p["payhipUrl"])}" '
+                 f'target="_blank" rel="noopener" {buy_attrs(p, "next-step-free")}>Get the free resource on Payhip ↗</a>') if delivery else ""
+    return f"""<section class="psec journey-panel" data-journey="{esc(slug)}" aria-labelledby="journey-{esc(slug)}">
+  <div class="journey-intro">
+    <p class="eyebrow">A useful next step · {esc(p['name'])}</p>
+    <h2 id="journey-{esc(slug)}">{esc(plan['title'])}</h2>
+    <p>{esc(plan['practice'])}</p>
+    {free_link}
+  </div>
+  <div class="journey-compare">
+    <div class="journey-free">
+      <p class="journey-label">Your free resource</p>
+      <p>{esc(plan['freeSummary'])}</p>
+    </div>
+    <div class="journey-paid">
+      <p class="journey-label">An optional paid companion · {esc(paid['priceText'])}</p>
+      <div class="journey-product">
+        <div class="journey-image"><img src="{asset_file(depth, paid['slug'], thumb)}" width="{image.get('cardW') or 750}" height="{image.get('cardH') or 500}" alt="" loading="lazy" decoding="async"></div>
+        <div><h3>{esc(paid['name'])}</h3><p>{esc(plan['paidSummary'])}</p>
+          <a class="text-link" href="{rel(depth, 'products/' + paid['slug'] + '/')}" data-dkp-event="premium_product_click" data-dkp-source-product-id="{esc(slug)}" data-dkp-product-id="{esc(paid['slug'])}" data-dkp-surface="{surface}">Explore the paid kit →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="journey-note">The free resource remains free and useful on its own. No purchase is required.</p>
+</section>"""
+
+
+def next_step_link(p, depth, loc="free_product"):
+    if not p or p.get("slug") not in FREE_JOURNEYS:
+        return ""
+    return (f'<p class="next-step-link"><a href="{rel(depth, "thank-you.html")}?lead={urllib.parse.quote(p["slug"])}" '
+            f'data-dkp-event="free_next_step_click" data-dkp-source-product-id="{esc(p["slug"])}" '
+            f'data-dkp-surface="{esc(loc)}">After downloading: see your practice plan →</a></p>')
 
 
 def freebie_gate(depth, p=None, source="freebies"):
@@ -1515,18 +1653,16 @@ def freebie_gate(depth, p=None, source="freebies"):
     we never hold a promised free file hostage — but the email path is the
     primary action and leads to thank-you.html, which makes one starter offer."""
     lead = p["slug"] if p else "free-brushes"
-    if p:
-        heading = f"Get {p['name']}"
-        sub = ("Enter your email and we will send the download link plus new free brush drops. "
-               "No spam, unsubscribe in one click.")
-        eyebrow, btn = "Free download", "Send my free download"
-    else:
-        # Secondary path on freebies.html: the direct Payhip downloads above
-        # are the primary action, so the email module only recruits subscribers.
-        heading = "Want new free drops sent to you?"
-        sub = ("Leave your email and every new free pack lands in your inbox the day it drops. "
-               "The downloads above never need an address — this is only for the next ones.")
-        eyebrow, btn = "Free drops, first", "Send me new freebies"
+    if not EMAIL_ENDPOINT:
+        return f"""<section class="freebie-gate" id="get-free"><div class="fg-inner"><div class="fg-copy">
+      <p class="eyebrow">A little more practice</p><h2>Keep creating with your free tools</h2>
+      <p class="muted">The resources above are yours to explore. For a guided portrait exercise, start with the free guide and see a suggested next step when you are ready.</p>
+      <a class="btn btn-line" href="{rel(depth, 'products/procreate-starter-guide-free-ebook/')}">Explore the free portrait guide</a>
+    </div></div></section>"""
+    heading = "DigiKitPro news and art tips"
+    sub = ("Subscribing is optional. The free resources are available directly on Payhip, "
+           "which may request details to deliver them.")
+    eyebrow, btn = "Optional newsletter", "Subscribe"
     return f"""<section class="freebie-gate" id="get-free" aria-labelledby="fg-title">
   <div class="fg-inner">
     <div class="fg-copy">
@@ -1537,16 +1673,17 @@ def freebie_gate(depth, p=None, source="freebies"):
         <input type="hidden" name="_subject" value="Free download request: {esc(lead)}">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
-        <!-- Absolute _next keeps the no-JS path on thank-you.html, which delivers the promised free file. -->
+        <!-- Provider-specific _next behaviour must be tested before launch. -->
         <input type="hidden" name="_next" value="{absurl('thank-you.html')}">
         <input type="hidden" name="source" value="{esc(source)}">
         <input type="hidden" name="lead_magnet" value="{esc(lead)}">
         <label class="sr-only" for="fg-email-{esc(lead)}">Email address</label>
         <input id="fg-email-{esc(lead)}" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <label class="email-consent"><input type="checkbox" name="marketing_consent" value="yes" required> I agree to receive DigiKitPro product news and art tips. I can unsubscribe at any time. <a href="{rel(depth,'privacy.html')}">Privacy policy</a>.</label>
         <button class="btn btn-gold" type="submit">{esc(btn)}</button>
-        <p class="nl-note" data-nl-note>We email the link straight away.</p>
+        <p class="nl-note" data-nl-note>Subscribing is optional; the free resources are available directly above.</p>
       </form>
-      {f'<p class="fg-alt muted">In a hurry? <a href="{p["payhipUrl"]}" target="_blank" rel="noopener" {buy_attrs(p, "freebie-gate-direct")}>Download it directly on Payhip ↗</a> — no email needed.</p>' if p else ''}
+      {f'<p class="fg-alt muted">In a hurry? <a href="{p["payhipUrl"]}" target="_blank" rel="noopener" {buy_attrs(p, "freebie-gate-direct")}>Download it directly on Payhip ↗</a> — newsletter signup is optional.</p>' if p else ''}
     </div>
   </div>
 </section>
@@ -1612,6 +1749,10 @@ def season_band(depth=0):
 </section>"""
 
 def write(path, content):
+    # Conditional template blocks can leave indentation-only lines. Keep the
+    # generated HTML diff clean without changing text or non-HTML files.
+    if path.endswith(".html"):
+        content = re.sub(r"(?m)^[ \t]+$", "", content)
     p = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(p), exist_ok=True) if os.path.dirname(path) else None
     open(p, "w", encoding="utf-8").write(content)

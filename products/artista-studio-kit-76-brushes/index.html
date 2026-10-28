@@ -30,18 +30,54 @@
   }catch(e){}
 })();
 </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5MFQFHNB6B');
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Artista Studio Kit: 76 Procreate Brushes for iPad Artists | DigiKitPro</title>
-  <meta name="description" content="76 pro Procreate brushes in one organized studio kit: linework, sketching, shading, graphite, markers, textures &amp; effects. Instant download, $5.00.">
+  <title>Artista Studio: 76 Procreate Brushes | DigiKitPro</title>
+  <meta name="description" content="Explore 76 Procreate brushes for sketching, line art, shading, graphite, markers and texture, organized in eight groups for iPad artists.">
   <link rel="canonical" href="https://digikitpro.shop/products/artista-studio-kit-76-brushes/">
   <meta name="google-site-verification" content="1e87093669a800cb">
   <meta name="msvalidate.01" content="52B8ABC07828BE6CE77B297D3F2E50A3">
@@ -58,13 +94,13 @@
   <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta property="og:type" content="product">
   <meta property="og:site_name" content="DigiKitPro">
-  <meta property="og:title" content="Artista Studio Kit: 76 Procreate Brushes for iPad Artists | DigiKitPro">
-  <meta property="og:description" content="76 pro Procreate brushes in one organized studio kit: linework, sketching, shading, graphite, markers, textures &amp; effects. Instant download, $5.00.">
+  <meta property="og:title" content="Artista Studio: 76 Procreate Brushes | DigiKitPro">
+  <meta property="og:description" content="Explore 76 Procreate brushes for sketching, line art, shading, graphite, markers and texture, organized in eight groups for iPad artists.">
   <meta property="og:url" content="https://digikitpro.shop/products/artista-studio-kit-76-brushes/">
   <meta property="og:image" content="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Artista Studio Kit: 76 Procreate Brushes for iPad Artists | DigiKitPro">
+  <meta property="og:image:width" content="750">
+  <meta property="og:image:height" content="928">
+  <meta property="og:image:alt" content="Artista Studio: 76 Procreate Brushes | DigiKitPro">
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="es_ES">
   <meta property="og:locale:alternate" content="fr_FR">
@@ -73,10 +109,10 @@
   <meta property="og:locale:alternate" content="pt_BR">
   <meta property="og:locale:alternate" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Artista Studio Kit: 76 Procreate Brushes for iPad Artists | DigiKitPro">
-  <meta name="twitter:description" content="76 pro Procreate brushes in one organized studio kit: linework, sketching, shading, graphite, markers, textures &amp; effects. Instant download, $5.00.">
+  <meta name="twitter:title" content="Artista Studio: 76 Procreate Brushes | DigiKitPro">
+  <meta name="twitter:description" content="Explore 76 Procreate brushes for sketching, line art, shading, graphite, markers and texture, organized in eight groups for iPad artists.">
   <meta name="twitter:image" content="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp">
-  <meta name="twitter:image:alt" content="Artista Studio Kit: 76 Procreate Brushes for iPad Artists | DigiKitPro">
+  <meta name="twitter:image:alt" content="Artista Studio: 76 Procreate Brushes | DigiKitPro">
   <meta name="geo.placename" content="DigiKitPro">
   <meta name="content-language" content="en">
   <meta name="format-detection" content="telephone=no">
@@ -88,20 +124,20 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="../../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../../css/style.css?v=fe430ede6b736c200057bdbd2cc61f8e">
+  <link rel="stylesheet" href="../../css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
- <link rel="preload" as="image" href="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" fetchpriority="high">
+ <link rel="preload" as="image" href="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" fetchpriority="high">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "product", "slug": "artista-studio-kit-76-brushes", "name": "Artista Studio Kit: 76 Procreate Brushes", "tier": "entry", "category": "Portrait", "price": 5.0, "free": false, "line": "procreate"}};</script>
   <script src="../../js/search-index.js" defer></script>
-  <script src="../../js/main.js" defer></script>
+  <script src="../../js/main.js?v=33a4a6e4ad79" defer></script>
   <script src="../../js/gallery.js" defer></script>
-  <script src="../../js/motion.js" defer></script>
-  <script src="../../js/analytics.js" defer></script>
-  <script src="../../js/feedback.js" defer></script>
-  <script src="../../js/translate.js" defer></script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Artista Studio Kit: 76 Procreate Brushes", "image": "https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp", "description": "One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects.", "brand": {"@type": "Brand", "name": "DigiKitPro"}, "sku": "artista-studio-kit-76-brushes", "url": "https://digikitpro.shop/products/artista-studio-kit-76-brushes/", "contentLocation": {"@type": "Place", "name": "Worldwide"}, "offers": {"@type": "Offer", "price": "5.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition", "url": "https://digikitpro.shop/products/artista-studio-kit-76-brushes/", "priceValidUntil": "2027-12-31", "seller": {"@type": "Organization", "name": "DigiKitPro"}}}</script>
+  <script src="../../js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="../../js/analytics.js?v=610c164ea071" defer></script>
+  <script src="../../js/translate.js?v=8877305ddd24" defer></script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Artista Studio Kit: 76 Procreate Brushes", "image": "https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp", "description": "A versatile 76-brush Procreate studio for sketching, linework, shading, graphite, markers and texture—organized into eight groups.", "brand": {"@type": "Brand", "name": "DigiKitPro"}, "sku": "artista-studio-kit-76-brushes", "url": "https://digikitpro.shop/products/artista-studio-kit-76-brushes/", "contentLocation": {"@type": "Place", "name": "Worldwide"}, "offers": {"@type": "Offer", "price": "5.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition", "url": "https://digikitpro.shop/products/artista-studio-kit-76-brushes/", "seller": {"@type": "Organization", "name": "DigiKitPro"}}}</script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "Products", "item": "https://digikitpro.shop/products.html"}, {"@type": "ListItem", "position": 3, "name": "Portrait", "item": "https://digikitpro.shop/category/portrait/"}, {"@type": "ListItem", "position": 4, "name": "Artista Studio Kit: 76 Procreate Brushes", "item": "https://digikitpro.shop/products/artista-studio-kit-76-brushes/"}]}</script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use this product?", "acceptedAnswer": {"@type": "Answer", "text": "You need an iPad with the Procreate app. Full requirements are listed above on this page."}}, {"@type": "Question", "name": "How will I receive my files?", "acceptedAnswer": {"@type": "Answer", "text": "Immediately after checkout on Payhip you are redirected to a download page, and you also receive an automated email with a permanent download link."}}, {"@type": "Question", "name": "What is the refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved."}}]}</script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is in the Artista Studio Kit?", "acceptedAnswer": {"@type": "Answer", "text": "There are 76 Procreate brushes across eight groups: linework and inking, sketching, shading, graphite and charcoal, markers, traditional media, texture and effects, and experimental brushes."}}, {"@type": "Question", "name": "Is Artista suitable for beginners?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Try one sketch, one liner and one shading brush first, then explore the other groups as you need them."}}, {"@type": "Question", "name": "Should I choose Artista or the Portrait Mastery Kit?", "acceptedAnswer": {"@type": "Answer", "text": "Artista is a broad 76-brush illustration collection. Portrait Mastery is a separate 46-brush kit organized around a portrait workflow and includes four paper textures."}}, {"@type": "Question", "name": "What do I need and how do I install it?", "acceptedAnswer": {"@type": "Answer", "text": "You need Procreate on an iPad. Download and extract the ZIP in Files, then tap the .brushset to import it. An Apple Pencil is recommended for pressure and tilt."}}, {"@type": "Question", "name": "How are delivery and refunds handled?", "acceptedAnswer": {"@type": "Answer", "text": "Payhip handles checkout and digital delivery. Sales are final once files have been downloaded; contact DigiKitPro if a file has a technical problem."}}]}</script>
 </head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
@@ -115,7 +151,7 @@
     <nav class="main-nav" aria-label="Primary"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html" class="active">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a></nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -155,39 +191,46 @@
     <nav class="crumbs" aria-label="Breadcrumb"><a href="../../index.html">Home</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><a href="../../products.html">Products</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><a href="../../category/portrait/">Portrait</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">Artista Studio Kit: 76 Procreate Brushes</span></nav>
     <article class="pdp">
       <div class="pdp-media" data-product-gallery><figure class="gal-main">
-      <img id="product-main-image" data-gallery-main src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" sizes="(min-width: 960px) 46vw, 100vw" width="1400" height="1731" alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork" fetchpriority="high" decoding="async" data-pin-description="Artista Studio Kit: 76 Procreate Brushes - One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/artista-studio-kit-76-brushes/" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp">
-      <a class="pin-btn pin-btn-gal" data-pin-anchor href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fartista-studio-kit-76-brushes%2Fartista-studio-kit-76-brushes.webp&amp;description=Artista+Studio+Kit%3A+76+Procreate+Brushes+-+One+organized+76-brush+collection+that+covers+the+full+studio+workflow%2C+linework%2C+inking%2C+sketching%2C+shading%2C+graphite%2C+markers+and+effects.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Artista Studio Kit: 76 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-    </figure><div class="gal-thumbs" role="group" aria-label="Product image previews"><button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb data-full-image="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" data-srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork" data-w="1400" data-h="1731" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" aria-label="View product image 1" aria-current="true"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" width="750" height="928" alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2.webp" data-srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2.webp 1200w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork: preview 1" data-w="1200" data-h="1017" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2.webp" aria-label="View product image 2"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2-card.webp" width="750" height="636" alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork: preview 1 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3.webp" data-srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3.webp 1200w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork: preview 2" data-w="1200" data-h="978" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3.webp" aria-label="View product image 3"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3-card.webp" width="750" height="612" alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork: preview 2 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4.webp" data-srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4.webp 1200w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork: preview 3" data-w="1200" data-h="895" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4.webp" aria-label="View product image 4"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4-card.webp" width="750" height="560" alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork: preview 3 thumbnail" loading="lazy" decoding="async"></button></div></div>
+      <img id="product-main-image" data-gallery-main src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" sizes="(min-width: 960px) 46vw, 100vw" width="1400" height="1731" alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork" fetchpriority="high" decoding="async" data-pin-description="Artista Studio Kit: 76 Procreate Brushes - A versatile 76-brush Procreate studio for sketching, linework, shading, graphite, markers and texture—organized into eight groups. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/artista-studio-kit-76-brushes/" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp">
+      <a class="pin-btn pin-btn-gal" data-pin-anchor href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fartista-studio-kit-76-brushes%2Fartista-studio-kit-76-brushes.webp&amp;description=Artista+Studio+Kit%3A+76+Procreate+Brushes+-+A+versatile+76-brush+Procreate+studio+for+sketching%2C+linework%2C+shading%2C+graphite%2C+markers+and+texture%E2%80%94organized+into+eight+groups.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Artista Studio Kit: 76 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+    </figure><div class="gal-thumbs" role="group" aria-label="Product image previews"><button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb data-full-image="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" data-srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork" data-w="1400" data-h="1731" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp" aria-label="View product image 1" aria-current="true"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" width="750" height="928" alt="Artista Studio Kit, 76 Procreate Brushes, product preview artwork thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2.webp" data-srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2.webp 1200w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Artista product graphic illustrating a sketch-to-finish workflow" data-w="1200" data-h="1017" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2.webp" aria-label="View product image 2"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-2-card.webp" width="750" height="636" alt="Artista product graphic illustrating a sketch-to-finish workflow thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3.webp" data-srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3.webp 1200w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Artista product graphic showing linework, sketch, shading, traditional and texture strokes" data-w="1200" data-h="978" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3.webp" aria-label="View product image 3"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-3-card.webp" width="750" height="612" alt="Artista product graphic showing linework, sketch, shading, traditional and texture strokes thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4.webp" data-srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4.webp 1200w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Artista product graphic illustrating marker, graphite, charcoal, gouache and pencil styles" data-w="1200" data-h="895" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4.webp" aria-label="View product image 4"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-4-card.webp" width="750" height="560" alt="Artista product graphic illustrating marker, graphite, charcoal, gouache and pencil styles thumbnail" loading="lazy" decoding="async"></button></div><p class="gallery-hint">Select a preview to explore the kit; tap the main image to enlarge it.</p></div>
       <div class="pdp-info">
         <div class="chip-row"><span class="meta-chip">76 versatile brushes</span><a class="meta-chip cat" href="../../category/portrait/">Portrait</a></div>
         <h1>Artista Studio Kit: 76 Procreate Brushes</h1>
-        <p class="pdp-short">One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects.</p>
+        <p class="pdp-short">A versatile 76-brush Procreate studio for sketching, linework, shading, graphite, markers and texture—organized into eight groups.</p>
         <div class="buy-panel">
           <div class="buy-top"><span class="buy-label">Price</span><span class="price price-lg">$5.00</span></div>
-          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/IjRTk" target="_blank" rel="noopener" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="pdp-buy-panel">Buy Now <span class="btn-arr">↗</span></a>
-          <p class="buy-cap">Opens the Payhip checkout in a new tab</p>
-          <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
+          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/IjRTk" target="_blank" rel="noopener" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="pdp-buy-panel">Buy on Payhip <span class="btn-arr">↗</span></a>
+          <p class="buy-cap">Opens the product on Payhip in a new tab; continue to checkout there</p>
+          <p class="trust-bridge">Checkout and digital delivery via Payhip · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
+
         </div>
         <p class="licence-line"><b>Commercial use allowed.</b> Yes — commercial use is allowed. Finished artwork you create is yours to use in commissions, client projects, prints, products and other commercial work. You may not resell, share, redistribute or repackage the brush files themselves. Contact us before agency, classroom or multi-user use. <a href="../../terms.html">Read the full licence</a>.</p>
-        <ul class="pdp-trust"><li>Instant download via Payhip</li><li>Lifetime access</li><li>Procreate on iPad required</li></ul>
+        <ul class="pdp-trust"><li>Digital delivery via Payhip</li><li>No physical item ships</li><li>Procreate on iPad required</li></ul>
       </div>
     </article>
 
-    <section class="psec" aria-labelledby="p-why-you-ll-love-it"><h2 id="p-why-you-ll-love-it">Why You&#x27;ll Love It</h2><ul class="tick-list gold"><li>Complete all-in-one workflow: one kit from first sketch to final effect</li><li>Eight curated sections keep 76 brushes organized and fast to navigate</li><li>Covers linework, shading, graphite, charcoal, markers and traditional media</li><li>Built for comics, concept art, portraits, illustration and character design</li></ul></section>
-    
+    <section class="psec" aria-labelledby="p-why-you-ll-love-it"><h2 id="p-why-you-ll-love-it">Why You&#x27;ll Love It</h2><ul class="tick-list gold"><li>76 brushes organized into eight groups for different drawing and painting tasks</li><li>Sketch and ink, then work with shading, graphite, charcoal, markers and effects</li><li>A versatile choice for comics, portraits, illustration and character work</li><li>Explore one group at a time or combine tools with your existing brushes</li></ul></section>
+
+    <section class="psec kit-choice" aria-labelledby="kit-choice-title">
+  <div><p class="eyebrow">Find your fit</p><h2 id="kit-choice-title">Mostly painting portraits?</h2>
+    <p>Artista is a broad studio collection. The separate Portrait Mastery Kit is organized specifically around sketching, blending, hair, texture and finishing a portrait.</p></div>
+  <a class="btn btn-line" href="../../products/portrait-mastery-kit-46-brushes/" data-dkp-event="kit_comparison_click" data-dkp-source-product-id="artista-studio-kit-76-brushes" data-dkp-product-id="portrait-mastery-kit-46-brushes">Explore Portrait Mastery Kit: 46 Procreate Brushes · $8.00 →</a>
+</section>
+
     <section class="psec" aria-labelledby="p-what-s-included"><h2 id="p-what-s-included">What&#x27;s Included</h2><ul class="tick-list check"><li>Linework &amp; Inking brushes</li><li>Sketching brushes</li><li>Shading brushes</li><li>Graphite &amp; Charcoal brushes</li><li>Markers</li><li>Traditional Media brushes</li><li>Texture &amp; Effects brushes</li><li>Experimental brushes</li></ul></section>
-    <section class="psec richtext" aria-labelledby="p-about"><h2 id="p-about">About This Product</h2><div class="prose"><blockquote>Artista Studio Kit brings <strong>76 versatile brushes</strong> into one organized collection, from precise linework and sketching to shading, traditional textures and expressive effects.</blockquote><blockquote><strong>One kit. One workflow. Endless creative possibilities.</strong></blockquote><p><br/></p><p><strong>What's Included</strong></p><ul><li>Linework &amp; Inking</li><li>Sketching</li><li>Shading</li><li>Graphite &amp; Charcoal</li><li>Markers</li><li>Traditional Media</li><li>Texture &amp; Effects</li><li>Experimental Brushes</li></ul><p><strong>Perfect for</strong></p><p> Comics • Concept Art • Portraits • Illustration • Character Design • Sketching</p></div></section>
-    
+    <section class="psec richtext" aria-labelledby="p-about"><h2 id="p-about">About This Product</h2><div class="prose"><p>Artista Studio Kit is for artists who move between sketches, inked lines, shading and traditional-media textures. Its 76 brushes are organized into eight groups, from linework and graphite to markers, texture and experimental effects.</p><p>Use a sketching brush to find your shapes, refine the drawing with a liner, and explore the shading and texture tools as the piece develops. Beginners can learn the groups one at a time; artists with more experience can add individual tools to an existing workflow.</p><p>Choose Artista for a broad illustration toolkit. If portraits are your main focus, the separate <a href="../portrait-mastery-kit-46-brushes/">Portrait Mastery Kit</a> is organized around portrait-specific stages instead.</p></div></section>
+
     <section class="psec" aria-labelledby="p-tech"><h2 id="p-tech">Technical Details</h2><table class="spec-table"><tr><th>Format</th><td>.brushset (Procreate)</td></tr>
 <tr><th>Contents</th><td>76 versatile brushes</td></tr>
 <tr><th>Download</th><td>ZIP (66MB)</td></tr>
-<tr><th>Delivery</th><td>Instant digital download via Payhip</td></tr>
+<tr><th>Delivery</th><td>Digital download via Payhip</td></tr>
 <tr><td colspan="2">Designed for Apple Pencil pressure &amp; tilt</td></tr>
 </table></section>
     <section class="psec" aria-labelledby="p-requirements"><h2 id="p-requirements">Requirements</h2><ul class="tick-list plain"><li>iPad with the Procreate app (not compatible with Photoshop or other apps)</li><li>Apple Pencil recommended for pressure &amp; tilt control</li><li>Digital download, no physical item ships</li></ul></section>
-    <section class="psec install-steps" aria-labelledby="p-install"><h2 id="p-install">How to install it</h2><ol class="steps-list"><li>Buy or download on Payhip — the .brushset file arrives by email instantly.</li><li>Get the file onto your iPad (AirDrop from a Mac, or any file transfer on Windows).</li><li>Tap the .brushset file in the Files app and choose <b>Open in Procreate</b>.</li><li>The set installs automatically and appears in your Brushes panel, ready to use.</li></ol><p class="muted install-note">Full walkthrough with screenshots: <a href="../../blog/how-to-install-procreate-brushes/">How to install Procreate brushes</a>.</p></section>
+    <section class="psec install-steps" aria-labelledby="p-install"><h2 id="p-install">How to install it</h2><ol class="steps-list"><li>Complete your order on Payhip, then download the files to your iPad.</li><li>If the download is a ZIP, tap it in the Files app to extract the folder first.</li><li>Open the extracted folder and tap the .brushset or .brush file to import it into Procreate.</li><li>Find the imported set in the Brushes panel. Paper textures, if included, are separate files.</li></ol><p class="muted install-note">Full walkthrough: <a href="../../blog/how-to-install-procreate-brushes/">How to install Procreate brushes</a>.</p></section>
     <section class="psec" aria-labelledby="p-for"><h2 id="p-for">Who It's For</h2><div class="tag-row"><span class="tag">Comics</span><span class="tag">Concept art</span><span class="tag">Portraits</span><span class="tag">Illustration</span><span class="tag">Character design</span><span class="tag">Sketching</span></div></section>
-    
+
     <section class="psec upgrade-panel" aria-labelledby="p-upgrade">
   <h2 id="p-upgrade">Looking for more than one pack?</h2>
   <div class="up-inner">
@@ -200,27 +243,33 @@
       <p class="up-this"><b>This pack</b> — Artista Studio Kit: 76 Procreate Brushes, $5.00</p>
       <p class="up-or muted">or</p>
       <h3>The DigiKitPro Master Library: 2,000+ Procreate Brushes</h3>
-      <p class="muted">This pack solves one problem well for $5.00. If you paint across several styles, the Master Library covers all of them for $19.00 — +$14.00 over this pack.</p>
+      <p class="muted">This pack solves one problem well for $5.00. If you paint across several styles, the Master Library covers all of them for $19.00. These are separate purchases; compare what each includes before buying.</p>
       <div class="up-cta">
         <span class="price">$19.00</span>
         <a class="btn btn-line btn-sm" href="../../products/master-library-2000-brushes/"
            data-dkp-event="upgrade_clicked" data-dkp-from-product-id="artista-studio-kit-76-brushes"
            data-dkp-to-product-id="master-library-2000-brushes" data-dkp-price-delta="14.00">View Product</a>
       </div>
-      <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
+      <p class="trust-bridge">Checkout and digital delivery via Payhip · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
     </div>
   </div>
 </section>
 
     <section class="psec" aria-labelledby="p-faq"><h2 id="p-faq">FAQ</h2><details class="faq-item">
-      <summary>What do I need to use this product?</summary>
-      <div class="faq-body"><p>You need an iPad with the Procreate app. Full requirements are listed above on this page.</p></div>
+      <summary>What is in the Artista Studio Kit?</summary>
+      <div class="faq-body"><p>There are 76 Procreate brushes across eight groups: linework and inking, sketching, shading, graphite and charcoal, markers, traditional media, texture and effects, and experimental brushes.</p></div>
     </details><details class="faq-item">
-      <summary>How will I receive my files?</summary>
-      <div class="faq-body"><p>Immediately after checkout on Payhip you are redirected to a download page, and you also receive an automated email with a permanent download link.</p></div>
+      <summary>Is Artista suitable for beginners?</summary>
+      <div class="faq-body"><p>Yes. Try one sketch, one liner and one shading brush first, then explore the other groups as you need them.</p></div>
     </details><details class="faq-item">
-      <summary>What is the refund policy?</summary>
-      <div class="faq-body"><p>Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved.</p></div>
+      <summary>Should I choose Artista or the Portrait Mastery Kit?</summary>
+      <div class="faq-body"><p>Artista is a broad 76-brush illustration collection. Portrait Mastery is a separate 46-brush kit organized around a portrait workflow and includes four paper textures.</p></div>
+    </details><details class="faq-item">
+      <summary>What do I need and how do I install it?</summary>
+      <div class="faq-body"><p>You need Procreate on an iPad. Download and extract the ZIP in Files, then tap the .brushset to import it. An Apple Pencil is recommended for pressure and tilt.</p></div>
+    </details><details class="faq-item">
+      <summary>How are delivery and refunds handled?</summary>
+      <div class="faq-body"><p>Payhip handles checkout and digital delivery. Sales are final once files have been downloaded; contact DigiKitPro if a file has a technical problem.</p></div>
     </details></section>
     <section class="psec" aria-labelledby="p-guides">
       <div class="sec-head"><div><p class="eyebrow">Learn the technique</p><h2 id="p-guides">Related Guides</h2></div></div>
@@ -228,16 +277,16 @@
     </section>
     <section class="psec share-sec" aria-label="Share">
       <p class="share-heading">Save or share this artwork</p>
-      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fartista-studio-kit-76-brushes%2Fartista-studio-kit-76-brushes.webp&amp;description=Artista+Studio+Kit%3A+76+Procreate+Brushes+-+One+organized+76-brush+collection+that+covers+the+full+studio+workflow%2C+linework%2C+inking%2C+sketching%2C+shading%2C+graphite%2C+markers+and+effects.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Pin this to Pinterest">📌 <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;text=Artista%20Studio%20Kit%3A%2076%20Procreate%20Brushes" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=Artista%20Studio%20Kit%3A%2076%20Procreate%20Brushes%20-%20One%20organized%2076-brush%20collection%20that%20covers%20the%20full%20studio%20workflow%2C%20linework%2C%20inking%2C%20sketching%2C%20shading%2C%20graphite%2C%20markers%20and%20effects.%20%7C%20DigiKitPro%20https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
+      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fartista-studio-kit-76-brushes%2Fartista-studio-kit-76-brushes.webp&amp;description=Artista+Studio+Kit%3A+76+Procreate+Brushes+-+A+versatile+76-brush+Procreate+studio+for+sketching%2C+linework%2C+shading%2C+graphite%2C+markers+and+texture%E2%80%94organized+into+eight+groups.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Pin it on Pinterest"><span aria-hidden="true">📌</span> <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;text=Artista%20Studio%20Kit%3A%2076%20Procreate%20Brushes" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=Artista%20Studio%20Kit%3A%2076%20Procreate%20Brushes%20-%20A%20versatile%2076-brush%20Procreate%20studio%20for%20sketching%2C%20linework%2C%20shading%2C%20graphite%2C%20markers%20and%20texture%E2%80%94organized%20into%20eight%20groups.%20%7C%20DigiKitPro%20https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
     </section>
 
     <section class="psec pdp-cta" aria-labelledby="p-get">
       <div>
         <h2 id="p-get">Get This Product</h2>
-        <p class="muted">Secure checkout on Payhip. Instant delivery to your email.</p>
-        <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
+        <p class="muted">Continue to the product on Payhip for checkout and digital delivery.</p>
+        <p class="trust-bridge">Checkout and digital delivery via Payhip · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
       </div>
-      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/IjRTk" target="_blank" rel="noopener" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="pdp-bottom">Buy Now <span class="btn-arr">↗</span></a>
+      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/IjRTk" target="_blank" rel="noopener" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="pdp-bottom">Buy on Payhip <span class="btn-arr">↗</span></a>
     </section>
 
     <section class="psec" aria-labelledby="p-related">
@@ -245,18 +294,18 @@
       <div class="grid cards">
 <article class="card" data-category="Portrait" data-name="portrait mastery kit: 46 procreate brushes" data-tags="portrait portrait workflow skin hair blending paper texture face realistic" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
   <div class="card-img">
-  <a class="card-media media-4x5" href="../../products/portrait-mastery-kit-46-brushes/" data-pin-description="Portrait Mastery Kit: 46 Procreate Brushes - A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-mastery-kit-46-brushes/" data-pin-media="https://digikitpro.shop/assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp">
-    <img src="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, ../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Portrait Mastery Kit: 46 Procreate Brushes: A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish." loading="lazy" decoding="async">
+  <a class="card-media media-4x5" href="../../products/portrait-mastery-kit-46-brushes/" data-pin-description="Portrait Mastery Kit: 46 Procreate Brushes - Sketch, blend and finish portraits with 46 Procreate brushes organized by task, plus four paper textures. A focused place to start building a portrait workflow. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-mastery-kit-46-brushes/" data-pin-media="https://digikitpro.shop/assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp">
+    <img src="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, ../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Portrait Mastery Kit: 46 Procreate Brushes: Sketch, blend and finish portraits with 46 Procreate brushes organized by task, plus four paper textures. A focused place to start building a portrait workflow." loading="lazy" decoding="async">
   </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-mastery-kit-46-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-mastery-kit-46-brushes%2Fportrait-mastery-kit-46-brushes-card.webp&amp;description=Portrait+Mastery+Kit%3A+46+Procreate+Brushes+-+A+portrait-specific+workflow+kit%3A+46+pro+brushes+plus+4+paper+textures+organized+into+sketch%2C+ink%2C+blend%2C+hair%2C+detail%2C+texture+and+finish.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Mastery Kit: 46 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-mastery-kit-46-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-mastery-kit-46-brushes%2Fportrait-mastery-kit-46-brushes-card.webp&amp;description=Portrait+Mastery+Kit%3A+46+Procreate+Brushes+-+Sketch%2C+blend+and+finish+portraits+with+46+Procreate+brushes+organized+by+task%2C+plus+four+paper+textures.+A+focused+place+to+start+building+a+portrait+workflow.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Mastery Kit: 46 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
   </div>
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../category/portrait/">Portrait</a>
-      <span class="badge">Best Seller</span>
+      <span class="badge">Featured</span>
     </div>
     <h3 class="card-title"><a href="../../products/portrait-mastery-kit-46-brushes/">Portrait Mastery Kit: 46 Procreate Brushes</a></h3>
-    <p class="card-short">A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish.</p>
+    <p class="card-short">Sketch, blend and finish portraits with 46 Procreate brushes organized by task, plus four paper textures. A focused place to start building a portrait workflow.</p>
     <div class="card-foot">
       <span class="price">$8.00</span>
       <a class="btn btn-line btn-sm" href="https://payhip.com/b/pOG6v" target="_blank" rel="noopener" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
@@ -265,18 +314,18 @@
 </article>
 <article class="card" data-category="Skin Texture" data-name="portrait skin brushes for procreate" data-tags="skin skin texture pores freckles wrinkles portrait realistic blending blusher highlighter" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
   <div class="card-img">
-  <a class="card-media media-4x5" href="../../products/portrait-skin-brushes-procreate/" data-pin-description="Portrait Skin Brushes for Procreate - 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-skin-brushes-procreate/" data-pin-media="https://digikitpro.shop/assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp">
-    <img src="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, ../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Portrait Skin Brushes for Procreate: 19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits." loading="lazy" decoding="async">
+  <a class="card-media media-4x5" href="../../products/portrait-skin-brushes-procreate/" data-pin-description="Portrait Skin Brushes for Procreate - Add pores, freckles and natural-looking texture to portraits with 19 Procreate brushes, including textured blenders and detail tools. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-skin-brushes-procreate/" data-pin-media="https://digikitpro.shop/assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp">
+    <img src="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp" srcset="../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate-card.webp 750w, ../../assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="946" alt="Portrait Skin Brushes for Procreate: Add pores, freckles and natural-looking texture to portraits with 19 Procreate brushes, including textured blenders and detail tools." loading="lazy" decoding="async">
   </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-skin-brushes-procreate%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-skin-brushes-procreate%2Fportrait-skin-brushes-procreate-card.webp&amp;description=Portrait+Skin+Brushes+for+Procreate+-+19+premium+skin-texture+brushes%3A+pores%2C+freckles%2C+wrinkles+and+textured+blenders+that+turn+flat+paintings+into+believable+portraits.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Skin Brushes for Procreate on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-skin-brushes-procreate%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-skin-brushes-procreate%2Fportrait-skin-brushes-procreate-card.webp&amp;description=Portrait+Skin+Brushes+for+Procreate+-+Add+pores%2C+freckles+and+natural-looking+texture+to+portraits+with+19+Procreate+brushes%2C+including+textured+blenders+and+detail+tools.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Skin Brushes for Procreate on Pinterest"><span aria-hidden="true">📌</span> Save</a>
   </div>
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../category/skin-texture/">Skin Texture</a>
-      <span class="badge">Best Seller</span>
+      <span class="badge">Featured</span>
     </div>
     <h3 class="card-title"><a href="../../products/portrait-skin-brushes-procreate/">Portrait Skin Brushes for Procreate</a></h3>
-    <p class="card-short">19 premium skin-texture brushes: pores, freckles, wrinkles and textured blenders that turn flat paintings into believable portraits.</p>
+    <p class="card-short">Add pores, freckles and natural-looking texture to portraits with 19 Procreate brushes, including textured blenders and detail tools.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
       <a class="btn btn-line btn-sm" href="https://payhip.com/b/btOrh" target="_blank" rel="noopener" data-dkp-slug="portrait-skin-brushes-procreate" data-dkp-name="Portrait Skin Brushes for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
@@ -293,7 +342,7 @@
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../category/line-art/">Line Art</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/essential-line-art-sketch-kit/">Essential Line Art &amp; Sketch Kit for Procreate</a></h3>
     <p class="card-short">43 focused brushes plus a bonus texture brush for clean line art, natural pencil sketches and confident inking, no pack-switching.</p>
@@ -327,31 +376,14 @@
     </section>
   </div>
   <section class="newsletter" id="newsletter">
-  <div class="wrap">
-    <div class="nl-card">
-      <p class="eyebrow">Free starter pack</p>
-      <h2>Get the Free Procreate Starter Pack</h2>
-      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
-      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
-           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
-           Source/lead fields allow future email provider to trigger the right sequence. -->
-      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="../../thank-you.html" action="" method="POST">
-        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
-        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
-        <input type="hidden" name="source" value="site">
-        <label class="sr-only" for="nl-email">Email address</label>
-        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
-        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
-      </form>
-      <p class="nl-caption">Prefer to grab them now? <a href="../../freebies.html">Browse the free brush packs</a>.</p>
-    </div>
-  </div>
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="../../products/procreate-starter-guide-free-ebook/">Explore the free guide</a>
+    <a class="btn btn-line" href="../../freebies.html">See all free resources</a></div>
+  </div></div>
 </section>
-
 </main>
 
 <footer class="site-footer">
@@ -408,7 +440,7 @@
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>

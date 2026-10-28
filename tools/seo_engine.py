@@ -281,8 +281,8 @@ def gen_seo_desc(name, category, desc="", assets="", price_text="", free=False):
     benefit = CATEGORY_BENEFIT[cat]
     what = real_assets(assets) or f"{cat} brushes"
 
-    tail = "Free instant download." if free else (
-        f"Instant download, {price_text}." if price_text else "Instant digital download."
+    tail = "Free digital download." if free else (
+        f"Digital download, {price_text}." if price_text else "Digital download."
     )
     # Reserve room for the price and call to action first: a truncated price
     # reads worse than a trimmed benefit sentence.
