@@ -29,8 +29,8 @@
 
  /* ---------- root prefix for asset fallbacks ---------- */
  (function () {
- var sc = document.querySelector('script[src$="js/main.js"]');
- window.__DKP_PREFIX = sc ? sc.getAttribute("src").replace(/js\/main\.js$/, "") : "./";
+ var sc = document.querySelector('script[src*="js/main.js"]');
+ window.__DKP_PREFIX = sc ? sc.getAttribute("src").replace(/js\/main\.js(?:\?.*)?$/, "") : "./";
  })();
 
  /* ---------- branded fallback for any image that fails to load ---------- */
@@ -74,8 +74,8 @@
   }
  // compute root prefix from the injected script path (works on any depth)
  (function () {
- var sc = document.querySelector('script[src$="js/main.js"]');
- window.__DKP_PREFIX = sc ? sc.getAttribute("src").replace(/js\/main\.js$/, "") : "./";
+ var sc = document.querySelector('script[src*="js/main.js"]');
+ window.__DKP_PREFIX = sc ? sc.getAttribute("src").replace(/js\/main\.js(?:\?.*)?$/, "") : "./";
  })();
 
  var overlay = $("[data-search-overlay]");
@@ -84,6 +84,12 @@
  var lastFocus = null;
 
  function norm(s) { return (s || "").toLowerCase(); }
+ // Search terms may come from ?q=. Treat them as text, never executable HTML.
+ function textAsHtml(s) {
+ var span = document.createElement("span");
+ span.textContent = s;
+ return span.innerHTML;
+ }
  function score(hay, q) {
  if (!q) return 0;
  var h = " " + hay;
@@ -120,7 +126,7 @@
  '</span><br><span class="sr-s">' + a.d + "</span></span></a>";
  }).join("");
  }
- resultsBox.innerHTML = out || '<p class="sr-empty">Nothing found for “' + q + '”. Try another word, or browse <a href="' + fixLocal(relTo("products.html")) + '">all products</a>.</p>';
+ resultsBox.innerHTML = out || '<p class="sr-empty">Nothing found for “' + textAsHtml(q) + '”. Try another word, or browse <a href="' + fixLocal(relTo("products.html")) + '">all products</a>.</p>';
  }
  function openSearch() {
  if (!overlay) return;
@@ -231,7 +237,6 @@
  e.preventDefault();
  note.innerHTML = 'The list is being wired up, meanwhile the free brushes are live now: <a href="' + window.DKP.store + '/collection/freebies" target="_blank" rel="noopener">open the Freebies collection ↗</a>';
  note.style.color = "";
- openExternal(window.DKP.store + "/collection/freebies");
  return;
  }
  if (!window.fetch || !window.FormData) return; // very old browsers → normal POST
@@ -240,7 +245,7 @@
  // identity (origin "null"), so mail services refuse these submissions.
  // Nothing is lost or faked, explain it honestly instead of an error.
  if (IS_FILE) {
- note.innerHTML = 'You’re viewing the <b>offline preview</b>, so signups can’t be sent from here, they work on the live site (hosting, or <code>python -m http.server</code>). Meanwhile the free brushes are ready: <a href="' + window.DKP.store + '/collection/freebies" target="_blank" rel="noopener">grab them on Payhip ↗</a>';
+ note.innerHTML = 'You’re viewing the <b>offline preview</b>, so signups cannot be sent from here. A hosted provider would need to be configured and tested first. Meanwhile the free brushes are ready: <a href="' + window.DKP.store + '/collection/freebies" target="_blank" rel="noopener">grab them on Payhip ↗</a>';
  note.style.color = "";
  return;
  }
@@ -252,22 +257,14 @@
  btn.disabled = false;
  btn.textContent = oldLabel;
  j = j || {};
- if (state === "ok" || state === "pending") {
+ if (state === "ok") {
  form.reset();
- /* Per-form success copy. A contact form is not a newsletter signup, so the
- hardcoded "you're on the list" wording was wrong there. Any form can set
- data-dkp-success (and optionally data-dkp-success-pending) to override.
- Defaults are the original newsletter wording, so existing forms are unchanged. */
  var okMsg = form.getAttribute("data-dkp-success")
- || "You’re on the list! Your first free brush drop is on its way; check your inbox.";
- var pendingMsg = form.getAttribute("data-dkp-success-pending")
- || form.getAttribute("data-dkp-success")
- || "You’re registered, welcome! Our list is brand new and finishing its one-time email activation; your address is saved and your free brushes arrive with the very first send.";
- note.textContent = state === "ok" ? okMsg : pendingMsg;
+ || "Your request was sent. Please follow any confirmation instructions from the email provider.";
+ note.textContent = okMsg;
  note.style.color = "#C9A86A";
- /* Tell the analytics layer a REAL provider response came back (never fired
- optimistically), then continue the funnel: the thank-you page delivers every
- free file directly, so the promise is kept even if the email is delayed. */
+ // A provider response means a request was sent, not that a person confirmed
+ // their subscription. Never infer marketing consent from a free download.
  var source = form.getAttribute("data-dkp-source") || "";
  var lead = form.getAttribute("data-dkp-lead") || "";
  var thanks = form.getAttribute("data-dkp-thanks") || "";
@@ -276,11 +273,14 @@
  } catch (_) {}
  if (thanks) {
  var url = thanks + (lead ? "?lead=" + encodeURIComponent(lead) + "&src=" + encodeURIComponent(source) : "");
- setTimeout(function () { location.href = fixLocal(url); }, state === "ok" ? 700 : 1600);
+ setTimeout(function () { location.href = fixLocal(url); }, 700);
  }
+ } else if (state === "pending") {
+ note.textContent = "The signup service needs activation. No subscription has been confirmed; please try again later.";
+ note.style.color = "#D88";
  } else if (/web server|open this page/i.test(j.message || "")) {
  // mail service refused this origin (offline file or unapproved domain)
- note.innerHTML = 'This preview can’t send signups (they only work on the live hosted site). Free brushes meanwhile: <a href="' + window.DKP.store + '/collection/freebies" target="_blank" rel="noopener">open the Freebies ↗</a>';
+ note.innerHTML = 'This preview can’t send signups. A hosted provider must be configured and tested. Free brushes meanwhile: <a href="' + window.DKP.store + '/collection/freebies" target="_blank" rel="noopener">open the Freebies ↗</a>';
  note.style.color = "";
  } else {
  note.textContent = "Something went wrong on the server. Please try again in a moment.";
@@ -291,8 +291,8 @@
  .then(function (r) {
  return r.json().catch(function () { return {}; }).then(function (j) {
  var state = "err";
- if (r.ok && (j.success === "true" || j.success === true || j.success === undefined)) state = "ok";
- else if (r.ok && /activat/i.test(j.message || "")) state = "pending"; // recorded; delivered after owner activates
+ if (r.ok && /activat/i.test(j.message || "") && j.success !== true && j.success !== "true") state = "pending";
+ else if (r.ok && (j.success === "true" || j.success === true || j.success === undefined)) state = "ok";
  finish(state, j);
  });
  })
@@ -300,30 +300,14 @@
  });
  });
 
- /* ---------- external purchase links: never silently dead ---------- */
- // In restrictive embeds (sandboxed preview iframes, popup blockers) a plain
- // target=_blank click can be swallowed with no visible result. Detect a
- // blocked popup and fall back to navigating the current frame instead, so
- // every Buy/Get button ALWAYS reaches Payhip.
- function openExternal(href) {
- var w = null;
- try { w = window.open(href, "_blank", "noopener"); } catch (_) {}
- if (!w || w.closed) {
- try { window.top.location.href = href; return; } catch (_) {}
- location.href = href;
- }
- }
- document.addEventListener("click", function (e) {
- var a = e.target && e.target.closest ? e.target.closest('a[target="_blank"][href^="http"]') : null;
- if (!a) return;
- e.preventDefault();
- openExternal(a.getAttribute("href"));
- });
+ /* External links retain native browser behaviour. In particular,
+    window.open(..., 'noopener') may return null even when it succeeded;
+    treating that as a blocked popup duplicated the checkout navigation. */
 
  /* ---------- scroll reveal ----------
     Handled by js/motion.js, which owns the whole reveal/stagger system
-    (same IntersectionObserver idea, plus hero intro, parallax, before/after
-    and the sticky CTA). Keeping it in one place means one observer pass
+    (same IntersectionObserver idea, plus an interactive before/after.
+    Keeping it in one place means one observer pass
     per page instead of two, and one place to honour reduced motion.
     Cards that a filter brings back are marked visible in the filter
     code above, so they never stay faded. */

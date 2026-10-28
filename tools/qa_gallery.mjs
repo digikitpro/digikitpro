@@ -110,7 +110,7 @@ function loadPage(rel, { transform, reducedMotion = false, failImages = [], preB
   const w = dom.window;
   const scripts = ["js/search-index.js", "js/main.js", "js/gallery.js", "js/motion.js", "js/analytics.js", "js/feedback.js", "js/translate.js"];
   for (const s of scripts) {
-    if (!html.includes(`src="../../${s}"`) && !html.includes(`src="../${s}"`) && !html.includes(`src="${s}"`)) continue;
+    if (!html.includes(`src="../../${s}`) && !html.includes(`src="../${s}`) && !html.includes(`src="${s}`)) continue;
     try { w.eval(readFileSync(join(ROOT, s), "utf8"), { filename: s }); }
     catch (e) { errors.push(`eval ${s}: ${e.message}`); }
   }
@@ -191,7 +191,7 @@ async function main() {
     const main = d.getElementById("product-main-image");
     ok("alt text follows the picture", main.getAttribute("alt") === tiles[2].getAttribute("data-alt"));
     const name = main.getAttribute("aria-label");
-    ok("the frame names both the artwork and the zoom action", /Product image 3 of 4/.test(name) && /open full size/i.test(name) && name.includes("preview 2"), name);
+    ok("the frame names both the artwork and the zoom action", /Product image 3 of 4/.test(name) && /open full size/i.test(name) && name.includes(tiles[2].getAttribute("data-alt")), name);
     ok("the counter announces position and total", /3 \/ 4/.test(d.querySelector("[data-gallery-count]").textContent), d.querySelector("[data-gallery-count]").textContent);
     ok("the counter is a polite live region", d.querySelector("[data-gallery-count]").getAttribute("aria-live") === "polite");
     key(tiles[2], "Tab"); await settle();

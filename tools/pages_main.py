@@ -40,17 +40,17 @@ def build_home():
             f'<a class="hero-card h1 hero-card--link" href="products/{hero_p["slug"]}/" '
             f'style="--hero-ar:{hw}/{hh}">'
             f'<img src="{asset_file(0, hero_p["slug"], im.get("main", ""))}" width="{hw}" height="{hh}" '
-            f'alt="{esc(hero_p["name"])} — finished portrait painted with the kit" '
+            f'alt="{esc(hero_p["name"])} product cover illustration" '
             f'loading="eager" fetchpriority="high" decoding="async">'
-            f'<span class="hero-cap">Painted with the {esc(hero_p["name"])}<b>View the kit →</b></span>'
+            f'<span class="hero-cap">Explore the {esc(hero_p["name"])}<b>View the kit →</b></span>'
             f'</a></div>')
 
     # ── Popular: the four leading kits, one per workflow ────────────────
     popular = [byslug[s] for s in (
-        "portrait-skin-brushes-procreate",
         "portrait-mastery-kit-46-brushes",
+        "portrait-skin-brushes-procreate",
+        "artista-studio-kit-76-brushes",
         "essential-line-art-sketch-kit",
-        "watercolor-studio-kit-50-brushes",
     ) if s in byslug]
 
     # ── Free row: the Starter Guide leads, then the three $0 kits ───────
@@ -73,7 +73,7 @@ def build_home():
     if skin:
         skin_cta = (
             f'<a class="btn btn-gold" href="products/{skin["slug"]}/" {buy_attrs(skin, "before-after")}>'
-            f'Shop the tools used in this artwork <span class="btn-arr">·</span> {esc(skin["priceText"])}</a>'
+            f'Explore the skin brush kit <span class="btn-arr">·</span> {esc(skin["priceText"])}</a>'
         )
     if portrait_bundle:
         bundle_cta = (
@@ -83,10 +83,10 @@ def build_home():
     before_after = f"""<section class="section ba-section" id="results" aria-labelledby="results-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Visual proof</p><h2 id="results-title">See the difference the right tools can make</h2></div>
+        <div><p class="eyebrow">Portrait workflow</p><h2 id="results-title">From broad shapes to finer detail</h2></div>
         <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit →</a>
       </div>
-      <p class="sec-note muted">Same artwork — different texture, detail and finishing tools. Drag the divider to see what pores, freckles, hair strands and the final polish add, and why the finished portrait stops looking airbrushed.</p>
+      <p class="sec-note muted">A portrait can develop from a simple value study into a textured finish. Drag the divider to explore an illustrative comparison; the final result also depends on observation and practice.</p>
       <figure class="ba-figure">
         <div class="ba-stage" data-ba>
           <img class="ba-img ba-after" src="assets/img/ba-after.webp" width="1200" height="800" alt="Finished portrait: detailed skin texture, hair strands and final rendering" loading="lazy" decoding="async">
@@ -100,7 +100,7 @@ def build_home():
           </div>
           <div class="ba-sweep" aria-hidden="true"></div>
         </div>
-        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use ← →.</span><span>Demonstration artwork.</span></figcaption>
+        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use ← →.</span><span>Illustrative artwork, not a verified brush-pack demonstration.</span></figcaption>
       </figure>
       <ol class="ba-steps" aria-label="What the tools add, in paint order">
         <li>Skin texture</li><li>Pores</li><li>Freckles</li><li>Hair</li><li>Final polish</li>
@@ -144,11 +144,12 @@ def build_home():
           <h3><a href="{s_u}">{esc(starter['name'])}</a></h3>
           <p class="edu-desc muted">{esc(starter.get('short') or "Start your first believable portrait this week — a free visual guide from blank canvas to structured head study.")}</p>
           <div class="ebook-foot">
-            <p class="edu-meta">PDF eBook · instant download</p>
+            <p class="edu-meta">PDF eBook · free download</p>
             <span class="price price-free">Free</span>
             <a class="btn btn-gold btn-sm" href="{esc(starter['payhipUrl'])}" target="_blank" rel="noopener" {buy_attrs(starter, "ebooks")}>Get Free ↗</a>
             <a class="text-link" href="{s_u}">View guide →</a>
           </div>
+          {next_step_link(starter, 0, "home_guide")}
         </div>
       </article>
       <article class="ebook-card edu-deep">
@@ -161,7 +162,7 @@ def build_home():
           <h3><a href="{m_u}">{esc(master_p['name'])}</a></h3>
           <p class="edu-desc muted">{esc(master_p.get('short') or "From blank canvas to believable portrait — a repeatable workflow you can reuse on every portrait after.")}</p>
           <div class="ebook-foot">
-            <p class="edu-meta">PDF eBook · 15 chapters · lifetime access</p>
+            <p class="edu-meta">PDF eBook · 15 chapters</p>
             <span class="price">{esc(master_p['priceText'])}</span>
             <a class="btn btn-line btn-sm" href="{m_u}">View Masterclass</a>
           </div>
@@ -197,7 +198,7 @@ def build_home():
 
     html_out = head(
         "DigiKitPro | Procreate Brushes for iPad Artists",
-        "Hand-tested Procreate brushes organized around the way you actually create — portraits, skin, line art, watercolor, anime and more. Start free, then build the toolkit you need.",
+        "Explore Procreate portrait, skin and illustration brush packs for iPad artists, plus free guides and resources for learning at your own pace.",
         SITE_URL + "/", 0, schemas=schema_org_home(), ctx=page_ctx("home"),
         preload="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp")
     html_out += header(0, active="index.html")
@@ -209,34 +210,31 @@ def build_home():
       <div class="hero-copy">
         <p class="eyebrow">Premium Procreate brushes · organized by workflow</p>
         <h1>Procreate Brushes<br>for <em>iPad Artists</em></h1>
-        <p class="hero-sub">Hand-tested portrait, skin, line art, watercolor and anime kits. Instant download, lifetime access — and free packs to try before you spend a cent.</p>
+        <p class="hero-sub">Thoughtfully organized portrait, skin and illustration brushes for beginners and growing iPad artists. Find the tools for your workflow, with free resources to practise alongside them.</p>
         <div class="hero-ctas">
           <a class="btn btn-gold btn-lg" href="products.html">Shop All Brushes</a>
           <a class="btn btn-line btn-lg" href="freebies.html">Try Free Brushes</a>
         </div>
-        <p class="hero-meta">Secure checkout via Payhip &nbsp;·&nbsp; Instant worldwide delivery &nbsp;·&nbsp; Lifetime access &nbsp;·&nbsp; Free packs, no email needed</p>
+        <p class="hero-meta">Secure checkout via Payhip &nbsp;·&nbsp; Digital delivery &nbsp;·&nbsp; Free resources available</p>
       </div>
       {hero_art}
     </div>
   </section>
 
-  <!-- VISUAL PROOF: before → after -->
-  {before_after}
-
-  <!-- STARTER GUIDE & MASTERCLASS — immediately after results -->
-  {ebooks_section}
-
-  <!-- POPULAR / BEST SELLERS -->
+  <!-- FEATURED PAID KITS: show the core offer first -->
   <section class="section" id="popular" aria-labelledby="pop-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Best sellers</p><h2 id="pop-title">Start With What You Actually Need</h2></div>
+        <div><p class="eyebrow">Featured brush kits</p><h2 id="pop-title">Find your starting point</h2></div>
         <a class="text-link" href="products.html">Browse all {len(PRODUCTS)} products →</a>
       </div>
-      <p class="sec-note muted">Focused tools for specific workflows. No giant brush pile required — every kit below is a real product with its own page, live price and Payhip checkout.</p>
+      <p class="sec-note muted">Start with a portrait workflow, add skin details, or explore a broader studio. Each kit has its own previews, contents and requirements.</p>
       {product_grid(popular, 0, classes="grid cards cards-4", dual_buy=True)}
     </div>
   </section>
+
+  <!-- Illustrative portrait workflow, labelled honestly -->
+  {before_after}
 
   <!-- SHOP BY WORKFLOW -->
   {craft_grid(0)}
@@ -254,10 +252,13 @@ def build_home():
         <div><p class="eyebrow">Completely free</p><h2 id="free-title">Try DigiKitPro Before You Buy</h2></div>
         <a class="text-link" href="freebies.html">All freebies →</a>
       </div>
-      <p class="sec-note muted">Try real Procreate resources before spending anything — the same pressure tuning and file quality as the paid packs. Download now, keep forever, and only spend money once you know how they feel.</p>
+      <p class="sec-note muted">Practise with a free portrait guide, brushes and colour palettes. Each is useful on its own, whether or not you choose a paid kit later.</p>
       {product_grid(free_row, 0, free_direct=True, classes="grid cards cards-4")}
     </div>
   </section>
+
+  <!-- FREE GUIDE AND OPTIONAL MASTERCLASS -->
+  {ebooks_section}
 
   <!-- LEARN PROCREATE: three guides -->
   <section class="section" id="articles" aria-labelledby="articles-title">
@@ -270,7 +271,15 @@ def build_home():
     </div>
   </section>
 
-  <!-- FREE STARTER PACK EMAIL CTA -->
+  <section class="section section-alt" id="home-faq" aria-labelledby="home-faq-title">
+    <div class="wrap narrow">
+      <div class="sec-head"><div><p class="eyebrow">Before you choose</p><h2 id="home-faq-title">A few useful answers</h2></div></div>
+      <details class="faq-item"><summary>Which brush kit should a portrait beginner start with?</summary><div class="faq-body"><p>The <a href="products/portrait-mastery-kit-46-brushes/">Portrait Mastery Kit</a> groups sketch, blending, hair, texture and finishing tools into one portrait workflow. For skin details specifically, look at the separate <a href="products/portrait-skin-brushes-procreate/">Portrait Skin Brushes</a>. You can also practise first with the <a href="products/procreate-starter-guide-free-ebook/">free Starter Guide</a> and Procreate's built-in brushes.</p></div></details>
+      <details class="faq-item"><summary>What do I need to use the brush packs?</summary><div class="faq-body"><p>Brush packs require Procreate on an iPad. An Apple Pencil is recommended for pressure-sensitive work. Check each product page for its exact requirements and installation steps.</p></div></details>
+      <details class="faq-item"><summary>How do downloads and refunds work?</summary><div class="faq-body"><p>Payhip handles checkout and digital delivery. Downloaded digital files are generally final sale; see the <a href="refunds.html">refund policy</a> or <a href="contact.html">contact us</a> if a file has a technical problem.</p></div></details>
+    </div>
+  </section>
+
   {newsletter(0)}
 
 </main>
@@ -302,117 +311,52 @@ def _compat(p):
 
 
 def build_thanks():
+    """Useful follow-up page, not a claim that a Payhip download completed.
+
+    All choices work without JS. With a valid ?lead=slug the matching section
+    is shown first and the other suggestions are hidden; unknown input is never
+    interpolated into a selector or page HTML. Payhip does not automatically
+    redirect here in the current configuration.
+    """
     depth = 0
-    freebies = [p for p in PRODUCTS if p.get("free") and not p.get("comingSoon")]
-    freebies.sort(key=lambda p: -(disc(p["slug"]).get("priority") or 0))
-
-    cards = ""
-    for p in freebies:
-        im = p.get("images") or {}
-        card = im.get("card", "")
-        cards += f'''<article class="thanks-card" data-thanks-slug="{esc(p["slug"])}">
-  <a class="thanks-media" href="{rel(depth, 'products/' + p['slug'] + '/')}">
-    <img src="{asset_file(depth, p['slug'], card)}"{img_srcset(depth, p['slug'], im, "(min-width: 1100px) 320px, 92vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(p.get('alt') or p['name'])}" loading="lazy" decoding="async">
-  </a>
-  <div class="thanks-body">
-    <span class="badge badge-free">Free</span>
-    <h2>{esc(p['name'])}</h2>
-    <p class="muted">{esc(p.get('assets') or '')}</p>
-    <a class="btn btn-gold btn-sm" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'thanks')}>Get Free ↗</a>
-  </div>
-</article>'''
-
-    # ONE starter offer: the highest-priority paid specialist pack.
-    entries = [p for p in PRODUCTS
-               if not p.get("free") and tier_of(p) == "entry" and line_of(p) == "procreate"]
-    entries.sort(key=lambda p: -(disc(p["slug"]).get("priority") or 0))
-    starter = entries[0] if entries else None
-    starter_html = ""
-    if starter:
-        im = starter.get("images") or {}
-        starter_html = f'''<section class="section section-alt" aria-labelledby="starter-title">
-  <div class="wrap starter-inner">
-    <div class="starter-media">
-      <a href="{rel(depth, 'products/' + starter['slug'] + '/')}">
-        <img src="{asset_file(depth, starter['slug'], im.get('card',''))}"{img_srcset(depth, starter['slug'], im, "(min-width: 960px) 340px, 92vw")} width="{im.get('cardW') or 750}" height="{im.get('cardH') or 500}" alt="{esc(starter.get('alt') or starter['name'])}" loading="lazy" decoding="async">
-      </a>
-    </div>
-    <div class="starter-body">
-      <p class="eyebrow">Your next step</p>
-      <h2 id="starter-title">{esc(starter['name'])}</h2>
-      <p class="muted">{esc(starter.get('short',''))}</p>
-      <ul class="tick-list check">
-        <li>{esc(starter.get('assets') or 'Complete specialist set')}</li>
-        <li>{esc(_compat(starter))}</li>
-        <li>Instant download, lifetime access</li>
-      </ul>
-      <div class="starter-cta">
-        <span class="price price-lg">{esc(starter['priceText'])}</span>
-        <a class="btn btn-gold" href="{starter['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(starter, 'thanks-starter')}>Buy Now ↗</a>
-        <a class="text-link" href="{rel(depth, 'products/' + starter['slug'] + '/')}">See what is inside →</a>
-      </div>
-      <p class="muted starter-note">Not yet? No pressure at all — the free packs above are yours to keep, and the
-        <a href="{rel(depth, 'products.html')}">full catalog</a> is waiting when you are ready.</p>
-    </div>
-  </div>
-</section>'''
-
+    journeys = [BY_SLUG[slug] for slug in FREE_JOURNEYS if slug in BY_SLUG and BY_SLUG[slug].get("free")]
+    sections = "\n".join(free_next_step(p, depth, delivery=True) for p in journeys)
     html_out = head(
-        "Thank You — Your Free Procreate Downloads | DigiKitPro",
-        "Your free Procreate brushes are ready to download right now, plus the recommended next step for your workflow.",
+        "Your Free Resource & Next Steps | DigiKitPro",
+        "Practice ideas for your free Procreate resource and optional companion brushes.",
         SITE_URL + "/thank-you.html", depth,
-        schemas=schema_breadcrumb([("Home", "/"), ("Thank you", "/thank-you.html")]),
+        schemas=schema_breadcrumb([("Home", "/"), ("Free resource next steps", "/thank-you.html")]),
         ctx=page_ctx("thankyou"),
         robots="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1")
     html_out += header(depth)
     html_out += f"""
 <main id="main">
   <section class="page-head thanks-head"><div class="wrap">
-    <p class="eyebrow">You are on the list</p>
-    <h1 data-thanks-title>Your free Procreate downloads are ready</h1>
-    <p class="lead" data-thanks-lead>Grab them right here — no need to wait for an email. Every file below is free,
-      delivered instantly by Payhip, and yours to keep.</p>
-    <p class="muted thanks-mail" data-thanks-mail>We have also sent a confirmation to your inbox. If it does not appear
-      in a few minutes, check spam, or just use the links below.</p>
+    <p class="eyebrow">Your free resources</p>
+    <h1>Make your next practice session count</h1>
+    <p class="lead">Choose a resource below for a simple exercise and a relevant, optional paid companion. If you have not downloaded it yet, the free Payhip link is here too.</p>
+    <p class="muted">No purchase is required. Payhip handles downloads and may ask for delivery details.</p>
   </div></section>
-
-  <section class="section"><div class="wrap">
-    <div class="grid thanks-grid">{cards}</div>
-  </div></section>
-
-  {starter_html}
-
-  {flagship_band(depth)}
-
+  <div class="wrap journey-list">{sections}</div>
   <section class="section"><div class="wrap narrow">
-    <div class="sec-head"><div><p class="eyebrow">While you are here</p><h2>Learn the workflow</h2></div></div>
-    <p class="muted">Brushes are half of it. These guides show the same tools used on finished artwork, step by step.</p>
-    <ul class="thanks-links">
-      <li><a href="{rel(depth,'blog/procreate-portrait-workflow/')}">The complete Procreate portrait workflow →</a></li>
-      <li><a href="{rel(depth,'blog/how-to-install-procreate-brushes/')}">How to install .brushset files on iPad →</a></li>
-      <li><a href="{rel(depth,'blog/how-to-choose-procreate-brushes/')}">How to choose brushes without regretting it →</a></li>
-    </ul>
+    <h2>Keep learning</h2>
+    <p><a href="freebies.html">See all free resources →</a></p>
+    <p><a href="blog/how-to-install-procreate-brushes/">How to install Procreate brushes →</a></p>
+    <p><a href="blog/procreate-portrait-workflow/">The portrait workflow →</a></p>
   </div></section>
 </main>
 """
     html_out += footer(depth)
-
-    # Tiny inline script: the only page-specific JS on the site. It reads the
-    # ?lead= parameter set by the signup form and puts the promised pack first,
-    # so the page matches what the visitor actually asked for.
     html_out = html_out.replace("</body>", """<script>
 (function(){
-  try{
-    var lead=new URLSearchParams(location.search).get('lead');
-    if(!lead)return;
-    var card=document.querySelector('[data-thanks-slug="'+CSS.escape(lead)+'"]');
-    if(card&&card.parentNode)card.parentNode.insertBefore(card,card.parentNode.firstChild);
-    var t=document.querySelector('[data-thanks-title]');
-    var name=card?card.querySelector('h2'):null;
-    if(t&&name)t.textContent='Your download is ready: '+name.textContent;
-    var m=document.querySelector('[data-thanks-mail]');
-    if(m)m.hidden=true;
-  }catch(e){}
+  try {
+    var lead = new URLSearchParams(location.search).get('lead');
+    if (!lead) return;
+    var cards = Array.prototype.slice.call(document.querySelectorAll('[data-journey]'));
+    var match = cards.filter(function(card){ return card.getAttribute('data-journey') === lead; })[0];
+    if (!match) return;
+    cards.forEach(function(card){ card.hidden = card !== match; });
+  } catch (e) { /* All suggestions remain visible without JS. */ }
 })();
 </script>
 </body>""", 1)
@@ -448,9 +392,9 @@ def build_products():
     # else, each group ordered by editorial priority then price. Same products,
     # nothing hidden, nothing removed — just an order that answers "what first?".
     _tier_rank = {t: i for i, t in enumerate(TIER_ORDER)}
-    _group_rank = {"free": 0, "flagship": 1, "bundle": 2, "entry": 3, "education": 4}
+    _group_rank = {"entry": 0, "bundle": 1, "flagship": 2, "education": 3, "free": 4}
     ordered = sorted(PRODUCTS, key=lambda p: (
-        _group_rank.get(tier_of(p), 9),
+        4 if p.get("free") else _group_rank.get(tier_of(p), 9),
         -(disc(p["slug"]).get("priority") or 0),
         -(p.get("featured") or 0),
         p.get("price") or 0,
@@ -463,7 +407,7 @@ def build_products():
     html_out += f"""
 <main id="main">
   {page_head(0, "The complete catalog", "Every Brush. Every Kit. One Store.", 
-    f"All {len(PRODUCTS)} DigiKitPro products, hand-tested for Procreate on iPad. Ordered as a value ladder: free packs first, then the Master Library, bundles and specialist kits.",
+    f"Explore all {len(PRODUCTS)} digital products: Procreate brushes, learning resources and other creative tools. Featured specialist kits appear first; free resources remain available throughout the catalog.",
     [("Products","products.html")])}
   {trust_band(0)}
   <section class="section">
@@ -484,20 +428,20 @@ def build_products():
 # ─────────────────────────── FREEBIES ───────────────────────────
 def build_freebies():
     html_out = head("Free Procreate Brushes | DigiKitPro",
-        "Download free professional Procreate resources: 100 fine liner brushes, 20+ chalk brushes and a 1,200-swatch color vault. No cost, instant delivery.",
+        "Explore free Procreate resources: 100 fine liner brushes, 20+ chalk brushes, a 1,200-swatch color vault and a portrait starter guide.",
         SITE_URL + "/freebies.html", 0, ctx=page_ctx("freebies"),
         schemas=schema_breadcrumb([("Home","/"),("Free Brushes","/freebies.html")]))
     html_out += header(0, active="freebies.html")
     html_out += f"""
 <main id="main">
-  {page_head(0, "$0, forever", "Free Procreate Brushes & Assets",
-    "Professional-grade tools, completely free. Download instantly, keep forever, and judge the quality for yourself before you spend anything.",
+  {page_head(0, "Free resources", "Free Procreate Brushes & Assets",
+    "Explore free brushes, color palettes and a portrait guide. Each digital resource is available through Payhip.",
     [("Free Brushes","freebies.html")])}
   {freebie_download_row(0)}
   {freebie_gate(0, source="freebies")}
   <section class="section"><div class="wrap narrow">
     <h2>Why we give professional tools away</h2>
-    <p>Great tools shouldn't be gated. Every freebie in this collection is built to the same standard as our paid kits, hand-tuned pressure curves, real-media texture, and organized .brushset installs. If they become part of your daily workflow (we think they will), the <a href="products.html">full catalog</a> is waiting when you're ready.</p>
+    <p>These free resources are here to help you practise, whether you choose a paid product or not. The guide is a PDF, the colour vault contains palettes, and the brush sets import into Procreate. Explore the <a href="products.html">full catalog</a> whenever you need a different tool.</p>
     <p>New here? Start with the <a href="products/free-fine-liner-brushes-100/">100-brush Fine Liner set</a>, then grab the <a href="products/free-color-vault-1200-swatches/">1,200-swatch Color Vault</a> so you never stall on color again.</p>
   </div></section>
 </main>
@@ -547,7 +491,7 @@ def build_bundles():
     html_out += f"""
 <main id="main">
   {page_head(0, "Best value", "Procreate Bundles",
-    "Complete libraries at a fraction of their combined price. One download, every tool, lifetime access, the fastest way to build a professional brush library.",
+    "Compare brush bundles by their contents, workflows and current prices before choosing the right collection.",
     [("Bundles","bundles.html")])}
   <section class="section"><div class="wrap">
     <p style="margin-bottom:1.75rem"><a class="text-link" href="guides/procreate-bundles-compared/">Compare every bundle side by side →</a></p>

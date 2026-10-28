@@ -24,8 +24,8 @@ THE ONE CONFIG KNOB
     hands out a single sign-up link; pasting it flips the primary CTA from
     "message us on Payhip" to the real application form. Left empty, the page
     states the program is invite-only and routes applicants to the store
-    contact form — the only channel that reaches the owner, because
-    EMAIL_ENDPOINT is unset and a form on this site would deliver nothing.
+    contact form. EMAIL_ENDPOINT is unset and actual message routing has not
+    been independently verified.
 
 HONESTY RULES (the same ones tools/verify.py enforces site-wide)
     No fabricated commission rate, no earnings estimate, no partner count, no
@@ -33,8 +33,8 @@ HONESTY RULES (the same ones tools/verify.py enforces site-wide)
     word the honesty guard polices site-wide, so the rule cannot be tripped by
     a sentence that exists to state the rule. What the page does promise is
     verifiable: the catalog is real (read from data/products.json at build
-    time, so a Payhip sync keeps every price and image true), delivery is
-    instant, and refunds follow refunds.html.
+    time; manually owned products still need reconciliation with Payhip).
+    Refund terms are stated on refunds.html.
 """
 from core import *
 
@@ -128,7 +128,7 @@ def _share_card(p, depth, angle=None):
     img_html = (f'<img src="{src}"{srcset} width="{w}" height="{h}" loading="lazy" '
                 f'decoding="async" alt="{esc(p["name"])} cover">') if src else ""
     angle_html = f'<p class="pt-angle">{esc(angle)}</p>' if angle else ""
-    free_note = ('<span class="pt-free">Free — $0, no card</span>' if p.get("free")
+    free_note = ('<span class="pt-free">Free on Payhip</span>' if p.get("free")
                  else f'<span class="pt-price">{esc(p["priceText"])}</span>')
     return f"""    <article class="pt-item">
       <div class="pt-thumb">{img_html}</div>
@@ -320,7 +320,7 @@ def build_partner():
     {crumbs(depth, [("Partner Program", PARTNER_DIR + "/")])}
     <p class="eyebrow">Partner program</p>
     <h1>Promote brushes you can <em>actually stand behind</em></h1>
-    <p class="lead">DigiKitPro is a catalog of Procreate brush kits, sold as instant digital downloads
+    <p class="lead">DigiKitPro is a catalog of Procreate brush kits, sold as digital downloads
     through Payhip. Partners recommend the kits that fit their audience, share tracked links, and are
     paid by Payhip for the sales they send. No invented social proof, no earnings theatre — the rules
     below are the same ones this site holds itself to.</p>
@@ -351,7 +351,7 @@ def build_partner():
     save the artwork, and replace the plain links with your own tracked ones once you are approved.</p>
 
     <h3 class="pt-sub">Start with the free kits</h3>
-    <p class="muted pt-sub-note">$0, no card, and they install exactly like the paid sets. This is how
+    <p class="muted pt-sub-note">Free on Payhip; the brush sets install like the paid brush sets. This is how
     someone tests the quality before trusting you with a purchase — so it is the first thing worth sharing.</p>
     <div class="pt-kit">
 {free_cards}
@@ -408,10 +408,7 @@ def build_partner():
       <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store ↗</a>.</p>
     </div>
   </div></section>
-  {newsletter(depth, heading="Free brush drops for your audience",
-              sub="New free packs and kit releases, sent when they go live — useful when you want something honest to share before you are a partner.",
-              source="partner", lead="partner-program", uid="ptnl",
-              cta="Send me new releases", eyebrow="Stay in the loop")}
+  {newsletter(depth, source="partner", lead="partner-program", uid="ptnl")}
 </main>
 {footer(depth)}"""
     write(f"{PARTNER_DIR}/index.html", html_out)

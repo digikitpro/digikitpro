@@ -38,7 +38,8 @@
   var DNT =
     navigator.doNotTrack === "1" ||
     window.doNotTrack === "1" ||
-    navigator.msDoNotTrack === "1";
+    navigator.msDoNotTrack === "1" ||
+    navigator.globalPrivacyControl === true;
 
   /* ── opt-out ──────────────────────────────────────────────────────────
      Promised in privacy.html, so it has to actually work:
@@ -60,7 +61,7 @@
     if (h.indexOf("dkp-analytics=off") !== -1) setOptOut(true);
     else if (h.indexOf("dkp-analytics=on") !== -1) setOptOut(false);
   })();
-  var OPTED_OUT = DNT || readOptOut();
+  var OPTED_OUT = DNT || readOptOut() || (location.hash || "").toLowerCase().indexOf("dkp-analytics=off") !== -1;
   if (OPTED_OUT) {
     /* Inert, but still expose the API so nothing else on the page throws. */
     window.dkp = {
@@ -140,13 +141,15 @@
     for (var i = 0; i < el.attributes.length; i++) {
       var a = el.attributes[i];
       if (a.name.indexOf("data-dkp-") === 0 && a.name !== "data-dkp-event") {
-        var key = a.name.slice(9).replace(/-([a-z])/g, function (m, c) {
-          return c.toUpperCase();
-        });
+        var key = a.name.slice(9).replace(/-/g, "_");
         out[key] = a.value;
       }
     }
-    if (out.price) out.price = parseFloat(out.price) || undefined;
+    if (out.price !== undefined) {
+      var price = Number(out.price);
+      if (isFinite(price)) out.price = price;
+      else delete out.price;
+    }
     return out;
   }
 
@@ -181,7 +184,7 @@
     }
     var base = {
       page_type: t,
-      page_path: location.pathname + location.search
+      page_path: location.pathname
     };
     if (PAGE.slug) {
       base.product_id = PAGE.slug;
@@ -189,6 +192,8 @@
       base.tier = PAGE.tier;
       base.category = PAGE.category;
       base.price = PAGE.price;
+      base.free = !!PAGE.free;
+      base.currency = "USD";
     }
     switch (t) {
       case "home":
@@ -208,8 +213,22 @@
       case "bundles":
         track("bundle_view", base);
         break;
+      case "thankyou":
+        // The URL identifies a suggested resource, NOT a confirmed download.
+        // Only send a catalog slug that is actually rendered on this page.
+        var lead = new URLSearchParams(location.search).get("lead");
+        var journeys = document.querySelectorAll("[data-journey]");
+        for (var i = 0; i < journeys.length; i++) {
+          if (lead && journeys[i].getAttribute("data-journey") === lead) {
+            base.source_product_id = lead;
+            break;
+          }
+        }
+        track("free_next_step_view", base);
+        break;
       default:
-        track("page_view", base);
+        // GA's tag already emits the standard page_view; avoid counting twice.
+        track("content_view", base);
     }
   }
 
@@ -259,7 +278,7 @@
   /* ── email signup: main.js dispatches this on a REAL provider response ─ */
   document.addEventListener("dkp:signup", function (e) {
     var d = (e && e.detail) || {};
-    track("email_signup", {
+    track("email_signup_request", {
       source: d.source || PAGE.type || "unknown",
       lead_magnet: d.lead || "",
       state: d.state || "ok"

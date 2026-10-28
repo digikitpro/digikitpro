@@ -69,19 +69,19 @@ def schema_faq(faqs):
 # so no product claims or reviews are invented.
 ABOUT_FAQS = [
     ("What is DigiKitPro?",
-     "DigiKitPro is an independent digital art studio that creates Procreate brush sets, bundles, color palettes, planners and guides. All products are digital downloads sold through Payhip, with instant worldwide delivery and no physical shipping."),
+     "DigiKitPro is an independent digital art studio offering Procreate brush sets, bundles, color palettes, planners and guides. Products are digital downloads sold through Payhip; no physical items are shipped."),
     ("How do I receive my files after buying?",
-     "Checkout is handled by Payhip. As soon as payment completes you get a download link by email and in your Payhip account. There is no shipping, so artists in any country receive the same files at the same moment."),
+     "Payhip handles checkout and digital delivery. Check the Payhip confirmation and receipt for access details; if you need help, use the contact page."),
     ("Do DigiKitPro brushes work on Windows or Android?",
      "The .brushset brush files require the Procreate app on an iPad. Some bundles also include PNG or other files that can open in apps that support those formats. Check the product description for the file types included."),
     ("Are there free Procreate brushes?",
-     "Yes. Free brush packs and a free starter eBook are listed on the Free Brushes page, and the newsletter sends free brush drops. You can start with the free fine liner set and the free chalkboard toolkit."),
+     "Yes. Free brush packs, a color palette collection and a free starter guide are listed on the Free Brushes page. You can start with the fine liner set or the chalkboard toolkit."),
     ("Which currencies and payment methods are accepted?",
-     "Prices display in USD and Payhip converts the charge to your local currency at checkout. Payhip accepts PayPal, cards, Apple Pay and other supported methods."),
+     "Prices are listed in USD. Review the payment options, currency and total shown by Payhip before completing checkout."),
     ("Is DigiKitPro affiliated with Procreate or Savage Interactive?",
      "No. DigiKitPro is an independent store. Procreate is a trademark of Savage Interactive Pty Ltd, and DigiKitPro is not affiliated with or endorsed by Savage Interactive."),
     ("How do I contact DigiKitPro?",
-     "Use the contact form on the Payhip store. Questions about products, orders and licensing are all read and answered directly."),
+     "Use the contact form on the Payhip store. You can use it for questions about products, orders and licensing."),
 ]
 
 
@@ -93,7 +93,7 @@ SITE_FAQS = [
     ("What do I need to use DigiKitPro brushes?",
      "The .brushset files require the Procreate app on an iPad. Brushes are calibrated for Apple Pencil pressure and tilt. Some products are PDFs, palettes or PNG files instead; each product page lists its file types under Technical Details."),
     ("How are the files delivered?",
-     "Checkout is handled by Payhip. As soon as payment completes, Payhip emails you a download link and the files also appear in your Payhip account. Delivery is instant and worldwide; nothing is physically shipped."),
+     "Payhip handles checkout and digital delivery. Check the Payhip confirmation and receipt for access details; if you need help, use the contact page. No physical item is shipped."),
     ("How do I install a .brushset file on my iPad?",
      "Get the file onto your iPad, then tap it in the Files app and choose Open in Procreate. The set installs automatically and appears in your Brushes panel. There is a full walkthrough with screenshots in the How to install Procreate brushes guide."),
     ("Can I sell artwork I make with these brushes?",
@@ -101,9 +101,9 @@ SITE_FAQS = [
     ("Can I get a refund?",
      "Because these are digital downloads, all sales are final once the files have been downloaded. If you hit a technical problem with a file, contact us and we will resolve it. The Refund Policy page explains this in full."),
     ("What payment methods and currencies are accepted?",
-     "Prices are displayed in USD and Payhip converts the charge to your local currency at checkout. Payhip accepts PayPal, cards, Apple Pay and other supported methods."),
+     "Prices are listed in USD. Review the payment options, currency and total shown by Payhip before completing checkout."),
     ("Are there free brushes I can try first?",
-     "Yes. Free brush packs and a free starter eBook are listed on the Free Brushes page, and the newsletter sends free brush drops. You can start with the free fine liner set and the free chalkboard toolkit."),
+     "Yes. Free brush packs, a color palette collection and a free starter guide are listed on the Free Brushes page. You can start with the fine liner set or the chalkboard toolkit."),
     ("Do the brushes work on Windows, Android or Photoshop?",
      "The .brushset format is specific to Procreate on iPad, so it will not load in Photoshop or on Windows and Android devices. Products that include PNG, PDF or palette files can be opened in any app that supports those formats; check the product page for what is included."),
     ("Which file do I download if a product has several ZIP parts?",
@@ -297,10 +297,7 @@ def build_google_merchant_feed():
 
 def build_misc():
     # ── CONTACT ──
-    # A real, working form. It posts to the same FormSubmit endpoint as the
-    # newsletter, but carries its own success copy via data-dkp-success so the
-    # confirmation does not say "you're on the list" (see js/main.js).
-    # It deliberately states no response time: only promise what is kept.
+    # Support goes to the Payhip store; do not claim a site form is configured.
     contact_schemas = schema_breadcrumb([("Home", "/"), ("Contact", "/contact.html")])
     html_out = head("Contact DigiKitPro",
         "Contact DigiKitPro about a product, an order, a technical problem with a file, or licensing via the Payhip store.",
@@ -323,7 +320,7 @@ def build_misc():
       <h2>Before you write</h2>
       <p>These answer most messages, and you will get an answer instantly:</p>
       <ul>
-        <li><strong>Where are my files?</strong> Payhip emails the download link the moment payment completes, and the files are also in your Payhip account. Check your spam folder first.</li>
+        <li><strong>Where are my files?</strong> Payhip handles delivery. Check the email address used for checkout and its spam folder; if you need help, contact the store with your order details.</li>
         <li><strong>How do I install a brushset?</strong> See <a href="blog/how-to-install-procreate-brushes/">How to install Procreate brushes</a>.</li>
         <li><strong>Can I sell what I make?</strong> Yes, finished artwork is yours to use commercially. See the <a href="terms.html">full licence</a>.</li>
         <li><strong>Refunds:</strong> see the <a href="refunds.html">Refund Policy</a>.</li>
@@ -348,14 +345,13 @@ def build_misc():
 <main id="main"><section class="section"><div class="wrap narrow prose">
   {crumbs(0, [("Refund Policy","refunds.html")])}
   <h1>Refund Policy</h1>
-  <p class="article-meta">Last updated: {BUILD_DATE}</p>
   <p class="lead">Everything sold here is a digital download. This page states the same policy as our <a href="terms.html">Terms of Service</a>, in one place so you can read it before you buy.</p>
   <h2>All sales are final once files are downloaded</h2>
   <p>Because digital files cannot be returned, all sales are final once the files have been downloaded. Please check compatibility before buying: .brushset files require the Procreate app on an iPad, and each product page lists exactly what file types are included under Technical Details.</p>
   <h2>Technical problems are resolved</h2>
   <p>If you hit a technical problem with any file, for example a download that will not complete, a corrupted file, or a brushset that will not open in Procreate, <a href="contact.html">contact us</a> and we will resolve it. Tell us which product it is and what happens when you try to open it, and include your Payhip order number if you have it.</p>
   <h2>Not sure yet? Start free</h2>
-  <p>If you want to try the brushes before spending anything, the <a href="freebies.html">free brush packs</a> are genuinely free and install exactly the same way, so you can confirm everything works on your iPad first.</p>
+  <p>If you want to try the brushes before spending anything, the <a href="freebies.html">free brush packs</a> can help you practise importing Procreate brushsets on your iPad.</p>
   <h2>Payments and chargebacks</h2>
   <p>All payments are processed by Payhip, not by DigiKitPro. Billing questions can also be raised through your Payhip receipt.</p>
   <h2>Contact</h2>
@@ -370,7 +366,7 @@ def build_misc():
         for q, a in SITE_FAQS)
     faq_schemas = schema_breadcrumb([("Home", "/"), ("FAQ", "/faq.html")]) + schema_faq(SITE_FAQS)
     html_out = head("FAQ, DigiKitPro Procreate Brushes",
-        "Answers to common questions about DigiKitPro Procreate brushes: compatibility, instant delivery, installing a .brushset, the commercial licence and refunds.",
+        "Answers to common questions about DigiKitPro Procreate brushes: compatibility, delivery, installing a .brushset, the commercial licence and refunds.",
         SITE_URL + "/faq.html", 0, schemas=faq_schemas)
     html_out += header(0)
     html_out += f"""
@@ -397,7 +393,7 @@ def build_misc():
     faq_html = "".join(f"<div class=\"faq-item\"><h3>{esc(q)}</h3><p>{esc(a)}</p></div>" for q, a in ABOUT_FAQS)
     about_schemas = schema_breadcrumb([("Home", "/"), ("About", "/about.html")]) + schema_faq(ABOUT_FAQS)
     html_out = head("About DigiKitPro, Premium Procreate Brush Studio",
-        "DigiKitPro creates premium Procreate brushes for portrait artists, illustrators and digital painters. Every brush is hand-tested on real artwork.",
+        "DigiKitPro offers Procreate brushes and digital resources for portrait artists, illustrators and digital painters.",
         SITE_URL + "/about.html", 0, schemas=about_schemas)
     html_out += header(0, active="about.html")
     html_out += f"""
@@ -409,7 +405,7 @@ def build_misc():
   </div></section>
   <section class="section"><div class="wrap narrow prose">
     <p class="lead"><strong>Welcome to DigiKitPro.</strong></p>
-    <p>DigiKitPro creates premium Procreate brushes for portrait artists, illustrators, and digital painters. Every brush is hand-tested on real artwork before release. Whether you're sketching, painting realistic skin, or building anime characters, we make tools that feel natural under the Apple Pencil.</p>
+    <p>DigiKitPro offers Procreate brushes for portrait artists, illustrators and digital painters. Explore tools for sketching, skin texture, linework and other creative workflows.</p>
     <h2>What we believe</h2>
     <ul>
       <li><strong>Workflow over catalog size.</strong> A kit organized around how you paint beats a thousand loose brushes.</li>
@@ -417,12 +413,12 @@ def build_misc():
       <li><strong>Honest pricing.</strong> Professional kits for the price of a coffee, and useful free packs that let you test the quality first.</li>
     </ul>
     <h2>How a kit earns its place</h2>
-    <p>Each release is organized around a real stage of making artwork: sketching, line, paint, texture, detail or finishing. Brushes are tested under the Apple Pencil at different pressure levels and used together as a workflow—not treated as isolated novelty marks. Product pages state the files, compatibility and requirements so you can check the fit before buying.</p>
-    <p>Compatibility guidance is reviewed as product information changes. If a file does not install or an order is missing, use the <a href="contact.html">support page</a> with the product name and order details so the issue can be traced through Payhip.</p>
-    <h2>Worldwide, instant, in your language</h2>
-    <p>Everything here is a digital download delivered instantly through Payhip, so artists in the <strong>United States, Canada, Europe and every other country</strong> get the same files at the same moment. There is no shipping and no physical product. Prices display in USD, and Payhip automatically converts the charge to your local currency at checkout. Use the globe button in the header to translate the whole site into English, Español, Français, Deutsch, Italiano, Português or Nederlands.</p>
+    <p>Kits bring together tools for stages of making artwork: sketching, line, paint, texture, detail or finishing. Product pages state the listed files, compatibility and requirements so you can check the fit before buying.</p>
+    <p>Check the product page for compatibility before buying. If a file does not install or an order is missing, use the <a href="contact.html">support page</a> with the product name and order details.</p>
+    <h2>Digital products and language options</h2>
+    <p>Our catalog contains digital products sold through Payhip; no physical items are shipped. Prices are listed in USD. Review the available payment methods, currency and total at checkout. Use the globe button in the header to request a translation into English, Español, Français, Deutsch, Italiano, Português or Nederlands.</p>
     <h2 id="contact">Contact</h2>
-    <p>Questions about a product, an order, or a collaboration? Contact us via the form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a> or visit our <a href="contact.html">contact page</a>, we read everything.</p>
+    <p>Questions about a product, an order, or a collaboration? Contact us via the form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a> or visit our <a href="contact.html">contact page</a>.</p>
     <h2 id="faq">Quick answers</h2>
     <p>Short, direct answers to the questions artists ask most. For anything else, use the contact form on <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip</a>.</p>
     {faq_html}
@@ -435,32 +431,33 @@ def build_misc():
     # ── PRIVACY ──
     html_out = head("Privacy Policy, DigiKitPro", "How DigiKitPro handles your data: newsletter sign-up, purchases processed securely by Payhip, and your rights.", SITE_URL + "/privacy.html", 0)
     html_out += header(0)
+    email_disclosure = ("If you explicitly subscribe to product news, the configured email provider receives your address and consent choice." if EMAIL_ENDPOINT else "This site currently has no newsletter signup provider. Payhip may ask for an email address when delivering a free or paid product.")
+    feedback_disclosure = ("An optional feedback form may send your selected answer and any text you choose to provide to our configured feedback service." if FEEDBACK_ENDPOINT else "The optional feedback collector is not configured on this site.")
+    ga_disclosure = ("<strong>Google Analytics 4:</strong> the Google tag measures page and product activity and may set cookies and process your IP address. We do not load it if your browser sends Do Not Track or Global Privacy Control, or if you opt out below. You can also use <a href=\"https://tools.google.com/dlpage/gaoptout\" rel=\"noopener\" target=\"_blank\">Google's opt-out add-on</a>." if GA_MEASUREMENT_ID and ANALYTICS_ENABLED else "<strong>Google Analytics 4:</strong> Google Analytics is not enabled in this build of the site.")
     html_out += f"""
 <main id="main"><section class="section"><div class="wrap narrow prose">
   {crumbs(0, [("Privacy Policy","privacy.html")])}
   <h1>Privacy Policy</h1>
-  <p class="article-meta">Last updated: {BUILD_DATE}</p>
   <h2>Overview</h2>
   <p>DigiKitPro ("we", "our") operates this content website and sells digital products through Payhip. This policy explains what data we collect and why.</p>
   <h2>Data we collect</h2>
   <ul>
-    <li><strong>Email address (optional):</strong> only if you subscribe to the newsletter. Used solely for product news, free asset drops and Procreate tips. Unsubscribe anytime via the link in every email.</li>
+    <li><strong>Email and delivery details:</strong> {esc(email_disclosure)}</li>
     <li><strong>Purchase data:</strong> all payments and order data are processed by Payhip on their secure checkout. We never see or store your payment card details. See Payhip's own privacy policy for how they process order data.</li>
   </ul>
   <h2>Analytics &amp; cookies</h2>
   <p>This is a static website with no server of our own, but it is not analytics-free, and we would rather tell you plainly than imply otherwise.</p>
   <ul>
-    <li><strong>Google Analytics 4</strong> is loaded on every page to measure which products and guides are useful. Google may set cookies and process your IP address for this. You can block it with any tracker blocker, by enabling your browser's <em>Do Not Track</em> setting (this site honours it and stops sending), or by using Google's own <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener" target="_blank">opt-out add-on</a>.</li>
-    <li><strong>What we measure:</strong> page and product views, clicks on "buy" and "download" links, and the answer you give to the optional "what stopped you from choosing a brush today?" prompt. <strong>We do not record your name, your email address, or anything you type</strong> — search queries are measured by length only.</li>
-    <li><strong>DigiKitPro sets no advertising cookies and no cross-site identifier.</strong> There is no retargeting, no ad pixel and no data broker sharing.</li>
-    <li><strong>A first-party summary</strong> of your visit (counts only) is kept in your browser's <code>localStorage</code> so the site can avoid asking you the same optional question twice. It never leaves your device unless you send a form. Clearing your browser data removes it.</li>
+    <li>{ga_disclosure}</li>
+    <li><strong>When site analytics is enabled, what we measure:</strong> page and product views, clicks on buy, free-download and optional recommendation links, and search-query length. These clicks are not proof that a purchase or download completed. Search text and URL query strings are excluded from the site's custom events. If a link has campaign tags, basic source, medium, campaign and optional content or ID labels may be sent to Google for attribution. {esc(feedback_disclosure)}</li>
+    <li><strong>Advertising:</strong> the optional Pinterest advertising tag is not loaded unless configured by the site owner.</li>
+    <li><strong>When measurement is enabled, a first-party summary</strong> of event counts is kept in your browser's <code>localStorage</code>; the summary itself is not uploaded. Clearing your browser data removes it.</li>
     <li><strong>Google Translate</strong> (the globe button in the header) is loaded from Google only when you choose a language. Google sets its own <code>googtrans</code> cookie to remember that choice. Do not use the button if you prefer not to contact Google.</li>
-    <li><strong>FormSubmit</strong> delivers newsletter and free-download requests to our inbox. It sees the email address you type and the page you sent it from.</li>
     <li><strong>Payhip</strong> handles all payments. Checkout happens on payhip.com under <a href="https://payhip.com/privacy" rel="noopener" target="_blank">Payhip's own privacy policy</a>; we never see or store your card details.</li>
   </ul>
-  <p>You can switch our own measurement off completely by visiting any page with <code>#dkp-analytics=off</code> in the address, which sets an opt-out in your browser.</p>
+  <p><a href="privacy.html?analytics=off#dkp-analytics=off">Turn site analytics off</a> · <a href="privacy.html?analytics=on#dkp-analytics=on">Turn site analytics back on</a>. Your choice is stored in this browser. Do Not Track and Global Privacy Control still take precedence.</p>
   <h2>Your rights</h2>
-  <p>You can request access, correction or deletion of your newsletter data at any time via the contact form on our <a href="{STORE_URL}" target="_blank" rel="noopener">Payhip store</a>. Every email we send contains a one-click unsubscribe link.</p>
+  <p>For questions or requests about data, use the <a href="contact.html">contact page</a>. For information held by Payhip, see <a href="https://payhip.com/privacy" target="_blank" rel="noopener">Payhip's privacy policy</a>.</p>
 </div></section></main>
 {footer(0)}"""
     write("privacy.html", html_out)
@@ -472,7 +469,6 @@ def build_misc():
 <main id="main"><section class="section"><div class="wrap narrow prose">
   {crumbs(0, [("Terms","terms.html")])}
   <h1>Terms of Service</h1>
-  <p class="article-meta">Last updated: {BUILD_DATE}</p>
   <h2>Digital products</h2>
   <p>All products are digital downloads delivered instantly via Payhip. No physical goods are shipped. You are responsible for confirming app compatibility (for example, .brushset files require Procreate on iPad) before purchase.</p>
   <h2>License</h2>
@@ -554,30 +550,30 @@ Sitemap: {SITE_URL}/sitemap-images.xml
     ]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n'
     for u, pr, freq in static_urls:
-        sm += f" <url><loc>{SITE_URL}{u}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>{freq}</changefreq><priority>{pr}</priority></url>\n"
+        sm += f" <url><loc>{SITE_URL}{u}</loc> <changefreq>{freq}</changefreq><priority>{pr}</priority></url>\n"
 
     for cslug in CATEGORY_SLUGS.values():
-        sm += f" <url><loc>{SITE_URL}/category/{cslug}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>\n"
+        sm += f" <url><loc>{SITE_URL}/category/{cslug}/</loc> <changefreq>weekly</changefreq><priority>0.85</priority></url>\n"
 
     # Seasonal hub pages (Halloween, Christmas, ...)
     for sdef in SEASON_DEFS:
-        sm += f" <url><loc>{SITE_URL}/season/{sdef['slug']}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>\n"
+        sm += f" <url><loc>{SITE_URL}/season/{sdef['slug']}/</loc> <changefreq>monthly</changefreq><priority>0.7</priority></url>\n"
 
     # Buyer-guide landing pages (tools/pages_guides.py) — commercial intent
     for u in [f"/{GUIDES_DIR}/"] + [f"/{u}" for u in GUIDE_URLS]:
-        sm += f" <url><loc>{SITE_URL}{u}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.75</priority></url>\n"
+        sm += f" <url><loc>{SITE_URL}{u}</loc> <changefreq>weekly</changefreq><priority>0.75</priority></url>\n"
 
     # Partner portal (tools/pages_partner.py). Deliberately the lowest
     # priority on the site: it is a page for creators who already know the
     # store, not a search-traffic landing page, and it must never outrank a
     # product or a buyer guide in the crawl budget.
-    sm += f" <url><loc>{SITE_URL}{PARTNER_URL}</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>\n"
+    sm += f" <url><loc>{SITE_URL}{PARTNER_URL}</loc> <changefreq>monthly</changefreq><priority>0.4</priority></url>\n"
 
     # SEO tools (tools/pages_tools.py) — high-intent utility pages
     # /tools/ landing + individual tools like /tools/canvas-calculator/
-    sm += f" <url><loc>{SITE_URL}/{_TOOLS_DIR}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>\n"
+    sm += f" <url><loc>{SITE_URL}/{_TOOLS_DIR}/</loc> <changefreq>weekly</changefreq><priority>0.8</priority></url>\n"
     for _td in _TOOL_DEFS:
-            sm += f" <url><loc>{SITE_URL}/{_TOOLS_DIR}/{_td['slug']}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>\n"
+            sm += f" <url><loc>{SITE_URL}/{_TOOLS_DIR}/{_td['slug']}/</loc> <changefreq>monthly</changefreq><priority>0.75</priority></url>\n"
 
     for p in PRODUCTS:
         slug = p["slug"]
@@ -587,7 +583,7 @@ Sitemap: {SITE_URL}/sitemap-images.xml
         if img:
             img_loc = img if is_abs(img) else absurl(f"assets/products/{slug}/{img}")
             img_xml = f"<image:image><image:loc>{img_loc}</image:loc><image:title>{esc(p['name'])}</image:title></image:image>"
-        sm += f" <url><loc>{SITE_URL}/products/{slug}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>daily</changefreq><priority>0.8</priority>{img_xml}</url>\n"
+        sm += f" <url><loc>{SITE_URL}/products/{slug}/</loc> <changefreq>daily</changefreq><priority>0.8</priority>{img_xml}</url>\n"
 
     for a in load_articles():
         slug = a["slug"]
@@ -596,7 +592,7 @@ Sitemap: {SITE_URL}/sitemap-images.xml
         if img:
             img_loc = img if is_abs(img) else absurl(img)
             img_xml = f"<image:image><image:loc>{img_loc}</image:loc><image:title>{esc(a['title'])}</image:title></image:image>"
-        sm += f" <url><loc>{SITE_URL}/blog/{slug}/</loc><lastmod>{BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority>{img_xml}</url>\n"
+        sm += f" <url><loc>{SITE_URL}/blog/{slug}/</loc> <changefreq>weekly</changefreq><priority>0.7</priority>{img_xml}</url>\n"
 
     sm += "</urlset>\n"
     write("sitemap.xml", sm)

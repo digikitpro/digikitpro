@@ -38,7 +38,7 @@ def gallery_html(p):
               im.get("cardW"), im.get("cardH"))]
     for g in im.get("gallery", []):
         items.append((g["file"], g.get("card"), g.get("w"), g.get("h"),
-                      f'{alt_main}: preview {len(items)}', g.get("cardW"), g.get("cardH")))
+                      g.get("alt") or f'{alt_main}: preview {len(items) + 1}', g.get("cardW"), g.get("cardH")))
     if not items: return "", ""
     first = items[0]
     # Pinterest: the gallery is the artwork, so it is the best thing to pin.
@@ -75,7 +75,8 @@ def gallery_html(p):
                 f' width="{card_w or 150}" height="{card_h or 100}"'
                 f' alt="{esc(alt)} thumbnail" loading="lazy" decoding="async"></button>')
         thumbs = f'<div class="gal-thumbs" role="group" aria-label="Product image previews">{"".join(btns)}</div>'
-    return main_fig + thumbs, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
+    hint = '<p class="gallery-hint">Select a preview to explore the kit; tap the main image to enlarge it.</p>' if len(items) > 1 else ''
+    return main_fig + thumbs + hint, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
 
 def look_inside_masterclass(p):
     """'Look Inside the Masterclass' — real interiors when present, honest placeholders otherwise.
@@ -217,7 +218,7 @@ def workflow_strip(p):
     the catalog's useful-but-affordable positioning without inventing brushes.
     """
     workflow = {
-        "portrait-mastery-kit-46-brushes": ["Sketch", "Ink", "Blend", "Skin", "Hair", "Detail", "Texture", "Finish"],
+        "portrait-mastery-kit-46-brushes": ["Sketch", "Ink", "Blend", "Hair", "Detail", "Texture", "Finish"],
         "ultimate-portrait-mastery-bundle": ["Line", "Skin", "Hair", "Finish"],
         "portrait-skin-brushes-procreate": ["Blend", "Pores", "Freckles", "Texture", "Finish"],
     }.get(p.get("slug"))
@@ -326,6 +327,26 @@ def clean_requirements(p):
     return out
 
 
+
+def kit_comparison(p, depth):
+    """A relevant alternative, not a claim that one product contains another."""
+    choices = {
+        "portrait-mastery-kit-46-brushes": ("portrait-skin-brushes-procreate", "Want to focus on skin?", "Portrait Mastery covers the wider portrait workflow. The separate Skin Brushes concentrate on pores, freckles, skin details and textured blending."),
+        "portrait-skin-brushes-procreate": ("portrait-mastery-kit-46-brushes", "Looking for a wider portrait workflow?", "This pack focuses on skin texture. The separate Portrait Mastery Kit also covers sketch, ink, hair, detail and finishing, with four paper textures."),
+        "artista-studio-kit-76-brushes": ("portrait-mastery-kit-46-brushes", "Mostly painting portraits?", "Artista is a broad studio collection. The separate Portrait Mastery Kit is organized specifically around sketching, blending, hair, texture and finishing a portrait."),
+    }
+    choice = choices.get(p.get("slug"))
+    if not choice:
+        return ""
+    other = BY_SLUG.get(choice[0])
+    if not other or other.get("comingSoon"):
+        return ""
+    return f"""<section class="psec kit-choice" aria-labelledby="kit-choice-title">
+  <div><p class="eyebrow">Find your fit</p><h2 id="kit-choice-title">{esc(choice[1])}</h2>
+    <p>{esc(choice[2])}</p></div>
+  <a class="btn btn-line" href="{rel(depth, 'products/' + other['slug'] + '/')}" data-dkp-event="kit_comparison_click" data-dkp-source-product-id="{esc(p['slug'])}" data-dkp-product-id="{esc(other['slug'])}">Explore {esc(other['name'])} · {esc(other['priceText'])} →</a>
+</section>"""
+
 def build_product_pages():
     for p in PRODUCTS:
         slug = p["slug"]; depth = 2
@@ -344,7 +365,7 @@ def build_product_pages():
         visual_crumbs.append((p["name"], f"products/{slug}/"))
 
         schemas = schema_product(p) + schema_breadcrumb(crumb_items)
-        schemas += [{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":f["q"],"acceptedAnswer":{"@type":"Answer","text":f["a"]}} for f in p.get("faqs",[])]}] if p.get("faqs") else schemas
+        schemas += [{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":f["q"],"acceptedAnswer":{"@type":"Answer","text":f["a"]}} for f in p.get("faqs",[])]}] if p.get("faqs") else []
 
         href_cc = f'https://creativecommons.org'
         features = li_block("Why You'll Love It", p.get("features"), cls="gold")
@@ -357,7 +378,7 @@ def build_product_pages():
             whofor = f"""<section class="psec" aria-labelledby="p-for"><h2 id="p-for">Who It's For</h2><div class="tag-row">{chips}</div></section>"""
         desc = _demote_headings(p.get("descriptionHtml", ""))
         if p["slug"] == "procreate-mega-bundle-650" and not desc.strip():
-            desc = "<p>650 pro Procreate brushes in one organized mega bundle. Portrait, skin, line art, watercolor and anime — every core style, instant download.</p>"
+            desc = "<p>650 pro Procreate brushes in one organized mega bundle. Portrait, skin, line art, watercolor and anime — a range of creative styles in a digital bundle.</p>"
         desc_sec = f"""<section class="psec richtext" aria-labelledby="p-about"><h2 id="p-about">About This Product</h2><div class="prose">{desc}</div></section>""" if desc.strip() else ""
 
         bundle_block = ""
@@ -393,7 +414,7 @@ def build_product_pages():
         # CTA verbs are standardised site-wide: free -> "Get Free",
         # paid -> "Buy Now" (this page IS the detail page, so the button
         # goes straight to Payhip).
-        cta_label = "View on Store" if coming else ("Get Free" if p["free"] else "Buy Now")
+        cta_label = "View on Store" if coming else ("Get Free on Payhip" if p["free"] else "Buy on Payhip")
         price_html = '<span class="price price-free">Free</span>' if p["free"] else f'<span class="price price-lg">{p["priceText"]}</span>'
         if coming:
             price_html += '<span class="price-note muted"> · at launch</span>'
@@ -404,11 +425,11 @@ def build_product_pages():
             badge = f'<span class="badge">{esc(_blabel)}</span>' if _blabel and not p["free"] else ('<span class="badge badge-free">Free</span>' if p["free"] else "")
         trust_items = (["Launches soon, right here on Payhip", "Newsletter subscribers get it first", "Procreate on iPad recommended"]
                        if coming else
-                       ["Instant download via Payhip", "Lifetime access",
+                       ["Digital delivery via Payhip", "No physical item ships",
                         'Procreate on iPad required' if p['category'] not in ('Other', 'Guides & eBooks') else 'See requirements below'])
         trust = "".join(f"<li>{t}</li>" for t in trust_items)
         get_copy = ("Launches soon on our Payhip store. Join the newsletter below and you will be the first to know."
-                    if coming else "Secure checkout on Payhip. Instant delivery to your email.")
+                    if coming else "Continue to the product on Payhip for checkout and digital delivery.")
 
         # badge chips row (status - assets - category), like the reference design
         status_chip = ('<span class="meta-chip soon">Coming Soon</span>' if coming else
@@ -420,7 +441,7 @@ def build_product_pages():
         cat_chip = f'<a class="meta-chip cat" href="{cat_href}">{esc(p["category"])}</a>'
         chips_html = status_chip + assets_chip + cat_chip
         caption = ("Launches soon · Newsletter subscribers get it first · Opens the store in a new tab"
-                   if coming else "Opens the Payhip checkout in a new tab")
+                   if coming else ("Opens the free product on Payhip in a new tab" if p['free'] else "Opens the product on Payhip in a new tab; continue to checkout there"))
         cta_label_long = cta_label
         # The trust bridge (checkout + delivery + refund terms, wording taken
         # from refunds.html) replaces the old generic caption line.
@@ -430,6 +451,7 @@ def build_product_pages():
           <a class="btn btn-gold btn-lg" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'pdp-buy-panel')}>{cta_label_long} <span class="btn-arr">↗</span></a>
           <p class="buy-cap">{caption}</p>
           {bridge}
+          {next_step_link(p, depth) if p.get("free") else ""}
         </div>"""
         # The licence question ("can I sell what I make?") is a real purchase
         # objection for working artists. It was only answered inside a collapsed
@@ -438,7 +460,10 @@ def build_product_pages():
         licence = "" if coming else licence_line(p)
 
         _og_img = asset_abs(slug, im.get("card", "")) if im.get("card", "") else absurl("assets/img/og-cover.jpg")
-        _preload = asset_abs(slug, im.get("main", "")) if im.get("main", "") else None
+        # Preload the same relative URL as the gallery image. An absolute
+        # production-domain URL breaks local/branch previews and can fetch the
+        # image twice; genuinely remote Payhip assets stay absolute.
+        _preload = asset_file(0, slug, im.get("main", "")) if im.get("main", "") else None
         html_out = head(p["seoTitle"], p["seoDesc"], absurl(f"products/{slug}/"), depth,
                         schemas=schemas, og_image=_og_img, page_type="product", preload=_preload,
                         ctx=page_ctx("product", p), gallery=True)
@@ -460,13 +485,15 @@ def build_product_pages():
     </article>
 
     {features}
+    {free_next_step(p, depth)}
+    {kit_comparison(p, depth)}
     {bundle_block}
     {included}
     {desc_sec}
     {look_inside_masterclass(p)}
     {technical}
     {requirements}
-    {install_steps(p) if not coming and not p.get("free") else ""}
+    {install_steps(p) if not coming else ""}
     {whofor}
     {workflow_strip(p)}
     {upgrade_panel(p, depth)}

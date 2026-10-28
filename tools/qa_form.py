@@ -1,30 +1,24 @@
 #!/usr/bin/env python3
-"""End-to-end newsletter test through the real page."""
-from playwright.sync_api import sync_playwright
+"""Safe, offline check of the default newsletter state.
 
-with sync_playwright() as pw:
-    b = pw.chromium.launch()
-    pg = b.new_context().new_page()
-    api_hit = {}
-    page = pg
-    def on_resp(resp):
-        if "formsubmit.co" in resp.url:
-            try:
-                api_hit["url"] = resp.url
-                api_hit["status"] = resp.status
-                api_hit["body"] = resp.json()
-            except Exception as e:
-                api_hit["err"] = str(e)
-    page.on("response", on_resp)
+This intentionally sends no email, does not submit a live form, and does not
+claim that a future provider works. For a configured provider, run an explicit,
+consent-safe integration test with the provider before launch.
+"""
+from pathlib import Path
+import sys
 
-    page.goto("http://localhost:8000/", wait_until="load")
-    page.wait_for_timeout(800)
-    page.locator(".nl-form").scroll_into_view_if_needed()
-    page.fill('#nl-email', "digikitpro.website.test@gmail.com")
-    page.click('.nl-form button[type="submit"]')
-    page.wait_for_timeout(6000)
-    print("server response:", api_hit)
-    print("note text:", page.inner_text('[data-nl-note]'))
-    page.locator(".newsletter").screenshot(path="shots/qa-form-result.png")
-    b.close()
-print("FORM QA DONE")
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools"))
+from core import EMAIL_ENDPOINT  # noqa: E402
+
+if EMAIL_ENDPOINT:
+    print("SKIP: an endpoint is configured; provider delivery and consent require a separate integration test.")
+    raise SystemExit(0)
+
+for relative in ("index.html", "freebies.html", "products/portrait-mastery-kit-46-brushes/index.html"):
+    page = (ROOT / relative).read_text(encoding="utf-8")
+    assert 'data-nl-form' not in page, f"{relative}: unconfigured newsletter form rendered"
+    assert 'freebies.html' in page, f"{relative}: free-resource route missing"
+    print(f"PASS: {relative}: no unconfigured signup form; free-resource route present")
+print("Offline form-state QA passed; no provider, consent, delivery, or unsubscribe flow was tested.")

@@ -30,18 +30,54 @@
   }catch(e){}
 })();
 </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5MFQFHNB6B');
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>FAQ, DigiKitPro Procreate Brushes</title>
-  <meta name="description" content="Answers to common questions about DigiKitPro Procreate brushes: compatibility, instant delivery, installing a .brushset, the commercial licence and refunds.">
+  <meta name="description" content="Answers to common questions about DigiKitPro Procreate brushes: compatibility, delivery, installing a .brushset, the commercial licence and refunds.">
   <link rel="canonical" href="https://digikitpro.shop/faq.html">
   <meta name="google-site-verification" content="1e87093669a800cb">
   <meta name="msvalidate.01" content="52B8ABC07828BE6CE77B297D3F2E50A3">
@@ -55,7 +91,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DigiKitPro">
   <meta property="og:title" content="FAQ, DigiKitPro Procreate Brushes">
-  <meta property="og:description" content="Answers to common questions about DigiKitPro Procreate brushes: compatibility, instant delivery, installing a .brushset, the commercial licence and refunds.">
+  <meta property="og:description" content="Answers to common questions about DigiKitPro Procreate brushes: compatibility, delivery, installing a .brushset, the commercial licence and refunds.">
   <meta property="og:url" content="https://digikitpro.shop/faq.html">
   <meta property="og:image" content="https://digikitpro.shop/assets/img/og-cover.jpg">
   <meta property="og:image:width" content="1200">
@@ -70,7 +106,7 @@
   <meta property="og:locale:alternate" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="FAQ, DigiKitPro Procreate Brushes">
-  <meta name="twitter:description" content="Answers to common questions about DigiKitPro Procreate brushes: compatibility, instant delivery, installing a .brushset, the commercial licence and refunds.">
+  <meta name="twitter:description" content="Answers to common questions about DigiKitPro Procreate brushes: compatibility, delivery, installing a .brushset, the commercial licence and refunds.">
   <meta name="twitter:image" content="https://digikitpro.shop/assets/img/og-cover.jpg">
   <meta name="twitter:image:alt" content="FAQ, DigiKitPro Procreate Brushes">
   <meta name="geo.placename" content="DigiKitPro">
@@ -84,17 +120,17 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=fe430ede6b736c200057bdbd2cc61f8e">
+  <link rel="stylesheet" href="css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="feed.xml">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{}};</script>
   <script src="js/search-index.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/motion.js" defer></script>
-  <script src="js/analytics.js" defer></script>
-  <script src="js/feedback.js" defer></script>
-  <script src="js/translate.js" defer></script>
+  <script src="js/main.js?v=33a4a6e4ad79" defer></script>
+  <script src="js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="js/analytics.js?v=610c164ea071" defer></script>
+  <script src="js/translate.js?v=8877305ddd24" defer></script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "FAQ", "item": "https://digikitpro.shop/faq.html"}]}</script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use DigiKitPro brushes?", "acceptedAnswer": {"@type": "Answer", "text": "The .brushset files require the Procreate app on an iPad. Brushes are calibrated for Apple Pencil pressure and tilt. Some products are PDFs, palettes or PNG files instead; each product page lists its file types under Technical Details."}}, {"@type": "Question", "name": "How are the files delivered?", "acceptedAnswer": {"@type": "Answer", "text": "Checkout is handled by Payhip. As soon as payment completes, Payhip emails you a download link and the files also appear in your Payhip account. Delivery is instant and worldwide; nothing is physically shipped."}}, {"@type": "Question", "name": "How do I install a .brushset file on my iPad?", "acceptedAnswer": {"@type": "Answer", "text": "Get the file onto your iPad, then tap it in the Files app and choose Open in Procreate. The set installs automatically and appears in your Brushes panel. There is a full walkthrough with screenshots in the How to install Procreate brushes guide."}}, {"@type": "Question", "name": "Can I sell artwork I make with these brushes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Finished artwork you create with these files is yours to use personally and commercially. What you may not do is resell, redistribute, copy or share the brush, palette or source files themselves, in original or modified form. The full licence is on the Terms page."}}, {"@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": {"@type": "Answer", "text": "Because these are digital downloads, all sales are final once the files have been downloaded. If you hit a technical problem with a file, contact us and we will resolve it. The Refund Policy page explains this in full."}}, {"@type": "Question", "name": "What payment methods and currencies are accepted?", "acceptedAnswer": {"@type": "Answer", "text": "Prices are displayed in USD and Payhip converts the charge to your local currency at checkout. Payhip accepts PayPal, cards, Apple Pay and other supported methods."}}, {"@type": "Question", "name": "Are there free brushes I can try first?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Free brush packs and a free starter eBook are listed on the Free Brushes page, and the newsletter sends free brush drops. You can start with the free fine liner set and the free chalkboard toolkit."}}, {"@type": "Question", "name": "Do the brushes work on Windows, Android or Photoshop?", "acceptedAnswer": {"@type": "Answer", "text": "The .brushset format is specific to Procreate on iPad, so it will not load in Photoshop or on Windows and Android devices. Products that include PNG, PDF or palette files can be opened in any app that supports those formats; check the product page for what is included."}}, {"@type": "Question", "name": "Which file do I download if a product has several ZIP parts?", "acceptedAnswer": {"@type": "Answer", "text": "Download all of them. Larger libraries are split into several ZIP files purely because of file size limits, and each part contains a different set of brushes. The Technical Details on the product page state how many parts there are and the total size."}}, {"@type": "Question", "name": "Is DigiKitPro affiliated with Procreate or Savage Interactive?", "acceptedAnswer": {"@type": "Answer", "text": "No. DigiKitPro is an independent store. Procreate is a trademark of Savage Interactive Pty Ltd, and DigiKitPro is not affiliated with or endorsed by Savage Interactive."}}]}</script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use DigiKitPro brushes?", "acceptedAnswer": {"@type": "Answer", "text": "The .brushset files require the Procreate app on an iPad. Brushes are calibrated for Apple Pencil pressure and tilt. Some products are PDFs, palettes or PNG files instead; each product page lists its file types under Technical Details."}}, {"@type": "Question", "name": "How are the files delivered?", "acceptedAnswer": {"@type": "Answer", "text": "Payhip handles checkout and digital delivery. Check the Payhip confirmation and receipt for access details; if you need help, use the contact page. No physical item is shipped."}}, {"@type": "Question", "name": "How do I install a .brushset file on my iPad?", "acceptedAnswer": {"@type": "Answer", "text": "Get the file onto your iPad, then tap it in the Files app and choose Open in Procreate. The set installs automatically and appears in your Brushes panel. There is a full walkthrough with screenshots in the How to install Procreate brushes guide."}}, {"@type": "Question", "name": "Can I sell artwork I make with these brushes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Finished artwork you create with these files is yours to use personally and commercially. What you may not do is resell, redistribute, copy or share the brush, palette or source files themselves, in original or modified form. The full licence is on the Terms page."}}, {"@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": {"@type": "Answer", "text": "Because these are digital downloads, all sales are final once the files have been downloaded. If you hit a technical problem with a file, contact us and we will resolve it. The Refund Policy page explains this in full."}}, {"@type": "Question", "name": "What payment methods and currencies are accepted?", "acceptedAnswer": {"@type": "Answer", "text": "Prices are listed in USD. Review the payment options, currency and total shown by Payhip before completing checkout."}}, {"@type": "Question", "name": "Are there free brushes I can try first?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Free brush packs, a color palette collection and a free starter guide are listed on the Free Brushes page. You can start with the fine liner set or the chalkboard toolkit."}}, {"@type": "Question", "name": "Do the brushes work on Windows, Android or Photoshop?", "acceptedAnswer": {"@type": "Answer", "text": "The .brushset format is specific to Procreate on iPad, so it will not load in Photoshop or on Windows and Android devices. Products that include PNG, PDF or palette files can be opened in any app that supports those formats; check the product page for what is included."}}, {"@type": "Question", "name": "Which file do I download if a product has several ZIP parts?", "acceptedAnswer": {"@type": "Answer", "text": "Download all of them. Larger libraries are split into several ZIP files purely because of file size limits, and each part contains a different set of brushes. The Technical Details on the product page state how many parts there are and the total size."}}, {"@type": "Question", "name": "Is DigiKitPro affiliated with Procreate or Savage Interactive?", "acceptedAnswer": {"@type": "Answer", "text": "No. DigiKitPro is an independent store. Procreate is a trademark of Savage Interactive Pty Ltd, and DigiKitPro is not affiliated with or endorsed by Savage Interactive."}}]}</script>
 </head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
@@ -108,7 +144,7 @@
     <nav class="main-nav" aria-label="Primary"><a href="freebies.html">Free Brushes</a><a href="products.html">Products</a><a href="bundles.html">Bundles</a><a href="blog.html">Articles</a><a href="tools/">Tools</a><a href="about.html">About</a></nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -151,38 +187,21 @@
   </div></section>
   <section class="section"><div class="wrap narrow">
     <p class="lead">Compatibility, delivery, installing, licensing and refunds. If your question is not here, <a href="contact.html">send us a message</a>.</p>
-    <div class="faq-list"><details class="faq-q"><summary>What do I need to use DigiKitPro brushes?</summary><div class="faq-body"><p>The .brushset files require the Procreate app on an iPad. Brushes are calibrated for Apple Pencil pressure and tilt. Some products are PDFs, palettes or PNG files instead; each product page lists its file types under Technical Details.</p></div></details><details class="faq-q"><summary>How are the files delivered?</summary><div class="faq-body"><p>Checkout is handled by Payhip. As soon as payment completes, Payhip emails you a download link and the files also appear in your Payhip account. Delivery is instant and worldwide; nothing is physically shipped.</p></div></details><details class="faq-q"><summary>How do I install a .brushset file on my iPad?</summary><div class="faq-body"><p>Get the file onto your iPad, then tap it in the Files app and choose Open in Procreate. The set installs automatically and appears in your Brushes panel. There is a full walkthrough with screenshots in the How to install Procreate brushes guide.</p></div></details><details class="faq-q"><summary>Can I sell artwork I make with these brushes?</summary><div class="faq-body"><p>Yes. Finished artwork you create with these files is yours to use personally and commercially. What you may not do is resell, redistribute, copy or share the brush, palette or source files themselves, in original or modified form. The full licence is on the Terms page.</p></div></details><details class="faq-q"><summary>Can I get a refund?</summary><div class="faq-body"><p>Because these are digital downloads, all sales are final once the files have been downloaded. If you hit a technical problem with a file, contact us and we will resolve it. The Refund Policy page explains this in full.</p></div></details><details class="faq-q"><summary>What payment methods and currencies are accepted?</summary><div class="faq-body"><p>Prices are displayed in USD and Payhip converts the charge to your local currency at checkout. Payhip accepts PayPal, cards, Apple Pay and other supported methods.</p></div></details><details class="faq-q"><summary>Are there free brushes I can try first?</summary><div class="faq-body"><p>Yes. Free brush packs and a free starter eBook are listed on the Free Brushes page, and the newsletter sends free brush drops. You can start with the free fine liner set and the free chalkboard toolkit.</p></div></details><details class="faq-q"><summary>Do the brushes work on Windows, Android or Photoshop?</summary><div class="faq-body"><p>The .brushset format is specific to Procreate on iPad, so it will not load in Photoshop or on Windows and Android devices. Products that include PNG, PDF or palette files can be opened in any app that supports those formats; check the product page for what is included.</p></div></details><details class="faq-q"><summary>Which file do I download if a product has several ZIP parts?</summary><div class="faq-body"><p>Download all of them. Larger libraries are split into several ZIP files purely because of file size limits, and each part contains a different set of brushes. The Technical Details on the product page state how many parts there are and the total size.</p></div></details><details class="faq-q"><summary>Is DigiKitPro affiliated with Procreate or Savage Interactive?</summary><div class="faq-body"><p>No. DigiKitPro is an independent store. Procreate is a trademark of Savage Interactive Pty Ltd, and DigiKitPro is not affiliated with or endorsed by Savage Interactive.</p></div></details></div>
+    <div class="faq-list"><details class="faq-q"><summary>What do I need to use DigiKitPro brushes?</summary><div class="faq-body"><p>The .brushset files require the Procreate app on an iPad. Brushes are calibrated for Apple Pencil pressure and tilt. Some products are PDFs, palettes or PNG files instead; each product page lists its file types under Technical Details.</p></div></details><details class="faq-q"><summary>How are the files delivered?</summary><div class="faq-body"><p>Payhip handles checkout and digital delivery. Check the Payhip confirmation and receipt for access details; if you need help, use the contact page. No physical item is shipped.</p></div></details><details class="faq-q"><summary>How do I install a .brushset file on my iPad?</summary><div class="faq-body"><p>Get the file onto your iPad, then tap it in the Files app and choose Open in Procreate. The set installs automatically and appears in your Brushes panel. There is a full walkthrough with screenshots in the How to install Procreate brushes guide.</p></div></details><details class="faq-q"><summary>Can I sell artwork I make with these brushes?</summary><div class="faq-body"><p>Yes. Finished artwork you create with these files is yours to use personally and commercially. What you may not do is resell, redistribute, copy or share the brush, palette or source files themselves, in original or modified form. The full licence is on the Terms page.</p></div></details><details class="faq-q"><summary>Can I get a refund?</summary><div class="faq-body"><p>Because these are digital downloads, all sales are final once the files have been downloaded. If you hit a technical problem with a file, contact us and we will resolve it. The Refund Policy page explains this in full.</p></div></details><details class="faq-q"><summary>What payment methods and currencies are accepted?</summary><div class="faq-body"><p>Prices are listed in USD. Review the payment options, currency and total shown by Payhip before completing checkout.</p></div></details><details class="faq-q"><summary>Are there free brushes I can try first?</summary><div class="faq-body"><p>Yes. Free brush packs, a color palette collection and a free starter guide are listed on the Free Brushes page. You can start with the fine liner set or the chalkboard toolkit.</p></div></details><details class="faq-q"><summary>Do the brushes work on Windows, Android or Photoshop?</summary><div class="faq-body"><p>The .brushset format is specific to Procreate on iPad, so it will not load in Photoshop or on Windows and Android devices. Products that include PNG, PDF or palette files can be opened in any app that supports those formats; check the product page for what is included.</p></div></details><details class="faq-q"><summary>Which file do I download if a product has several ZIP parts?</summary><div class="faq-body"><p>Download all of them. Larger libraries are split into several ZIP files purely because of file size limits, and each part contains a different set of brushes. The Technical Details on the product page state how many parts there are and the total size.</p></div></details><details class="faq-q"><summary>Is DigiKitPro affiliated with Procreate or Savage Interactive?</summary><div class="faq-body"><p>No. DigiKitPro is an independent store. Procreate is a trademark of Savage Interactive Pty Ltd, and DigiKitPro is not affiliated with or endorsed by Savage Interactive.</p></div></details></div>
     <div class="prose">
       <h2>Still stuck?</h2>
       <p>Use the <a href="contact.html">contact page</a> or the contact form on our <a href="https://payhip.com/digikitpro" target="_blank" rel="noopener">Payhip store</a>. For the legal detail, see the <a href="terms.html">Terms</a>, the <a href="refunds.html">Refund Policy</a> and the <a href="privacy.html">Privacy Policy</a>.</p>
     </div>
   </div></section>
   <section class="newsletter" id="newsletter">
-  <div class="wrap">
-    <div class="nl-card">
-      <p class="eyebrow">Free starter pack</p>
-      <h2>Get the Free Procreate Starter Pack</h2>
-      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
-      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
-           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
-           Source/lead fields allow future email provider to trigger the right sequence. -->
-      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="thank-you.html" action="" method="POST">
-        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
-        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
-        <input type="hidden" name="source" value="site">
-        <label class="sr-only" for="nl-email">Email address</label>
-        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
-        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
-      </form>
-      <p class="nl-caption">Prefer to grab them now? <a href="freebies.html">Browse the free brush packs</a>.</p>
-    </div>
-  </div>
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="products/procreate-starter-guide-free-ebook/">Explore the free guide</a>
+    <a class="btn btn-line" href="freebies.html">See all free resources</a></div>
+  </div></div>
 </section>
-
 </main>
 
 <footer class="site-footer">
@@ -239,7 +258,7 @@
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>

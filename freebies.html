@@ -30,18 +30,54 @@
   }catch(e){}
 })();
 </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5MFQFHNB6B');
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Free Procreate Brushes | DigiKitPro</title>
-  <meta name="description" content="Download free professional Procreate resources: 100 fine liner brushes, 20+ chalk brushes and a 1,200-swatch color vault. No cost, instant delivery.">
+  <meta name="description" content="Explore free Procreate resources: 100 fine liner brushes, 20+ chalk brushes, a 1,200-swatch color vault and a portrait starter guide.">
   <link rel="canonical" href="https://digikitpro.shop/freebies.html">
   <meta name="google-site-verification" content="1e87093669a800cb">
   <meta name="msvalidate.01" content="52B8ABC07828BE6CE77B297D3F2E50A3">
@@ -55,7 +91,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DigiKitPro">
   <meta property="og:title" content="Free Procreate Brushes | DigiKitPro">
-  <meta property="og:description" content="Download free professional Procreate resources: 100 fine liner brushes, 20+ chalk brushes and a 1,200-swatch color vault. No cost, instant delivery.">
+  <meta property="og:description" content="Explore free Procreate resources: 100 fine liner brushes, 20+ chalk brushes, a 1,200-swatch color vault and a portrait starter guide.">
   <meta property="og:url" content="https://digikitpro.shop/freebies.html">
   <meta property="og:image" content="https://digikitpro.shop/assets/img/og-cover.jpg">
   <meta property="og:image:width" content="1200">
@@ -70,7 +106,7 @@
   <meta property="og:locale:alternate" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Procreate Brushes | DigiKitPro">
-  <meta name="twitter:description" content="Download free professional Procreate resources: 100 fine liner brushes, 20+ chalk brushes and a 1,200-swatch color vault. No cost, instant delivery.">
+  <meta name="twitter:description" content="Explore free Procreate resources: 100 fine liner brushes, 20+ chalk brushes, a 1,200-swatch color vault and a portrait starter guide.">
   <meta name="twitter:image" content="https://digikitpro.shop/assets/img/og-cover.jpg">
   <meta name="twitter:image:alt" content="Free Procreate Brushes | DigiKitPro">
   <meta name="geo.placename" content="DigiKitPro">
@@ -84,15 +120,15 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=fe430ede6b736c200057bdbd2cc61f8e">
+  <link rel="stylesheet" href="css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="feed.xml">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "freebies"}};</script>
   <script src="js/search-index.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/motion.js" defer></script>
-  <script src="js/analytics.js" defer></script>
-  <script src="js/feedback.js" defer></script>
-  <script src="js/translate.js" defer></script>
+  <script src="js/main.js?v=33a4a6e4ad79" defer></script>
+  <script src="js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="js/analytics.js?v=610c164ea071" defer></script>
+  <script src="js/translate.js?v=8877305ddd24" defer></script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "Free Brushes", "item": "https://digikitpro.shop/freebies.html"}]}</script>
 </head>
 <body>
@@ -107,7 +143,7 @@
     <nav class="main-nav" aria-label="Primary"><a href="freebies.html" class="active">Free Brushes</a><a href="products.html">Products</a><a href="bundles.html">Bundles</a><a href="blog.html">Articles</a><a href="tools/">Tools</a><a href="about.html">About</a></nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -143,20 +179,20 @@
 </div>
 
 <main id="main">
-  <section class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">Free Brushes</span></nav><p class="eyebrow">$0, forever</p><h1>Free Procreate Brushes & Assets</h1><p class="lead">Professional-grade tools, completely free. Download instantly, keep forever, and judge the quality for yourself before you spend anything.</p></div></section>
+  <section class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">Free Brushes</span></nav><p class="eyebrow">Free resources</p><h1>Free Procreate Brushes & Assets</h1><p class="lead">Explore free brushes, color palettes and a portrait guide. Each digital resource is available through Payhip.</p></div></section>
   <section class="section" id="direct" aria-labelledby="direct-title">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="eyebrow">No email, no wait</p><h2 id="direct-title">Download Them Right Now</h2></div>
-      <a class="text-link" href="#get-free">Or get new drops by email ↓</a>
+      <div><p class="eyebrow">Free on Payhip</p><h2 id="direct-title">Choose a Free Resource</h2></div>
+      <a class="text-link" href="products.html">Explore the full shop →</a>
     </div>
-    <p class="sec-note muted">Every button goes straight to Payhip's free checkout. Nothing is gated: take the packs first, decide about email later.</p>
+    <p class="sec-note muted">Each button opens its free product on Payhip. Payhip handles delivery and may request your email; a DigiKitPro newsletter signup is not required.</p>
     <div class="grid dl-grid"><article class="dl-card">
   <div class="card-img">
-  <a class="dl-media" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="freebie-direct" data-pin-description="Free Fine Liner Set: 100 Brushes + 13 Paper Textures - Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-fine-liner-brushes-100/" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp">
+  <a class="dl-media" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="freebie-direct" data-pin-description="Free Fine Liner Set: 100 Brushes + 13 Paper Textures - Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free digital download via Payhip. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-fine-liner-brushes-100/" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp">
     <img src="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" srcset="assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp 580w, assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 92vw" width="580" height="387" alt="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" loading="lazy" decoding="async">
     <span class="badge badge-free">Free</span>
-  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100-card.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+instant+download.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Free Fine Liner Set: 100 Brushes + 13 Paper Textures on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </a><a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100-card.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+digital+download+via+Payhip.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Free Fine Liner Set: 100 Brushes + 13 Paper Textures on Pinterest"><span aria-hidden="true">📌</span> Save</a>
   </div>
   <div class="dl-body">
     <h3>Free Fine Liner Set: 100 Brushes + 13 Paper Textures</h3>
@@ -165,7 +201,8 @@
       <span class="price price-free">Free</span>
       <a class="btn btn-gold" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="freebie-direct">Get Free <span class="btn-arr">↗</span></a>
     </div>
-    <p class="dl-note">No email required · instant download · keep forever</p>
+    <p class="dl-note">Free via Payhip · newsletter signup not required</p>
+    <a class="dl-next" href="thank-you.html?lead=free-fine-liner-brushes-100" data-dkp-event="free_next_step_click" data-dkp-source-product-id="free-fine-liner-brushes-100" data-dkp-surface="freebies">After downloading: your next step →</a>
   </div>
 </article><article class="dl-card">
   <div class="card-img">
@@ -181,7 +218,8 @@
       <span class="price price-free">Free</span>
       <a class="btn btn-gold" href="https://payhip.com/b/Rexg7" target="_blank" rel="noopener" data-dkp-slug="free-chalkboard-artists-toolkit" data-dkp-name="Chalkboard Artist&#x27;s Toolkit: 20+ Chalk Brushes (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="freebie-direct">Get Free <span class="btn-arr">↗</span></a>
     </div>
-    <p class="dl-note">No email required · instant download · keep forever</p>
+    <p class="dl-note">Free via Payhip · newsletter signup not required</p>
+    <a class="dl-next" href="thank-you.html?lead=free-chalkboard-artists-toolkit" data-dkp-event="free_next_step_click" data-dkp-source-product-id="free-chalkboard-artists-toolkit" data-dkp-surface="freebies">After downloading: your next step →</a>
   </div>
 </article><article class="dl-card">
   <div class="card-img">
@@ -197,7 +235,8 @@
       <span class="price price-free">Free</span>
       <a class="btn btn-gold" href="https://payhip.com/b/BmFdZ" target="_blank" rel="noopener" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="freebie-direct">Get Free <span class="btn-arr">↗</span></a>
     </div>
-    <p class="dl-note">No email required · instant download · keep forever</p>
+    <p class="dl-note">Free via Payhip · newsletter signup not required</p>
+    <a class="dl-next" href="thank-you.html?lead=free-color-vault-1200-swatches" data-dkp-event="free_next_step_click" data-dkp-source-product-id="free-color-vault-1200-swatches" data-dkp-surface="freebies">After downloading: your next step →</a>
   </div>
 </article><article class="dl-card">
   <div class="card-img">
@@ -208,44 +247,26 @@
   </div>
   <div class="dl-body">
     <h3>Procreate Portrait Starter Guide (Free eBook)</h3>
-    <p class="muted">PDF eBook · instant download</p>
+    <p class="muted">PDF eBook · free download</p>
     <div class="dl-foot">
       <span class="price price-free">Free</span>
       <a class="btn btn-gold" href="https://payhip.com/b/XRA5B" target="_blank" rel="noopener" data-dkp-slug="procreate-starter-guide-free-ebook" data-dkp-name="Procreate Portrait Starter Guide (Free eBook)" data-dkp-price="0.00" data-dkp-tier="education" data-dkp-free="1" data-dkp-loc="freebie-direct">Get Free <span class="btn-arr">↗</span></a>
     </div>
-    <p class="dl-note">No email required · instant download · keep forever</p>
+    <p class="dl-note">Free via Payhip · newsletter signup not required</p>
+    <a class="dl-next" href="thank-you.html?lead=procreate-starter-guide-free-ebook" data-dkp-event="free_next_step_click" data-dkp-source-product-id="procreate-starter-guide-free-ebook" data-dkp-surface="freebies">After downloading: your next step →</a>
   </div>
 </article></div>
-    <p class="trust-bridge">Secure checkout via Payhip · instant download · $0 now and forever, no card needed · <a href="refunds.html">Refund policy</a></p>
+    <p class="trust-bridge">Checkout and digital delivery via Payhip · free resource · Payhip may request delivery details · <a href="refunds.html">Refund policy</a></p>
   </div>
 </section>
-  <section class="freebie-gate" id="get-free" aria-labelledby="fg-title">
-  <div class="fg-inner">
-    <div class="fg-copy">
-      <p class="eyebrow">Free drops, first</p>
-      <h2 id="fg-title">Want new free drops sent to you?</h2>
-      <p class="muted">Leave your email and every new free pack lands in your inbox the day it drops. The downloads above never need an address — this is only for the next ones.</p>
-      <form class="nl-form fg-form" data-nl-form data-dkp-source="freebies" data-dkp-lead="free-brushes" data-dkp-thanks="thank-you.html" action="" method="POST">
-        <input type="hidden" name="_subject" value="Free download request: free-brushes">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <!-- Absolute _next keeps the no-JS path on thank-you.html, which delivers the promised free file. -->
-        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
-        <input type="hidden" name="source" value="freebies">
-        <input type="hidden" name="lead_magnet" value="free-brushes">
-        <label class="sr-only" for="fg-email-free-brushes">Email address</label>
-        <input id="fg-email-free-brushes" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me new freebies</button>
-        <p class="nl-note" data-nl-note>We email the link straight away.</p>
-      </form>
-      
-    </div>
-  </div>
-</section>
-
+  <section class="freebie-gate" id="get-free"><div class="fg-inner"><div class="fg-copy">
+      <p class="eyebrow">A little more practice</p><h2>Keep creating with your free tools</h2>
+      <p class="muted">The resources above are yours to explore. For a guided portrait exercise, start with the free guide and see a suggested next step when you are ready.</p>
+      <a class="btn btn-line" href="products/procreate-starter-guide-free-ebook/">Explore the free portrait guide</a>
+    </div></div></section>
   <section class="section"><div class="wrap narrow">
     <h2>Why we give professional tools away</h2>
-    <p>Great tools shouldn't be gated. Every freebie in this collection is built to the same standard as our paid kits, hand-tuned pressure curves, real-media texture, and organized .brushset installs. If they become part of your daily workflow (we think they will), the <a href="products.html">full catalog</a> is waiting when you're ready.</p>
+    <p>These free resources are here to help you practise, whether you choose a paid product or not. The guide is a PDF, the colour vault contains palettes, and the brush sets import into Procreate. Explore the <a href="products.html">full catalog</a> whenever you need a different tool.</p>
     <p>New here? Start with the <a href="products/free-fine-liner-brushes-100/">100-brush Fine Liner set</a>, then grab the <a href="products/free-color-vault-1200-swatches/">1,200-swatch Color Vault</a> so you never stall on color again.</p>
   </div></section>
 </main>
@@ -304,7 +325,7 @@
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>

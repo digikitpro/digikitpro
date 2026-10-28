@@ -97,35 +97,9 @@
   function initHero() {
     var hero = $(".hero");
     if (!hero) return;
+    // Content stays visible on first paint; no entrance delay or cursor motion.
     html.classList.add("hero-ready");
-    requestAnimationFrame(function () { hero.classList.add("hero-in"); });
-
-    var showcase = $(".hero-showcase", hero);
-    if (!showcase || REDUCED || MOBILE) return;
-
-    /* Cursor parallax: each cover sits at a different depth, so the stack
-       separates a little instead of moving as one block. Max 14 px.
-       Gated on the event's own pointerType rather than a media query: some
-       environments (headless browsers, hybrid tablets) misreport
-       `pointer: fine`, and a missed mouse is worse than a missed effect. */
-    var raf = 0, mx = 0, my = 0;
-    function apply() {
-      raf = 0;
-      showcase.style.setProperty("--mx", mx.toFixed(3));
-      showcase.style.setProperty("--my", my.toFixed(3));
-    }
-    hero.addEventListener("pointermove", function (e) {
-      if (e.pointerType === "touch") return;
-      var r = hero.getBoundingClientRect();
-      mx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-      my = ((e.clientY - r.top) / r.height - 0.5) * 2;
-      if (mx > 1) mx = 1; else if (mx < -1) mx = -1;
-      if (my > 1) my = 1; else if (my < -1) my = -1;
-      if (!raf) raf = requestAnimationFrame(apply);
-    }, { passive: true });
-    hero.addEventListener("pointerleave", function () {
-      mx = 0; my = 0; if (!raf) raf = requestAnimationFrame(apply);
-    }, { passive: true });
+    hero.classList.add("hero-in");
   }
 
   /* ══════════════════════════════════════════════════════════════════
@@ -191,7 +165,7 @@
     /* — pointer drag (mouse, pen, touch) — */
     stage.addEventListener("pointerdown", function (e) {
       if (e.button != null && e.button !== 0) return;
-      dragging = true; touched = true;
+      dragging = true;
       stage.classList.add("dragging");
       stage.classList.remove("ba-glide");
       if (stage.setPointerCapture) { try { stage.setPointerCapture(e.pointerId); } catch (err) {} }
@@ -234,33 +208,9 @@
     }
 
     /* — reveal-in: start flat, sweep to finished once, then hand over — */
-    var started = false;
-    function autoReveal() {
-      if (started) return;
-      started = true;
-      if (REDUCED || touched) { set(50); return; }
-      if (sweep) { sweep.classList.add("on"); setTimeout(function () { sweep.classList.remove("on"); }, 1300); }
-      var from = 96, to = 50, t0 = 0, dur = 1150;
-      stage.classList.remove("ba-glide");
-      function step(ts) {
-        if (touched || dragging) return;                 /* visitor took over: stop */
-        if (!t0) t0 = ts;
-        var k = Math.min(1, (ts - t0) / dur);
-        var e = 1 - Math.pow(1 - k, 3);                  /* easeOutCubic, ~1.1 s */
-        set(from + (to - from) * e);
-        if (k < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }
-
-    if (!("IntersectionObserver" in window)) { set(50); return; }
-    var io = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) { autoReveal(); io.disconnect(); }
-    }, { threshold: 0.35 });
-    io.observe(stage);
-    /* Start flat (the visitor's "before"), then sweep to the finished side
-       the first time the section lands. Reduced motion: just show half. */
-    set(REDUCED ? 50 : 96);
+    // Start at the midpoint. The comparison moves only when a visitor
+    // chooses to drag, tap or use the keyboard; it does not auto-play.
+    set(50);
   }
 
   /* ══════════════════════════════════════════════════════════════════
@@ -366,11 +316,9 @@
     if (REDUCED) html.classList.add("motion-reduced");
     initReveal();
     initHero();
-    initParallax();
     initBeforeAfter();
-    initBundleDepth();
     initProgress();
-    if (PAGE_HOME) initStickyCta();                  /* a homepage nudge, per the brief */
+    // Avoid unsolicited sticky promotional bars and decorative parallax.
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     onScroll();

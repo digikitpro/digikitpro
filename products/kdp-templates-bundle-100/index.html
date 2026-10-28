@@ -30,13 +30,49 @@
   }catch(e){}
 })();
 </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5MFQFHNB6B');
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -88,20 +124,20 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="../../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../../css/style.css?v=fe430ede6b736c200057bdbd2cc61f8e">
+  <link rel="stylesheet" href="../../css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
- <link rel="preload" as="image" href="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp" fetchpriority="high">
+ <link rel="preload" as="image" href="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp" fetchpriority="high">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "product", "slug": "kdp-templates-bundle-100", "name": "100+ Editable KDP Templates 2026: Canva Bundle", "tier": "bundle", "category": "Other", "price": 8.0, "free": false, "line": "lifestyle"}};</script>
   <script src="../../js/search-index.js" defer></script>
-  <script src="../../js/main.js" defer></script>
+  <script src="../../js/main.js?v=33a4a6e4ad79" defer></script>
   <script src="../../js/gallery.js" defer></script>
-  <script src="../../js/motion.js" defer></script>
-  <script src="../../js/analytics.js" defer></script>
-  <script src="../../js/feedback.js" defer></script>
-  <script src="../../js/translate.js" defer></script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "100+ Editable KDP Templates 2026: Canva Bundle", "image": "https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp", "description": "100+ fully editable Canva planner, journal, logbook and workbook templates ready for Amazon KDP publishing in 2026.", "brand": {"@type": "Brand", "name": "DigiKitPro"}, "sku": "kdp-templates-bundle-100", "url": "https://digikitpro.shop/products/kdp-templates-bundle-100/", "contentLocation": {"@type": "Place", "name": "Worldwide"}, "offers": {"@type": "Offer", "price": "8.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition", "url": "https://digikitpro.shop/products/kdp-templates-bundle-100/", "priceValidUntil": "2027-12-31", "seller": {"@type": "Organization", "name": "DigiKitPro"}}}</script>
+  <script src="../../js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="../../js/analytics.js?v=610c164ea071" defer></script>
+  <script src="../../js/translate.js?v=8877305ddd24" defer></script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "100+ Editable KDP Templates 2026: Canva Bundle", "image": "https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp", "description": "100+ fully editable Canva planner, journal, logbook and workbook templates ready for Amazon KDP publishing in 2026.", "brand": {"@type": "Brand", "name": "DigiKitPro"}, "sku": "kdp-templates-bundle-100", "url": "https://digikitpro.shop/products/kdp-templates-bundle-100/", "contentLocation": {"@type": "Place", "name": "Worldwide"}, "offers": {"@type": "Offer", "price": "8.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition", "url": "https://digikitpro.shop/products/kdp-templates-bundle-100/", "seller": {"@type": "Organization", "name": "DigiKitPro"}}}</script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "Products", "item": "https://digikitpro.shop/products.html"}, {"@type": "ListItem", "position": 3, "name": "100+ Editable KDP Templates 2026: Canva Bundle", "item": "https://digikitpro.shop/products/kdp-templates-bundle-100/"}]}</script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use this product?", "acceptedAnswer": {"@type": "Answer", "text": "You need the app or software listed in the requirements above. Full requirements are listed above on this page."}}, {"@type": "Question", "name": "How will I receive my files?", "acceptedAnswer": {"@type": "Answer", "text": "Immediately after checkout on Payhip you are redirected to a download page, and you also receive an automated email with a permanent download link."}}, {"@type": "Question", "name": "What is the refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved."}}]}</script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use this product?", "acceptedAnswer": {"@type": "Answer", "text": "You need the app or software listed in the requirements above. Full requirements are listed above on this page."}}, {"@type": "Question", "name": "How will I receive my files?", "acceptedAnswer": {"@type": "Answer", "text": "Payhip handles checkout and digital delivery. Check the Payhip checkout and receipt for access details, and contact the store if you need help."}}, {"@type": "Question", "name": "What is the refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved."}}]}</script>
 </head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
@@ -115,7 +151,7 @@
     <nav class="main-nav" aria-label="Primary"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html" class="active">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a></nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -157,60 +193,63 @@
       <div class="pdp-media" data-product-gallery><figure class="gal-main">
       <img id="product-main-image" data-gallery-main src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp" srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp 1160w" sizes="(min-width: 960px) 46vw, 100vw" width="1160" height="774" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork" fetchpriority="high" decoding="async" data-pin-description="100+ Editable KDP Templates 2026: Canva Bundle - 100+ fully editable Canva planner, journal, logbook and workbook templates ready for Amazon KDP publishing in 2026. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/kdp-templates-bundle-100/" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp">
       <a class="pin-btn pin-btn-gal" data-pin-anchor href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fkdp-templates-bundle-100%2Fkdp-templates-bundle-100.webp&amp;description=100%2B+Editable+KDP+Templates+2026%3A+Canva+Bundle+-+100%2B+fully+editable+Canva+planner%2C+journal%2C+logbook+and+workbook+templates+ready+for+Amazon+KDP+publishing+in+2026.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save 100+ Editable KDP Templates 2026: Canva Bundle on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-    </figure><div class="gal-thumbs" role="group" aria-label="Product image previews"><button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb data-full-image="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp" data-srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp" aria-label="View product image 1" aria-current="true"><img src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-card.webp" width="750" height="500" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2.webp" data-srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 1" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2.webp" aria-label="View product image 2"><img src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2-card.webp" width="750" height="500" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 1 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3.webp" data-srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 2" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3.webp" aria-label="View product image 3"><img src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3-card.webp" width="750" height="500" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 2 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4.webp" data-srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 3" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4.webp" aria-label="View product image 4"><img src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4-card.webp" width="750" height="500" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 3 thumbnail" loading="lazy" decoding="async"></button></div></div>
+    </figure><div class="gal-thumbs" role="group" aria-label="Product image previews"><button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb data-full-image="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp" data-srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100.webp" aria-label="View product image 1" aria-current="true"><img src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-card.webp" width="750" height="500" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2.webp" data-srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 2" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2.webp" aria-label="View product image 2"><img src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-2-card.webp" width="750" height="500" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 2 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3.webp" data-srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 3" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3.webp" aria-label="View product image 3"><img src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-3-card.webp" width="750" height="500" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 3 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4.webp" data-srcset="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4-card.webp 750w, ../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 4" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4.webp" aria-label="View product image 4"><img src="../../assets/products/kdp-templates-bundle-100/kdp-templates-bundle-100-4-card.webp" width="750" height="500" alt="100+ Editable KDP Templates 2026, Canva Bundle, product preview artwork: preview 4 thumbnail" loading="lazy" decoding="async"></button></div><p class="gallery-hint">Select a preview to explore the kit; tap the main image to enlarge it.</p></div>
       <div class="pdp-info">
         <div class="chip-row"><span class="meta-chip">100+ Canva templates</span><a class="meta-chip cat" href="../../products.html#cat-Other">Other</a></div>
         <h1>100+ Editable KDP Templates 2026: Canva Bundle</h1>
         <p class="pdp-short">100+ fully editable Canva planner, journal, logbook and workbook templates ready for Amazon KDP publishing in 2026.</p>
         <div class="buy-panel">
           <div class="buy-top"><span class="buy-label">Price</span><span class="price price-lg">$8.00</span></div>
-          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/jFL0I" target="_blank" rel="noopener" data-dkp-slug="kdp-templates-bundle-100" data-dkp-name="100+ Editable KDP Templates 2026: Canva Bundle" data-dkp-price="8.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="pdp-buy-panel">Buy Now <span class="btn-arr">↗</span></a>
-          <p class="buy-cap">Opens the Payhip checkout in a new tab</p>
-          <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
+          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/jFL0I" target="_blank" rel="noopener" data-dkp-slug="kdp-templates-bundle-100" data-dkp-name="100+ Editable KDP Templates 2026: Canva Bundle" data-dkp-price="8.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="pdp-buy-panel">Buy on Payhip <span class="btn-arr">↗</span></a>
+          <p class="buy-cap">Opens the product on Payhip in a new tab; continue to checkout there</p>
+          <p class="trust-bridge">Checkout and digital delivery via Payhip · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
+
         </div>
         <p class="licence-line"><b>Commercial use allowed.</b> Yes — commercial use is allowed. Finished artwork you create is yours to use in commissions, client projects, prints, products and other commercial work. You may not resell, share, redistribute or repackage the brush files themselves. Contact us before agency, classroom or multi-user use. <a href="../../terms.html">Read the full licence</a>.</p>
-        <ul class="pdp-trust"><li>Instant download via Payhip</li><li>Lifetime access</li><li>See requirements below</li></ul>
+        <ul class="pdp-trust"><li>Digital delivery via Payhip</li><li>No physical item ships</li><li>See requirements below</li></ul>
       </div>
     </article>
 
     <section class="psec" aria-labelledby="p-why-you-ll-love-it"><h2 id="p-why-you-ll-love-it">Why You&#x27;ll Love It</h2><ul class="tick-list gold"><li>100+ editable Canva templates</li><li>Planners, journals, logbooks &amp; workbooks</li><li>Beginner friendly drag-and-drop editing</li><li>KDP-upload ready for 2026</li></ul></section>
-    
+
+
+
     <section class="psec" aria-labelledby="p-what-s-included"><h2 id="p-what-s-included">What&#x27;s Included</h2><ul class="tick-list check"><li>A complete collection of 100+ editable KDP interior templates, including:</li><li>Core Planners &amp; Journals</li><li>2026 365-Day Planner</li><li>2025–2026 Monthly Planner</li><li>2025–2029 Monthly Planner</li><li>2026 Daily Planner</li><li>2026 Weekly Planner</li><li>2026 Monthly Budget Planner</li><li>2026 Project Planner</li><li>2026 Goal Action Planner</li><li>2026 Self Care Planner</li><li>2026 Social Media Planner</li><li>2026 Family Planner</li><li>2026 Financial Goal Planner</li></ul></section>
     <section class="psec richtext" aria-labelledby="p-about"><h2 id="p-about">About This Product</h2><div class="prose"><p>Expand your Amazon KDP publishing business with a professionally designed collection of 100+ fully editable templates for 2026. This all-in-one Canva bundle allows you to create high-quality planners, journals, logbooks, and workbooks ready for Amazon KDP upload.</p><p>Designed for both beginners and experienced publishers, these templates are easy to customize. Simply edit the text, adjust colors, drag and drop images, and export your final files for print or PDF publishing.</p><p>This bundle helps you save time, increase productivity, and launch multiple KDP products faster.</p><p>Important: Some templates include Canva Pro elements. A Canva Pro account may be required to access certain premium graphics.</p><h3><strong>What You Will Receive</strong></h3><p>A complete collection of 100+ editable KDP interior templates, including:</p><h3>Core Planners &amp; Journals</h3><ul><li>2026 365-Day Planner</li><li>2025–2026 Monthly Planner</li><li>2025–2029 Monthly Planner</li><li>2026 Daily Planner</li><li>2026 Weekly Planner</li><li>2026 Monthly Budget Planner</li><li>2026 Project Planner</li><li>2026 Goal Action Planner</li><li>2026 Self Care Planner</li><li>2026 Social Media Planner</li><li>2026 Family Planner</li><li>2026 Financial Goal Planner</li></ul><h3>Health &amp; Wellness</h3><ul><li>2026 Gratitude Journal</li><li>2026 Daily Gratitude Journal</li><li>2026 Daily Affirmation Journal</li><li>2026 Anxiety Journal</li><li>2026 Mood Tracker</li><li>2026 Sleep Tracker</li><li>2026 Fitness Planner</li><li>2026 Workout Log Book</li><li>2026 Daily Weight Loss Planner</li><li>2026 Blood Sugar Log Book</li><li>2026 Medication Logbook</li><li>2026 Health Record Book</li><li>2026 Ovulation Test Strips Log Book</li></ul><h3>Finance &amp; Business</h3><ul><li>2026 Budget Tracker</li><li>2026 Income Tracker</li><li>2026 Checking Account Ledger</li><li>2026 Monthly Bill Payment Tracker</li><li>2026 Money Saving Challenges Book</li><li>2026 Product Inventory Logbook</li><li>2026 Competitor Tracker</li><li>2026 Trading Log Book</li><li>2026 Website Planner</li><li>2026 Work Time Tracker</li><li>2026 Order Form Logbook</li><li>2026 Petty Cash Log Book</li><li>2026 Notary Journal</li></ul><h3>Logbooks &amp; Trackers</h3><ul><li>2026 Mileage Log Book</li><li>2026 Boating Log Book</li><li>2026 Fishing Logbook Journal</li><li>2026 Camping Journal &amp; RV Travel Logbook</li><li>2026 Hiking Logbook Journal</li><li>2026 Golf Journal</li><li>2026 Archery Training Book</li><li>2026 Horseback Riding Journal</li><li>2026 Beekeeping Log Book</li><li>2026 Coin Inventory Logbook</li><li>2026 Movie Logbook</li><li>2026 Password Tracker</li><li>2026 Visitor’s Log Book</li><li>2026 Voice Mail Log Book</li><li>2026 Phone Call Message Book</li></ul><h3>Education &amp; School</h3><ul><li>2026 Assignment Planner</li><li>2026 Substitute Teacher Report Notebook</li><li>2026 Textbook Rental Tracker</li><li>2026 Toddler Report Book</li><li>2026 Meeting Note Planner</li></ul><h3>Special Interest &amp; Event Books</h3><ul><li>2026 Baby Shower Guest Book</li><li>2026 Wedding Checklist</li><li>2026 Christmas Shopping Planner</li><li>2026 Prayer Journal</li><li>2026 Retirement Guest Book</li><li>2026 Church Membership Record Book</li><li>2026 Child Custody Journal</li><li>2026 Nurse Stories Journal</li><li>2026 Bucket List Journal</li><li>2026 Dream Journal</li><li>2026 Outfit Planner</li><li>2026 Blank Recipe Book</li></ul><h3>Games &amp; Score Sheets</h3><ul><li>2026 Bowling Score Book</li><li>2026 Dart Score Sheet</li><li>2026 Phase 10 Score Sheet</li><li>2026 Progressive 500 Score Sheets</li><li>2026 Play Nine Score Sheets</li><li>2026 Samba Score Sheets</li><li>2026 Spades Score Sheet</li><li>2026 Uno Score Sheet</li><li>2026 Euchre Score Sheets</li><li>2026 Mile Bornes Score Sheet</li><li>2026 Kismet Score Sheets</li></ul><p>And many more customizable layouts you can mix, match, combine, and rebrand to create unique low-content and no-content books for Amazon KDP.</p><h3><strong>Why This Bundle Is Ideal for KDP Sellers</strong></h3><ul><li>Fully editable Canva templates</li><li>Print-ready for Amazon KDP</li><li>Suitable for low-content and no-content publishing</li><li>Multiple profitable niches included</li><li>Time-saving and scalable</li><li>Beginner-friendly customization</li><li>Designed for 2026 trending planner market</li></ul><h3><strong>Perfect For</strong></h3><ul><li>Amazon KDP publishers</li><li>Passive income creators</li><li>Print-on-demand sellers</li><li>Digital product creators</li><li>Etsy and Payhip sellers</li><li>Entrepreneurs building multiple planner brands</li></ul><p>Launch faster. Publish smarter. Scale your KDP business with professionally structured templates designed to convert in the 2026 planner and journal market.</p></div></section>
-    
+
     <section class="psec" aria-labelledby="p-tech"><h2 id="p-tech">Technical Details</h2><table class="spec-table"><tr><th>Format</th><td>Editable Canva templates</td></tr>
 <tr><th>Contents</th><td>100+ Canva templates</td></tr>
 <tr><th>Download</th><td>ZIP (939MB)</td></tr>
 <tr><th>Delivery</th><td>Instant digital download via Payhip</td></tr>
 </table></section>
     <section class="psec" aria-labelledby="p-requirements"><h2 id="p-requirements">Requirements</h2><ul class="tick-list plain"><li>A free Canva account to edit templates</li><li>Digital download, no physical item ships</li></ul></section>
-    <section class="psec install-steps" aria-labelledby="p-install"><h2 id="p-install">How to install it</h2><ol class="steps-list"><li>Buy or download on Payhip — the .brushset file arrives by email instantly.</li><li>Get the file onto your iPad (AirDrop from a Mac, or any file transfer on Windows).</li><li>Tap the .brushset file in the Files app and choose <b>Open in Procreate</b>.</li><li>The set installs automatically and appears in your Brushes panel, ready to use.</li></ol><p class="muted install-note">Full walkthrough with screenshots: <a href="../../blog/how-to-install-procreate-brushes/">How to install Procreate brushes</a>.</p></section>
+
     <section class="psec" aria-labelledby="p-for"><h2 id="p-for">Who It's For</h2><div class="tag-row"><span class="tag">KDP publishers</span><span class="tag">Side hustlers</span><span class="tag">Template sellers</span></div></section>
-    
-    
+
+
     <section class="psec" aria-labelledby="p-faq"><h2 id="p-faq">FAQ</h2><details class="faq-item">
       <summary>What do I need to use this product?</summary>
       <div class="faq-body"><p>You need the app or software listed in the requirements above. Full requirements are listed above on this page.</p></div>
     </details><details class="faq-item">
       <summary>How will I receive my files?</summary>
-      <div class="faq-body"><p>Immediately after checkout on Payhip you are redirected to a download page, and you also receive an automated email with a permanent download link.</p></div>
+      <div class="faq-body"><p>Payhip handles checkout and digital delivery. Check the Payhip checkout and receipt for access details, and contact the store if you need help.</p></div>
     </details><details class="faq-item">
       <summary>What is the refund policy?</summary>
       <div class="faq-body"><p>Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved.</p></div>
     </details></section>
-    
+
     <section class="psec share-sec" aria-label="Share">
       <p class="share-heading">Save or share this artwork</p>
-      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fkdp-templates-bundle-100%2Fkdp-templates-bundle-100.webp&amp;description=100%2B+Editable+KDP+Templates+2026%3A+Canva+Bundle+-+100%2B+fully+editable+Canva+planner%2C+journal%2C+logbook+and+workbook+templates+ready+for+Amazon+KDP+publishing+in+2026.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Pin this to Pinterest">📌 <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F&amp;text=100%2B%20Editable%20KDP%20Templates%202026%3A%20Canva%20Bundle" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=100%2B%20Editable%20KDP%20Templates%202026%3A%20Canva%20Bundle%20-%20100%2B%20fully%20editable%20Canva%20planner%2C%20journal%2C%20logbook%20and%20workbook%20templates%20ready%20for%20Amazon%20KDP%20publishing%20in%202026.%20%7C%20DigiKitPro%20https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
+      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fkdp-templates-bundle-100%2Fkdp-templates-bundle-100.webp&amp;description=100%2B+Editable+KDP+Templates+2026%3A+Canva+Bundle+-+100%2B+fully+editable+Canva+planner%2C+journal%2C+logbook+and+workbook+templates+ready+for+Amazon+KDP+publishing+in+2026.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Pin it on Pinterest"><span aria-hidden="true">📌</span> <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F&amp;text=100%2B%20Editable%20KDP%20Templates%202026%3A%20Canva%20Bundle" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=100%2B%20Editable%20KDP%20Templates%202026%3A%20Canva%20Bundle%20-%20100%2B%20fully%20editable%20Canva%20planner%2C%20journal%2C%20logbook%20and%20workbook%20templates%20ready%20for%20Amazon%20KDP%20publishing%20in%202026.%20%7C%20DigiKitPro%20https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fkdp-templates-bundle-100%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
     </section>
 
     <section class="psec pdp-cta" aria-labelledby="p-get">
       <div>
         <h2 id="p-get">Get This Product</h2>
-        <p class="muted">Secure checkout on Payhip. Instant delivery to your email.</p>
-        <p class="trust-bridge">Secure checkout via Payhip · instant download · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
+        <p class="muted">Continue to the product on Payhip for checkout and digital delivery.</p>
+        <p class="trust-bridge">Checkout and digital delivery via Payhip · all sales final once downloaded, faulty files always resolved · <a href="../../refunds.html">Refund policy</a></p>
       </div>
-      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/jFL0I" target="_blank" rel="noopener" data-dkp-slug="kdp-templates-bundle-100" data-dkp-name="100+ Editable KDP Templates 2026: Canva Bundle" data-dkp-price="8.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="pdp-bottom">Buy Now <span class="btn-arr">↗</span></a>
+      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/jFL0I" target="_blank" rel="noopener" data-dkp-slug="kdp-templates-bundle-100" data-dkp-name="100+ Editable KDP Templates 2026: Canva Bundle" data-dkp-price="8.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="pdp-bottom">Buy on Payhip <span class="btn-arr">↗</span></a>
     </section>
 
     <section class="psec" aria-labelledby="p-related">
@@ -226,7 +265,7 @@
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../products.html#cat-Other">Other</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/mindfulness-system-planner/">10-Minute Daily Mindfulness System: 57-Page Planner</a></h3>
     <p class="card-short">A 57-page mindfulness planner with 10-minute daily prompts, fully hyperlinked PDF plus an editable Canva template.</p>
@@ -246,7 +285,7 @@
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../products.html#cat-Other">Other</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/ultimate-fitness-planner/">Ultimate Fitness Planner for Peak Performance</a></h3>
     <p class="card-short">A beautifully designed fitness planner for goal setting, workout schedules, meal planning, habit tracking and self-care.</p>
@@ -266,7 +305,7 @@
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../products.html#cat-Other">Other</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/wellness-journal-365/">Digital Wellness Journal: 365 Hyperlinked Pages, Dark Mode</a></h3>
     <p class="card-short">365 undated daily wellness pages in a distraction-free dark minimalist design for GoodNotes and Notability.</p>
@@ -300,31 +339,14 @@
     </section>
   </div>
   <section class="newsletter" id="newsletter">
-  <div class="wrap">
-    <div class="nl-card">
-      <p class="eyebrow">Free starter pack</p>
-      <h2>Get the Free Procreate Starter Pack</h2>
-      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
-      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
-           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
-           Source/lead fields allow future email provider to trigger the right sequence. -->
-      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="../../thank-you.html" action="" method="POST">
-        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
-        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
-        <input type="hidden" name="source" value="site">
-        <label class="sr-only" for="nl-email">Email address</label>
-        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
-        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
-      </form>
-      <p class="nl-caption">Prefer to grab them now? <a href="../../freebies.html">Browse the free brush packs</a>.</p>
-    </div>
-  </div>
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="../../products/procreate-starter-guide-free-ebook/">Explore the free guide</a>
+    <a class="btn btn-line" href="../../freebies.html">See all free resources</a></div>
+  </div></div>
 </section>
-
 </main>
 
 <footer class="site-footer">
@@ -381,7 +403,7 @@
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>

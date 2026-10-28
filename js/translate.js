@@ -150,7 +150,7 @@
     if (!code || !toggle) return;
     var cd = toggle.querySelector(".lang-cd");
     if (cd) cd.textContent = code.toUpperCase();
-    toggle.setAttribute("aria-label", "Translate this page - current language: " + (NAMES[code] || code));
+    toggle.setAttribute("aria-label", code.toUpperCase() + " - Translate this page, current language: " + (NAMES[code] || code));
     $$("[data-lang]").forEach(function (b) {
       b.setAttribute("aria-current", b.getAttribute("data-lang") === code ? "true" : "false");
     });

@@ -30,13 +30,49 @@
   }catch(e){}
 })();
 </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5MFQFHNB6B');
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -84,15 +120,15 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="../../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../../css/style.css?v=fe430ede6b736c200057bdbd2cc61f8e">
+  <link rel="stylesheet" href="../../css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "category", "slug": "portrait", "category": "Portrait Brushes"}};</script>
   <script src="../../js/search-index.js" defer></script>
-  <script src="../../js/main.js" defer></script>
-  <script src="../../js/motion.js" defer></script>
-  <script src="../../js/analytics.js" defer></script>
-  <script src="../../js/feedback.js" defer></script>
-  <script src="../../js/translate.js" defer></script>
+  <script src="../../js/main.js?v=33a4a6e4ad79" defer></script>
+  <script src="../../js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="../../js/analytics.js?v=610c164ea071" defer></script>
+  <script src="../../js/translate.js?v=8877305ddd24" defer></script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "Products", "item": "https://digikitpro.shop/products.html"}, {"@type": "ListItem", "position": 3, "name": "Portrait Brushes", "item": "https://digikitpro.shop/category/portrait/"}]}</script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ItemList", "name": "DigiKitPro Procreate Brushes Catalog", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Artista Studio Kit: 76 Procreate Brushes", "url": "https://digikitpro.shop/products/artista-studio-kit-76-brushes/"}, {"@type": "ListItem", "position": 2, "name": "Portrait Mastery Kit: 46 Procreate Brushes", "url": "https://digikitpro.shop/products/portrait-mastery-kit-46-brushes/"}]}</script>
 </head>
@@ -108,7 +144,7 @@
     <nav class="main-nav" aria-label="Primary"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html" class="active">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a></nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -166,18 +202,18 @@
       <div class="grid cards">
 <article class="card" data-category="Portrait" data-name="artista studio kit: 76 procreate brushes" data-tags="studio kit all in one inking shading graphite charcoal markers illustration comics" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
   <div class="card-img">
-  <a class="card-media media-4x5" href="../../products/artista-studio-kit-76-brushes/" data-pin-description="Artista Studio Kit: 76 Procreate Brushes - One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/artista-studio-kit-76-brushes/" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp">
-    <img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Artista Studio Kit: 76 Procreate Brushes: One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects." loading="eager" fetchpriority="high" decoding="async">
+  <a class="card-media media-4x5" href="../../products/artista-studio-kit-76-brushes/" data-pin-description="Artista Studio Kit: 76 Procreate Brushes - A versatile 76-brush Procreate studio for sketching, linework, shading, graphite, markers and texture—organized into eight groups. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/artista-studio-kit-76-brushes/" data-pin-media="https://digikitpro.shop/assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp">
+    <img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" srcset="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp 750w, ../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Artista Studio Kit: 76 Procreate Brushes: A versatile 76-brush Procreate studio for sketching, linework, shading, graphite, markers and texture—organized into eight groups." loading="eager" fetchpriority="high" decoding="async">
   </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fartista-studio-kit-76-brushes%2Fartista-studio-kit-76-brushes-card.webp&amp;description=Artista+Studio+Kit%3A+76+Procreate+Brushes+-+One+organized+76-brush+collection+that+covers+the+full+studio+workflow%2C+linework%2C+inking%2C+sketching%2C+shading%2C+graphite%2C+markers+and+effects.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Artista Studio Kit: 76 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fartista-studio-kit-76-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fartista-studio-kit-76-brushes%2Fartista-studio-kit-76-brushes-card.webp&amp;description=Artista+Studio+Kit%3A+76+Procreate+Brushes+-+A+versatile+76-brush+Procreate+studio+for+sketching%2C+linework%2C+shading%2C+graphite%2C+markers+and+texture%E2%80%94organized+into+eight+groups.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Artista Studio Kit: 76 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
   </div>
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../category/portrait/">Portrait</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/artista-studio-kit-76-brushes/">Artista Studio Kit: 76 Procreate Brushes</a></h3>
-    <p class="card-short">One organized 76-brush collection that covers the full studio workflow, linework, inking, sketching, shading, graphite, markers and effects.</p>
+    <p class="card-short">A versatile 76-brush Procreate studio for sketching, linework, shading, graphite, markers and texture—organized into eight groups.</p>
     <div class="card-foot">
       <span class="price">$5.00</span>
       <a class="btn btn-line btn-sm" href="https://payhip.com/b/IjRTk" target="_blank" rel="noopener" data-dkp-slug="artista-studio-kit-76-brushes" data-dkp-name="Artista Studio Kit: 76 Procreate Brushes" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
@@ -186,18 +222,18 @@
 </article>
 <article class="card" data-category="Portrait" data-name="portrait mastery kit: 46 procreate brushes" data-tags="portrait portrait workflow skin hair blending paper texture face realistic" data-free="0" data-featured="1" data-tier="entry" data-line="procreate" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
   <div class="card-img">
-  <a class="card-media media-4x5" href="../../products/portrait-mastery-kit-46-brushes/" data-pin-description="Portrait Mastery Kit: 46 Procreate Brushes - A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-mastery-kit-46-brushes/" data-pin-media="https://digikitpro.shop/assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp">
-    <img src="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, ../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Portrait Mastery Kit: 46 Procreate Brushes: A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish." loading="eager" fetchpriority="high" decoding="async">
+  <a class="card-media media-4x5" href="../../products/portrait-mastery-kit-46-brushes/" data-pin-description="Portrait Mastery Kit: 46 Procreate Brushes - Sketch, blend and finish portraits with 46 Procreate brushes organized by task, plus four paper textures. A focused place to start building a portrait workflow. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/portrait-mastery-kit-46-brushes/" data-pin-media="https://digikitpro.shop/assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp">
+    <img src="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp" srcset="../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes-card.webp 750w, ../../assets/products/portrait-mastery-kit-46-brushes/portrait-mastery-kit-46-brushes.webp 1400w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="928" alt="Portrait Mastery Kit: 46 Procreate Brushes: Sketch, blend and finish portraits with 46 Procreate brushes organized by task, plus four paper textures. A focused place to start building a portrait workflow." loading="eager" fetchpriority="high" decoding="async">
   </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-mastery-kit-46-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-mastery-kit-46-brushes%2Fportrait-mastery-kit-46-brushes-card.webp&amp;description=Portrait+Mastery+Kit%3A+46+Procreate+Brushes+-+A+portrait-specific+workflow+kit%3A+46+pro+brushes+plus+4+paper+textures+organized+into+sketch%2C+ink%2C+blend%2C+hair%2C+detail%2C+texture+and+finish.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Mastery Kit: 46 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fportrait-mastery-kit-46-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fportrait-mastery-kit-46-brushes%2Fportrait-mastery-kit-46-brushes-card.webp&amp;description=Portrait+Mastery+Kit%3A+46+Procreate+Brushes+-+Sketch%2C+blend+and+finish+portraits+with+46+Procreate+brushes+organized+by+task%2C+plus+four+paper+textures.+A+focused+place+to+start+building+a+portrait+workflow.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Portrait Mastery Kit: 46 Procreate Brushes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
   </div>
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../category/portrait/">Portrait</a>
-      <span class="badge">Best Seller</span>
+      <span class="badge">Featured</span>
     </div>
     <h3 class="card-title"><a href="../../products/portrait-mastery-kit-46-brushes/">Portrait Mastery Kit: 46 Procreate Brushes</a></h3>
-    <p class="card-short">A portrait-specific workflow kit: 46 pro brushes plus 4 paper textures organized into sketch, ink, blend, hair, detail, texture and finish.</p>
+    <p class="card-short">Sketch, blend and finish portraits with 46 Procreate brushes organized by task, plus four paper textures. A focused place to start building a portrait workflow.</p>
     <div class="card-foot">
       <span class="price">$8.00</span>
       <a class="btn btn-line btn-sm" href="https://payhip.com/b/pOG6v" target="_blank" rel="noopener" data-dkp-slug="portrait-mastery-kit-46-brushes" data-dkp-name="Portrait Mastery Kit: 46 Procreate Brushes" data-dkp-price="8.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
@@ -222,31 +258,14 @@
   </div>
 </section>
   <section class="newsletter" id="newsletter">
-  <div class="wrap">
-    <div class="nl-card">
-      <p class="eyebrow">Free starter pack</p>
-      <h2>Get the Free Procreate Starter Pack</h2>
-      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
-      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
-           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
-           Source/lead fields allow future email provider to trigger the right sequence. -->
-      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="../../thank-you.html" action="" method="POST">
-        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
-        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
-        <input type="hidden" name="source" value="site">
-        <label class="sr-only" for="nl-email">Email address</label>
-        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
-        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
-      </form>
-      <p class="nl-caption">Prefer to grab them now? <a href="../../freebies.html">Browse the free brush packs</a>.</p>
-    </div>
-  </div>
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="../../products/procreate-starter-guide-free-ebook/">Explore the free guide</a>
+    <a class="btn btn-line" href="../../freebies.html">See all free resources</a></div>
+  </div></div>
 </section>
-
 </main>
 
 <footer class="site-footer">
@@ -303,7 +322,7 @@
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>

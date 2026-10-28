@@ -30,13 +30,49 @@
   }catch(e){}
 })();
 </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5MFQFHNB6B');
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -84,20 +120,20 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="../../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../../css/style.css?v=fe430ede6b736c200057bdbd2cc61f8e">
+  <link rel="stylesheet" href="../../css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
- <link rel="preload" as="image" href="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp" fetchpriority="high">
+ <link rel="preload" as="image" href="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp" fetchpriority="high">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "product", "slug": "free-color-vault-1200-swatches", "name": "Ultimate Procreate Color Vault: 1,200+ Swatches (Free)", "tier": "free", "category": "Other", "price": 0.0, "free": true, "line": "procreate"}};</script>
   <script src="../../js/search-index.js" defer></script>
-  <script src="../../js/main.js" defer></script>
+  <script src="../../js/main.js?v=33a4a6e4ad79" defer></script>
   <script src="../../js/gallery.js" defer></script>
-  <script src="../../js/motion.js" defer></script>
-  <script src="../../js/analytics.js" defer></script>
-  <script src="../../js/feedback.js" defer></script>
-  <script src="../../js/translate.js" defer></script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Ultimate Procreate Color Vault: 1,200+ Swatches (Free)", "image": "https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp", "description": "40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade.", "brand": {"@type": "Brand", "name": "DigiKitPro"}, "sku": "free-color-vault-1200-swatches", "url": "https://digikitpro.shop/products/free-color-vault-1200-swatches/", "contentLocation": {"@type": "Place", "name": "Worldwide"}, "offers": {"@type": "Offer", "price": "0.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition", "url": "https://digikitpro.shop/products/free-color-vault-1200-swatches/", "priceValidUntil": "2027-12-31", "seller": {"@type": "Organization", "name": "DigiKitPro"}}}</script>
+  <script src="../../js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="../../js/analytics.js?v=610c164ea071" defer></script>
+  <script src="../../js/translate.js?v=8877305ddd24" defer></script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Ultimate Procreate Color Vault: 1,200+ Swatches (Free)", "image": "https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp", "description": "40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade.", "brand": {"@type": "Brand", "name": "DigiKitPro"}, "sku": "free-color-vault-1200-swatches", "url": "https://digikitpro.shop/products/free-color-vault-1200-swatches/", "contentLocation": {"@type": "Place", "name": "Worldwide"}, "offers": {"@type": "Offer", "price": "0.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition", "url": "https://digikitpro.shop/products/free-color-vault-1200-swatches/", "seller": {"@type": "Organization", "name": "DigiKitPro"}}}</script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "Products", "item": "https://digikitpro.shop/products.html"}, {"@type": "ListItem", "position": 3, "name": "Ultimate Procreate Color Vault: 1,200+ Swatches (Free)", "item": "https://digikitpro.shop/products/free-color-vault-1200-swatches/"}]}</script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use this product?", "acceptedAnswer": {"@type": "Answer", "text": "You need the app or software listed in the requirements above. Full requirements are listed above on this page."}}, {"@type": "Question", "name": "How will I receive my files?", "acceptedAnswer": {"@type": "Answer", "text": "Immediately after checkout on Payhip you are redirected to a download page, and you also receive an automated email with a permanent download link."}}, {"@type": "Question", "name": "What is the refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved."}}]}</script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use this product?", "acceptedAnswer": {"@type": "Answer", "text": "You need the app or software listed in the requirements above. Full requirements are listed above on this page."}}, {"@type": "Question", "name": "How will I receive my files?", "acceptedAnswer": {"@type": "Answer", "text": "Payhip handles checkout and digital delivery. Check the Payhip checkout and receipt for access details, and contact the store if you need help."}}, {"@type": "Question", "name": "What is the refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved."}}]}</script>
 </head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
@@ -111,7 +147,7 @@
     <nav class="main-nav" aria-label="Primary"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html" class="active">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a></nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -153,43 +189,69 @@
       <div class="pdp-media" data-product-gallery><figure class="gal-main">
       <img id="product-main-image" data-gallery-main src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp" srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" sizes="(min-width: 960px) 46vw, 100vw" width="1160" height="774" alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork" fetchpriority="high" decoding="async" data-pin-description="Ultimate Procreate Color Vault: 1,200+ Swatches (Free) - 40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-color-vault-1200-swatches/" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp">
       <a class="pin-btn pin-btn-gal" data-pin-anchor href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-color-vault-1200-swatches%2Ffree-color-vault-1200-swatches.webp&amp;description=Ultimate+Procreate+Color+Vault%3A+1%2C200%2B+Swatches+%28Free%29+-+40+professional+palettes%2C+1%2C200%2B+curated+swatches%2C+so+you+never+burn+the+first+hour+of+a+painting+hunting+for+the+right+shade.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Ultimate Procreate Color Vault: 1,200+ Swatches (Free) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-    </figure><div class="gal-thumbs" role="group" aria-label="Product image previews"><button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb data-full-image="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp" data-srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp" aria-label="View product image 1" aria-current="true"><img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp" width="750" height="500" alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2.webp" data-srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork: preview 1" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2.webp" aria-label="View product image 2"><img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2-card.webp" width="750" height="500" alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork: preview 1 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3.webp" data-srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork: preview 2" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3.webp" aria-label="View product image 3"><img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3-card.webp" width="750" height="500" alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork: preview 2 thumbnail" loading="lazy" decoding="async"></button></div></div>
+    </figure><div class="gal-thumbs" role="group" aria-label="Product image previews"><button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb data-full-image="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp" data-srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp" aria-label="View product image 1" aria-current="true"><img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp" width="750" height="500" alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2.webp" data-srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork: preview 2" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2.webp" aria-label="View product image 2"><img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-2-card.webp" width="750" height="500" alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork: preview 2 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3.webp" data-srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3.webp 1160w" data-sizes="(min-width: 960px) 46vw, 100vw" data-alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork: preview 3" data-w="1160" data-h="774" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3.webp" aria-label="View product image 3"><img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-3-card.webp" width="750" height="500" alt="Ultimate Procreate Color Vault, 1,200+ Swatches (Free), product preview artwork: preview 3 thumbnail" loading="lazy" decoding="async"></button></div><p class="gallery-hint">Select a preview to explore the kit; tap the main image to enlarge it.</p></div>
       <div class="pdp-info">
         <div class="chip-row"><span class="meta-chip free">Free</span><span class="meta-chip">40 palettes / 1,200+ swatches</span><a class="meta-chip cat" href="../../products.html#cat-Other">Other</a></div>
         <h1>Ultimate Procreate Color Vault: 1,200+ Swatches (Free)</h1>
         <p class="pdp-short">40 professional palettes, 1,200+ curated swatches, so you never burn the first hour of a painting hunting for the right shade.</p>
         <div class="buy-panel">
           <div class="buy-top"><span class="buy-label">Price</span><span class="price price-free">Free</span></div>
-          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/BmFdZ" target="_blank" rel="noopener" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-buy-panel">Get Free <span class="btn-arr">↗</span></a>
-          <p class="buy-cap">Opens the Payhip checkout in a new tab</p>
-          <p class="trust-bridge">Secure checkout via Payhip · instant download · $0 now and forever, no card needed · <a href="../../refunds.html">Refund policy</a></p>
+          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/BmFdZ" target="_blank" rel="noopener" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-buy-panel">Get Free on Payhip <span class="btn-arr">↗</span></a>
+          <p class="buy-cap">Opens the free product on Payhip in a new tab</p>
+          <p class="trust-bridge">Checkout and digital delivery via Payhip · free resource · Payhip may request delivery details · <a href="../../refunds.html">Refund policy</a></p>
+          <p class="next-step-link"><a href="../../thank-you.html?lead=free-color-vault-1200-swatches" data-dkp-event="free_next_step_click" data-dkp-source-product-id="free-color-vault-1200-swatches" data-dkp-surface="free_product">After downloading: see your practice plan →</a></p>
         </div>
         <p class="licence-line"><b>Commercial use allowed.</b> Yes — commercial use is allowed. Finished artwork you create is yours to use in commissions, client projects, prints, products and other commercial work. You may not resell, share, redistribute or repackage the brush files themselves. Contact us before agency, classroom or multi-user use. <a href="../../terms.html">Read the full licence</a>.</p>
-        <ul class="pdp-trust"><li>Instant download via Payhip</li><li>Lifetime access</li><li>See requirements below</li></ul>
+        <ul class="pdp-trust"><li>Digital delivery via Payhip</li><li>No physical item ships</li><li>See requirements below</li></ul>
       </div>
     </article>
 
     <section class="psec" aria-labelledby="p-why-you-ll-love-it"><h2 id="p-why-you-ll-love-it">Why You&#x27;ll Love It</h2><ul class="tick-list gold"><li>1,200+ curated pro swatches, free</li><li>40 ready-to-use palettes</li><li>Cohesive color without the guesswork</li><li>Instant Procreate palette import</li></ul></section>
-    
+    <section class="psec journey-panel" data-journey="free-color-vault-1200-swatches" aria-labelledby="journey-free-color-vault-1200-swatches">
+  <div class="journey-intro">
+    <p class="eyebrow">A useful next step · Ultimate Procreate Color Vault: 1,200+ Swatches (Free)</p>
+    <h2 id="journey-free-color-vault-1200-swatches">Pair your colours with pattern-making tools</h2>
+    <p>Try this: choose three colours from one free palette and use them consistently across a small illustration.</p>
+
+  </div>
+  <div class="journey-compare">
+    <div class="journey-free">
+      <p class="journey-label">Your free resource</p>
+      <p>The free Color Vault contains 40 Procreate palettes and 1,200+ swatches; it is a colour resource, not a brush set.</p>
+    </div>
+    <div class="journey-paid">
+      <p class="journey-label">An optional paid companion · $5.00</p>
+      <div class="journey-product">
+        <div class="journey-image"><img src="../../assets/products/brush-palette-bundle-160/brush-palette-bundle-160-card.webp" width="750" height="500" alt="" loading="lazy" decoding="async"></div>
+        <div><h3>Procreate Brush &amp; Color Palette Bundle: 160 Brushes + 12 Palettes</h3><p>The separate Brush &amp; Color Palette Bundle contains 160 pattern brushes and 12 palettes. The free palettes are still useful on their own and are not a trial version of the bundle.</p>
+          <a class="text-link" href="../../products/brush-palette-bundle-160/" data-dkp-event="premium_product_click" data-dkp-source-product-id="free-color-vault-1200-swatches" data-dkp-product-id="brush-palette-bundle-160" data-dkp-surface="free_product">Explore the paid kit →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="journey-note">The free resource remains free and useful on its own. No purchase is required.</p>
+</section>
+
+
     <section class="psec" aria-labelledby="p-what-s-included"><h2 id="p-what-s-included">What&#x27;s Included</h2><ul class="tick-list check"><li>You get 40 curated palettes covering every aesthetic imaginable:</li><li>🌸 Pastel &amp; Lavender – For soft, dreamy, and ethereal vibes.</li><li>🌅 Sunset &amp; Flower – Warm, vibrant, and nature-inspired tones.</li><li>🌵 Succulent &amp; Earthy – Organic, calm, and grounding colors.</li><li>🌈 Rainbow &amp; Holo – High-energy, iridescent, and holographic pops.</li><li>⚡ Neon &amp; Retro – Bold, synthwave, and vintage-inspired palettes.</li><li>Stop guessing and start creating. Get the most comprehensive color library for Procreate - completely free.</li><li>40 professionally curated color palettes.</li><li>1,200+ unique colors.</li><li>Format: .swatches (Standard Procreate format).</li><li>⚠️ Requirements:</li><li>App: This bundle is exclusively for the Procreate App.</li><li>Device: You must have an iPad to use these files.</li></ul></section>
     <section class="psec richtext" aria-labelledby="p-about"><h2 id="p-about">About This Product</h2><div class="prose"><p><strong>Stop wasting hours picking the "perfect" color. </strong></p><p>We’ve all been there: you have a great idea for a painting, but you spend the first hour just staring at the color wheel, unable to find the right shade. Choosing a cohesive color palette is the hardest part of digital art - until now.</p><p><br/></p><p>Welcome to the <strong>Ultimate Procreate Color Vault</strong>. We have done the hard work for you. We’ve curated a massive library of <strong>40 professional palettes</strong> containing over <strong>1,200 stunning colors</strong>, all designed to bring harmony, mood, and professionalism to your artwork instantly.</p><p><br/></p><p>Whether you are painting a cozy lofi room, a futuristic cyberpunk city, or a soft botanical garden, we have the perfect palette ready for you.</p><p><strong>What’s inside the Vault:</strong></p><p>You get 40 curated palettes covering every aesthetic imaginable:</p><p>🌸 <strong>Pastel &amp; Lavender</strong> – For soft, dreamy, and ethereal vibes.</p><p>🌅 <strong>Sunset &amp; Flower</strong> – Warm, vibrant, and nature-inspired tones.</p><p>🌵 <strong>Succulent &amp; Earthy</strong> – Organic, calm, and grounding colors.</p><p>🌈 <strong>Rainbow &amp; Holo</strong> – High-energy, iridescent, and holographic pops.</p><p>⚡ <strong>Neon &amp; Retro</strong> – Bold, synthwave, and vintage-inspired palettes.</p><p><br/></p><p><strong>Import harmonious palette sets in one tap. ✍️</strong></p><p>Stop guessing and start creating. Get the most comprehensive color library for Procreate - completely free.</p><p><br/></p><p><strong>What you will receive:</strong></p><ul><li>40 professionally curated color palettes.</li><li>1,200+ unique colors.</li><li>Format: <span>.swatches</span> (Standard Procreate format).</li></ul><p><strong>⚠️ Requirements:</strong></p><ul><li><strong>App:</strong> This bundle is exclusively for the <strong>Procreate App</strong>.</li><li><strong>Device:</strong> You must have an <strong>iPad</strong> to use these files.</li><li><em>Note: These files are not compatible with Photoshop, Clip Studio Paint, or other applications.</em></li></ul><p><br/></p><p><br/></p></div></section>
-    
+
     <section class="psec" aria-labelledby="p-tech"><h2 id="p-tech">Technical Details</h2><table class="spec-table"><tr><th>Format</th><td>.swatches (Procreate color palettes)</td></tr>
 <tr><th>Contents</th><td>40 palettes / 1,200+ swatches</td></tr>
 <tr><th>Download</th><td>ZIP (142KB)</td></tr>
-<tr><th>Delivery</th><td>Instant digital download via Payhip</td></tr>
+<tr><th>Delivery</th><td>Digital download via Payhip</td></tr>
 </table></section>
     <section class="psec" aria-labelledby="p-requirements"><h2 id="p-requirements">Requirements</h2><ul class="tick-list plain"><li>iPad with the Procreate app</li><li>Digital download, no physical item ships</li></ul></section>
-    
+    <section class="psec install-steps" aria-labelledby="p-install"><h2 id="p-install">How to install it</h2><ol class="steps-list"><li>Complete the free download on Payhip and save the files to your iPad.</li><li>If the download is a ZIP, tap it in Files to extract the folder.</li><li>Tap a .swatches file to import the palette into Procreate, then find it in the Palettes panel.</li></ol><p class="muted install-note">Swatches are colour palettes, not brushes.</p></section>
     <section class="psec" aria-labelledby="p-for"><h2 id="p-for">Who It's For</h2><div class="tag-row"><span class="tag">Painters</span><span class="tag">Illustrators</span><span class="tag">Every iPad artist</span></div></section>
-    
-    
+
+
     <section class="psec" aria-labelledby="p-faq"><h2 id="p-faq">FAQ</h2><details class="faq-item">
       <summary>What do I need to use this product?</summary>
       <div class="faq-body"><p>You need the app or software listed in the requirements above. Full requirements are listed above on this page.</p></div>
     </details><details class="faq-item">
       <summary>How will I receive my files?</summary>
-      <div class="faq-body"><p>Immediately after checkout on Payhip you are redirected to a download page, and you also receive an automated email with a permanent download link.</p></div>
+      <div class="faq-body"><p>Payhip handles checkout and digital delivery. Check the Payhip checkout and receipt for access details, and contact the store if you need help.</p></div>
     </details><details class="faq-item">
       <summary>What is the refund policy?</summary>
       <div class="faq-body"><p>Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved.</p></div>
@@ -200,16 +262,16 @@
     </section>
     <section class="psec share-sec" aria-label="Share">
       <p class="share-heading">Save or share this artwork</p>
-      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-color-vault-1200-swatches%2Ffree-color-vault-1200-swatches.webp&amp;description=Ultimate+Procreate+Color+Vault%3A+1%2C200%2B+Swatches+%28Free%29+-+40+professional+palettes%2C+1%2C200%2B+curated+swatches%2C+so+you+never+burn+the+first+hour+of+a+painting+hunting+for+the+right+shade.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Pin this to Pinterest">📌 <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F&amp;text=Ultimate%20Procreate%20Color%20Vault%3A%201%2C200%2B%20Swatches%20%28Free%29" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=Ultimate%20Procreate%20Color%20Vault%3A%201%2C200%2B%20Swatches%20%28Free%29%20-%2040%20professional%20palettes%2C%201%2C200%2B%20curated%20swatches%2C%20so%20you%20never%20burn%20the%20first%20hour%20of%20a%20painting%20hunting%20for%20the%20right%20shade.%20%7C%20DigiKitPro%20https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
+      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-color-vault-1200-swatches%2Ffree-color-vault-1200-swatches.webp&amp;description=Ultimate+Procreate+Color+Vault%3A+1%2C200%2B+Swatches+%28Free%29+-+40+professional+palettes%2C+1%2C200%2B+curated+swatches%2C+so+you+never+burn+the+first+hour+of+a+painting+hunting+for+the+right+shade.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Pin it on Pinterest"><span aria-hidden="true">📌</span> <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F&amp;text=Ultimate%20Procreate%20Color%20Vault%3A%201%2C200%2B%20Swatches%20%28Free%29" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=Ultimate%20Procreate%20Color%20Vault%3A%201%2C200%2B%20Swatches%20%28Free%29%20-%2040%20professional%20palettes%2C%201%2C200%2B%20curated%20swatches%2C%20so%20you%20never%20burn%20the%20first%20hour%20of%20a%20painting%20hunting%20for%20the%20right%20shade.%20%7C%20DigiKitPro%20https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
     </section>
 
     <section class="psec pdp-cta" aria-labelledby="p-get">
       <div>
         <h2 id="p-get">Get This Product</h2>
-        <p class="muted">Secure checkout on Payhip. Instant delivery to your email.</p>
-        <p class="trust-bridge">Secure checkout via Payhip · instant download · $0 now and forever, no card needed · <a href="../../refunds.html">Refund policy</a></p>
+        <p class="muted">Continue to the product on Payhip for checkout and digital delivery.</p>
+        <p class="trust-bridge">Checkout and digital delivery via Payhip · free resource · Payhip may request delivery details · <a href="../../refunds.html">Refund policy</a></p>
       </div>
-      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/BmFdZ" target="_blank" rel="noopener" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-bottom">Get Free <span class="btn-arr">↗</span></a>
+      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/BmFdZ" target="_blank" rel="noopener" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-bottom">Get Free on Payhip <span class="btn-arr">↗</span></a>
     </section>
 
     <section class="psec" aria-labelledby="p-related">
@@ -225,7 +287,7 @@
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../products.html#cat-Other">Other</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/procreate-palettes-bundle-50/">Procreate Palettes Bundle: 50 Sets × 30 Swatches</a></h3>
     <p class="card-short">50 ready-to-use palettes of 30 hand-picked swatches each, jump straight into creating without second-guessing color.</p>
@@ -257,10 +319,10 @@
 </article>
 <article class="card" data-category="Line Art" data-name="free fine liner set: 100 brushes + 13 paper textures" data-tags="free fine liner liner pen micron paper textures inking" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
   <div class="card-img">
-  <a class="card-media media-3x2" href="../../products/free-fine-liner-brushes-100/" data-pin-description="Free Fine Liner Set: 100 Brushes + 13 Paper Textures - Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-fine-liner-brushes-100/" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp">
-    <img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" srcset="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp 580w, ../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Free Fine Liner Set: 100 Brushes + 13 Paper Textures: Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download." loading="lazy" decoding="async">
+  <a class="card-media media-3x2" href="../../products/free-fine-liner-brushes-100/" data-pin-description="Free Fine Liner Set: 100 Brushes + 13 Paper Textures - Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free digital download via Payhip. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-fine-liner-brushes-100/" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp">
+    <img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" srcset="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp 580w, ../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="387" alt="Free Fine Liner Set: 100 Brushes + 13 Paper Textures: Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free digital download via Payhip." loading="lazy" decoding="async">
   </a>
-    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100-card.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+instant+download.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Free Fine Liner Set: 100 Brushes + 13 Paper Textures on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100-card.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+digital+download+via+Payhip.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Free Fine Liner Set: 100 Brushes + 13 Paper Textures on Pinterest"><span aria-hidden="true">📌</span> Save</a>
   </div>
   <div class="card-body">
     <div class="card-top">
@@ -268,7 +330,7 @@
       <span class="badge badge-free">Free</span>
     </div>
     <h3 class="card-title"><a href="../../products/free-fine-liner-brushes-100/">Free Fine Liner Set: 100 Brushes + 13 Paper Textures</a></h3>
-    <p class="card-short">Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download.</p>
+    <p class="card-short">Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free digital download via Payhip.</p>
     <div class="card-foot">
       <span class="price">Free</span>
       <a class="btn btn-line btn-sm" href="../../products/free-fine-liner-brushes-100/" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
@@ -299,31 +361,14 @@
     </section>
   </div>
   <section class="newsletter" id="newsletter">
-  <div class="wrap">
-    <div class="nl-card">
-      <p class="eyebrow">Free starter pack</p>
-      <h2>Get the Free Procreate Starter Pack</h2>
-      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
-      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
-           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
-           Source/lead fields allow future email provider to trigger the right sequence. -->
-      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="../../thank-you.html" action="" method="POST">
-        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
-        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
-        <input type="hidden" name="source" value="site">
-        <label class="sr-only" for="nl-email">Email address</label>
-        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
-        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
-      </form>
-      <p class="nl-caption">Prefer to grab them now? <a href="../../freebies.html">Browse the free brush packs</a>.</p>
-    </div>
-  </div>
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="../../products/procreate-starter-guide-free-ebook/">Explore the free guide</a>
+    <a class="btn btn-line" href="../../freebies.html">See all free resources</a></div>
+  </div></div>
 </section>
-
 </main>
 
 <footer class="site-footer">
@@ -380,7 +425,7 @@
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>

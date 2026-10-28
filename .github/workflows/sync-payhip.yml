@@ -49,6 +49,9 @@ jobs:
       - name: Rebuild static site
         env:
           SITE_URL: https://digikitpro.shop
+          # Optional kill switch for both GA loading and first-party event counts.
+          # Set repository variable DKP_ANALYTICS to false to disable in builds.
+          DKP_ANALYTICS: ${{ vars.DKP_ANALYTICS || 'true' }}
           GOOGLE_VERIFY: ${{ vars.GOOGLE_VERIFY }}
           BING_VERIFY: ${{ vars.BING_VERIFY }}
           # Pinterest: empty values fall back to the defaults in tools/core.py.

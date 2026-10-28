@@ -30,13 +30,49 @@
   }catch(e){}
 })();
 </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MFQFHNB6B"></script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
   <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5MFQFHNB6B');
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -84,20 +120,20 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="../../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../../css/style.css?v=fe430ede6b736c200057bdbd2cc61f8e">
+  <link rel="stylesheet" href="../../css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
- <link rel="preload" as="image" href="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" fetchpriority="high">
+ <link rel="preload" as="image" href="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" fetchpriority="high">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "product", "slug": "free-fine-liner-brushes-100", "name": "Free Fine Liner Set: 100 Brushes + 13 Paper Textures", "tier": "free", "category": "Line Art", "price": 0.0, "free": true, "line": "procreate"}};</script>
   <script src="../../js/search-index.js" defer></script>
-  <script src="../../js/main.js" defer></script>
+  <script src="../../js/main.js?v=33a4a6e4ad79" defer></script>
   <script src="../../js/gallery.js" defer></script>
-  <script src="../../js/motion.js" defer></script>
-  <script src="../../js/analytics.js" defer></script>
-  <script src="../../js/feedback.js" defer></script>
-  <script src="../../js/translate.js" defer></script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Free Fine Liner Set: 100 Brushes + 13 Paper Textures", "image": "https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp", "description": "Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download.", "brand": {"@type": "Brand", "name": "DigiKitPro"}, "sku": "free-fine-liner-brushes-100", "url": "https://digikitpro.shop/products/free-fine-liner-brushes-100/", "contentLocation": {"@type": "Place", "name": "Worldwide"}, "offers": {"@type": "Offer", "price": "0.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition", "url": "https://digikitpro.shop/products/free-fine-liner-brushes-100/", "priceValidUntil": "2027-12-31", "seller": {"@type": "Organization", "name": "DigiKitPro"}}}</script>
+  <script src="../../js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="../../js/analytics.js?v=610c164ea071" defer></script>
+  <script src="../../js/translate.js?v=8877305ddd24" defer></script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Free Fine Liner Set: 100 Brushes + 13 Paper Textures", "image": "https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp", "description": "Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free digital download via Payhip.", "brand": {"@type": "Brand", "name": "DigiKitPro"}, "sku": "free-fine-liner-brushes-100", "url": "https://digikitpro.shop/products/free-fine-liner-brushes-100/", "contentLocation": {"@type": "Place", "name": "Worldwide"}, "offers": {"@type": "Offer", "price": "0.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition", "url": "https://digikitpro.shop/products/free-fine-liner-brushes-100/", "seller": {"@type": "Organization", "name": "DigiKitPro"}}}</script>
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "Products", "item": "https://digikitpro.shop/products.html"}, {"@type": "ListItem", "position": 3, "name": "Line Art", "item": "https://digikitpro.shop/category/line-art/"}, {"@type": "ListItem", "position": 4, "name": "Free Fine Liner Set: 100 Brushes + 13 Paper Textures", "item": "https://digikitpro.shop/products/free-fine-liner-brushes-100/"}]}</script>
- <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use this product?", "acceptedAnswer": {"@type": "Answer", "text": "You need an iPad with the Procreate app. Full requirements are listed above on this page."}}, {"@type": "Question", "name": "How will I receive my files?", "acceptedAnswer": {"@type": "Answer", "text": "Immediately after checkout on Payhip you are redirected to a download page, and you also receive an automated email with a permanent download link."}}, {"@type": "Question", "name": "What is the refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved."}}]}</script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What do I need to use this product?", "acceptedAnswer": {"@type": "Answer", "text": "You need an iPad with the Procreate app. Full requirements are listed above on this page."}}, {"@type": "Question", "name": "How will I receive my files?", "acceptedAnswer": {"@type": "Answer", "text": "Payhip handles checkout and digital delivery. Check the Payhip checkout and receipt for access details, and contact the store if you need help."}}, {"@type": "Question", "name": "What is the refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved."}}]}</script>
 </head>
 <body>
 <noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
@@ -111,7 +147,7 @@
     <nav class="main-nav" aria-label="Primary"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html" class="active">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a></nav>
     <div class="header-actions">
       <div class="lang-wrap" data-lang-wrap>
-        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="Translate / choose language">
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
           <span class="lang-cd">EN</span>
         </button>
@@ -151,46 +187,72 @@
     <nav class="crumbs" aria-label="Breadcrumb"><a href="../../index.html">Home</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><a href="../../products.html">Products</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><a href="../../category/line-art/">Line Art</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">Free Fine Liner Set: 100 Brushes + 13 Paper Textures</span></nav>
     <article class="pdp">
       <div class="pdp-media" data-product-gallery><figure class="gal-main">
-      <img id="product-main-image" data-gallery-main src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork" fetchpriority="high" decoding="async" data-pin-description="Free Fine Liner Set: 100 Brushes + 13 Paper Textures - Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-fine-liner-brushes-100/" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp">
-      <a class="pin-btn pin-btn-gal" data-pin-anchor href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+instant+download.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Free Fine Liner Set: 100 Brushes + 13 Paper Textures on Pinterest"><span aria-hidden="true">📌</span> Save</a>
-    </figure><div class="gal-thumbs" role="group" aria-label="Product image previews"><button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb data-full-image="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" data-alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork" data-w="580" data-h="387" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" aria-label="View product image 1" aria-current="true"><img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-2.webp" data-alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 1" data-w="580" data-h="387" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-2.webp" aria-label="View product image 2"><img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-2-card.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 1 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-3.webp" data-alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 2" data-w="580" data-h="387" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-3.webp" aria-label="View product image 3"><img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-3-card.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 2 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-4.webp" data-alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 3" data-w="580" data-h="387" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-4.webp" aria-label="View product image 4"><img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-4-card.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 3 thumbnail" loading="lazy" decoding="async"></button></div></div>
+      <img id="product-main-image" data-gallery-main src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork" fetchpriority="high" decoding="async" data-pin-description="Free Fine Liner Set: 100 Brushes + 13 Paper Textures - Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free digital download via Payhip. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-fine-liner-brushes-100/" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp">
+      <a class="pin-btn pin-btn-gal" data-pin-anchor href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+digital+download+via+Payhip.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Free Fine Liner Set: 100 Brushes + 13 Paper Textures on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+    </figure><div class="gal-thumbs" role="group" aria-label="Product image previews"><button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb data-full-image="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" data-alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork" data-w="580" data-h="387" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100.webp" aria-label="View product image 1" aria-current="true"><img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-card.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-2.webp" data-alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 2" data-w="580" data-h="387" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-2.webp" aria-label="View product image 2"><img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-2-card.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 2 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-3.webp" data-alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 3" data-w="580" data-h="387" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-3.webp" aria-label="View product image 3"><img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-3-card.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 3 thumbnail" loading="lazy" decoding="async"></button><button class="gal-thumb product-gallery-thumb" type="button" data-gallery-thumb data-full-image="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-4.webp" data-alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 4" data-w="580" data-h="387" data-pin-media="https://digikitpro.shop/assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-4.webp" aria-label="View product image 4"><img src="../../assets/products/free-fine-liner-brushes-100/free-fine-liner-brushes-100-4-card.webp" width="580" height="387" alt="Free Fine Liner Set, 100 Brushes + 13 Paper Textures, product preview artwork: preview 4 thumbnail" loading="lazy" decoding="async"></button></div><p class="gallery-hint">Select a preview to explore the kit; tap the main image to enlarge it.</p></div>
       <div class="pdp-info">
         <div class="chip-row"><span class="meta-chip free">Free</span><span class="meta-chip">100 brushes + 13 seamless paper textures</span><a class="meta-chip cat" href="../../category/line-art/">Line Art</a></div>
         <h1>Free Fine Liner Set: 100 Brushes + 13 Paper Textures</h1>
-        <p class="pdp-short">Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free instant download.</p>
+        <p class="pdp-short">Real pen precision at zero cost: 100 fine liner, micron and marker brushes plus 13 seamless paper textures. Free digital download via Payhip.</p>
         <div class="buy-panel">
           <div class="buy-top"><span class="buy-label">Price</span><span class="price price-free">Free</span></div>
-          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-buy-panel">Get Free <span class="btn-arr">↗</span></a>
-          <p class="buy-cap">Opens the Payhip checkout in a new tab</p>
-          <p class="trust-bridge">Secure checkout via Payhip · instant download · $0 now and forever, no card needed · <a href="../../refunds.html">Refund policy</a></p>
+          <a class="btn btn-gold btn-lg" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-buy-panel">Get Free on Payhip <span class="btn-arr">↗</span></a>
+          <p class="buy-cap">Opens the free product on Payhip in a new tab</p>
+          <p class="trust-bridge">Checkout and digital delivery via Payhip · free resource · Payhip may request delivery details · <a href="../../refunds.html">Refund policy</a></p>
+          <p class="next-step-link"><a href="../../thank-you.html?lead=free-fine-liner-brushes-100" data-dkp-event="free_next_step_click" data-dkp-source-product-id="free-fine-liner-brushes-100" data-dkp-surface="free_product">After downloading: see your practice plan →</a></p>
         </div>
         <p class="licence-line"><b>Commercial use allowed.</b> Yes — commercial use is allowed. Finished artwork you create is yours to use in commissions, client projects, prints, products and other commercial work. You may not resell, share, redistribute or repackage the brush files themselves. Contact us before agency, classroom or multi-user use. <a href="../../terms.html">Read the full licence</a>.</p>
-        <ul class="pdp-trust"><li>Instant download via Payhip</li><li>Lifetime access</li><li>Procreate on iPad required</li></ul>
+        <ul class="pdp-trust"><li>Digital delivery via Payhip</li><li>No physical item ships</li><li>Procreate on iPad required</li></ul>
       </div>
     </article>
 
     <section class="psec" aria-labelledby="p-why-you-ll-love-it"><h2 id="p-why-you-ll-love-it">Why You&#x27;ll Love It</h2><ul class="tick-list gold"><li>100 professional fine liner brushes, completely free</li><li>13 seamless paper textures for analog warmth</li><li>Fineliners, micron pens and markers in one set</li><li>Crisp, natural lines with authentic analog texture</li></ul></section>
-    
-    <section class="psec" aria-labelledby="p-what-s-included"><h2 id="p-what-s-included">What&#x27;s Included</h2><ul class="tick-list check"><li>100 Professional Procreate Brushes</li><li>Fineliners</li><li>Micron pens</li><li>Markers</li><li>Stipple brushes</li><li>Textured liners</li><li>13 Seamless Paper Textures</li><li>Adds realistic depth to any piece</li><li>Wide Range of Line Weights</li><li>0.05 – 0.8 + brush tip variations</li><li>Organized Categories</li><li>Sketch / Micron / Shading / Textured / Paper / Basic</li><li>───────────────────────</li><li>🎨 PERFECT FOR</li></ul></section>
-    <section class="psec richtext" aria-labelledby="p-about"><h2 id="p-about">About This Product</h2><div class="prose"><p>Real Pen Precision. Zero Cost.</p><p>This free brush set brings the feel of traditional fineliners, micron pens, and markers directly to your iPad.</p><p>100 carefully crafted brushes. 13 seamless paper textures. One download.</p><p>Whether you sketch, ink, or illustrate, this set delivers crisp, natural lines with authentic analog texture.</p><p>───────────────────────</p><h3>📦 <strong>WHAT'S INCLUDED</strong></h3><p><br/></p><p>✔️ 100 Professional Procreate Brushes</p><p> • Fineliners</p><p> • Micron pens</p><p> • Markers</p><p> • Stipple brushes</p><p> • Textured liners</p><p><br/></p><p>✔️ 13 Seamless Paper Textures</p><p> • Adds realistic depth to any piece</p><p><br/></p><p>✔️ Wide Range of Line Weights</p><p> • 0.05 – 0.8 + brush tip variations</p><p><br/></p><p>✔️ Organized Categories</p><p> • Sketch / Micron / Shading / Textured / Paper / Basic</p><p>───────────────────────</p><h3>🎨 <strong>PERFECT FOR</strong></h3><p><br/></p><p>• Line art &amp; inking</p><p>• Comic artists</p><p>• Tattoo design</p><p>• Stippling &amp; crosshatching</p><p>• Detailed illustration</p><p>• Sketchbook-style work</p><p>───────────────────────</p><h3>⚡ <strong>WHY ARTISTS GRAB THIS</strong></h3><p>✦ Traditional feel with digital control</p><p>✦ Optimized for Apple Pencil pressure sensitivity</p><p>✦ Professional quality, beginner friendly</p><p>✦ Instant download, start inking immediately</p><p>───────────────────────</p><h3>📱 <strong>COMPATIBILITY</strong></h3><p>• Procreate app (iPad only)</p><p>• Apple Pencil required for best results</p><p>──────────────────────</p><p>💡 This is a FREE resource, no catch.</p><p>Download. Create. Enjoy.</p><p><br/></p><p>If you love these, check out my other premium brush sets for even more creative tools.</p><p><br/></p><h3><strong>Tags </strong></h3><p>Procreate brushes, free Procreate brushes, fine liner brushes, micron brushes, inking brushes, stipple brushes, digital illustration, iPad brushes, line art, comic brushes, tattoo design, Procreate textures, paper textures, Apple Pencil, free download</p></div></section>
-    
+    <section class="psec journey-panel" data-journey="free-fine-liner-brushes-100" aria-labelledby="journey-free-fine-liner-brushes-100">
+  <div class="journey-intro">
+    <p class="eyebrow">A useful next step · Free Fine Liner Set: 100 Brushes + 13 Paper Textures</p>
+    <h2 id="journey-free-fine-liner-brushes-100">Take your linework into a broader studio workflow</h2>
+    <p>Try this: draw the same small object with two line weights, then use a soft shading brush to group its shadows.</p>
+
+  </div>
+  <div class="journey-compare">
+    <div class="journey-free">
+      <p class="journey-label">Your free resource</p>
+      <p>The free set gives you 100 fine liner, micron, marker and textured-line brushes plus 13 paper textures.</p>
+    </div>
+    <div class="journey-paid">
+      <p class="journey-label">An optional paid companion · $5.00</p>
+      <div class="journey-product">
+        <div class="journey-image"><img src="../../assets/products/artista-studio-kit-76-brushes/artista-studio-kit-76-brushes-card.webp" width="750" height="928" alt="" loading="lazy" decoding="async"></div>
+        <div><h3>Artista Studio Kit: 76 Procreate Brushes</h3><p>Artista is a separate 76-brush collection with sketching, graphite, charcoal, shading, traditional media and effects alongside linework. Some brush types overlap; it is a different toolkit, not a required upgrade.</p>
+          <a class="text-link" href="../../products/artista-studio-kit-76-brushes/" data-dkp-event="premium_product_click" data-dkp-source-product-id="free-fine-liner-brushes-100" data-dkp-product-id="artista-studio-kit-76-brushes" data-dkp-surface="free_product">Explore the paid kit →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="journey-note">The free resource remains free and useful on its own. No purchase is required.</p>
+</section>
+
+
+    <section class="psec" aria-labelledby="p-what-s-included"><h2 id="p-what-s-included">What&#x27;s Included</h2><ul class="tick-list check"><li>100 Procreate fine liner, micron, marker, stipple and textured-line brushes</li><li>13 seamless paper textures</li><li>Groups for sketch, micron, shading, textured, paper and basic tools</li></ul></section>
+    <section class="psec richtext" aria-labelledby="p-about"><h2 id="p-about">About This Product</h2><div class="prose"><p>Explore fine lines, textured marks and marker-style strokes with this free Procreate set. It includes 100 brushes and 13 seamless paper textures for sketching, inking and illustration.</p><p>Try a liner for the drawing and a paper texture underneath. If you later want to explore other studio media, Artista Studio is a separate paid collection with graphite, charcoal, shading and effects alongside its linework tools. You can keep and use the free set on its own.</p></div></section>
+
     <section class="psec" aria-labelledby="p-tech"><h2 id="p-tech">Technical Details</h2><table class="spec-table"><tr><th>Format</th><td>.brushset (Procreate)</td></tr>
 <tr><th>Contents</th><td>100 brushes + 13 seamless paper textures</td></tr>
 <tr><th>Download</th><td>ZIP (77MB)</td></tr>
-<tr><th>Delivery</th><td>Instant digital download via Payhip</td></tr>
+<tr><th>Delivery</th><td>Digital download via Payhip</td></tr>
 <tr><td colspan="2">Designed for Apple Pencil pressure &amp; tilt</td></tr>
 </table></section>
     <section class="psec" aria-labelledby="p-requirements"><h2 id="p-requirements">Requirements</h2><ul class="tick-list plain"><li>iPad with the Procreate app (not compatible with Photoshop or other apps)</li><li>Apple Pencil recommended for pressure &amp; tilt control</li><li>Digital download, no physical item ships</li></ul></section>
-    
+    <section class="psec install-steps" aria-labelledby="p-install"><h2 id="p-install">How to install it</h2><ol class="steps-list"><li>Complete your order on Payhip, then download the files to your iPad.</li><li>If the download is a ZIP, tap it in the Files app to extract the folder first.</li><li>Open the extracted folder and tap the .brushset or .brush file to import it into Procreate.</li><li>Find the imported set in the Brushes panel. Paper textures, if included, are separate files.</li></ol><p class="muted install-note">Full walkthrough: <a href="../../blog/how-to-install-procreate-brushes/">How to install Procreate brushes</a>.</p></section>
     <section class="psec" aria-labelledby="p-for"><h2 id="p-for">Who It's For</h2><div class="tag-row"><span class="tag">Sketchers</span><span class="tag">Inkers</span><span class="tag">Illustrators</span><span class="tag">Lettering artists</span></div></section>
-    
-    
+
+
     <section class="psec" aria-labelledby="p-faq"><h2 id="p-faq">FAQ</h2><details class="faq-item">
       <summary>What do I need to use this product?</summary>
       <div class="faq-body"><p>You need an iPad with the Procreate app. Full requirements are listed above on this page.</p></div>
     </details><details class="faq-item">
       <summary>How will I receive my files?</summary>
-      <div class="faq-body"><p>Immediately after checkout on Payhip you are redirected to a download page, and you also receive an automated email with a permanent download link.</p></div>
+      <div class="faq-body"><p>Payhip handles checkout and digital delivery. Check the Payhip checkout and receipt for access details, and contact the store if you need help.</p></div>
     </details><details class="faq-item">
       <summary>What is the refund policy?</summary>
       <div class="faq-body"><p>Due to the nature of digital products, all sales are final once files are downloaded. If you run into any technical issue, contact DigiKitPro and it will be resolved.</p></div>
@@ -201,16 +263,16 @@
     </section>
     <section class="psec share-sec" aria-label="Share">
       <p class="share-heading">Save or share this artwork</p>
-      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+instant+download.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Pin this to Pinterest">📌 <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;text=Free%20Fine%20Liner%20Set%3A%20100%20Brushes%20%2B%2013%20Paper%20Textures" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=Free%20Fine%20Liner%20Set%3A%20100%20Brushes%20%2B%2013%20Paper%20Textures%20-%20Real%20pen%20precision%20at%20zero%20cost%3A%20100%20fine%20liner%2C%20micron%20and%20marker%20brushes%20plus%2013%20seamless%20paper%20textures.%20Free%20instant%20download.%20%7C%20DigiKitPro%20https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
+      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-fine-liner-brushes-100%2Ffree-fine-liner-brushes-100.webp&amp;description=Free+Fine+Liner+Set%3A+100+Brushes+%2B+13+Paper+Textures+-+Real+pen+precision+at+zero+cost%3A+100+fine+liner%2C+micron+and+marker+brushes+plus+13+seamless+paper+textures.+Free+digital+download+via+Payhip.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Pin it on Pinterest"><span aria-hidden="true">📌</span> <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F&amp;text=Free%20Fine%20Liner%20Set%3A%20100%20Brushes%20%2B%2013%20Paper%20Textures" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=Free%20Fine%20Liner%20Set%3A%20100%20Brushes%20%2B%2013%20Paper%20Textures%20-%20Real%20pen%20precision%20at%20zero%20cost%3A%20100%20fine%20liner%2C%20micron%20and%20marker%20brushes%20plus%2013%20seamless%20paper%20textures.%20Free%20digital%20download%20via%20Payhip.%20%7C%20DigiKitPro%20https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-fine-liner-brushes-100%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
     </section>
 
     <section class="psec pdp-cta" aria-labelledby="p-get">
       <div>
         <h2 id="p-get">Get This Product</h2>
-        <p class="muted">Secure checkout on Payhip. Instant delivery to your email.</p>
-        <p class="trust-bridge">Secure checkout via Payhip · instant download · $0 now and forever, no card needed · <a href="../../refunds.html">Refund policy</a></p>
+        <p class="muted">Continue to the product on Payhip for checkout and digital delivery.</p>
+        <p class="trust-bridge">Checkout and digital delivery via Payhip · free resource · Payhip may request delivery details · <a href="../../refunds.html">Refund policy</a></p>
       </div>
-      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-bottom">Get Free <span class="btn-arr">↗</span></a>
+      <a class="btn btn-gold btn-lg" href="https://payhip.com/b/zGwKS" target="_blank" rel="noopener" data-dkp-slug="free-fine-liner-brushes-100" data-dkp-name="Free Fine Liner Set: 100 Brushes + 13 Paper Textures" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="pdp-bottom">Get Free on Payhip <span class="btn-arr">↗</span></a>
     </section>
 
     <section class="psec" aria-labelledby="p-related">
@@ -226,7 +288,7 @@
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../category/line-art/">Line Art</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/essential-line-art-sketch-kit/">Essential Line Art &amp; Sketch Kit for Procreate</a></h3>
     <p class="card-short">43 focused brushes plus a bonus texture brush for clean line art, natural pencil sketches and confident inking, no pack-switching.</p>
@@ -246,7 +308,7 @@
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../category/line-art/">Line Art</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/master-line-art-vault-300/">Master Line-Art Vault: 300+ Fine Line Brushes</a></h3>
     <p class="card-short">The ultimate all-in-one linework collection: 300+ fine line brushes with the precision, variety and character pro artwork demands.</p>
@@ -266,7 +328,7 @@
   <div class="card-body">
     <div class="card-top">
       <a class="card-cat" href="../../category/line-art/">Line Art</a>
-      
+
     </div>
     <h3 class="card-title"><a href="../../products/liner-marker-studio-39-brushes/">Professional Liner &amp; Marker Studio: 39 High-Fidelity Brushes</a></h3>
     <p class="card-short">A curated digital ink station: 39 brushes replicating the saturated flow of alcohol markers and the razor precision of technical liners.</p>
@@ -300,31 +362,14 @@
     </section>
   </div>
   <section class="newsletter" id="newsletter">
-  <div class="wrap">
-    <div class="nl-card">
-      <p class="eyebrow">Free starter pack</p>
-      <h2>Get the Free Procreate Starter Pack</h2>
-      <p class="muted nl-sub">Download the free Portrait Starter Guide plus free brush packs, new releases and iPad art tips. No spam, unsubscribe anytime — or grab the free packs right now, no email needed.</p>
-      <!-- Newsletter: when EMAIL_ENDPOINT is configured, submissions are sent via FormSubmit/AJAX (main.js).
-           Without JS the form does a normal POST. With no endpoint configured, main.js shows the Payhip freebies collection.
-           Source/lead fields allow future email provider to trigger the right sequence. -->
-      <form class="nl-form" data-nl-form data-dkp-source="site" data-dkp-lead="" data-dkp-thanks="../../thank-you.html" action="" method="POST">
-        <input type="hidden" name="_subject" value="New DigiKitPro subscriber">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <!-- _next must be ABSOLUTE for hosted form services: without it the no-JS path may land on a generic confirmation page instead of our thank-you page, which delivers the free files. -->
-        <input type="hidden" name="_next" value="https://digikitpro.shop/thank-you.html">
-        <input type="hidden" name="source" value="site">
-        <label class="sr-only" for="nl-email">Email address</label>
-        <input id="nl-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        <button class="btn btn-gold" type="submit">Send me the Starter Pack</button>
-        <p class="nl-note" data-nl-note>No spam. Unsubscribe anytime.</p>
-      </form>
-      <p class="nl-caption">Prefer to grab them now? <a href="../../freebies.html">Browse the free brush packs</a>.</p>
-    </div>
-  </div>
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="../../products/procreate-starter-guide-free-ebook/">Explore the free guide</a>
+    <a class="btn btn-line" href="../../freebies.html">See all free resources</a></div>
+  </div></div>
 </section>
-
 </main>
 
 <footer class="site-footer">
@@ -381,7 +426,7 @@
     </nav>
   </div>
   <div class="wrap foot-bottom">
-    <p>© 2026 DigiKitPro. Worldwide instant-delivery digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
   </div>
 </footer>
 </body>

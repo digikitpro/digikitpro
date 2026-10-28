@@ -28,7 +28,7 @@
 
   /* Honours the same opt-out promised in privacy.html: a visitor who turned
      measurement off, or whose browser sends Do Not Track, is never prompted. */
-  if (navigator.doNotTrack === "1" || window.doNotTrack === "1") return;
+  if (navigator.doNotTrack === "1" || window.doNotTrack === "1" || navigator.globalPrivacyControl === true) return;
   try { if (window.localStorage.getItem("dkp_analytics_optout") === "1") return; } catch (e) {}
 
   var PAGE = DKP.page || {};
@@ -49,9 +49,9 @@
     { id: "browsing",     label: "I was just browsing",              reply: "No problem. The free packs are genuinely free — no email required to look.", link: "freebies.html", linkLabel: "Browse the free brushes" },
     { id: "price",        label: "Too expensive",                    reply: "Fair. Start with the free collection, or compare bundles against single packs — the arithmetic is on the page.", link: "bundles.html", linkLabel: "Compare bundle value" },
     { id: "unsure",       label: "Not sure which brush I need",      reply: "Good question — the choosing guide walks through it honestly: what each kind of pack is for, and what is not worth buying.", link: "blog/how-to-choose-procreate-brushes/", linkLabel: "How to choose brushes" },
-    { id: "examples",     label: "Need more examples of the results",reply: "Useful to know. The technique guides show the same brushes used on finished artwork.", link: "blog.html", linkLabel: "See the technique guides" },
-    { id: "other-product",label: "Looking for something else",       reply: "Tell us what — that list decides what gets made next.", link: "about.html#contact", linkLabel: "Send a request" },
-    { id: "other",        label: "Something else",                   reply: "Thanks for the honesty — it goes straight to the studio.", link: "about.html#contact", linkLabel: "Tell us more" }
+    { id: "examples",     label: "Need more examples of the results",reply: "Useful to know. The technique guides offer ideas for practising your workflow.", link: "blog.html", linkLabel: "See the technique guides" },
+    { id: "other-product",label: "Looking for something else",       reply: "Tell us what — that list decides what gets made next.", link: "contact.html", linkLabel: "Send a request" },
+    { id: "other",        label: "Something else",                   reply: "Thanks for the honesty — thanks for sharing.", link: "contact.html", linkLabel: "Tell us more" }
   ];
 
   var bought = false;

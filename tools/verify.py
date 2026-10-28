@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 105 CHECKS PASSED.
+Expects: ALL 114 CHECKS PASSED.
 (89 -> 93 on 2026-09-20: + 4 from the product image gallery repair — every
 product page ships js/gallery.js with [data-product-gallery], #product-main-image
 and a data-full-image per tile; a tile can never hand the frame the -card crop;
@@ -93,7 +93,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 105
+EXPECTED = 114
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -169,7 +169,7 @@ class HrefParser(HTMLParser):
 
 def iter_html() -> list[Path]:
     skip_dirs = {".git", "tools", "data", "content", "docs", "scraped",
-                 "shots", "uploads", ".cache", "__pycache__", ".github"}
+                 "shots", "uploads", ".cache", "__pycache__", ".github", "node_modules"}
     out: list[Path] = []
     for p in ROOT.rglob("*.html"):
         if any(part in skip_dirs for part in p.relative_to(ROOT).parts):
@@ -465,12 +465,12 @@ def main() -> int:
     # spine as the live brief: see → believe → find → try → start → deepen
     # → trust → learn → stay.
     ids = homepage_section_ids(home_html)
-    IA = ["results", "ebooks", "popular", "craft", "bundles", "master-library", "free", "articles", "newsletter"]
-    check("homepage section order matches the result-first brief",
+    IA = ["popular", "results", "craft", "bundles", "master-library", "free", "ebooks", "articles", "home-faq", "newsletter"]
+    check("homepage section order matches the product-first brief",
           ids == IA, ", ".join(ids) or "no sections found")
-    # The page must close on learning, then the one low-commitment CTA: … free → Articles → newsletter as the last section.
-    check("homepage closes: free → articles → email CTA",
-          ids[-3:] == ["free", "articles", "newsletter"],
+    # Learning resources and FAQs follow the featured paid kits.
+    check("homepage closes: articles → FAQ → free resource CTA",
+          ids[-3:] == ["articles", "home-faq", "newsletter"],
           "final section: " + (ids[-1] if ids else "-"))
 
     products = {p["slug"]: p for p in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))}
@@ -533,7 +533,21 @@ def main() -> int:
           dormant and not wrote_new and not wrote_dirty,
           (r.stdout or "").strip()[:80])
 
-    check("products.json unmodified vs git", git_clean("data/products.json"))
+    # Copy may be edited, but catalog identity, prices and Payhip destinations
+    # must not change as a side effect of this conversion pass.
+    base = subprocess.run(["git", "show", "HEAD:data/products.json"], cwd=ROOT,
+                          capture_output=True, text=True)
+    reference = json.loads(base.stdout) if base.returncode == 0 else []
+    invariant = ("id", "payhipId", "slug", "name", "price", "priceText", "currency", "free", "payhipUrl", "comingSoon")
+    def facts(p):
+        images = p.get("images") or {}
+        files = tuple(images.get(k) for k in ("main", "card", "thumb"))
+        files += tuple(g.get("file") for g in images.get("gallery", []))
+        return tuple(p.get(k) for k in invariant), files
+    before = {p["slug"]: facts(p) for p in reference}
+    after = {p["slug"]: facts(p) for p in json.loads(read("data/products.json"))}
+    check("catalog identity, prices and Payhip destinations match HEAD",
+          bool(before) and before == after, f"{len(after)} product records compared")
     check("discovery.json unmodified vs git", git_clean("data/discovery.json"))
     # Look at the build step only — the file header also mentions tools/build.py.
     build_from = deploy.find("Build static site")
@@ -1118,6 +1132,80 @@ def main() -> int:
           not schema_bad,
           f"all {len(catalog)} product pages align with their landing pages and catalog data"
           if not schema_bad else f"mismatch: {schema_bad[:5]}")
+
+    # Free-to-paid recommendations must never replace or invent a download.
+    journeys = json.loads(read("data/free-journeys.json"))
+    journey_bad = []
+    for source, detail in journeys.items():
+        free = products.get(source) or {}
+        paid = products.get(detail.get("paid")) or {}
+        page_path = ROOT / "products" / source / "index.html"
+        page = page_path.read_text(encoding="utf-8") if page_path.is_file() else ""
+        if not (free.get("free") and free.get("payhipUrl") in page and paid
+                and not paid.get("free") and f'data-journey="{source}"' in page
+                and f'data-dkp-product-id="{paid.get("slug")}"' in page
+                and f'thank-you.html?lead={source}' in page):
+            journey_bad.append(source)
+    check("four free resources retain Payhip links and point to relevant paid journeys",
+          len(journeys) == 4 and not journey_bad, ", ".join(journey_bad) or "4/4 journeys")
+
+    thanks = read("thank-you.html")
+    check("follow-up suggestions do not claim a confirmed signup or download",
+          all(f'data-journey="{slug}"' in thanks for slug in journeys)
+          and "You are on the list" not in thanks and "Your download is complete" not in thanks,
+          "all four optional suggestions are rendered")
+
+    check("sitemap omits build-date lastmod until real change dates exist",
+          "<lastmod>" not in sm_xml and "<lastmod>" not in read("sitemap-images.xml"),
+          "no fabricated global modification dates")
+
+    duplicate_faq = []
+    for p in catalog:
+        text = read(f'products/{p["slug"]}/index.html')
+        nodes = [json.loads(raw) for raw in re.findall(
+            r'<script type="application/ld\+json">([\s\S]*?)</script>', text)]
+        if sum(isinstance(n, dict) and n.get("@type") == "FAQPage" for n in nodes) > 1:
+            duplicate_faq.append(p["slug"])
+    check("product pages have at most one FAQPage schema block",
+          not duplicate_faq, ", ".join(duplicate_faq) or f"{len(catalog)} pages checked")
+
+    fingerprints = {name: hashlib.sha256((ROOT / "js" / name).read_bytes()).hexdigest()[:12]
+                    for name in ("main.js", "analytics.js", "motion.js", "translate.js")}
+    stale_scripts = [str(p.relative_to(ROOT)) for p in html_files if not is_verification_page(p)
+                     and any(f'js/{name}?v={version}' not in p.read_text(encoding="utf-8")
+                             for name, version in fingerprints.items())]
+    check("generated pages reference current cache-versioned site scripts",
+          not stale_scripts, f"{len(html_files)} HTML files checked" if not stale_scripts else str(stale_scripts[:5]))
+
+    check("both build workflows expose the analytics kill switch",
+          "DKP_ANALYTICS: ${{ vars.DKP_ANALYTICS || 'true' }}" in deploy
+          and "DKP_ANALYTICS: ${{ vars.DKP_ANALYTICS || 'true' }}" in sync,
+          "set repository variable DKP_ANALYTICS=false to disable in both builds")
+
+    wrong_preloads = []
+    for p in catalog:
+        text = read(f'products/{p["slug"]}/index.html')
+        preload = re.search(r'<link rel="preload" as="image" href="([^"]+)"', text)
+        main_image = re.search(r'<img id="product-main-image"[^>]*?\bsrc="([^"]+)"', text)
+        if not (preload and main_image and preload.group(1) == main_image.group(1)):
+            wrong_preloads.append(p["slug"])
+    check("product preload matches the gallery image URL, including in previews",
+          not wrong_preloads, f"{len(catalog)} products checked" if not wrong_preloads else str(wrong_preloads[:5]))
+
+    # Guard selected high-traffic copy against reverting to an unconfigured
+    # newsletter or unsupported guarantees about access duration/delivery time.
+    trust_pages = ["index.html", "freebies.html", "about.html", "faq.html"]
+    trust_pages += [f"products/{slug}/index.html" for slug in journeys]
+    trust_pages += [f"products/{slug}/index.html" for slug in (
+        "portrait-mastery-kit-46-brushes", "portrait-skin-brushes-procreate", "artista-studio-kit-76-brushes")]
+    unverified_promise = re.compile(
+        r"instant (?:digital )?(?:download|delivery)|download instantly|keep forever|lifetime access|\$0, forever", re.I)
+    trust_bad = [path for path in trust_pages if unverified_promise.search(read(path))]
+    check("selected conversion pages avoid unverified delivery and lifetime guarantees",
+          not trust_bad, ", ".join(trust_bad) if trust_bad else f"{len(trust_pages)} selected pages checked")
+    check("FAQ and About do not promise unconfigured newsletter drops",
+          all("newsletter sends free brush drops" not in read(path).lower() for path in ("about.html", "faq.html")),
+          "newsletter service is not configured in the default build")
 
     passed = sum(1 for _, ok, _ in CHECKS if ok)
     failed = [(n, d) for n, ok, d in CHECKS if not ok]

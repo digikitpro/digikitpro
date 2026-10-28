@@ -1,0 +1,30 @@
+{
+  "procreate-starter-guide-free-ebook": {
+    "paid": "portrait-mastery-kit-46-brushes",
+    "title": "Turn the portrait lessons into a practice routine",
+    "freeSummary": "The free PDF teaches structure, value, surface and finishing. Procreate’s built-in brushes are enough to follow it.",
+    "paidSummary": "The separate Portrait Mastery Kit adds 46 brushes organized for sketch, ink, blending, hair, detail, texture and finish, plus four paper textures.",
+    "practice": "Try this: make a quick head study using three value groups. Once the shapes read clearly, add a little texture on a new layer."
+  },
+  "free-fine-liner-brushes-100": {
+    "paid": "artista-studio-kit-76-brushes",
+    "title": "Take your linework into a broader studio workflow",
+    "freeSummary": "The free set gives you 100 fine liner, micron, marker and textured-line brushes plus 13 paper textures.",
+    "paidSummary": "Artista is a separate 76-brush collection with sketching, graphite, charcoal, shading, traditional media and effects alongside linework. Some brush types overlap; it is a different toolkit, not a required upgrade.",
+    "practice": "Try this: draw the same small object with two line weights, then use a soft shading brush to group its shadows."
+  },
+  "free-chalkboard-artists-toolkit": {
+    "paid": "professional-charcoal-studio",
+    "title": "Explore another traditional-media texture",
+    "freeSummary": "The free chalk toolkit includes 20+ chalk brushes, a chalk eraser and swatches for dark backgrounds.",
+    "paidSummary": "The separate Charcoal Studio focuses on compressed, vine and willow charcoal, smudging tools and textured detailers for sketches and tonal work.",
+    "practice": "Try this: letter a short word on a dark canvas, then lift small areas with the chalk eraser for a worn finish."
+  },
+  "free-color-vault-1200-swatches": {
+    "paid": "brush-palette-bundle-160",
+    "title": "Pair your colours with pattern-making tools",
+    "freeSummary": "The free Color Vault contains 40 Procreate palettes and 1,200+ swatches; it is a colour resource, not a brush set.",
+    "paidSummary": "The separate Brush & Color Palette Bundle contains 160 pattern brushes and 12 palettes. The free palettes are still useful on their own and are not a trial version of the bundle.",
+    "practice": "Try this: choose three colours from one free palette and use them consistently across a small illustration."
+  }
+}
