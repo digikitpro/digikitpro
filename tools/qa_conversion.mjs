@@ -224,6 +224,46 @@ async function testSearch() {
   ok('normal product search still returns links', await page.locator('[data-search-page-results] a.sr-item').count() > 0);
   await ctx.close();
 }
+async function testCanonicalHomeNavigation() {
+  console.log('\n── Canonical homepage navigation ──');
+  const cases = [
+    ['/about.html', 'about.html'],
+    ['/tools/', 'tools/index.html'],
+    ['/blog/procreate-blending-brushes-guide/', 'blog/procreate-blending-brushes-guide/index.html'],
+  ];
+  const links = [
+    ['header', 'header.site-header a.brand'],
+    ['footer', 'footer.site-footer a.brand'],
+    ['breadcrumb', 'nav.crumbs a'],
+  ];
+  for (const javaScriptEnabled of [true, false]) {
+    const { ctx } = await makeContext({ javaScriptEnabled });
+    const page = await ctx.newPage();
+    for (const [path] of cases) {
+      for (const [name, selector] of links) {
+        await page.goto(BASE + path, { waitUntil: 'domcontentloaded' });
+        const link = page.locator(selector).first();
+        const resolved = await link.evaluate(a => a.href);
+        await Promise.all([page.waitForURL(BASE + '/'), link.click()]);
+        ok(`${javaScriptEnabled ? 'JS on' : 'JS off'}: ${path} ${name} opens the canonical homepage`,
+           resolved === BASE + '/' && page.url() === BASE + '/', resolved);
+      }
+    }
+    await ctx.close();
+  }
+  // Local file previews rely on main.js to turn directory links into index.html.
+  const { ctx } = await makeContext();
+  const page = await ctx.newPage();
+  const localHome = new URL('../index.html', import.meta.url).href;
+  for (const [, path] of cases) {
+    for (const [name, selector] of links) {
+      await page.goto(new URL('../' + path, import.meta.url).href, { waitUntil: 'load' });
+      await Promise.all([page.waitForURL(localHome), page.locator(selector).first().click()]);
+      ok(`file preview: ${path} ${name} opens the local homepage`, page.url() === localHome, page.url());
+    }
+  }
+  await ctx.close();
+}
 async function testRecovery404() {
   console.log('\n── Nested 404 recovery (GitHub Pages simulated locally) ──');
   const errorHtml = readFileSync(new URL('../404.html', import.meta.url), 'utf8');
@@ -374,6 +414,7 @@ try {
   await testPayhip();
   await testJourneys();
   await testSearch();
+  await testCanonicalHomeNavigation();
   await testRecovery404();
   await testSearchLandingPages();
   await testCanvasCalculator();

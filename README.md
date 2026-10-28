@@ -179,9 +179,10 @@ lazy-loading responsive WebP · descriptive alt text · clean URLs. Structured d
 and meta tags do not guarantee a particular Google result, ranking or indexing.
 
 After building, run `python3 tools/qa_seo.py` to check generated canonicals,
-indexability, sitemaps, JSON-LD, article dates and local Open Graph image sizes.
-The deploy and catalog-sync workflows run this offline check before publishing;
-use Search Console separately to inspect Google's selected canonicals and indexing.
+indexability, HTTPS internal links, canonical homepage navigation, sitemaps,
+JSON-LD, article dates and local Open Graph image sizes. The deploy and
+catalog-sync workflows run this offline check before publishing; use Search
+Console separately to inspect Google's selected canonicals and indexing.
 For article authors, the optional `seo_title` frontmatter is an **unbranded**
 human-written search title; the generator appends ` | DigiKitPro`. Set `modified`
 only when the visible article has actually changed, not merely on every build.

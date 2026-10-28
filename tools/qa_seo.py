@@ -16,6 +16,7 @@ from pathlib import Path
 from urllib.parse import unquote, urljoin, urlsplit
 import xml.etree.ElementTree as ET
 
+from core import home_href
 from pages_blog import article_seo_title
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -39,8 +40,13 @@ class Page(HTMLParser):
         self.titles, self.h1s, self.canonicals, self.bases = [], [], [], []
         self.meta = defaultdict(list)
         self.schemas, self.times = [], []
+        self.anchors = []
+        self.home_links = {"header": [], "footer": [], "breadcrumbs": []}
+        self.breadcrumb_count = 0
         self.hero_src = None
         self._title = self._h1 = self._json = self._hero = False
+        self._site_header = self._site_footer = False
+        self._breadcrumb = self._breadcrumb_first_link = False
         self._schema_text = ""
 
     def handle_starttag(self, tag, attrs):
@@ -59,6 +65,23 @@ class Page(HTMLParser):
             self.canonicals.append(a.get("href", ""))
         elif tag == "base":
             self.bases.append(a.get("href", ""))
+        elif tag == "header" and "site-header" in a.get("class", "").split():
+            self._site_header = True
+        elif tag == "footer" and "site-footer" in a.get("class", "").split():
+            self._site_footer = True
+        elif tag == "nav" and "crumbs" in a.get("class", "").split():
+            self.breadcrumb_count += 1
+            self._breadcrumb = self._breadcrumb_first_link = True
+        elif tag == "a" and "href" in a:
+            self.anchors.append(a["href"])
+            if "brand" in a.get("class", "").split():
+                if self._site_header:
+                    self.home_links["header"].append(a["href"])
+                if self._site_footer:
+                    self.home_links["footer"].append(a["href"])
+            if self._breadcrumb and self._breadcrumb_first_link:
+                self.home_links["breadcrumbs"].append(a["href"])
+                self._breadcrumb_first_link = False
         elif tag == "script" and a.get("type", "").lower() == "application/ld+json":
             self._json = True
             self._schema_text = ""
@@ -84,6 +107,12 @@ class Page(HTMLParser):
             self._h1 = False
         elif tag == "figure":
             self._hero = False
+        elif tag == "header":
+            self._site_header = False
+        elif tag == "footer":
+            self._site_footer = False
+        elif tag == "nav" and self._breadcrumb:
+            self._breadcrumb = self._breadcrumb_first_link = False
         elif tag == "script" and self._json:
             self.schemas.append(self._schema_text)
             self._json = False
@@ -163,6 +192,8 @@ def image_size(path):
 
 def main():
     check(SITE_PARTS.scheme == "https" and bool(SITE_PARTS.netloc), "SITE_URL must use HTTPS")
+    for depth, expected in ((-1, "/"), (0, "./"), (1, "../"), (2, "../../")):
+        check(home_href(depth) == expected, f"home link at depth {depth} must be {expected!r}")
     html_files = sorted(p for p in ROOT.rglob("*.html")
                         if not SKIP.intersection(p.relative_to(ROOT).parts)
                         and not p.name.lower().startswith(("google", "yandex")))
@@ -180,6 +211,25 @@ def main():
         check(len(parser.meta["description"]) == 1 and bool(parser.meta["description"][0].strip()), f"{rel}: missing/duplicate description")
         check(len(parser.h1s) == 1 and bool(parser.h1s[0].strip()), f"{rel}: expected one nonempty h1")
         check(len(parser.meta["robots"]) == 1, f"{rel}: expected one robots directive")
+        if all("noindex" not in value.lower() for value in parser.meta["robots"]):
+            # Resolve against the published URL and any HTML base, just as a
+            # browser or crawler would; relative href strings alone are not URLs.
+            base = urljoin(canonical, parser.bases[0]) if parser.bases else canonical
+            alias = urlsplit(SITE + "/index.html")
+            aliases, insecure = [], []
+            for href in parser.anchors:
+                target = urlsplit(urljoin(base, href))
+                if target.netloc == alias.netloc and target.path == alias.path:
+                    aliases.append(href)
+                if target.netloc == SITE_PARTS.netloc and target.scheme == "http":
+                    insecure.append(href)
+            check(not aliases, f"{rel}: links to the noncanonical homepage alias: {aliases}")
+            check(not insecure, f"{rel}: internal links use HTTP instead of HTTPS: {insecure}")
+            home = parser.home_links
+            all_home_links = home["header"] + home["footer"] + home["breadcrumbs"]
+            check(len(home["header"]) == len(home["footer"]) == 1 and len(home["breadcrumbs"]) == parser.breadcrumb_count
+                  and all(urljoin(base, href) == SITE + "/" for href in all_home_links),
+                  f"{rel}: header, footer or breadcrumb home link does not resolve to the canonical homepage: {home}")
         if len(parser.titles) == 1:
             titles[parser.titles[0]].append(rel)
             check(parser.meta["og:title"] == parser.titles, f"{rel}: Open Graph title differs from title")
