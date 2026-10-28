@@ -628,6 +628,14 @@ NAV = [("Free Brushes","freebies.html"),
        ("Products","products.html"),("Bundles","bundles.html"),
        ("Articles","blog.html"),("Tools","tools/"),("About","about.html")]
 
+def home_href(depth):
+    """Link to the homepage's canonical directory, not its index.html alias.
+
+    Relative URLs keep local previews on their own origin and work without JS
+    on a web server. Negative depth is reserved for root-relative error pages.
+    """
+    return "/" if depth < 0 else ("../" * depth or "./")
+
 def header(depth, active=None):
     links = ""
     for n, u in NAV:
@@ -638,7 +646,7 @@ def header(depth, active=None):
     return f"""<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-inner">
-    <a class="brand" href="{rel(depth,'index.html')}" aria-label="{SITE_NAME} home">
+    <a class="brand" href="{home_href(depth)}" aria-label="{SITE_NAME} home">
       <svg class="brand-mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="15" stroke="#C9A86A" stroke-width="1.4"/><path d="M11 22.5V9.5h4.4c3.9 0 6.6 2.7 6.6 6.5s-2.7 6.5-6.6 6.5H11Zm2.5-2.2h1.8c2.6 0 4.1-1.8 4.1-4.3s-1.5-4.3-4.1-4.3h-1.8v8.6Z" fill="#C9A86A"/></svg>
       <span class="brand-name">DigiKit<em>Pro</em></span>
     </a>
@@ -740,7 +748,7 @@ def footer(depth):
 <footer class="site-footer">
   <div class="wrap footer-grid">
     <div class="foot-brand">
-      <a class="brand" href="{rel(depth,'index.html')}"><span class="brand-name">DigiKit<em>Pro</em></span></a>
+      <a class="brand" href="{home_href(depth)}"><span class="brand-name">DigiKit<em>Pro</em></span></a>
       <p class="muted">{TAGLINE}</p>
       <p class="foot-label">Store</p>
       <div class="foot-links"><a href="{STORE_URL}" target="_blank" rel="noopener">Payhip ↗</a></div>
@@ -799,14 +807,14 @@ def footer(depth):
 """
 
 def breadcrumbs(depth, items):
-    els = [f'<a href="{rel(depth,"index.html")}">Home</a>']
+    els = [f'<a href="{home_href(depth)}">Home</a>']
     for name, u in items[:-1]:
         els.append(f'<a href="{rel(depth,u)}">{esc(name)}</a>')
     els.append(f'<span aria-current="page">{esc(items[-1][0])}</span>')
     return '<nav class="crumbs" aria-label="Breadcrumb">' + '<span class="crumb-sep">/</span>'.join(els).replace("</span>","</span>",1) + "</nav>"
 
 def crumbs(depth, items):
-    links = [f'<a href="{rel(depth,"index.html")}">Home</a>']
+    links = [f'<a href="{home_href(depth)}">Home</a>']
     for name, u in items[:-1]:
         links.append(f'<a href="{rel(depth,u)}">{esc(name)}</a>')
     links.append(f'<span aria-current="page">{esc(items[-1][0])}</span>')
