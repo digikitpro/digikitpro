@@ -252,6 +252,7 @@ async function testRecovery404() {
         blog: [...document.querySelectorAll('main a')].find(a => a.textContent.trim() === 'art tutorials')?.href,
         css: css?.href, cssLoaded: !!css?.sheet,
         script: document.querySelector('script[src*="/main.js"]')?.src,
+        skip: document.querySelector('.skip-link')?.href,
         navProducts: [...document.querySelectorAll('header a')].find(a => a.textContent.trim() === 'Products')?.href,
       };
     });
@@ -263,6 +264,22 @@ async function testRecovery404() {
     ok(`${label}: nested 404 stylesheet loads and scripts resolve from the site root`,
        resolved.css.startsWith(BASE + '/css/style.css?') && resolved.cssLoaded &&
        resolved.script.startsWith(BASE + '/js/main.js?'), JSON.stringify(resolved));
+    let extraNavigations = 0;
+    page.on('request', request => { if (request.isNavigationRequest()) extraNavigations++; });
+    await page.locator('.skip-link').focus();
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(50);
+    ok(`${label}: Skip to content stays on the missing URL and targets its main content`,
+       resolved.skip === BASE + nested + '#main' && page.url() === BASE + nested + '#main' && extraNavigations === 0, page.url());
+    if (javascriptEnabled) {
+      await page.locator('[data-search-open]').click();
+      await page.locator('[data-search-input]').fill('portrait');
+      const result = page.locator('[data-search-results] a.sr-item').first();
+      await result.waitFor();
+      ok('JS on: 404 search results resolve from the site root',
+         (await result.evaluate(a => a.href)).startsWith(BASE + '/products/'));
+      await page.locator('[data-search-close]').click();
+    }
     await page.getByRole('link', { name: 'Browse Products', exact: true }).click();
     await page.waitForURL(BASE + '/products.html');
     ok(`${label}: 404 Browse Products opens the real product index`, page.url() === BASE + '/products.html');

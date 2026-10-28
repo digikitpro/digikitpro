@@ -203,9 +203,13 @@ def urljoin(*parts):
 def absurl(path):
     return SITE_URL + "/" + path.lstrip("/")
 
+# Use root-relative links when a document may be served at any request path
+# (GitHub Pages' custom 404), while preserving ordinary same-page fragments.
+ROOT_RELATIVE = -1
+
 def rel(depth, path):
-    """Relative url from a page at `depth` dirs deep."""
-    prefix = "../" * depth
+    """URL from a page at `depth` directories, or from the site root."""
+    prefix = "/" if depth == ROOT_RELATIVE else "../" * depth
     return prefix + path.lstrip("/")
 
 def _css_fingerprint():
@@ -452,7 +456,7 @@ _GITHUB_KILL = """<script>
 })();
 </script>"""
 
-def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False, base_href=None, og_size=None):
+def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False, og_size=None):
     """`ctx` is the analytics page context (see js/analytics.js). It is emitted
     as window.DKP.page and contains ONLY non-personal page facts: page type,
     product slug/name/tier/category/price. No visitor data, ever."""
@@ -477,7 +481,6 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     if size and all(isinstance(n, int) and n > 0 for n in size) and len(size) == 2:
         og_dimensions = (f'\n  <meta property="og:image:width" content="{size[0]}">'
                          f'\n  <meta property="og:image:height" content="{size[1]}">')
-    base_tag = f'  <base href="{esc(base_href)}">\n' if base_href else ""
     vmeta = ""
     if GOOGLE_VERIFY: vmeta += f'\n  <meta name="google-site-verification" content="{esc(GOOGLE_VERIFY)}">'
     if BING_VERIFY: vmeta += f'\n  <meta name="msvalidate.01" content="{esc(BING_VERIFY)}">'
@@ -576,7 +579,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-{base_tag}{_GITHUB_KILL}
+{_GITHUB_KILL}
 {ga}{pin_tag}  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{esc(title)}</title>

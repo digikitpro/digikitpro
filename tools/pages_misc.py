@@ -499,20 +499,20 @@ def build_misc():
 
     # ── 404 ──
     # GitHub Pages serves 404.html at the *requested* URL, not /404.html.
-    # Root the shared header, footer, styles and scripts even for an unknown
-    # path several levels deep (and for visitors with JavaScript disabled).
-    html_out = head("Page not found, DigiKitPro", "That page doesn't exist, but the brushes do. Browse the full DigiKitPro catalog.", SITE_URL + "/404.html", 0,
-                      robots="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1", base_href="/")
-    html_out += header(0)
+    # Use root-relative links and assets at unknown depths, but no <base>:
+    # a base URL would make the #main skip link navigate to the homepage.
+    html_out = head("Page not found, DigiKitPro", "That page doesn't exist, but the brushes do. Browse the full DigiKitPro catalog.", SITE_URL + "/404.html", ROOT_RELATIVE,
+                      robots="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1")
+    html_out += header(ROOT_RELATIVE)
     html_out += f"""
 <main id="main"><section class="section"><div class="wrap narrow" style="text-align:center;padding:6rem 0">
   <p class="eyebrow">404</p>
   <h1>This canvas is blank.</h1>
   <p class="lead">The page you're looking for didn't make it to the final artwork.</p>
-  <div class="hero-ctas" style="justify-content:center"><a class="btn btn-gold" href="index.html">Back to Home</a><a class="btn btn-line" href="products.html">Browse Products</a></div>
-  <p>Or explore <a class="text-link" href="freebies.html">free brushes</a> and <a class="text-link" href="blog.html">art tutorials</a>.</p>
+  <div class="hero-ctas" style="justify-content:center"><a class="btn btn-gold" href="/index.html">Back to Home</a><a class="btn btn-line" href="/products.html">Browse Products</a></div>
+  <p>Or explore <a class="text-link" href="/freebies.html">free brushes</a> and <a class="text-link" href="/blog.html">art tutorials</a>.</p>
 </div></section></main>
-{footer(0)}"""
+{footer(ROOT_RELATIVE)}"""
     write("404.html", html_out)
 
     # ── .nojekyll: tell GitHub Pages to serve files as-is (no Jekyll build) ──

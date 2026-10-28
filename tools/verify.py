@@ -189,7 +189,7 @@ def resolve_href(page: Path, href: str) -> Path | None:
         return None  # pure fragment
     if re.match(r"^(https?:|mailto:|javascript:|tel:|//)", raw, re.I):
         return None
-    target = (page.parent / raw).resolve()
+    target = (ROOT / raw.lstrip("/") if raw.startswith("/") else page.parent / raw).resolve()
     try:
         target.relative_to(ROOT.resolve())
     except ValueError:

@@ -186,10 +186,11 @@ For article authors, the optional `seo_title` frontmatter is an **unbranded**
 human-written search title; the generator appends ` | DigiKitPro`. Set `modified`
 only when the visible article has actually changed, not merely on every build.
 
-GitHub Pages serves `404.html` at the missing URL. Its root `<base>` keeps assets
-and navigation working at nested paths even without JavaScript; it does not
-redirect missing pages to the homepage. The canvas calculator's layer numbers
-are illustrative assumptions, not measured Procreate limits.
+GitHub Pages serves `404.html` at the missing URL. Root-relative asset and
+navigation paths work at nested URLs even without JavaScript, while the skip
+link stays on the error page. Missing pages are not redirected to the homepage.
+The canvas calculator's layer numbers are illustrative assumptions, not measured
+Procreate limits.
 
 ## 6. Where the data came from
 
