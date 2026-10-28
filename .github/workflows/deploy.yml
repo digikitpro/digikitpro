@@ -73,6 +73,11 @@ jobs:
           PARTNER_SIGNUP_URL: ${{ vars.PARTNER_SIGNUP_URL }}
         run: python3 tools/build.py
 
+      - name: Check generated search markup and sitemaps
+        env:
+          SITE_URL: https://digikitpro.shop
+        run: python3 tools/qa_seo.py
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3

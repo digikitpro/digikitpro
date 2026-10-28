@@ -6,7 +6,6 @@ date: 2026-09-14
 modified: 2026-09-14
 category: Tutorials
 howto: true
-totaltime: PT180M
 primary_keyword: Procreate portrait workflow
 secondary_keywords: [how to paint a portrait in Procreate, digital portrait process, Procreate portrait tutorial, portrait layers]
 search_intent: Informational

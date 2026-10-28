@@ -1,9 +1,9 @@
 ---
 title: How to Make Digital Art Look Traditional: 7 Practical Techniques
 slug: how-to-make-digital-art-look-traditional
-description: Make digital art look traditional in Procreate with paper tooth, broken edges, limited colour, layered marks, and medium-specific workflows.
+description: Give Procreate art a traditional feel with paper texture, broken edges and layered marks. Compare dry-media and watercolor techniques.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-10-28
 category: Tutorials
 primary_keyword: how to make digital art look traditional
 secondary_keywords: [traditional digital art Procreate, Procreate paper texture, digital painting texture, traditional media brushes]
@@ -17,6 +17,12 @@ related: [how-to-create-realistic-watercolor-in-procreate, how-to-create-realist
 Traditional media does not look handmade because it has a special colour grade. It looks handmade because the tool, surface, pressure, and medium interact imperfectly. Pencil catches paper tooth, charcoal breaks at the edge, pastel leaves a visible deposit, and watercolor changes as it overlaps.
 
 To make digital art look traditional in Procreate, reproduce those decisions deliberately. Do not cover a clean painting with one texture filter at the end and expect it to carry the whole image.
+
+## Compare a dry mark with a wash
+
+Paint one small object twice using the same light source. For a dry-media version, build form with broken strokes and let some of the surface show through. For a watercolor-style version, overlap translucent shapes and retain a few visible edges. Hide any paper layer afterward: the mark-making should still suggest the medium.
+
+Built-in brushes are enough for this test. The [free Chalkboard Artist’s Toolkit](/products/free-chalkboard-artists-toolkit/) offers chalk marks to explore; chalk and charcoal are different media, so compare them with the separate [Charcoal Studio](/products/professional-charcoal-studio/) only if a charcoal workflow is what you need.
 
 ## 1. Start with a medium-specific tool
 

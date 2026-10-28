@@ -6,7 +6,6 @@ date: 2026-09-14
 modified: 2026-09-14
 category: Tutorials
 howto: true
-totaltime: PT75M
 primary_keyword: how to create realistic watercolor in Procreate
 secondary_keywords: [Procreate watercolor tutorial, digital watercolor, watercolor brushes for Procreate, watercolor paper texture]
 search_intent: Informational

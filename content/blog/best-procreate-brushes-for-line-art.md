@@ -1,9 +1,9 @@
 ---
 title: Best Procreate Brushes for Line Art: How to Choose a Liner
 slug: best-procreate-brushes-for-line-art
-description: Find Procreate brushes for line art by comparing taper, pressure response, texture, stabilisation, and workflow. Includes free and specialist options.
+description: Compare Procreate line-art brushes by taper, pressure, texture and stabilisation. Try a simple liner test with free or specialist tools.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-10-28
 category: Procreate Brushes
 primary_keyword: best Procreate brushes for line art
 secondary_keywords: [Procreate line art brushes, best liner brush for Procreate, manga ink brushes, clean line art on iPad]
@@ -64,6 +64,8 @@ Keep the brush that helps you make a deliberate mark repeatedly. A dramatic stam
 Sketch loosely on its own layer and reduce its opacity before inking. Keep the final line art separate until the shapes and hierarchy are resolved. If you need to clean a contour, redraw the full gesture rather than repeatedly erasing a tiny wobble; the larger action is usually more confident.
 
 For comics or tattoo concepts, keep large black shapes separate from fine linework until the composition reads at thumbnail size. For coloured illustration, decide whether the line will remain dark, shift toward a colour, or disappear under paint before you over-render it.
+
+For character art, compare an outer contour with the finer marks inside the face and hair. If the details disappear at the final size, reduce their weight or simplify them instead of switching brushes immediately. The [anime and manga guide](/blog/best-procreate-brushes-for-anime/) expands this into a full line-and-shading workflow.
 
 ## Common mistakes
 

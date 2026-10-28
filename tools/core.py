@@ -384,22 +384,24 @@ def schema_breadcrumb(items):
              "itemListElement":[{"@type":"ListItem","position":i+1,"name":n,"item":absurl(u)} for i,(n,u) in enumerate(items)]}]
 
 def schema_article(a):
-    """BlogPosting (richer than the generic Article: eligible for blog/article
-    rich results). Image is always an absolute URL, required by BlogPosting."""
-    img = a.get("image") or "assets/img/og-cover.jpg"
-    img = img if is_abs(img) else absurl(img)
-    return [{"@context":"https://schema.org","@type":"BlogPosting","headline":a["title"],
-             "description":a["description"],"image":[img],
-             "datePublished":a["date"],"dateModified":a.get("modified") or a["date"],
-             "keywords":", ".join([a.get("primary_keyword", "")] + (a.get("secondary_keywords") or [])),
-             "author":{"@type":"Organization","name":SITE_NAME,"url":SITE_URL},
-             "publisher":{"@id":SITE_URL+"/#org"},
-             "mainEntityOfPage":absurl(f"blog/{a['slug']}/"),
-             "inLanguage":"en","url":absurl(f"blog/{a['slug']}/")}]
+    """BlogPosting metadata. Search features and image selection aren't guaranteed."""
+    node = {"@context":"https://schema.org","@type":"BlogPosting","headline":a["title"],
+            "description":a["description"],
+            "datePublished":a["date"],"dateModified":a.get("modified") or a["date"],
+            "keywords":", ".join([a.get("primary_keyword", "")] + (a.get("secondary_keywords") or [])),
+            "author":{"@type":"Organization","name":SITE_NAME,"url":SITE_URL},
+            "publisher":{"@id":SITE_URL+"/#org"},
+            "mainEntityOfPage":absurl(f"blog/{a['slug']}/"),
+            "inLanguage":"en","url":absurl(f"blog/{a['slug']}/")}
+    # The visible hero is the larger source image; cards use a smaller crop.
+    # Omit the optional image when an article has no visible hero.
+    if a.get("hero"):
+        node["image"] = [a["hero"] if is_abs(a["hero"]) else absurl(a["hero"])]
+    return [node]
 
 def schema_howto(name, description, steps, total_time=None, tools=None):
-    """HowTo rich result. `steps` = list of (name, text) tuples; each becomes a
-    HowToStep. `tools` is an optional list of Procreate/tool names (HowToTool)."""
+    """Schema.org HowTo metadata; this does not guarantee a search feature.
+    `steps` is a list of (name, text) tuples; tools and time are optional."""
     step_nodes = [{"@type":"HowToStep","position":i+1,"name":n,"text":t}
                   for i,(n,t) in enumerate(steps)]
     node = {"@context":"https://schema.org","@type":"HowTo","name":name,
@@ -450,7 +452,7 @@ _GITHUB_KILL = """<script>
 })();
 </script>"""
 
-def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False):
+def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False, base_href=None, og_size=None):
     """`ctx` is the analytics page context (see js/analytics.js). It is emitted
     as window.DKP.page and contains ONLY non-personal page facts: page type,
     product slug/name/tier/category/price. No visitor data, ever."""
@@ -468,6 +470,14 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     pl = (f' <link rel="preload" as="image" href="{preload if is_abs(preload) else rel(depth, preload)}" fetchpriority="high">\n'
           if preload else "")
     ogimg = og_image if is_abs(og_image) else absurl(og_image or "assets/img/og-cover.jpg")
+    # Custom artwork has varying dimensions; publish catalog dimensions when
+    # known, or omit these optional tags rather than claim the default size.
+    size = og_size if og_image else (1200, 630)
+    og_dimensions = ""
+    if size and all(isinstance(n, int) and n > 0 for n in size) and len(size) == 2:
+        og_dimensions = (f'\n  <meta property="og:image:width" content="{size[0]}">'
+                         f'\n  <meta property="og:image:height" content="{size[1]}">')
+    base_tag = f'  <base href="{esc(base_href)}">\n' if base_href else ""
     vmeta = ""
     if GOOGLE_VERIFY: vmeta += f'\n  <meta name="google-site-verification" content="{esc(GOOGLE_VERIFY)}">'
     if BING_VERIFY: vmeta += f'\n  <meta name="msvalidate.01" content="{esc(BING_VERIFY)}">'
@@ -566,7 +576,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-{_GITHUB_KILL}
+{base_tag}{_GITHUB_KILL}
 {ga}{pin_tag}  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{esc(title)}</title>
@@ -580,9 +590,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <meta property="og:title" content="{esc(title)}">
   <meta property="og:description" content="{esc(desc)}">
   <meta property="og:url" content="{esc(canonical)}">
-  <meta property="og:image" content="{ogimg}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image" content="{ogimg}">{og_dimensions}
   <meta property="og:image:alt" content="{esc(title)}">
   <meta property="og:locale" content="en_US">{locales}
   <meta name="twitter:card" content="summary_large_image">

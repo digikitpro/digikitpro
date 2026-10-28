@@ -26,6 +26,10 @@ const paths = [
   '/products/free-fine-liner-brushes-100/',
   '/freebies.html',
   '/thank-you.html?lead=free-fine-liner-brushes-100',
+  '/blog/how-to-choose-procreate-brushes/',
+  '/blog/best-procreate-brushes-for-anime/',
+  '/tools/canvas-calculator/',
+  '/404.html',
 ];
 let failed = 0;
 for (const path of paths) {
@@ -54,5 +58,5 @@ for (const code of ['en', 'es', 'fr', 'de', 'it', 'pt', 'nl']) {
   if (!pass) failed++;
 }
 await browser.close();
-console.log('Automated checks cover only these five pages at 390px; manual and assistive-technology testing is still needed. Google Translate was blocked.');
+console.log(`Automated checks cover only these ${paths.length} pages at 390px; manual and assistive-technology testing is still needed. Google Translate was blocked.`);
 if (failed) process.exitCode = 1;

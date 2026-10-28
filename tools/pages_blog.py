@@ -113,6 +113,24 @@ def extract_howto_steps(body):
 def _truthy(v):
     return str(v or "").strip().lower() in ("true", "yes", "1")
 
+def article_seo_title(article):
+    """Use an optional human-written search title without cutting off words.
+
+    A length target is only a guide: Google controls its own title display.
+    For a long title, a natural colon/parenthesis break is preferable to a
+    mechanical mid-word ellipsis. Otherwise keep the complete title.
+    """
+    suffix = f" | {SITE_NAME}"
+    override = str(article.get("seo_title") or "").strip()
+    if override:
+        return override + suffix
+    title = article["title"].strip()
+    if len(title + suffix) > 65:
+        candidate = title.split(" (", 1)[0].split(":", 1)[0].strip()
+        if candidate and len(candidate + suffix) <= 65:
+            title = candidate
+    return title + suffix
+
 _ARTICLES = None
 
 def load_articles():
@@ -208,28 +226,16 @@ def build_blog():
         if _truthy(a.get("howto")):
             steps = extract_howto_steps(a["body"])
             if steps:
-                tool_names = [BY_SLUG[s]["name"] for s in (a.get("products") or []) if s in BY_SLUG][:4]
-                tools_list = ["Procreate (iPad)", "Apple Pencil"] + tool_names
-                schemas += schema_howto(
-                    a["title"], a["description"], steps,
-                    total_time=a.get("totaltime") or None, tools=tools_list)
+                # Recommended products and an Apple Pencil are not necessarily
+                # required tools, and the articles don't verify a completion
+                # time. Do not turn either into a structured-data claim.
+                schemas += schema_howto(a["title"], a["description"], steps)
         hero_ss = img_srcset(depth, a.get("_pslug",""), a.get("_im") or {}, "(min-width: 860px) 760px, 94vw")
         og_img = (asset_abs(a["products"][0], BY_SLUG[a["products"][0]]["images"]["card"])
                   if a.get("products") and a["products"][0] in BY_SLUG else None)
-        raw_title = a['title']
-        if len(f"{raw_title} | {SITE_NAME}") > 65:
-            t = raw_title
-            if " (" in t:
-                t = t.split(" (")[0].strip()
-            if ":" in t:
-                t = t.split(":")[0].strip()
-            if len(f"{t} | {SITE_NAME}") > 65 and " for " in t:
-                t = t.split(" for ")[0].strip()
-            seo_t = f"{t} | {SITE_NAME}" if len(f"{t} | {SITE_NAME}") <= 65 else f"{raw_title[:45]}... | {SITE_NAME}"
-        else:
-            seo_t = f"{raw_title} | {SITE_NAME}"
-        html_out = head(seo_t, a["description"], absurl(f"blog/{a['slug']}/"), depth,
-                        schemas=schemas, page_type="article", og_image=og_img,
+        og_size = (a.get("_im", {}).get("cardW"), a.get("_im", {}).get("cardH")) if og_img else None
+        html_out = head(article_seo_title(a), a["description"], absurl(f"blog/{a['slug']}/"), depth,
+                        schemas=schemas, page_type="article", og_image=og_img, og_size=og_size,
                         ctx=page_ctx("article", slug=a["slug"], name=a["title"]))
         html_out += header(depth, active="blog.html")
         html_out += f"""

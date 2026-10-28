@@ -6,7 +6,6 @@ date: 2026-09-14
 modified: 2026-09-14
 category: Tutorials
 howto: true
-totaltime: PT90M
 primary_keyword: how to design a tattoo in Procreate
 secondary_keywords: [tattoo design Procreate, tattoo flash on iPad, Procreate tattoo stencil, tattoo linework brushes]
 search_intent: Informational

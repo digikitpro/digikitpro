@@ -459,13 +459,14 @@ def build_product_pages():
         # under the buy panel, stating exactly what terms.html already says.
         licence = "" if coming else licence_line(p)
 
-        _og_img = asset_abs(slug, im.get("card", "")) if im.get("card", "") else absurl("assets/img/og-cover.jpg")
+        _og_img = asset_abs(slug, im.get("card", "")) if im.get("card", "") else None
+        _og_size = (im.get("cardW"), im.get("cardH")) if _og_img else None
         # Preload the same relative URL as the gallery image. An absolute
         # production-domain URL breaks local/branch previews and can fetch the
         # image twice; genuinely remote Payhip assets stay absolute.
         _preload = asset_file(0, slug, im.get("main", "")) if im.get("main", "") else None
         html_out = head(p["seoTitle"], p["seoDesc"], absurl(f"products/{slug}/"), depth,
-                        schemas=schemas, og_image=_og_img, page_type="product", preload=_preload,
+                        schemas=schemas, og_image=_og_img, og_size=_og_size, page_type="product", preload=_preload,
                         ctx=page_ctx("product", p), gallery=True)
         html_out += header(depth, active="products.html")
         html_out += f"""

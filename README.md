@@ -175,7 +175,21 @@ scraped/                          ← original scraper + Payhip source data (ref
 Unique title/meta per page · canonicals · Open Graph + Twitter cards · Product + Offer JSON-LD
 with real Payhip prices · Article schema · BreadcrumbList · Organization + WebSite (SearchAction) ·
 FAQPage schema on product pages · `sitemap.xml` · `robots.txt` · semantic HTML5 ·
-lazy-loading responsive WebP · descriptive alt text · clean URLs.
+lazy-loading responsive WebP · descriptive alt text · clean URLs. Structured data
+and meta tags do not guarantee a particular Google result, ranking or indexing.
+
+After building, run `python3 tools/qa_seo.py` to check generated canonicals,
+indexability, sitemaps, JSON-LD, article dates and local Open Graph image sizes.
+The deploy and catalog-sync workflows run this offline check before publishing;
+use Search Console separately to inspect Google's selected canonicals and indexing.
+For article authors, the optional `seo_title` frontmatter is an **unbranded**
+human-written search title; the generator appends ` | DigiKitPro`. Set `modified`
+only when the visible article has actually changed, not merely on every build.
+
+GitHub Pages serves `404.html` at the missing URL. Its root `<base>` keeps assets
+and navigation working at nested paths even without JavaScript; it does not
+redirect missing pages to the homepage. The canvas calculator's layer numbers
+are illustrative assumptions, not measured Procreate limits.
 
 ## 6. Where the data came from
 

@@ -10,11 +10,14 @@
  * intercepted. No live checkout, Google tag or purchase is contacted.
  */
 import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright-core');
 const SERVER = (process.env.BASE_URL || 'http://127.0.0.1:4173').replace(/\/$/, '');
 const BASE = 'https://digikitpro.shop';
-if (SERVER === BASE) throw new Error('BASE_URL must be a local preview server, never the live store.');
+if (!['localhost', '127.0.0.1', '[::1]'].includes(new URL(SERVER).hostname)) {
+  throw new Error('BASE_URL must be a local preview server, never the live store.');
+}
 const executablePath = process.env.CHROMIUM_PATH || '/usr/bin/chromium';
 const browser = await chromium.launch({ executablePath, headless: true, args: ['--no-sandbox'] });
 let passed = 0, failed = 0;
@@ -221,6 +224,110 @@ async function testSearch() {
   ok('normal product search still returns links', await page.locator('[data-search-page-results] a.sr-item').count() > 0);
   await ctx.close();
 }
+async function testRecovery404() {
+  console.log('\n── Nested 404 recovery (GitHub Pages simulated locally) ──');
+  const errorHtml = readFileSync(new URL('../404.html', import.meta.url), 'utf8');
+  const nested = '/products/__dkp_missing_qa__/item/';
+  const slashless = '/blog/__dkp_missing_qa__?ref=example#top';
+  const doubleSlash = '//example.invalid/escape';
+  for (const javascriptEnabled of [true, false]) {
+    const { ctx } = await makeContext({ javaScriptEnabled: javascriptEnabled });
+    await ctx.route('**/*', async route => {
+      const request = route.request(), url = new URL(request.url());
+      if (request.isNavigationRequest() && url.origin === BASE &&
+          (url.pathname.startsWith('/products/__dkp_missing_qa__') ||
+           url.pathname.startsWith('/blog/__dkp_missing_qa__') ||
+           url.pathname === doubleSlash)) {
+        await route.fulfill({ status: 404, contentType: 'text/html', body: errorHtml });
+      } else await route.fallback();
+    });
+    const page = await ctx.newPage();
+    const response = await page.goto(BASE + nested, { waitUntil: 'load' });
+    const resolved = await page.evaluate(() => {
+      const css = document.querySelector('link[rel="stylesheet"]');
+      return {
+        home: [...document.querySelectorAll('main a')].find(a => a.textContent.trim() === 'Back to Home')?.href,
+        products: [...document.querySelectorAll('main a')].find(a => a.textContent.trim() === 'Browse Products')?.href,
+        freebies: [...document.querySelectorAll('main a')].find(a => a.textContent.trim() === 'free brushes')?.href,
+        blog: [...document.querySelectorAll('main a')].find(a => a.textContent.trim() === 'art tutorials')?.href,
+        css: css?.href, cssLoaded: !!css?.sheet,
+        script: document.querySelector('script[src*="/main.js"]')?.src,
+        navProducts: [...document.querySelectorAll('header a')].find(a => a.textContent.trim() === 'Products')?.href,
+      };
+    });
+    const label = javascriptEnabled ? 'JS on' : 'JS off';
+    ok(`${label}: nested 404 stays a 404 and recovery links resolve to the site root`,
+       response.status() === 404 && page.url() === BASE + nested && resolved.home === BASE + '/index.html' &&
+       resolved.products === BASE + '/products.html' && resolved.freebies === BASE + '/freebies.html' &&
+       resolved.blog === BASE + '/blog.html' && resolved.navProducts === BASE + '/products.html', JSON.stringify(resolved));
+    ok(`${label}: nested 404 stylesheet loads and scripts resolve from the site root`,
+       resolved.css.startsWith(BASE + '/css/style.css?') && resolved.cssLoaded &&
+       resolved.script.startsWith(BASE + '/js/main.js?'), JSON.stringify(resolved));
+    await page.getByRole('link', { name: 'Browse Products', exact: true }).click();
+    await page.waitForURL(BASE + '/products.html');
+    ok(`${label}: 404 Browse Products opens the real product index`, page.url() === BASE + '/products.html');
+    const slashResponse = await page.goto(BASE + slashless, { waitUntil: 'load' });
+    await page.waitForTimeout(150);
+    ok(`${label}: unknown slashless path keeps its 404, query and fragment without retrying`,
+       slashResponse.status() === 404 && page.url() === BASE + slashless, page.url());
+    const doubleResponse = await page.goto(BASE + doubleSlash, { waitUntil: 'load' });
+    await page.waitForTimeout(150);
+    ok(`${label}: a double-slash missing path cannot trigger an off-origin retry`,
+       doubleResponse.status() === 404 && page.url() === BASE + doubleSlash, page.url());
+    await ctx.close();
+  }
+}
+async function testSearchLandingPages() {
+  console.log('\n── Search landing pages at 320px ──');
+  const { ctx } = await makeContext({ viewport: { width: 320, height: 844 } });
+  const page = await ctx.newPage();
+  for (const slug of [
+    'how-to-choose-procreate-brushes', 'best-procreate-brushes-for-anime',
+    'how-to-make-digital-art-look-traditional', 'how-to-create-realistic-skin-in-procreate',
+    'best-procreate-brushes-for-portraits', 'procreate-blending-brushes-guide',
+    'how-to-paint-realistic-hair-in-procreate', 'best-procreate-brushes-for-line-art',
+  ]) {
+    const response = await page.goto(`${BASE}/blog/${slug}/`, { waitUntil: 'load' });
+    const state = await page.evaluate(() => ({
+      overflow: document.documentElement.scrollWidth > innerWidth + 1,
+      title: document.title,
+      heading: !!document.querySelector('main h1'),
+      bodyLinks: document.querySelectorAll('.article-body a[href]').length,
+    }));
+    ok(`article is readable and linked: ${slug}`, response.status() === 200 && !state.overflow && state.heading && state.bodyLinks > 0, JSON.stringify(state));
+  }
+  await ctx.close();
+}
+async function testCanvasCalculator() {
+  console.log('\n── Canvas calculator and analytics-disabled behavior ──');
+  const { ctx } = await makeContext({}, 'doNotTrack');
+  const page = await ctx.newPage();
+  const initialErrors = pageErrors.length;
+  await page.goto(BASE + '/tools/canvas-calculator/', { waitUntil: 'load' });
+  await page.locator('[data-preset="a4"]').click();
+  ok('A4 preset produces the stated 2480 × 3508 pixels',
+     (await page.locator('#out-px').textContent()).replace(/,/g, '') === '2480 × 3508 px');
+  await page.locator('[data-preset="a3"]').click();
+  ok('A3 preset produces the stated 3508 × 4961 pixels',
+     (await page.locator('#out-px').textContent()).replace(/,/g, '') === '3508 × 4961 px');
+  await page.locator('#calc-unit').selectOption('in');
+  await page.locator('#calc-w').fill('8.5');
+  await page.locator('#calc-h').fill('11');
+  await page.locator('#calc-dpi').fill('300');
+  ok('decimal inch dimensions convert to US Letter at 300 DPI',
+     (await page.locator('#out-px').textContent()).replace(/,/g, '') === '2550 × 3300 px');
+  await page.locator('#calc-unit').selectOption('px');
+  await page.locator('#calc-w').fill('20000');
+  ok('large dimensions are not silently clipped to 16384 pixels',
+     (await page.locator('#out-px').textContent()).replace(/,/g, '').startsWith('20000 ×'));
+  await page.locator('#calc-w').fill('');
+  ok('invalid input clears stale calculation results', (await page.locator('#out-px').textContent()) === '—');
+  ok('layer numbers are disclosed as assumptions, not verified Procreate limits',
+     (await page.locator('.calc-layers').textContent()).includes("not Procreate's internal model"));
+  ok('preset buttons work with analytics disabled and no JavaScript errors',
+     pageErrors.length === initialErrors && await page.evaluate(() => typeof window.gtag === 'undefined'), pageErrors.slice(initialErrors).join('; '));
+  await ctx.close();
+}
 async function testPrivacy() {
   console.log('\n── Analytics behavior and privacy controls (Google tag stubbed) ──');
   const preview = await makeContext();
@@ -267,6 +374,9 @@ try {
   await testPayhip();
   await testJourneys();
   await testSearch();
+  await testRecovery404();
+  await testSearchLandingPages();
+  await testCanvasCalculator();
   await testPrivacy();
   ok('no uncaught JavaScript errors in tested pages', pageErrors.length === 0, pageErrors.join('; '));
 } catch (e) { failed++; problems.push(e.stack || String(e)); console.error(e); }

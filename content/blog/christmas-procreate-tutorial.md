@@ -6,7 +6,6 @@ date: 2026-09-14
 modified: 2026-09-14
 category: Tutorials
 howto: true
-totaltime: PT50M
 primary_keyword: Christmas Procreate tutorial
 secondary_keywords: [Christmas card Procreate, holiday Procreate brushes, digital Christmas card, Procreate washi tape brushes]
 search_intent: Informational with commercial investigation

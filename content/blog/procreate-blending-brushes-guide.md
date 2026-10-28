@@ -1,9 +1,10 @@
 ---
 title: Procreate Blending Brushes: How to Blend Without Plastic Skin
+seo_title: Procreate Blending Brushes: How to Keep Texture
 slug: procreate-blending-brushes-guide
-description: Learn how Procreate blending brushes work, when to use Smudge, and how to keep texture while building soft digital-paint transitions.
+description: Compare Smudge, textured blenders and painting over transitions in Procreate. Practise soft edges without losing the texture of your art.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-10-28
 category: Tutorials
 primary_keyword: Procreate blending brushes
 secondary_keywords: [best blending brush for Procreate, how to blend in Procreate, Procreate smudge brush, digital painting blending]
@@ -68,6 +69,12 @@ Paint three overlapping circles with a light, middle, and shadow colour. Make th
 3. Paint the transition manually without Smudge.
 
 Compare them at thumbnail size. Then add one hard edge to each. The exercise teaches you that a good painting usually needs all three behaviours, not one perfect blend.
+
+## Recover an over-blended transition
+
+If the transition has become grey or the shape has disappeared, stop smudging. Repaint the light and shadow shapes, add an intermediate colour where the edge needs it, and make a few short blending strokes rather than dragging across the whole area. Restore one firm edge and compare the result at thumbnail size.
+
+For a complete portrait example, follow the [realistic skin workflow](/blog/how-to-create-realistic-skin-in-procreate/); its value and edge decisions matter more than choosing a particular paid brush.
 
 ## Common blending mistakes
 

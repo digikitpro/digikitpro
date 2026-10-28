@@ -67,6 +67,11 @@ jobs:
           INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY || '2a0c816c785f97257c6a69f2d5cc3c47' }}
         run: python3 tools/build.py
 
+      - name: Check generated search markup and sitemaps
+        env:
+          SITE_URL: https://digikitpro.shop
+        run: python3 tools/qa_seo.py
+
       - name: Commit auto-sync results
         id: commit
         run: |

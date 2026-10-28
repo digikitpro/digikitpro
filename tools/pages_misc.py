@@ -498,8 +498,11 @@ def build_misc():
     write("search.html", html_out)
 
     # ── 404 ──
+    # GitHub Pages serves 404.html at the *requested* URL, not /404.html.
+    # Root the shared header, footer, styles and scripts even for an unknown
+    # path several levels deep (and for visitors with JavaScript disabled).
     html_out = head("Page not found, DigiKitPro", "That page doesn't exist, but the brushes do. Browse the full DigiKitPro catalog.", SITE_URL + "/404.html", 0,
-                      robots="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1")
+                      robots="noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1", base_href="/")
     html_out += header(0)
     html_out += f"""
 <main id="main"><section class="section"><div class="wrap narrow" style="text-align:center;padding:6rem 0">
@@ -507,17 +510,8 @@ def build_misc():
   <h1>This canvas is blank.</h1>
   <p class="lead">The page you're looking for didn't make it to the final artwork.</p>
   <div class="hero-ctas" style="justify-content:center"><a class="btn btn-gold" href="index.html">Back to Home</a><a class="btn btn-line" href="products.html">Browse Products</a></div>
+  <p>Or explore <a class="text-link" href="freebies.html">free brushes</a> and <a class="text-link" href="blog.html">art tutorials</a>.</p>
 </div></section></main>
-  <script>
-  // GitHub Pages serves this file for unknown URLs. Many "not found" hits are just
-  // directory-style links missing their trailing slash; retry that form silently.
-  (function () {{
-    var p = location.pathname;
-    if (location.protocol !== "file:" && /\\/[^\\/\\.]+$/.test(p) && p.length > 1) {{
-      location.replace(p + "/" + location.search + location.hash);
-    }}
-  }})();
-  </script>
 {footer(0)}"""
     write("404.html", html_out)
 
