@@ -40,11 +40,19 @@ class Page(HTMLParser):
         self.meta = defaultdict(list)
         self.schemas, self.times = [], []
         self.hero_src = None
+        self.skip_href = None
+        self.local_refs = []
         self._title = self._h1 = self._json = self._hero = False
         self._schema_text = ""
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag in ("a", "link", "script", "img"):
+            ref = a.get("href") if tag in ("a", "link") else a.get("src")
+            if ref:
+                self.local_refs.append(ref)
+        if tag == "a" and "skip-link" in a.get("class", "").split():
+            self.skip_href = a.get("href")
         if tag == "title":
             self._title = True
             self.titles.append("")
@@ -277,7 +285,11 @@ def main():
         check(any("noindex" in r.lower() for r in page.meta["robots"]), f"{noindex}: expected noindex")
         check(expected_url(ROOT / noindex) not in urls, f"{noindex}: noindex page appears in sitemap")
     error_page = pages[(ROOT / "404.html").resolve()]
-    check(error_page.bases == ["/"], "404.html needs a root base for arbitrary nested URLs")
+    check(not error_page.bases, "404.html must not redirect same-page fragments via a base element")
+    check(error_page.skip_href == "#main", "404.html skip link must target its own main content")
+    for ref in error_page.local_refs:
+        if not ref.startswith(("#", "/", "http:", "https:", "mailto:", "tel:", "data:")):
+            check(False, f"404.html needs a root-relative asset or link: {ref}")
     check("location.replace(p +" not in (ROOT / "404.html").read_text(encoding="utf-8"), "404.html must not retry unknown paths")
 
     check(article_seo_title({"title": "An unusually long article title without any natural break that should remain whole"}).startswith("An unusually long article title without any natural break that should remain whole"), "long title was cut mid-word")
