@@ -17,7 +17,8 @@ from urllib.parse import unquote, urljoin, urlsplit
 import xml.etree.ElementTree as ET
 
 from core import home_href
-from pages_blog import article_seo_title
+from pages_blog import article_seo_title, load_articles, md_to_html, _truthy
+from seo_engine import should_fill
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = os.environ.get("SITE_URL", "https://digikitpro.shop").rstrip("/")
@@ -345,6 +346,56 @@ def main():
     check(article_seo_title({"title": "Long title: supporting detail that can be omitted", "seo_title": "A helpful short title"}) == "A helpful short title | DigiKitPro", "manual search title override failed")
     hair = pages[(ROOT / "blog/how-to-paint-realistic-hair-in-procreate/index.html").resolve()]
     check(hair.titles == ["How to Paint Realistic Hair in Procreate | DigiKitPro"], "hair article search title regressed")
+
+    # Catch stale generated pages after an editor changes source metadata.
+    catalog = json.loads((ROOT / "data/products.json").read_text(encoding="utf-8"))
+    for product in catalog:
+        slug = product["slug"]
+        page = pages.get((ROOT / "products" / slug / "index.html").resolve())
+        check(page is not None, f"{slug}: missing generated product page")
+        if page is None:
+            continue
+        check(page.titles == [product["seoTitle"]], f"{slug}: title differs from product source")
+        check(page.meta["description"] == [product["seoDesc"]], f"{slug}: description differs from product source")
+        check(page.meta["twitter:title"] == [product["seoTitle"]], f"{slug}: Twitter title differs from product source")
+        check(page.meta["twitter:description"] == [product["seoDesc"]], f"{slug}: Twitter description differs from product source")
+
+    # These are deliberately hand-written. The scheduled SEO enrichment treats
+    # auto-owned records and exact name + brand placeholders as regenerable.
+    curated = {
+        "portrait-mastery-kit-46-brushes", "portrait-skin-brushes-procreate", "artista-studio-kit-76-brushes",
+        "anime-soft-style-studio-kit", "anime-soft-style-brushes-100", "essential-line-art-sketch-kit",
+        "free-fine-liner-brushes-100", "master-line-art-vault-300", "watercolor-studio-kit-50-brushes",
+        "liner-marker-studio-39-brushes", "ultimate-portrait-mastery-bundle", "procreate-mega-bundle-650",
+        "professional-charcoal-studio", "procreate-starter-guide-free-ebook", "free-chalkboard-artists-toolkit",
+        "free-color-vault-1200-swatches", "professional-digital-sketchbook", "dreamy-pastel-art-kit",
+        "pro-sketch-traditional-art-kit",
+    }
+    by_slug = {p["slug"]: p for p in catalog}
+    for slug in sorted(curated):
+        product = by_slug.get(slug)
+        check(product is not None, f"{slug}: curated SEO product missing")
+        if product is not None:
+            check(not should_fill(product, "seoTitle") and not should_fill(product, "seoDesc"),
+                  f"{slug}: scheduled SEO enrichment would replace curated metadata")
+
+    for article in load_articles():
+        slug = article["slug"]
+        path = ROOT / "blog" / slug / "index.html"
+        page = pages.get(path.resolve())
+        check(page is not None, f"{slug}: missing generated article")
+        if page is None:
+            continue
+        check(page.titles == [article_seo_title(article)], f"{slug}: title differs from article source")
+        check(page.meta["description"] == [article["description"]], f"{slug}: description differs from article source")
+        if _truthy(article.get("lead_before_hero")):
+            first = md_to_html(article["body"].strip()).split("\n", 1)[0]
+            markup = path.read_text(encoding="utf-8")
+            lead_pos = markup.find('<div class="prose article-lead">')
+            hero_pos = markup.find('<figure class="article-hero ')
+            check(first.startswith("<p>") and bool(article.get("hero")), f"{slug}: lead needs an opening paragraph and hero")
+            check(first in markup and markup.count(first) == 1, f"{slug}: opening paragraph missing or duplicated")
+            check(0 <= lead_pos < hero_pos and first in markup[lead_pos:hero_pos], f"{slug}: opening paragraph must precede hero")
 
     print(f"SEO QA: {checks} checks across {len(html_files)} pages, {len(urls)} sitemap URLs, {image_count} sitemap images, {article_count} articles and {howto_count} HowTo blocks")
     if errors:

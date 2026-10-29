@@ -28,6 +28,9 @@ const paths = [
   '/thank-you.html?lead=free-fine-liner-brushes-100',
   '/blog/how-to-choose-procreate-brushes/',
   '/blog/best-procreate-brushes-for-anime/',
+  '/blog/best-procreate-brushes-for-beginners/',
+  '/blog/how-to-make-digital-art-look-traditional/',
+  '/blog/how-to-create-realistic-skin-in-procreate/',
   '/tools/canvas-calculator/',
   '/404.html',
 ];

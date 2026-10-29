@@ -204,6 +204,15 @@ def build_blog():
     for a in arts:
         depth = 2
         body_html = md_to_html(a["body"].strip(), depth)
+        # Opt-in guides can put their actual opening paragraph before the
+        # product-cover hero, so readers get an answer without first scrolling
+        # past the artwork. Move it rather than duplicating the article text.
+        lead_html = ""
+        if a.get("hero") and _truthy(a.get("lead_before_hero")):
+            lead = re.match(r"^(<p>.*?</p>)(?:\n|$)", body_html, re.S)
+            if lead:
+                lead_html = f'    <div class="prose article-lead">{lead.group(1)}</div>\n'
+                body_html = body_html[lead.end():]
         marker = "__PRODUCTS__"
         tools = tools_mention(a, depth)
         if marker in body_html:
@@ -230,7 +239,18 @@ def build_blog():
                 # required tools, and the articles don't verify a completion
                 # time. Do not turn either into a structured-data claim.
                 schemas += schema_howto(a["title"], a["description"], steps)
-        hero_ss = img_srcset(depth, a.get("_pslug",""), a.get("_im") or {}, "(min-width: 860px) 760px, 94vw")
+        compact_hero = bool(lead_html)
+        hero_class = "article-hero article-hero--compact" if compact_hero else "article-hero"
+        hero_product = BY_SLUG.get(a.get("_pslug"))
+        hero_name = hero_product["name"] if hero_product else SITE_NAME
+        hero_alt = f"Product cover: {hero_name}" if compact_hero else a["title"]
+        hero_sizes = "(min-width: 860px) 21rem, (min-width: 544px) 32rem, 94vw" if compact_hero else "(min-width: 860px) 760px, 94vw"
+        hero_im = a.get("_im") or {}
+        hero_ss = img_srcset(depth, a.get("_pslug",""), hero_im, hero_sizes)
+        # Some original covers and card images have the same width; duplicate
+        # width descriptors make a srcset invalid. Use the full source alone.
+        if compact_hero and hero_im.get("cardW") == hero_im.get("fullW"):
+            hero_ss = ""
         og_img = (asset_abs(a["products"][0], BY_SLUG[a["products"][0]]["images"]["card"])
                   if a.get("products") and a["products"][0] in BY_SLUG else None)
         og_size = (a.get("_im", {}).get("cardW"), a.get("_im", {}).get("cardH")) if og_img else None
@@ -247,7 +267,7 @@ def build_blog():
       <h1>{esc(a['title'])}</h1>
       <p class="article-meta">By the {SITE_NAME} studio · Published <time datetime="{a['date']}">{a['date']}</time>{f' · Updated <time datetime="{a["modified"]}">{a["modified"]}</time>' if a.get('modified') and a.get('modified') != a.get('date') else ''}</p>
     </header>
-    {f'<figure class="article-hero"><img src="{a["hero"] if is_abs(a["hero"]) else rel(depth, a["hero"])}"{hero_ss} width="{a.get("heroW",1200)}" height="{a.get("heroH",800)}" alt="{esc(a["title"])}" fetchpriority="high" decoding="async"><figcaption>Artwork shown: {esc(BY_SLUG[a["products"][0]]["name"]) if a.get("products") else SITE_NAME}</figcaption></figure>' if a.get('hero') else ''}
+{lead_html}    {f'<figure class="{hero_class}"><img src="{a["hero"] if is_abs(a["hero"]) else rel(depth, a["hero"])}"{hero_ss} width="{a.get("heroW",1200)}" height="{a.get("heroH",800)}" alt="{esc(hero_alt)}" fetchpriority="high" decoding="async"><figcaption>Artwork shown: {esc(hero_name)}</figcaption></figure>' if a.get('hero') else ''}
     <div class="prose article-body">{body_html}</div>
     {share_row}
     {rel_html}

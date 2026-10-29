@@ -1,9 +1,11 @@
 ---
 title: How to Make Digital Art Look Traditional: 7 Practical Techniques
+seo_title: How to Make Digital Art Look Traditional in Procreate
 slug: how-to-make-digital-art-look-traditional
 description: Give Procreate art a traditional feel with paper texture, broken edges and layered marks. Compare dry-media and watercolor techniques.
 date: 2026-09-14
-modified: 2026-10-28
+modified: 2026-10-29
+lead_before_hero: true
 category: Tutorials
 primary_keyword: how to make digital art look traditional
 secondary_keywords: [traditional digital art Procreate, Procreate paper texture, digital painting texture, traditional media brushes]
@@ -14,13 +16,19 @@ products: [professional-digital-sketchbook, professional-charcoal-studio, dreamy
 related: [how-to-create-realistic-watercolor-in-procreate, how-to-create-realistic-skin-texture-in-procreate, procreate-blending-brushes-guide]
 ---
 
-Traditional media does not look handmade because it has a special colour grade. It looks handmade because the tool, surface, pressure, and medium interact imperfectly. Pencil catches paper tooth, charcoal breaks at the edge, pastel leaves a visible deposit, and watercolor changes as it overlaps.
+To give digital art a traditional feel in Procreate, build visible marks as you paint: let edges break, layer colour and use paper texture selectively. A paper overlay supports the marks underneath; it cannot replace them.
 
-To make digital art look traditional in Procreate, reproduce those decisions deliberately. Do not cover a clean painting with one texture filter at the end and expect it to carry the whole image.
+Traditional media has a distinctive look because the tool, surface, pressure and medium interact. Pencil catches paper tooth, charcoal breaks at the edge, pastel leaves a visible deposit, and watercolor changes as it overlaps. Recreate the choices you notice in your reference rather than applying a single effect over a finished painting.
 
 ## Compare a dry mark with a wash
 
-Paint one small object twice using the same light source. For a dry-media version, build form with broken strokes and let some of the surface show through. For a watercolor-style version, overlap translucent shapes and retain a few visible edges. Hide any paper layer afterward: the mark-making should still suggest the medium.
+Paint one small object twice using the same light source and canvas size:
+
+1. For the dry-media version, use a pencil- or charcoal-like brush to build form with broken strokes. Let some of the surface show through.
+2. For the watercolor-style version, overlap translucent shapes and retain a few visible edges instead of blending every transition.
+3. Hide any paper texture layer and compare the studies at thumbnail size. If the object no longer reads, adjust the shapes and values before adding more texture.
+
+Built-in textured and painting brushes are enough to try this exercise. If you later use a paper overlay, adjust its opacity so it supports the marks instead of competing with them.
 
 Built-in brushes are enough for this test. The [free Chalkboard Artist’s Toolkit](/products/free-chalkboard-artists-toolkit/) offers chalk marks to explore; chalk and charcoal are different media, so compare them with the separate [Charcoal Studio](/products/professional-charcoal-studio/) only if a charcoal workflow is what you need.
 

@@ -324,6 +324,10 @@ h3{font-size:1.15rem}
 .article-hero img{width:100%;height:auto;object-fit:contain;background:none}
 .article-hero{background:var(--mat)}
 .article-hero figcaption{padding:.6rem 1rem;font-size:.75rem;color:var(--muted);background:var(--surface)}
+/* Opt-in guides keep their complete cover visible without making readers
+   scroll past an oversized product graphic to reach the tutorial. */
+.article-hero--compact{max-width:32rem}
+@media(min-width:860px){.article-hero--compact{float:right;width:min(32%,21rem);margin:0 0 1.5rem 2rem}}
 
 /* ── why ── */
 .why-grid{grid-template-columns:1fr}
