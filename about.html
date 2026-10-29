@@ -120,8 +120,8 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
-  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
+  <link rel="stylesheet" href="css/style.css?v=ba6fac389fe3bf14fa33642221c48f4f">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap,.header-actions [data-menu-toggle]{display:none}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="feed.xml">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{}};</script>
   <script src="js/search-index.js" defer></script>
@@ -133,7 +133,7 @@
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is DigiKitPro?", "acceptedAnswer": {"@type": "Answer", "text": "DigiKitPro is an independent digital art studio offering Procreate brush sets, bundles, color palettes, planners and guides. Products are digital downloads sold through Payhip; no physical items are shipped."}}, {"@type": "Question", "name": "How do I receive my files after buying?", "acceptedAnswer": {"@type": "Answer", "text": "Payhip handles checkout and digital delivery. Check the Payhip confirmation and receipt for access details; if you need help, use the contact page."}}, {"@type": "Question", "name": "Do DigiKitPro brushes work on Windows or Android?", "acceptedAnswer": {"@type": "Answer", "text": "The .brushset brush files require the Procreate app on an iPad. Some bundles also include PNG or other files that can open in apps that support those formats. Check the product description for the file types included."}}, {"@type": "Question", "name": "Are there free Procreate brushes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Free brush packs, a color palette collection and a free starter guide are listed on the Free Brushes page. You can start with the fine liner set or the chalkboard toolkit."}}, {"@type": "Question", "name": "Which currencies and payment methods are accepted?", "acceptedAnswer": {"@type": "Answer", "text": "Prices are listed in USD. Review the payment options, currency and total shown by Payhip before completing checkout."}}, {"@type": "Question", "name": "Is DigiKitPro affiliated with Procreate or Savage Interactive?", "acceptedAnswer": {"@type": "Answer", "text": "No. DigiKitPro is an independent store. Procreate is a trademark of Savage Interactive Pty Ltd, and DigiKitPro is not affiliated with or endorsed by Savage Interactive."}}, {"@type": "Question", "name": "How do I contact DigiKitPro?", "acceptedAnswer": {"@type": "Answer", "text": "Use the contact form on the Payhip store. You can use it for questions about products, orders and licensing."}}]}</script>
 </head>
 <body>
-<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
+<noscript><div class="noscript-bar">JavaScript is off. Browse products and guides; search and filters need JavaScript.</div></noscript>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-inner">
@@ -163,6 +163,10 @@
       <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
+      <noscript><details class="noscript-menu">
+        <summary class="icon-btn" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+        <nav class="mobile-nav" aria-label="Mobile navigation"><a href="freebies.html">Free Brushes</a><a href="products.html">Products</a><a href="bundles.html">Bundles</a><a href="blog.html">Articles</a><a href="tools/">Tools</a><a href="about.html">About</a><a class="btn btn-gold" href="products.html">Browse kits</a></nav>
+      </details></noscript>
     </div>
   </div>
   <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile"><a href="freebies.html">Free Brushes</a><a href="products.html">Products</a><a href="bundles.html">Bundles</a><a href="blog.html">Articles</a><a href="tools/">Tools</a><a href="about.html">About</a><a class="btn btn-gold" href="products.html" rel="noopener">Browse kits</a></nav>

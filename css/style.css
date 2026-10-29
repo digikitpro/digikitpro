@@ -78,7 +78,13 @@ h3{font-size:1.15rem}
 .mobile-nav.open{display:flex}
 .mobile-nav a{padding:.75rem .2rem;color:var(--text);border-bottom:1px solid var(--border);font-weight:500}
 .mobile-nav a.btn{color:#181206;border:none;justify-content:center;margin-top:.8rem}
-@media(min-width:960px){.main-nav{display:flex}.menu-btn{display:none}.mobile-nav{display:none!important}}
+/* Native details/summary keeps the mobile menu usable without JavaScript,
+   without a permanently expanded sticky header covering the page. */
+.noscript-menu summary{list-style:none}
+.noscript-menu summary::-webkit-details-marker{display:none}
+.noscript-menu .mobile-nav{position:absolute;top:100%;left:0;right:0;max-height:calc(100vh - 76px);overflow:auto;box-shadow:var(--shadow)}
+.noscript-menu[open] .mobile-nav{display:flex}
+@media(min-width:960px){.main-nav{display:flex}.menu-btn,.noscript-menu{display:none}.mobile-nav{display:none!important}}
 
 /* ── search ── */
 .search-overlay{position:fixed;inset:0;z-index:150;background:rgba(6,6,8,.72);backdrop-filter:blur(6px);padding:4.5rem 16px 16px}
@@ -368,10 +374,28 @@ h3{font-size:1.15rem}
 .crumb-ic{color:#5c594f}
 
 /* ── product page ── */
-.pdp{display:grid;gap:2rem;padding:1.6rem 0 1rem}
-@media(min-width:960px){.pdp{grid-template-columns:1.05fr .95fr;gap:3rem}}
+.pdp{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"info" "media" "assurance";gap:2rem;padding:1.6rem 0 1rem}
+.pdp-info,.pdp-media,.pdp-assurance{min-width:0}
+.pdp-info{grid-area:info}
+.pdp-media{grid-area:media}
+.pdp-assurance{grid-area:assurance;display:flex;flex-direction:column;gap:.9rem}
+.pdp-assurance .licence-line{margin-top:0}
+@media(min-width:960px){.pdp{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);grid-template-rows:auto 1fr;grid-template-areas:"media info" "media assurance";gap:2rem 3rem;align-items:start}}
+.pdp-summary{display:flow-root}
+.pdp-summary .pdp-short{margin-top:.9rem}
+.pdp-cover-peek{display:none}
+@media(max-width:959px){
+  .pdp-cover-peek{display:block;float:right;width:clamp(78px,26vw,104px);margin:.9rem 0 .5rem 1rem;color:var(--muted);font-size:.72rem;text-align:center;line-height:1.35}
+  .pdp-cover-frame{display:block;aspect-ratio:4/5;margin-bottom:.35rem;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--mat)}
+  .pdp-cover-frame img{width:100%;height:100%;object-fit:contain}
+  .pdp-info .buy-panel{gap:.85rem;margin:.3rem 0}
+}
+.pdp-quicklinks{display:flex;flex-wrap:wrap;gap:.65rem 1.15rem}
+.pdp-quicklinks a{font-size:.85rem;color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+#product-images,.psec h2[id]{scroll-margin-top:6rem}
 .gal-main{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--mat)}
-.gal-main img{width:100%;cursor:zoom-in}
+.gal-main img{width:100%}
+.gal-main img[data-gallery-zoom]{cursor:zoom-in}
 .gal-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
 .gal-thumb{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;padding:0;background:var(--surface-2);cursor:pointer;opacity:.65;transition:opacity .2s,border-color .2s}
 .gal-thumb{background:var(--mat)}
@@ -1647,11 +1671,6 @@ a.hero-card--link:hover .hero-cap b{text-decoration:underline;text-underline-off
 }
 @media(max-width:350px){.lang-cd{display:none}}
 @media(min-width:960px) and (max-width:1199px){.main-nav{gap:.85rem}}
-/* Grid children must be allowed to shrink; otherwise long product names can
-   make the column wider than a 320px screen even with page overflow clipped. */
-.pdp{grid-template-columns:minmax(0,1fr)}
-.pdp-info,.pdp-media{min-width:0}
-@media(min-width:960px){.pdp{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}}
 /* The offer and controls must be visible immediately, not after an entrance
    delay. Keep the existing typography and artwork; remove the looping float. */
 html.js-motion .hero-in .hero-copy > *,

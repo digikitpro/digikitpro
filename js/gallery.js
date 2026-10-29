@@ -28,7 +28,8 @@
    • Progressive enhancement: with JS off the page still shows the real
      cover, the real file behind every tile and the Pin button. Nothing is
      hidden behind a script that failed to run.
-   • A click never navigates, never reloads and never moves the page.
+   • An ordinary click updates the frame without navigation or page scroll;
+     modified clicks keep the link's normal browser behaviour.
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
   "use strict";
@@ -168,6 +169,8 @@
     }
 
     var figure = tag(mainImage.parentNode) === "FIGURE" ? mainImage.parentNode : null;
+    var hint = $("[data-gallery-hint]", gallery);
+    if (hint) hint.textContent = "Select a preview; open the main image to zoom.";
     var swiped = 0;
     var lightbox = null;
     var displayed = null;   /* what is on screen right now, known good */
@@ -293,6 +296,10 @@
       displayed = previous;
       previous = null;
       paint(displayed);
+      /* Restore the selected tile, counter and accessible name as well as
+         the picture; otherwise they describe the image that failed. */
+      showImage(displayed.index, { noScroll: true, silent: true });
+      if (lightbox && lightbox.open) lightbox.render();
     }
     function probe(url) {
       var im = new Image();
@@ -330,15 +337,16 @@
     thumbEls.forEach(function (el, idx) {
       if (tag(el) === "A") { el.setAttribute("role", el.getAttribute("role") || "button"); el.setAttribute("title", el.getAttribute("title") || "Show this image in the main frame"); }
       el.addEventListener("click", function (ev) {
-        /* Buttons do not navigate; the guards are for a tile still nested in
-           a link, so a tap can never reload the page, open the raw image, or
-           fire the product card / Pinterest link around it. */
+        /* Leave modified clicks to the browser (open image in a new tab,
+           download, etc.). A plain click enhances the link into a control. */
+        if (tag(el) === "A" && (ev.button !== 0 || ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey)) return;
         ev.preventDefault();
         ev.stopPropagation();
         showImage(idx);
       });
       if (tag(el) === "A") {
         el.addEventListener("keydown", function (ev) {
+          if (ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey) return;
           if (ev.key === "Enter" || ev.key === " " || ev.key === "Spacebar") { ev.preventDefault(); ev.stopPropagation(); showImage(idx); }
         });
       }

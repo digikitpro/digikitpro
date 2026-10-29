@@ -120,8 +120,8 @@
   <link rel="dns-prefetch" href="https://translate.google.com">
   <link rel="preload" href="../../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../../css/style.css?v=2241ca2f8e4685f1fc130c685888ad18">
-  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{display:none}@media(max-width:959px){.mobile-nav{display:flex}.menu-btn{display:none}}</style></noscript>
+  <link rel="stylesheet" href="../../css/style.css?v=ba6fac389fe3bf14fa33642221c48f4f">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap,.header-actions [data-menu-toggle]{display:none}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
  <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "tool", "slug": "canvas-calculator", "name": "Procreate Canvas Size & DPI Calculator"}};</script>
   <script src="../../js/search-index.js" defer></script>
@@ -135,7 +135,7 @@
  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What canvas size should I use in Procreate for Instagram?", "acceptedAnswer": {"@type": "Answer", "text": "Common starting dimensions are 1080×1080 px for a square, 1080×1350 px for a portrait and 1080×1920 px for a story. Screen display uses pixel dimensions; DPI metadata does not change a fixed pixel canvas."}}, {"@type": "Question", "name": "What DPI should I use for Procreate prints?", "acceptedAnswer": {"@type": "Answer", "text": "For print, 300 DPI is a common starting point; confirm the requirements with your printer. At a fixed physical size, a higher DPI produces more pixels. For a fixed pixel canvas, changing DPI changes the calculated print size, not the pixel count."}}, {"@type": "Question", "name": "How does Procreate calculate layer limits?", "acceptedAnswer": {"@type": "Answer", "text": "Actual layer limits depend on the canvas, device and app. This calculator uses assumed memory budgets to illustrate how size affects a rough estimate; it is not Procreate's internal model. Check the layer limit shown in Procreate on your iPad."}}, {"@type": "Question", "name": "Why is my Procreate file so big?", "acceptedAnswer": {"@type": "Answer", "text": "For an 8-bit RGBA layer, width × height × 4 bytes is an uncompressed pixel estimate. A 2480×3508 px layer is about 33.2 MiB. Actual exported size varies with format, compression, bit depth and layer content."}}, {"@type": "Question", "name": "What is the best canvas size for portraits in Procreate?", "acceptedAnswer": {"@type": "Answer", "text": "For a portrait intended to print, 3000×4000 px at 300 DPI gives a print size of roughly 10×13.3 inches. For screen work, choose the pixel dimensions needed for the destination. Check Procreate's actual layer limit before you begin."}}, {"@type": "Question", "name": "Does canvas size affect Apple Pencil performance?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Larger canvases use more RAM and can slow down brush strokes and blending, especially on 4GB iPads. If Procreate feels laggy, try a smaller canvas or merge layers you no longer need to edit."}}]}</script>
 </head>
 <body>
-<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
+<noscript><div class="noscript-bar">JavaScript is off. Browse products and guides; search and filters need JavaScript.</div></noscript>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-inner">
@@ -165,6 +165,10 @@
       <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
+      <noscript><details class="noscript-menu">
+        <summary class="icon-btn" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+        <nav class="mobile-nav" aria-label="Mobile navigation"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a><a class="btn btn-gold" href="../../products.html">Browse kits</a></nav>
+      </details></noscript>
     </div>
   </div>
   <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a><a class="btn btn-gold" href="../../products.html" rel="noopener">Browse kits</a></nav>
