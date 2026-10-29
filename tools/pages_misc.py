@@ -142,11 +142,10 @@ def _catalog_row(p):
         "price": price,
         "brand": "DigiKitPro",
         "condition": "new",
-        # Verified Google product taxonomy leaf (id 4951, taxonomy v2021-09-21).
-        # Pinterest catalog diagnostics flag anything shallower (Warning 126),
-        # and the previous 3-segment value skipped the "Computer Software"
-        # level, so it matched no real node at all.
-        "google_product_category": "Software > Computer Software > Multimedia & Design Software > Graphic Design & Illustration Software",
+        # Pinterest makes google_product_category optional. These downloads
+        # include brushes, planners, illustrations and books; none has been
+        # individually verified as graphic-design software, so omit the
+        # blanket taxonomy rather than misclassifying the catalog.
         "product_type": cat_path,
         "item_group_id": p.get("category") or "",
     }
@@ -155,8 +154,9 @@ def _catalog_row(p):
 def build_pinterest_feed():
     """Pinterest product-catalog data source: one row per PAID product, the
     exact fields Pinterest's catalog/data-source ingestion documents (id,
-    title, description, link, image_link, availability, price, brand,
-    condition, google_product_category). Free items are Rich-Pin-only (see
+    title, description, link, image_link, availability, price, brand and
+    condition). Its optional Google category is omitted until each product
+    can be classified accurately. Free items are Rich-Pin-only (see
     _catalog_row docstring) so they are left out of this feed on purpose.
 
     Written as both CSV (data-source upload / spreadsheet review) and XML/RSS
@@ -168,8 +168,7 @@ def build_pinterest_feed():
 
     # ── CSV ────────────────────────────────────────────────────────────
     cols = ["id", "title", "description", "link", "image_link", "availability",
-            "price", "brand", "condition", "google_product_category",
-            "product_type", "item_group_id"]
+            "price", "brand", "condition", "product_type", "item_group_id"]
 
     def _csv_cell(v):
         v = str(v).replace('"', '""')
@@ -193,7 +192,6 @@ def build_pinterest_feed():
     <g:price>{esc(r['price'])}</g:price>
     <g:brand>{esc(r['brand'])}</g:brand>
     <g:condition>{esc(r['condition'])}</g:condition>
-    <g:google_product_category>{esc(r['google_product_category'])}</g:google_product_category>
     <g:product_type>{esc(r['product_type'])}</g:product_type>
     <g:item_group_id>{esc(r['item_group_id'])}</g:item_group_id>
   </item>""")
@@ -212,23 +210,26 @@ def build_pinterest_feed():
 
 
 def _google_merchant_book(p):
-    """Books/eBooks are held out of the initial Merchant feed until their
-    identifiers and destination eligibility have been reviewed separately.
-    Google treats eBooks specially for Shopping ads; do not leak them into a
-    broad automatic source just because their pages share the product schema.
+    """Conservatively hold digital books and the PDF travel guide out of the
+    common source. Google excludes eBooks from Shopping ads, although its
+    free-listing treatment can differ. Review destinations and eligibility
+    before making a separate source; this does not remove the organic pages.
     """
-    return p.get("category") == "Guides & eBooks" or "ebook" in p.get("slug", "").lower()
+    formats = (str(x).lower() for x in (p.get("technical") or []))
+    return (p.get("category") == "Guides & eBooks"
+            or "ebook" in p.get("slug", "").lower()
+            or any("pdf travel guide" in x for x in formats))
 
 
 def build_google_merchant_feed():
     """Build a dedicated Google Merchant Center XML source from the catalog.
 
-    This is intentionally not a copy of the Pinterest feed: that feed excludes
-    free items and marks them out of stock because it only covers paid Pins.
-    The Merchant feed contains all currently available non-book products,
-    including free downloads (price 0, in stock), while keeping product links
-    on the claimed DigiKitPro domain. Ebooks are excluded pending a separate
-    Google policy/identifier review.
+    This is not a blanket eligibility claim for digital goods. Hold out
+    zero-price downloads under Google's price requirements and digital books
+    (including the PDF travel guide) pending destination-specific review.
+    All products retain their organic site pages and direct Payhip links.
+    Remaining paid, non-book products still require individual Merchant
+    Center policy and destination review.
 
     Only GTINs and MPNs explicitly present in products.json are emitted. When
     neither is supplied, identifier_exists=no accurately says that the catalog
@@ -237,7 +238,8 @@ def build_google_merchant_feed():
     can fetch its public URL on a schedule.
     """
     products = [p for p in PRODUCTS
-                if not p.get("comingSoon") and not _google_merchant_book(p)]
+                if not p.get("comingSoon") and not p.get("free")
+                and float(p.get("price") or 0) > 0 and not _google_merchant_book(p)]
     items = []
     for p in products:
         slug = p["slug"]
@@ -292,7 +294,7 @@ def build_google_merchant_feed():
 </rss>
 """
     write("google-merchant-feed.xml", xml)
-    print(f"Google Merchant feed: {len(products)} available non-book products -> google-merchant-feed.xml")
+    print(f"Google Merchant feed: {len(products)} paid non-book candidates -> google-merchant-feed.xml (eligibility unverified)")
 
 
 def build_misc():

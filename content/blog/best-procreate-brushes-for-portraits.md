@@ -3,7 +3,7 @@ title: Best Procreate Brushes for Portraits: A Workflow-Based Guide
 slug: best-procreate-brushes-for-portraits
 description: Compare Procreate portrait brushes for sketching, skin, hair and detail. See when a free guide, focused skin set or broader kit may fit.
 date: 2026-09-14
-modified: 2026-10-28
+modified: 2026-10-29
 category: Procreate Brushes
 primary_keyword: best Procreate brushes for portraits
 secondary_keywords: [Procreate portrait brushes, portrait painting brushes for iPad, Procreate skin brushes, digital portrait brush set]
@@ -60,7 +60,7 @@ The [Professional Hair Brushes](/products/professional-hair-brushes/) are the mo
 
 ### For a multi-stage upgrade: Ultimate Portrait Mastery Bundle
 
-The [Ultimate Portrait Mastery Bundle](/products/ultimate-portrait-mastery-bundle/) is catalogued as four kits: a 43-brush line-art and sketch kit, 19 skin brushes, 160 hair stamps, and 30 glitter and shine brushes. It is relevant when you will use all four stages. If you only paint skin, the smaller skin set is a more precise purchase.
+The [Ultimate Portrait Mastery Bundle](/products/ultimate-portrait-mastery-bundle/) is catalogued as four kits: line art and sketch, 19 skin brushes, 160 hair stamps, and 30 glitter and shine brushes. The line-art count needs confirmation because the listing's total and group breakdown disagree. If you only paint skin, the smaller skin set is a more focused option; compare what you already own before buying the bundle.
 
 ## A practical brush test for portraits
 

@@ -356,21 +356,16 @@ def main():
         if page is None:
             continue
         check(page.titles == [product["seoTitle"]], f"{slug}: title differs from product source")
+        check(page.h1s == [product.get("pdpH1") or product["name"]], f"{slug}: H1 differs from product source")
         check(page.meta["description"] == [product["seoDesc"]], f"{slug}: description differs from product source")
         check(page.meta["twitter:title"] == [product["seoTitle"]], f"{slug}: Twitter title differs from product source")
         check(page.meta["twitter:description"] == [product["seoDesc"]], f"{slug}: Twitter description differs from product source")
 
-    # These are deliberately hand-written. The scheduled SEO enrichment treats
-    # auto-owned records and exact name + brand placeholders as regenerable.
-    curated = {
-        "portrait-mastery-kit-46-brushes", "portrait-skin-brushes-procreate", "artista-studio-kit-76-brushes",
-        "anime-soft-style-studio-kit", "anime-soft-style-brushes-100", "essential-line-art-sketch-kit",
-        "free-fine-liner-brushes-100", "master-line-art-vault-300", "watercolor-studio-kit-50-brushes",
-        "liner-marker-studio-39-brushes", "ultimate-portrait-mastery-bundle", "procreate-mega-bundle-650",
-        "professional-charcoal-studio", "procreate-starter-guide-free-ebook", "free-chalkboard-artists-toolkit",
-        "free-color-vault-1200-swatches", "professional-digital-sketchbook", "dreamy-pastel-art-kit",
-        "pro-sketch-traditional-art-kit",
-    }
+    # Hand-authored H1 records are editorially curated. The scheduled SEO
+    # enrichment must not replace their metadata with placeholders; future
+    # auto-synced products without an H1 override remain machine-owned.
+    curated = {p["slug"] for p in catalog if p.get("pdpH1")}
+    check(bool(curated), "no curated product SEO records found")
     by_slug = {p["slug"]: p for p in catalog}
     for slug in sorted(curated):
         product = by_slug.get(slug)
