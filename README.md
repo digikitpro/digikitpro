@@ -185,6 +185,18 @@ Console separately to inspect Google's selected canonicals and indexing.
 For article authors, the optional `seo_title` frontmatter is an **unbranded**
 human-written search title; the generator appends ` | DigiKitPro`. Set `modified`
 only when the visible article has actually changed, not merely on every build.
+For a guide with a hero image, `lead_before_hero: true` moves its opening Markdown
+paragraph above a compact product-cover image without duplicating it. Start the
+article with a real paragraph when using this option; the SEO check verifies the
+rendered order.
+
+Product `seoTitle` and `seoDesc` in `data/products.json` populate search and
+social metadata; `seoDesc` also supplies the Pinterest catalog description.
+Keep claims consistent with the product page and review them when contents or
+requirements change. The scheduled SEO engine preserves custom metadata on
+manually maintained products, but regenerates fields on `auto` products and
+may replace the exact `name | DigiKitPro` placeholder title. Google may display
+its own title and snippet instead of these fields.
 
 Product pages put the offer before the gallery in source order. On phones a
 small cover link leads to the full gallery; on desktop the gallery remains on

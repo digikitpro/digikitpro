@@ -1,9 +1,11 @@
 ---
 title: How to Paint Realistic Skin in Procreate: A Layered Workflow
+seo_title: How to Paint Realistic Skin in Procreate: 8 Steps
 slug: how-to-create-realistic-skin-in-procreate
-description: Paint realistic skin in Procreate with a guide to values, undertones, blending and texture. Built-in brushes work; specialist tools are optional.
+description: Paint skin in Procreate with eight steps for values, undertones, blending and texture. Built-in brushes work; specialist tools are optional.
 date: 2026-09-14
-modified: 2026-10-28
+modified: 2026-10-29
+lead_before_hero: true
 category: Tutorials
 howto: true
 primary_keyword: how to paint realistic skin in Procreate
@@ -15,9 +17,9 @@ products: [portrait-skin-brushes-procreate, portrait-mastery-kit-46-brushes, ult
 related: [how-to-create-realistic-skin-texture-in-procreate, best-procreate-brushes-for-portraits, procreate-blending-brushes-guide]
 ---
 
-Realistic skin in Procreate is not a matter of covering a face with a pore texture. It is a sequence of large decisions: proportion, value, colour temperature, edge control, and only then surface detail. If the first shapes are unclear, adding freckles or noise will make the wrong forms more convincing rather than fixing them.
+For realistic skin in Procreate, build the head and light-and-shadow shapes first, then adjust colour and edges. Add pores or freckles last and only where they support the reference.
 
-This tutorial uses suggested starting points rather than fixed settings. Brush size, opacity, layer count, and colour depend on your canvas, reference, iPad, and style. Work from a well-lit reference and keep the reference visible while you paint.
+This tutorial uses suggested starting points rather than fixed settings. Brush size, opacity, layer count, and colour depend on your canvas, reference, iPad, and style. Work from a well-lit reference and keep the reference visible while you paint; you can follow the steps with built-in brushes.
 
 ## Diagnose the problem before adding texture
 
@@ -83,6 +85,17 @@ Add lashes, pores, freckles, and wrinkles only after the value and edge structur
 Flip the canvas, zoom out, and temporarily hide the texture layer. If the portrait collapses without texture, return to structure, values, or edges. If it still reads, bring texture back at a lower strength than you first used.
 
 Export a working file with layers preserved. For a final image, use the format and colour profile required by the destination; Procreate’s [custom canvas reference](https://help.procreate.com/procreate/handbook/gallery/gallery-create) explains the difference between screen-oriented RGB and print-oriented CMYK choices.
+
+## Rescue an over-smoothed portrait
+
+If the skin looks plastic, keep a copy of your working layer before making changes. Then try this sequence:
+
+1. Hide the texture layer, if you used one, and compare the largest light and shadow shapes with your reference.
+2. Repaint a clear mid-tone or shadow plane where blending has blurred the form; do not smudge the whole face again.
+3. Restore a firm edge at one focal feature, such as an eyelid, and leave a softer edge where the form turns away.
+4. Show the texture layer again and reduce its opacity if the surface competes with the face.
+
+For more ways to compare Smudge with painting over an edge, see the [blending brushes guide](/blog/procreate-blending-brushes-guide/).
 
 ## Common mistakes
 

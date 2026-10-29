@@ -473,7 +473,7 @@ async function testSearchLandingPages() {
   const { ctx } = await makeContext({ viewport: { width: 320, height: 844 } });
   const page = await ctx.newPage();
   for (const slug of [
-    'how-to-choose-procreate-brushes', 'best-procreate-brushes-for-anime',
+    'how-to-choose-procreate-brushes', 'best-procreate-brushes-for-anime', 'best-procreate-brushes-for-beginners',
     'how-to-make-digital-art-look-traditional', 'how-to-create-realistic-skin-in-procreate',
     'best-procreate-brushes-for-portraits', 'procreate-blending-brushes-guide',
     'how-to-paint-realistic-hair-in-procreate', 'best-procreate-brushes-for-line-art',
@@ -488,6 +488,70 @@ async function testSearchLandingPages() {
     ok(`article is readable and linked: ${slug}`, response.status() === 200 && !state.overflow && state.heading && state.bodyLinks > 0, JSON.stringify(state));
   }
   await ctx.close();
+}
+async function testGuideLeads() {
+  console.log('\n── Priority guides: answer, artwork and first exercise ──');
+  const slugs = [
+    'how-to-choose-procreate-brushes', 'best-procreate-brushes-for-anime',
+    'best-procreate-brushes-for-beginners', 'how-to-make-digital-art-look-traditional',
+    'how-to-create-realistic-skin-in-procreate',
+  ];
+  for (const javaScriptEnabled of [true, false]) {
+    const { ctx } = await makeContext({ javaScriptEnabled, reducedMotion: 'reduce' });
+    const page = await ctx.newPage();
+    for (const width of (javaScriptEnabled ? [320, 390, 768, 860, 1024, 1440] : [320, 390, 1440])) {
+      await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
+      for (const slug of slugs) {
+        const response = await page.goto(`${BASE}/blog/${slug}/`, { waitUntil: 'load' });
+        await page.locator('.article-hero img').evaluate(el => el.decode().catch(() => {}));
+        const state = await page.evaluate(() => {
+          const lead = document.querySelector('.article-lead p');
+          const figure = document.querySelector('.article-hero');
+          const image = figure?.querySelector('img');
+          const intro = document.querySelector('.article-body > p:first-child');
+          const header = document.querySelector('.site-header').getBoundingClientRect();
+          if (!lead || !figure || !image || !intro) return { missing: true };
+          const lr = lead.getBoundingClientRect(), fr = figure.getBoundingClientRect(), ir = intro.getBoundingClientRect();
+          const imageRect = image.getBoundingClientRect();
+          const range = document.createRange(); range.selectNodeContents(intro);
+          const overlapsCover = [...range.getClientRects()].some(r => r.width && r.height &&
+            r.left < fr.right - 1 && r.right > fr.left + 1 && r.top < fr.bottom - 1 && r.bottom > fr.top + 1);
+          const sameParagraphs = [...document.querySelectorAll('article p')].filter(p => p.textContent.trim() === lead.textContent.trim()).length;
+          return {
+            ordered: !!(lead.compareDocumentPosition(figure) & Node.DOCUMENT_POSITION_FOLLOWING) &&
+              !!(figure.compareDocumentPosition(intro) & Node.DOCUMENT_POSITION_FOLLOWING),
+            once: sameParagraphs === 1,
+            leadInView: lr.top >= header.bottom && lr.bottom <= innerHeight,
+            imageLoaded: image.complete && image.naturalWidth > 0,
+            wholeCover: getComputedStyle(image).objectFit === 'contain' && imageRect.height > 0 &&
+              Math.abs(imageRect.width / imageRect.height - image.naturalWidth / image.naturalHeight) < 0.02,
+            compact: fr.width <= 513,
+            inBounds: [lr, fr].every(r => r.left >= -1 && r.right <= innerWidth + 1),
+            noPageOverflow: document.documentElement.scrollWidth <= innerWidth + 1,
+            noTextCoverOverlap: !overlapsCover,
+            desktopContent: innerWidth < 860 || (fr.width <= 337 && ir.top < innerHeight),
+          };
+        });
+        const good = response.status() === 200 && !state.missing && Object.values(state).every(Boolean);
+        ok(`${javaScriptEnabled ? 'JS on' : 'JS off'} ${width}px guide: ${slug}`,
+           good, JSON.stringify(state));
+      }
+    }
+    // Verify both optional directions without opening a Payhip checkout.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${BASE}/blog/how-to-choose-procreate-brushes/`, { waitUntil: 'load' });
+    await page.locator('.article-body a[href$="/products/free-fine-liner-brushes-100/"]').first().click();
+    ok(`${javaScriptEnabled ? 'JS on' : 'JS off'} guide free-resource link reaches the product page`,
+       page.url() === `${BASE}/products/free-fine-liner-brushes-100/`);
+    await page.goto(`${BASE}/blog/how-to-choose-procreate-brushes/`, { waitUntil: 'load' });
+    await page.locator('.article-body a[href$="/products/portrait-mastery-kit-46-brushes/"]').first().click();
+    ok(`${javaScriptEnabled ? 'JS on' : 'JS off'} guide paid-resource link reaches the product page`,
+       page.url() === `${BASE}/products/portrait-mastery-kit-46-brushes/`);
+    await page.goto(`${BASE}/blog/best-procreate-brushes-for-line-art/`, { waitUntil: 'load' });
+    ok(`${javaScriptEnabled ? 'JS on' : 'JS off'} non-opt-in articles retain their original layout`,
+       await page.locator('.article-lead').count() === 0 && await page.locator('.article-hero--compact').count() === 0);
+    await ctx.close();
+  }
 }
 async function testCanvasCalculator() {
   console.log('\n── Canvas calculator and analytics-disabled behavior ──');
@@ -569,6 +633,7 @@ try {
   await testCanonicalHomeNavigation();
   await testRecovery404();
   await testSearchLandingPages();
+  await testGuideLeads();
   await testCanvasCalculator();
   await testPrivacy();
   ok('no uncaught JavaScript errors in tested pages', pageErrors.length === 0, pageErrors.join('; '));
