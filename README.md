@@ -179,8 +179,9 @@ and meta tags do not guarantee a particular Google result, ranking or indexing.
 
 After building, run `python3 tools/qa_seo.py` to check generated canonicals,
 indexability, HTTPS internal links, canonical homepage navigation, sitemaps,
-JSON-LD, article dates and local Open Graph image sizes. The deploy and
-catalog-sync workflows run this offline check before publishing; use Search
+JSON-LD, article dates and local Open Graph image sizes. Run
+`python3 tools/qa_indexnow.py` for offline URL-selection and retry tests. The
+deploy and catalog-sync workflows run both checks before publishing; use Search
 Console separately to inspect Google's selected canonicals and indexing.
 For article authors, the optional `seo_title` frontmatter is an **unbranded**
 human-written search title; the generator appends ` | DigiKitPro`. Set `modified`
@@ -224,9 +225,10 @@ Nothing is invented. If a product is added/removed in the store later, update
   a worldwide trust band. `tools/core.py` has `LANGUAGES` and `GEO_META` if you want to change them.
 - **Discovery:** product cards and suggestions use catalog data and editorial
   priorities; they do not measure or claim actual search or sales popularity.
-- **IndexNow:** on by default — the workflows carry a default key (public by design); the build
-  writes `<key>.txt` and the deploy/sync workflows ping Bing, Yandex and Seznam. Set the repo
-  variable `INDEXNOW_KEY` only to rotate it.
+- **IndexNow:** on by default — the workflows carry a default key (public by design), and the build
+  writes `<key>.txt`. The deploy workflow notifies participating engines after Pages is live;
+  catalog sync queues a deploy for changes or a pending retry. Set repository variable
+  `INDEXNOW_KEY` only to rotate it. Notifications do not guarantee indexing and do not reach Google.
 
 See `SEO-INDEXING.md` for Google Search Console + Bing Webmaster + IndexNow setup and a content
 cadence that keeps the site visible on search results.

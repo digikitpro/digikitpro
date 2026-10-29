@@ -5,7 +5,8 @@ name: Auto-sync new Payhip products
 # descriptions with tools/seo_engine.py, rebuilds the static site, and commits
 # the change. The Build & deploy workflow then publishes it. Since this workflow
 # pushes with GITHUB_TOKEN (which suppresses follow-on push-triggered workflows),
-# it explicitly dispatches the Pages deploy after a changed catalog is committed.
+# it explicitly dispatches the Pages deploy after a changed catalog is committed
+# or an IndexNow notification needs a post-deployment retry.
 #
 # Nothing here fails the site if Payhip is unreachable: payhip_sync.py exits 0
 # when the store cannot be reached, and the commit step is skipped when the
@@ -72,6 +73,11 @@ jobs:
           SITE_URL: https://digikitpro.shop
         run: python3 tools/qa_seo.py
 
+      - name: Check IndexNow selection and retries offline
+        env:
+          SITE_URL: https://digikitpro.shop
+        run: python3 tools/qa_indexnow.py
+
       - name: Commit auto-sync results
         id: commit
         run: |
@@ -88,8 +94,20 @@ jobs:
           git push origin HEAD:${{ github.ref_name }}
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
+      # Retry a failed or unrecorded IndexNow submission even on a no-change
+      # sync, but only via a deployment so the URLs are live before the ping.
+      - name: Check for pending IndexNow retry
+        if: steps.commit.outputs.changed == 'false'
+        id: indexnow
+        env:
+          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY || '2a0c816c785f97257c6a69f2d5cc3c47' }}
+          SITE_URL: https://digikitpro.shop
+        run: |
+          pending="$(python3 tools/submit_index.py --check-pending)"
+          echo "pending=$pending" >> "$GITHUB_OUTPUT"
+
       - name: Queue Pages deployment
-        if: steps.commit.outputs.changed == 'true'
+        if: steps.commit.outputs.changed == 'true' || steps.indexnow.outputs.pending == 'true'
         uses: actions/github-script@v7
         env:
           TARGET_REF: ${{ github.ref_name }}
@@ -101,10 +119,7 @@ jobs:
               workflow_id: "deploy.yml",
               ref: process.env.TARGET_REF,
             });
-            core.info("Queued Pages deployment for generated catalog/feed updates.");
+            core.info("Queued Pages deployment for changes or a pending IndexNow retry.");
 
-      - name: Ping search engines (IndexNow) for the changed URLs
-        env:
-          INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY || '2a0c816c785f97257c6a69f2d5cc3c47' }}
-          SITE_URL: https://digikitpro.shop
-        run: python3 tools/submit_index.py
+      # IndexNow is handled by the queued deploy workflow after Pages is live.
+      # Pinging here would race the deployment and duplicate its notification.
