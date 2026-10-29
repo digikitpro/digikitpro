@@ -1412,7 +1412,8 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
         lo_s = f"${lo:.0f}" if float(lo).is_integer() else f"${lo:.2f}"
         hi_s = f"${hi:.0f}" if float(hi).is_integer() else f"${hi:.2f}"
         compare = (f'Single specialist packs run <b>{lo_s}\u2013{hi_s}</b> each across '
-                   f'{len(prices)} kits. One library, every style, {esc(f["priceText"])}.')
+                   f'{len(prices)} kits. The Master Library is listed at {esc(f["priceText"])}; '
+                   'confirm contents and possible overlap before buying.')
     if home:
         # ── Homepage variant (2026-09-18 reorder): the library is the
         #    advanced option AFTER the bundle ladder, so the headline sells
@@ -1431,9 +1432,9 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
     <div class="flag-body">
       <p class="eyebrow">{esc(f['name'])}</p>
       <h2 id="flag-title">One Library. Multiple Workflows. Less Tool Hunting.</h2>
-      <p class="lead-sm">2,000+ organized Procreate brushes — affordable, organized and ready for every workflow, from portraits and skin to line art, watercolor and anime.</p>
+      <p class="lead-sm">A listed collection of 2,000+ Procreate brushes across portrait, line art, watercolor and other drawing styles.</p>
       <ul class="flag-points">
-        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> in organised category folders — no more hunting for the right tool</li>
+        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> listed in organised category folders</li>
         <li>Organized tools for a range of Procreate workflows</li>
       </ul>
       <ul class="flag-chips">{chips}</ul>
@@ -1457,9 +1458,9 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
     <div class="flag-body">
       <p class="eyebrow">One library. Multiple workflows. Less tool hunting.</p>
       <h2 id="flag-title">{esc(f['name'])}</h2>
-      <p class="lead-sm">2,000+ organized Procreate brushes — affordable, organized and ready for every workflow, from portraits and skin to line art, watercolor and anime.</p>
+      <p class="lead-sm">A listed collection of 2,000+ Procreate brushes across portrait, line art, watercolor and other drawing styles.</p>
       <ul class="flag-points">
-        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> in organised category folders — no more hunting for the right tool</li>
+        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> listed in organised category folders</li>
         <li>Portrait, skin, hair, linework, watercolour, traditional media, character &amp; anatomy, texture and effects</li>
         <li>Organized tools for a range of Procreate workflows</li>
       </ul>
@@ -1492,13 +1493,14 @@ def upgrade_panel(p, depth):
     diff = f["price"] - p.get("price", 0)
     if tier == "bundle":
         head_txt = "Already looking at a bundle?"
-        body = (f"For a broader collection, compare the Master Library: "
-                f"{esc(f.get('assets') or '2,000+ brushes')} in one organised download.")
+        body = (f"For a broader listed collection, compare the Master Library: "
+                f"{f.get('assets') or '2,000+ brushes'}. Ask the store to confirm "
+                "contents and possible overlap before buying both.")
     else:
         head_txt = "Looking for more than one pack?"
-        body = (f"This pack solves one problem well for {esc(p['priceText'])}. "
-                f"If you paint across several styles, the Master Library covers all of them "
-                f"for {esc(f['priceText'])}. These are separate purchases; compare what each includes before buying.")
+        body = (f"This pack is listed at {p['priceText']}. The separate Master Library "
+                f"is listed at {f['priceText']} and describes several brush styles. "
+                "Ask the store to confirm possible overlap before buying both.")
     im = f.get("images") or {}
     thumb = im.get("card") or im.get("main") or ""
     return f"""<section class="psec upgrade-panel" aria-labelledby="p-upgrade">
@@ -1548,21 +1550,15 @@ def _is_ebook(p):
 
 
 def licence_line(p=None):
-    """Commercial-usage objection, answered above the fold.
+    """Point to terms without applying one unverified license to every file.
 
-    Wording follows the product format so an eBook is never described as if
-    it were a brush pack (and vice versa)."""
-    if p is not None and _is_ebook(p):
-        body = ('You may create your own artwork while following the guide and use your artwork '
-                'personally or commercially. The PDF, text, illustrations, images and educational '
-                'materials may not be resold, redistributed, publicly shared, repackaged or presented as your own product.')
-    else:
-        body = ('Yes — commercial use is allowed. Finished artwork you create is yours to use in '
-                'commissions, client projects, prints, products and other commercial work. You may not '
-                'resell, share, redistribute or repackage the brush files themselves. Contact us before '
-                'agency, classroom or multi-user use.')
-    return (f'<p class="licence-line"><b>Commercial use allowed.</b> {body} '
-            f'<a href="../../terms.html">Read the full licence</a>.</p>')
+    Some seller listings specify personal use while other products describe
+    commercial use. Individual licenses and third-party rights need review.
+    """
+    return ('<p class="licence-line"><b>Usage terms.</b> '
+            'Review the <a href="../../terms.html">store terms</a> and any '
+            'product-specific license. Contact the store before commercial '
+            'or redistribution use if the permissions are unclear.</p>')
 
 
 def install_steps(p=None):
@@ -1595,8 +1591,11 @@ def install_steps(p=None):
                 'How to install Procreate brushes</a>.')
     elif ".swatches" in hay:
         heading = "How to install it"
+        first_step = ("Complete the free download on Payhip and save the files to your iPad."
+                      if p.get("free") else
+                      "Complete your order on Payhip and save the files to your iPad.")
         steps = [
-            "Complete the free download on Payhip and save the files to your iPad.",
+            first_step,
             "If the download is a ZIP, tap it in Files to extract the folder.",
             "Tap a .swatches file to import the palette into Procreate, then find it in the Palettes panel.",
         ]

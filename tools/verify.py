@@ -549,7 +549,25 @@ def main() -> int:
     after = {p["slug"]: facts(p) for p in json.loads(read("data/products.json"))}
     check("catalog identity, prices and Payhip destinations match HEAD",
           bool(before) and before == after, f"{len(after)} product records compared")
-    check("discovery.json unmodified vs git", git_clean("data/discovery.json"))
+    # Permit only the two fact-correcting ladder edits, not arbitrary changes
+    # to other rung text, routing, product assignments, filters or structure.
+    old_discovery = subprocess.run(["git", "show", "HEAD:data/discovery.json"], cwd=ROOT,
+                                   capture_output=True, text=True)
+    allowed_rung_copy = {
+        "procreate-mega-bundle-650": "A selection of brushes and paper textures across multiple sets.",
+        "master-library-2000-brushes": "A broad brush library organized into themed categories.",
+    }
+    discovery_same = False
+    if old_discovery.returncode == 0:
+        expected_discovery = json.loads(old_discovery.stdout)
+        seen_rungs = set()
+        for rung in (expected_discovery.get("bundleLadder") or {}).get("rungs", []):
+            if rung.get("slug") in allowed_rung_copy:
+                seen_rungs.add(rung["slug"])
+                rung["rung"] = allowed_rung_copy[rung["slug"]]
+        discovery_same = (seen_rungs == set(allowed_rung_copy) and
+                          expected_discovery == json.loads(read("data/discovery.json")))
+    check("discovery configuration preserved apart from two specified rung edits", discovery_same)
     # Look at the build step only — the file header also mentions tools/build.py.
     build_from = deploy.find("Build static site")
     build_to = deploy.find("configure-pages")
@@ -1026,10 +1044,9 @@ def main() -> int:
           f"{len(gal_txt)} product pages checked" if not bad_pdp_nav else f"broken: {bad_pdp_nav[:5]}")
 
     # ── 94–99 Google Merchant Center source + structured data ──────────
-    # The feed is separate from Pinterest's paid-only catalog: Merchant gets
-    # free downloads as in-stock, keeps product links on the claimed site, and
-    # holds eBooks outside this first source until their identifiers/destinations
-    # are reviewed. Product pages carry matching SKU/condition/offer URL data.
+    # Zero-price downloads and digital books are held out of the shared
+    # Merchant source; their organic pages and checkout links remain intact.
+    # The remaining candidates still need destination-specific policy review.
     merchant_xml = read("google-merchant-feed.xml") if exists("google-merchant-feed.xml") else ""
     merchant_root = None
     try:
@@ -1043,6 +1060,8 @@ def main() -> int:
     merchant_eligible = [p for p in catalog
                          if p.get("category") != "Guides & eBooks"
                          and "ebook" not in p.get("slug", "").lower()
+                         and not any("pdf travel guide" in str(t).lower() for t in p.get("technical", []))
+                         and not p.get("free") and float(p.get("price") or 0) > 0
                          and not p.get("comingSoon")]
     merchant_ids = [x.findtext("g:id", namespaces=gns) for x in merchant_items]
     merchant_by_id = {x.findtext("g:id", namespaces=gns): x for x in merchant_items}
@@ -1052,10 +1071,10 @@ def main() -> int:
           and bool(merchant_items)
           and merchant_items[0].find("g:id", namespaces=gns) is not None
           and len(merchant_items) == len(merchant_eligible),
-          f"{len(merchant_items)} XML items; expected {len(merchant_eligible)} eligible catalog products")
+          f"{len(merchant_items)} XML items; expected {len(merchant_eligible)} paid non-book candidates")
 
     expected_merchant_ids = {p["slug"] for p in merchant_eligible}
-    check("95 Merchant feed covers the eligible catalog and excludes eBooks",
+    check("95 Merchant feed contains paid non-book candidates, not a policy eligibility guarantee",
           set(merchant_ids) == expected_merchant_ids
           and len(merchant_ids) == len(set(merchant_ids))
           and not any(_google_slug for _google_slug in merchant_ids
@@ -1087,16 +1106,15 @@ def main() -> int:
           f"{len(merchant_eligible)} products: prices match, image URLs are HTTPS, and links stay on {HOST}"
           if not merchant_bad else "; ".join(merchant_bad[:5]))
 
-    merchant_free = [p for p in merchant_eligible if p.get("free")]
+    free_products = [p for p in catalog if p.get("free")]
     free_bad = []
-    for p in merchant_free:
-        row = merchant_by_id.get(p["slug"])
-        if not row or row.findtext("g:availability", namespaces=gns) != "in_stock" \
-                or row.findtext("g:price", namespaces=gns) != "0.00 USD":
+    for p in free_products:
+        page = ROOT / "products" / p["slug"] / "index.html"
+        if p["slug"] in merchant_by_id or not page.is_file() or p["payhipUrl"] not in page.read_text(encoding="utf-8"):
             free_bad.append(p["slug"])
-    check("97 free downloads are in stock at a zero price in the Merchant feed",
-          len(merchant_free) > 0 and not free_bad,
-          f"{len(merchant_free)} free products included" if not free_bad else f"incorrect: {free_bad}")
+    check("97 zero-price downloads stay on the site but are held out of the Merchant feed",
+          bool(free_products) and not free_bad,
+          f"{len(free_products)} free product pages and direct links preserved" if not free_bad else f"incorrect: {free_bad}")
 
     identifier_bad = []
     for p in merchant_eligible:
