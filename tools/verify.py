@@ -6,7 +6,7 @@ Run after a successful `python3 tools/build.py`:
 
     python3 tools/verify.py
 
-Expects: ALL 114 CHECKS PASSED.
+Expects all static checks to pass.
 (89 -> 93 on 2026-09-20: + 4 from the product image gallery repair — every
 product page ships js/gallery.js with [data-product-gallery], #product-main-image
 and a data-full-image per tile; a tile can never hand the frame the -card crop;
@@ -93,7 +93,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 HOST = "https://digikitpro.shop"
-EXPECTED = 114
+EXPECTED = 115
 
 CHECKS: list[tuple[str, bool, str]] = []
 
@@ -189,7 +189,7 @@ def resolve_href(page: Path, href: str) -> Path | None:
         return None  # pure fragment
     if re.match(r"^(https?:|mailto:|javascript:|tel:|//)", raw, re.I):
         return None
-    target = (page.parent / raw).resolve()
+    target = (ROOT / raw.lstrip("/") if raw.startswith("/") else page.parent / raw).resolve()
     try:
         target.relative_to(ROOT.resolve())
     except ValueError:
@@ -689,30 +689,26 @@ def main() -> int:
           and 0 <= commit_sync_pos < deploy_sync_pos,
           "changed catalog/feed commits explicitly dispatch deploy.yml; unchanged runs do not")
 
-    # With the variable set, the CTA must really become the sign-up link and
-    # the invite-only copy must go. Renders the page in-process, then rebuilds
-    # it from the pinned (unset) environment so the artifact on disk always
-    # matches the build a fresh checkout produces.
-    # core must be reloaded first: pages_partner binds PARTNER_SIGNUP_URL with
-    # `from core import *`, so reloading the page module alone would keep
-    # reading the stale constant out of an already-imported core.
+    # Exercise both signup states in memory. Verification must not rewrite an
+    # analytics-disabled or otherwise configured artifact. Reload core first
+    # because pages_partner imports its constants by value.
     import core as _core
     test_signup = "https://payhip.com/affiliates/verify-selftest"
-    os.environ["PARTNER_SIGNUP_URL"] = test_signup
-    importlib.reload(_core)
-    importlib.reload(pp)
-    pp.build_partner()
-    open_html = read(partner_file)
-    os.environ["PARTNER_SIGNUP_URL"] = ""
-    importlib.reload(_core)
-    importlib.reload(pp)
-    pp.build_partner()
-    restored_html = read(partner_file)   # re-read: partner_html above may predate a developer's local build
+    def render_partner(signup):
+        os.environ["PARTNER_SIGNUP_URL"] = signup
+        importlib.reload(_core)
+        importlib.reload(pp)
+        rendered = {}
+        pp.write = lambda path, content: rendered.update({path: content})
+        pp.build_partner()
+        return rendered.get(partner_file, "")
+    open_html = render_partner(test_signup)
+    closed_html = render_partner("")
     check("partner: PARTNER_SIGNUP_URL switches the page to open applications",
           f'href="{test_signup}"' in open_html and "Apply to join" in open_html
           and "Invite-only" not in open_html
-          and "Invite-only" in restored_html and test_signup not in restored_html,
-          "application CTA + status copy follow the variable, and the artifact is rebuilt without it")
+          and "Invite-only" in closed_html and test_signup not in closed_html,
+          "application CTA + status copy follow the variable; artifacts remain untouched")
 
     # ── 81–82 product card framing (see .card-media in css/style.css) ──
     # Two invariants, each learned the hard way. (a) The artwork must FILL its
@@ -953,17 +949,18 @@ def main() -> int:
     bad_tile: list[str] = []
     n_tiles = 0
     for p_, t in gal_txt.items():
-        btns = re.findall(r'<button class="gal-thumb[^"]*"[^>]*>', t)
-        n_tiles += len(btns)
-        if len(btns) != t.count("data-full-image="):
-            bad_tile.append(f"{p_.parent.name}: {len(btns)} tiles but {t.count('data-full-image=')} full-size references")
-        for btn in btns:
-            m = re.search(r'data-full-image="([^"]+)"', btn)
-            if not m:
-                bad_tile.append(f"{p_.parent.name}: a tile with no data-full-image")
+        tiles = re.findall(r'<a class="gal-thumb[^"]*"[^>]*>', t)
+        n_tiles += len(tiles)
+        if len(tiles) != t.count("data-full-image="):
+            bad_tile.append(f"{p_.parent.name}: {len(tiles)} links but {t.count('data-full-image=')} full-size references")
+        for tile in tiles:
+            m = re.search(r'data-full-image="([^"]+)"', tile)
+            href = re.search(r' href="([^"]+)"', tile)
+            if not m or not href or href.group(1) != m.group(1):
+                bad_tile.append(f"{p_.parent.name}: a tile must link to its full-size image")
             elif re.search(r"-(card|thumb)\.[a-z0-9]+$", m.group(1)):
                 bad_tile.append(f"{p_.parent.name}: tile hands the frame a crop ({m.group(1)})")
-    check("91 gallery tiles reference the full-size file, never the card crop",
+    check("91 gallery tiles link to the full-size file, never the card crop",
           not bad_tile and n_tiles >= 100,
           f"{n_tiles} tiles across the catalogue, each pointing the frame at its own full-size "
           "file; the -card crop stays where it belongs, inside the tile"
@@ -1010,6 +1007,22 @@ def main() -> int:
           "with close button, arrows and a scroll-locked page, sideways-scrolling tiles on a phone "
           "— with the existing frame, grid, type and colours untouched"
           if not missing and strip_mobile else f"missing: {missing + (['tiles do not scroll sideways on a phone'] if not strip_mobile else [])}")
+
+    # The offer is first in source order (and on mobile), followed by images.
+    # All quick links must target real sections on the same product page.
+    bad_pdp_nav = []
+    for p_, t in gal_txt.items():
+        nav = re.search(r'<nav class="pdp-quicklinks"[^>]*>(.*?)</nav>', t, re.S)
+        links = re.findall(r'href="#([^"]+)"', nav.group(1)) if nav else []
+        ids = set(re.findall(r'\bid="([^"]+)"', t))
+        positions = [t.find('<div class="pdp-info">'), t.find('<div class="pdp-media"'), t.find('<div class="pdp-assurance">')]
+        if (not nav or not links or 'class="pdp-cover-peek" href="#product-images"' not in t or
+            "product-images" not in ids or any(link not in ids for link in links) or
+            min(positions) < 0 or positions != sorted(positions)):
+            bad_pdp_nav.append(p_.parent.name)
+    check("product offers precede their galleries and quick links target real sections",
+          len(gal_txt) == len(json.loads(read("data/products.json"))) and not bad_pdp_nav,
+          f"{len(gal_txt)} product pages checked" if not bad_pdp_nav else f"broken: {bad_pdp_nav[:5]}")
 
     # ── 94–99 Google Merchant Center source + structured data ──────────
     # The feed is separate from Pinterest's paid-only catalog: Merchant gets
@@ -1194,12 +1207,12 @@ def main() -> int:
 
     # Guard selected high-traffic copy against reverting to an unconfigured
     # newsletter or unsupported guarantees about access duration/delivery time.
-    trust_pages = ["index.html", "freebies.html", "about.html", "faq.html"]
+    trust_pages = ["index.html", "freebies.html", "about.html", "faq.html", "terms.html", "guides/procreate-starter-kits/index.html"]
     trust_pages += [f"products/{slug}/index.html" for slug in journeys]
     trust_pages += [f"products/{slug}/index.html" for slug in (
         "portrait-mastery-kit-46-brushes", "portrait-skin-brushes-procreate", "artista-studio-kit-76-brushes")]
     unverified_promise = re.compile(
-        r"instant (?:digital )?(?:download|delivery)|download instantly|keep forever|lifetime access|\$0, forever", re.I)
+        r"instant (?:digital )?(?:download|delivery)|download instantly|delivered instantly|keep forever|lifetime access|\$0, forever", re.I)
     trust_bad = [path for path in trust_pages if unverified_promise.search(read(path))]
     check("selected conversion pages avoid unverified delivery and lifetime guarantees",
           not trust_bad, ", ".join(trust_bad) if trust_bad else f"{len(trust_pages)} selected pages checked")

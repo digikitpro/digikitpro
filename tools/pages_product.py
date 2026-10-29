@@ -17,15 +17,13 @@ def gallery_html(p):
     Markup contract with js/gallery.js, the only thing that moves the picture:
       [data-product-gallery]  the gallery root (on .pdp-media)
       #product-main-image     the big frame, also [data-gallery-main]
-      [data-gallery-thumb]    one <button type="button"> per image
+      [data-gallery-thumb]    one full-image link per preview
       data-full-image         that image's FULL-size file, never the card crop
       data-srcset/data-sizes  that same image's own responsive pair, when it
                               has one to offer — it travels with src, it is
                               never reused from another image
-    Every value is read from the product record, so 1 image and 9 images need
-    no special case and a new product needs no code change. Tiles are buttons,
-    so a tap cannot navigate, reload, or fire a link that wraps them; with JS
-    off the cover still renders as plain HTML.
+    With JS enabled the gallery enhances the links into controls; without it,
+    each preview remains a working link to its own full-size image.
     """
     im = p["images"]
     slug = p["slug"]
@@ -66,16 +64,18 @@ def gallery_html(p):
             active = ' active' if i == 0 else ""
             here = ' aria-current="true"' if i == 0 else ""
             btns.append(
-                f'<button class="gal-thumb product-gallery-thumb{active}" type="button"'
+                f'<a class="gal-thumb product-gallery-thumb{active}" href="{esc(asset_file(2, slug, f))}"'
                 f' data-gallery-thumb data-full-image="{esc(asset_file(2, slug, f))}"{pair}'
                 f' data-alt="{esc(alt)}" data-w="{w or 1200}" data-h="{h or 800}"'
                 f' data-pin-media="{esc(asset_abs(slug, f))}"'
-                f' aria-label="View product image {i+1}"{here}>'
+                f' aria-label="View product image {i+1}: {esc(alt)}"{here}>'
                 f'<img src="{asset_file(2, slug, th)}"'
                 f' width="{card_w or 150}" height="{card_h or 100}"'
-                f' alt="{esc(alt)} thumbnail" loading="lazy" decoding="async"></button>')
+                f' alt="" loading="lazy" decoding="async"></a>')
         thumbs = f'<div class="gal-thumbs" role="group" aria-label="Product image previews">{"".join(btns)}</div>'
-    hint = '<p class="gallery-hint">Select a preview to explore the kit; tap the main image to enlarge it.</p>' if len(items) > 1 else ''
+    hint = ('<p class="gallery-hint" data-gallery-hint>Select a preview to open the full image.</p>'
+            if len(items) > 1 else
+            f'<noscript><p class="gallery-hint"><a href="{esc(asset_file(2, slug, first[0]))}">Open full-size product image</a></p></noscript>')
     return main_fig + thumbs + hint, (first[0] if is_abs(first[0]) else absurl(f"assets/products/{slug}/{first[0]}"))
 
 def look_inside_masterclass(p):
@@ -441,7 +441,7 @@ def build_product_pages():
         cat_chip = f'<a class="meta-chip cat" href="{cat_href}">{esc(p["category"])}</a>'
         chips_html = status_chip + assets_chip + cat_chip
         caption = ("Launches soon · Newsletter subscribers get it first · Opens the store in a new tab"
-                   if coming else ("Opens the free product on Payhip in a new tab" if p['free'] else "Opens the product on Payhip in a new tab; continue to checkout there"))
+                   if coming else ("Opens the free product on Payhip in a new tab" if p['free'] else "Opens the product on Payhip in a new tab. Review the total and payment options there before paying."))
         cta_label_long = cta_label
         # The trust bridge (checkout + delivery + refund terms, wording taken
         # from refunds.html) replaces the old generic caption line.
@@ -454,10 +454,26 @@ def build_product_pages():
           {next_step_link(p, depth) if p.get("free") else ""}
         </div>"""
         # The licence question ("can I sell what I make?") is a real purchase
-        # objection for working artists. It was only answered inside a collapsed
-        # FAQ and on terms.html, i.e. below the fold and hidden. Now it sits
-        # under the buy panel, stating exactly what terms.html already says.
+        # objection for working artists. Keep the existing terms visible near
+        # the offer on desktop and after the gallery on mobile.
         licence = "" if coming else licence_line(p)
+
+        # Link only to sections actually present on this product, so visitors
+        # can check the details without searching through a long page.
+        quick_links = []
+        if included:
+            quick_links.append('<a href="#p-what-s-included">What’s included</a>')
+        if requirements:
+            quick_links.append('<a href="#p-requirements">Requirements</a>')
+        if p.get("faqs"):
+            quick_links.append('<a href="#p-faq">FAQ</a>')
+        quick_nav = (f'<nav class="pdp-quicklinks" aria-label="On this product page">{"".join(quick_links)}</nav>'
+                     if quick_links else "")
+        cover_file = im.get("card") or im.get("main")
+        cover_peek = (f'<a class="pdp-cover-peek" href="#product-images">'
+                      f'<span class="pdp-cover-frame"><img src="{esc(asset_file(depth, slug, cover_file))}" '
+                      f'width="{im.get("cardW") or im.get("fullW") or 750}" height="{im.get("cardH") or im.get("fullH") or 750}" '
+                      f'alt="" loading="lazy" decoding="async"></span><span>View images</span></a>')
 
         _og_img = asset_abs(slug, im.get("card", "")) if im.get("card", "") else None
         _og_size = (im.get("cardW"), im.get("cardH")) if _og_img else None
@@ -474,12 +490,15 @@ def build_product_pages():
   <div class="wrap">
     {crumbs(depth, visual_crumbs)}
     <article class="pdp">
-      <div class="pdp-media" data-product-gallery>{gal}</div>
       <div class="pdp-info">
         <div class="chip-row">{chips_html}</div>
-        <h1>{esc(p['name'])}</h1>
-        <p class="pdp-short">{esc(p['short'])}</p>
+        <div class="pdp-summary"><h1>{esc(p['name'])}</h1>{cover_peek}
+          <p class="pdp-short">{esc(p['short'])}</p></div>
         {buy_panel}
+        {quick_nav}
+      </div>
+      <div class="pdp-media" id="product-images" data-product-gallery>{gal}</div>
+      <div class="pdp-assurance">
         {licence}
         <ul class="pdp-trust">{trust}</ul>
       </div>

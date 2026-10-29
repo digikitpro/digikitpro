@@ -15,7 +15,7 @@
 
    No browser download, no localhost, no Playwright: jsdom parses the page and
    the image loader is stubbed, so the whole suite runs in about a second and
-   works in CI and offline. 134 checks over 12 scenarios:
+   works in CI and offline, covering these scenarios:
 
      1  the reported bug     a tile click changes the big image, using that
                              tile's full-size file; no reload, no navigation,
@@ -145,7 +145,7 @@ const toLegacyMarkup = (html) => html
   .replace(/ data-srcset="[^"]*" data-sizes="[^"]*"/g, "")
   .replace(/ aria-current="true"/g, "")
   .replace(/ role="group" aria-label="Product image previews"/, "")
-  .replace(/<div class="pdp-media" data-product-gallery>/, '<div class="pdp-media">');
+  .replace(/<div class="pdp-media" id="product-images" data-product-gallery>/, '<div class="pdp-media">');
 
 async function main() {
 
@@ -186,16 +186,33 @@ async function main() {
     ok("exactly one tile is the current one", d.querySelectorAll('[data-gallery-thumb][aria-current="true"]').length === 1,
       `${d.querySelectorAll('[data-gallery-thumb][aria-current="true"]').length} of ${tiles.length}`);
     ok("gallery records the current index", d.querySelector("[data-product-gallery]").getAttribute("data-current-index") === "2");
-    ok("tiles are <button type=button>, never links", tiles.every((t) => t.tagName === "BUTTON" && t.getAttribute("type") === "button"));
-    ok("every tile is labelled with its image number", tiles.every((t) => /^View product image \d+$/.test(t.getAttribute("aria-label") || "")));
+    ok("tiles link to their own full-size image and are enhanced as buttons", tiles.every((t) => t.tagName === "A" && t.getAttribute("href") === t.getAttribute("data-full-image") && t.getAttribute("role") === "button"));
+    ok("every tile is labelled with its image number and description", tiles.every((t) => /^View product image \d+: .+/.test(t.getAttribute("aria-label") || "")));
     const main = d.getElementById("product-main-image");
     ok("alt text follows the picture", main.getAttribute("alt") === tiles[2].getAttribute("data-alt"));
     const name = main.getAttribute("aria-label");
     ok("the frame names both the artwork and the zoom action", /Product image 3 of 4/.test(name) && /open full size/i.test(name) && name.includes(tiles[2].getAttribute("data-alt")), name);
     ok("the counter announces position and total", /3 \/ 4/.test(d.querySelector("[data-gallery-count]").textContent), d.querySelector("[data-gallery-count]").textContent);
     ok("the counter is a polite live region", d.querySelector("[data-gallery-count]").getAttribute("aria-live") === "polite");
+    ok("the hint describes the enhanced zoom behaviour", /open the main image to zoom/i.test(d.querySelector('[data-gallery-hint]').textContent));
     key(tiles[2], "Tab"); await settle();
-    ok("tiles are focusable keyboard controls (they are real buttons)", tiles.every((t) => !t.hasAttribute("tabindex") || t.getAttribute("tabindex") !== "-1"));
+    ok("tiles remain focusable keyboard controls", tiles.every((t) => !t.hasAttribute("tabindex") || t.getAttribute("tabindex") !== "-1"));
+  }
+
+  /* Modified clicks keep native link behavior. Prevent navigation only after
+     observing whether the gallery had canceled the event. */
+  {
+    const { d, w, settle } = loadPage(PDP4);
+    await settle();
+    const tile = d.querySelectorAll('[data-gallery-thumb]')[1];
+    const main = d.getElementById('product-main-image');
+    const before = main.getAttribute('src');
+    let canceledByGallery = false;
+    tile.addEventListener('click', (ev) => { canceledByGallery ||= ev.defaultPrevented; ev.preventDefault(); });
+    for (const modifier of [{ctrlKey:true}, {metaKey:true}, {shiftKey:true}, {altKey:true}, {button:1}]) {
+      tile.dispatchEvent(new w.MouseEvent('click', { bubbles:true, cancelable:true, ...modifier }));
+    }
+    ok('modified and middle clicks retain native link behavior', !canceledByGallery && main.getAttribute('src') === before);
   }
 
   /* ── 3. prev / next ───────────────────────────────────────────────────── */
@@ -356,9 +373,17 @@ async function main() {
     ok("the frame keeps the image the visitor was looking at", base(main.getAttribute("src")) === before, base(main.getAttribute("src")));
     ok("no broken-image placeholder is written into the frame", !/coming-soon/.test(main.getAttribute("src")), main.getAttribute("src"));
     ok("no layout hole: the frame still has width and height", main.getAttribute("width") && main.getAttribute("height"));
+    ok("selection, counter and accessible label return to the restored picture",
+      tiles[0].getAttribute('aria-current') === 'true' && !tiles[2].hasAttribute('aria-current') &&
+      d.querySelector('[data-gallery-count]').textContent.trim() === '1 / 4' && /Product image 1 of 4/.test(main.getAttribute('aria-label')));
     click(tiles[1]); await settle();
     ok("the next click paints normally", /-2\.webp$/.test(main.getAttribute("src")), base(main.getAttribute("src")));
     ok("a failed image is not a script error", errors.length === 0, errors.slice(0, 2).join(" | ").slice(0, 200));
+    click(main); await settle();
+    click(d.querySelector('[data-lb-next]')); await settle(); await settle();
+    ok('a failed image in the lightbox also restores its picture and counter',
+      /-2\.webp$/.test(d.querySelector('.dkp-lb-img').getAttribute('src')) &&
+      d.querySelector('[data-lb-count]').textContent.trim() === '2 of 4');
   }
 
   /* ── 9. other products: nothing hard-coded ────────────────────────────── */
@@ -524,7 +549,10 @@ async function main() {
       if (n > 1) {
         multi++;
         if ((t.match(/data-full-image="/g) || []).length !== n) bad.push(`${s}: a tile without data-full-image`);
+        if ((t.match(/<a class="gal-thumb[^>]+href="/g) || []).length !== n) bad.push(`${s}: a preview without a native link`);
         if ((t.match(/aria-current="true"/g) || []).length !== 1) bad.push(`${s}: active tile state`);
+      } else if (!t.includes('Open full-size product image</a></p></noscript>')) {
+        bad.push(`${s}: no single-image fallback`);
       }
       const mm = /<img id="product-main-image"[^>]*>/.exec(t);
       const ss = mm && /srcset="([^"]+)"/.exec(mm[0]);

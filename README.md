@@ -72,12 +72,12 @@ full-size file rather than let the frame keep image #1's candidates:
          width="1160" height="774" alt="…" fetchpriority="high">
   </figure>
   <div class="gal-thumbs" role="group" aria-label="Product image previews">
-    <button class="gal-thumb product-gallery-thumb active" type="button" data-gallery-thumb
-            data-full-image="kit.webp" data-srcset="…" data-sizes="…" data-alt="…"
-            data-w="1160" data-h="774" data-pin-media="https://…/kit.webp"
-            aria-label="View product image 1" aria-current="true">
-      <img src="kit-card.webp" width="750" height="500" alt="… thumbnail" loading="lazy">
-    </button>
+    <a class="gal-thumb product-gallery-thumb active" href="kit.webp" data-gallery-thumb
+       data-full-image="kit.webp" data-srcset="…" data-sizes="…" data-alt="…"
+       data-w="1160" data-h="774" data-pin-media="https://…/kit.webp"
+       aria-label="View product image 1: …" aria-current="true">
+      <img src="kit-card.webp" width="750" height="500" alt="" loading="lazy">
+    </a>
     …
   </div>
 </div>
@@ -86,9 +86,10 @@ full-size file rather than let the frame keep image #1's candidates:
 All of it is emitted by `gallery_html()` in `tools/pages_product.py` from
 `data/products.json`, so there is no per-product list and no special case: a
 product with one image gets a zoomable frame and no arrows, a product with nine
-gets nine tiles, and `python3 tools/build.py` keeps every page in step. The module
-also still reads the older `data-gal-main` / `data-gal-thumb` / `data-full` hooks,
-so a page cached by a CDN before a rebuild behaves like the new one.
+gets nine tiles, and `python3 tools/build.py` keeps every page in step. Without
+JavaScript, each preview links to its full-size image; single-image products
+provide a full-size link as well. The module also reads older `data-gal-main` /
+`data-gal-thumb` / `data-full` hooks for cached pages.
 
 What it adds, and what it never does:
 * tiles, `←`/`→` over the artwork, `ArrowLeft`/`ArrowRight`/`Home`/`End` while focus
@@ -100,22 +101,20 @@ What it adds, and what it never does:
 * full-size images are warmed on idle after `load` (skipped on `saveData`/2G), and a
   file that fails to load puts back the image that was on screen — never a broken
   frame, never a placeholder;
-* it never reloads or navigates, never scrolls the window, and touches no element
-  outside `[data-product-gallery]`; search, filters, nav, translation, Payhip and
-  Pinterest links are left as `js/main.js` had them — the gallery block was lifted
-  out of that file whole, and checks 90–93 in `tools/verify.py` police the module,
-  the markup contract and the CSS that makes them visible.
+* an ordinary preview click updates the frame without navigating or scrolling the
+  page; modified clicks retain normal browser link behaviour. Search, filters,
+  navigation, Payhip and Pinterest links remain independent. Checks 90–93 in
+  `tools/verify.py` cover the module, markup contract and gallery CSS.
 
 The behaviour, not just the markup, is policed by `tools/qa_gallery.mjs`: it loads
 the real built pages, runs the real scripts in `<script>` order through jsdom (no
-browser download, works offline) and asserts 134 checks - the click, the arrows,
-the keyboard, the viewer, touch and swipe, a failing image, a 1-image product, the
-page that already has its own look-inside slider, Payhip-synced absolute image URLs,
-`<a>` tiles from before this contract, and stale HTML / stale `js/main.js` caches.
+browser download, works offline) and tests clicks, modified clicks, arrows,
+keyboard, viewer, touch and swipe, failing images, 1-image products, the separate
+look-inside slider, Payhip-synced absolute image URLs and stale caches.
 
 ```bash
 python3 tools/build.py            # regenerate
-python3 tools/verify.py           # 114 static checks
+python3 tools/verify.py           # static checks
 node tools/qa_gallery.mjs         # gallery (needs: npm i --no-save jsdom)
 python3 tools/qa_form.py          # offline default form-state check, sends nothing
 python3 tools/qa_assets.py        # local HTML asset references
@@ -187,10 +186,14 @@ For article authors, the optional `seo_title` frontmatter is an **unbranded**
 human-written search title; the generator appends ` | DigiKitPro`. Set `modified`
 only when the visible article has actually changed, not merely on every build.
 
-GitHub Pages serves `404.html` at the missing URL. Its root `<base>` keeps assets
-and navigation working at nested paths even without JavaScript; it does not
-redirect missing pages to the homepage. The canvas calculator's layer numbers
-are illustrative assumptions, not measured Procreate limits.
+Product pages put the offer before the gallery in source order. On phones a
+small cover link leads to the full gallery; on desktop the gallery remains on
+the left. The mobile navigation falls back to a native, collapsible menu without
+JavaScript. GitHub Pages serves `404.html` at the missing URL: root-relative
+assets and navigation work at nested paths, while the skip link stays on the
+error page. Missing pages are not redirected to the homepage. The canvas
+calculator's layer numbers are illustrative assumptions, not measured Procreate
+limits.
 
 ## 6. Where the data came from
 

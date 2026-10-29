@@ -203,9 +203,12 @@ def urljoin(*parts):
 def absurl(path):
     return SITE_URL + "/" + path.lstrip("/")
 
+# A custom 404 is served at the requested path, which may have any depth.
+ROOT_RELATIVE = -1
+
 def rel(depth, path):
-    """Relative url from a page at `depth` dirs deep."""
-    prefix = "../" * depth
+    """URL from a page at `depth` directories, or from the site root."""
+    prefix = "/" if depth == ROOT_RELATIVE else "../" * depth
     return prefix + path.lstrip("/")
 
 def _css_fingerprint():
@@ -452,7 +455,7 @@ _GITHUB_KILL = """<script>
 })();
 </script>"""
 
-def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False, base_href=None, og_size=None):
+def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="website", preload=None, ctx=None, robots=None, gallery=False, og_size=None):
     """`ctx` is the analytics page context (see js/analytics.js). It is emitted
     as window.DKP.page and contains ONLY non-personal page facts: page type,
     product slug/name/tier/category/price. No visitor data, ever."""
@@ -477,7 +480,6 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     if size and all(isinstance(n, int) and n > 0 for n in size) and len(size) == 2:
         og_dimensions = (f'\n  <meta property="og:image:width" content="{size[0]}">'
                          f'\n  <meta property="og:image:height" content="{size[1]}">')
-    base_tag = f'  <base href="{esc(base_href)}">\n' if base_href else ""
     vmeta = ""
     if GOOGLE_VERIFY: vmeta += f'\n  <meta name="google-site-verification" content="{esc(GOOGLE_VERIFY)}">'
     if BING_VERIFY: vmeta += f'\n  <meta name="msvalidate.01" content="{esc(BING_VERIFY)}">'
@@ -576,7 +578,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-{base_tag}{_GITHUB_KILL}
+{_GITHUB_KILL}
 {ga}{pin_tag}  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{esc(title)}</title>
@@ -608,7 +610,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <link rel="preload" href="{rel(depth,'assets/fonts/playfairdisplay-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{rel(depth,'assets/fonts/manrope-normal.woff2')}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{rel(depth,'css/style.css')}?v={CSS_VERSION}">
-  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap{{display:none}}@media(max-width:959px){{.mobile-nav{{display:flex}}.menu-btn{{display:none}}}}</style></noscript>
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap,.header-actions [data-menu-toggle]{{display:none}}</style></noscript>
   <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} Blog RSS feed" href="{rel(depth,'feed.xml')}">
 {pl} <script>window.DKP={{store:'{STORE_URL}',email:'{EMAIL_ENDPOINT}',analytics:{str(ANALYTICS_ENABLED).lower()},feedbackEndpoint:'{FEEDBACK_ENDPOINT}',page:{ctx_json}}};</script>
   <script src="{rel(depth,'js/search-index.js')}" defer></script>
@@ -618,7 +620,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   <script src="{script_src(depth,'translate.js')}" defer></script>
 {s}</head>
 <body>
-<noscript><div class="noscript-bar">JavaScript is off: every product page and guide still opens normally; only search and category filters need JS enabled. Every product, price and Payhip link on this site is plain HTML and works without it.</div></noscript>
+<noscript><div class="noscript-bar">JavaScript is off. Browse products and guides; search and filters need JavaScript.</div></noscript>
 """
 
 # ── Tools (SEO engine) ──────────────────────────────────────────────────
@@ -672,6 +674,10 @@ def header(depth, active=None):
       <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
+      <noscript><details class="noscript-menu">
+        <summary class="icon-btn" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+        <nav class="mobile-nav" aria-label="Mobile navigation">{mlinks}<a class="btn btn-gold" href="{rel(depth,'products.html')}">Browse kits</a></nav>
+      </details></noscript>
     </div>
   </div>
   <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile">{mlinks}<a class="btn btn-gold" href="{rel(depth,'products.html')}" rel="noopener">Browse kits</a></nav>
@@ -902,12 +908,11 @@ def cta_for(p):
 def trust_bridge(depth=0, free=False):
     """The one-line trust bridge that sits beside/below every Payhip CTA.
 
-    Refund wording is taken from refunds.html ("all sales are final once the
-    files have been downloaded" + "technical problems are resolved") so the
-    claim never drifts from the policy page.
+    Refund wording follows refunds.html; link to the policy rather than
+    promising a particular support outcome.
     """
     terms = ("free resource · Payhip may request delivery details" if free
-             else "all sales final once downloaded, faulty files always resolved")
+             else "all sales final once downloaded")
     return (f'<p class="trust-bridge">Checkout and digital delivery via Payhip · '
             f'{terms} · <a href="{rel(depth, "refunds.html")}">Refund policy</a></p>')
 

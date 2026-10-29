@@ -103,7 +103,7 @@ GUIDE_DEFS = [
             ("What is the real difference between a $5 kit and the $19 Master Library?",
              "Depth versus breadth. A $5 kit goes deep on one subject — skin, line art, watercolour — and is the cheaper, faster answer when you know what you are making. The Master Library is 2,000+ brushes organised across every style: it makes sense once you work across subjects and would otherwise be buying several packs one by one."),
             ("Will these kits work on my iPad?",
-             "Every .brushset kit requires the Procreate app on an iPad, and each product page lists its own contents, file sizes and requirements under Technical Details. Payment and delivery are handled by Payhip — instant download, with PayPal, cards and Apple Pay accepted."),
+             "Every .brushset kit requires the Procreate app on an iPad. Check each product page for its contents and requirements. Payhip handles checkout and digital delivery; review the total and available payment options there before paying."),
             ("Can I sell artwork I make with these brushes?",
              "Yes. Unless a product page states otherwise, purchases include a licence for personal and commercial finished artwork. What you may not do is resell or share the brush files themselves. The full licence is one page — see the Terms of Service link in the footer."),
         ],

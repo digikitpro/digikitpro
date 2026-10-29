@@ -109,6 +109,78 @@ async function testHeaderAndLayout() {
   ok('no unsolicited sticky promotional bar is created', await page.locator('.sticky-cta').count() === 0);
   await ctx.close();
 }
+async function testProductDecisionPath() {
+  console.log('\n── Product decision path and responsive order ──');
+  const catalog = JSON.parse(readFileSync(new URL('../data/products.json', import.meta.url), 'utf8'));
+  const { ctx } = await makeContext({ viewport: { width: 320, height: 844 }, reducedMotion: 'reduce' });
+  const page = await ctx.newPage();
+  const bad = [];
+  for (const product of catalog) {
+    const response = await page.goto(`${BASE}/products/${product.slug}/`, { waitUntil: 'load' });
+    // Lazy images do not delay the page's load event; wait for the visible
+    // cover to finish decoding before judging whether the asset is available.
+    await page.locator('.pdp-cover-peek img').evaluate(img => img.decode().catch(() => {}));
+    const state = await page.evaluate(() => {
+      const title = document.querySelector('.pdp-info h1');
+      const buy = document.querySelector('.buy-panel .btn');
+      const preview = document.querySelector('.pdp-cover-peek');
+      const image = preview?.querySelector('img');
+      const rect = buy?.getBoundingClientRect();
+      const headerBottom = document.querySelector('.site-header').getBoundingClientRect().bottom;
+      const inView = el => {
+        const r = el?.getBoundingClientRect();
+        return !!r && r.width > 0 && r.height > 0 && r.top >= headerBottom && r.bottom <= innerHeight;
+      };
+      const quickLinks = [...document.querySelectorAll('.pdp-quicklinks a')];
+      return {
+        titleVisible: inView(title), overflow: document.documentElement.scrollWidth > innerWidth + 1,
+        buyBottom: rect?.bottom, buyTop: rect?.top,
+        previewVisible: inView(preview),
+        imageLoaded: !!image?.complete && image.naturalWidth > 0,
+        targetsExist: quickLinks.length > 0 && quickLinks.every(a => !!document.getElementById(a.hash.slice(1))),
+      };
+    });
+    if (response.status() !== 200 || !state.titleVisible || state.overflow || !state.previewVisible || !state.imageLoaded ||
+        !state.targetsExist || !(state.buyTop >= 0 && state.buyBottom <= 844)) bad.push(`${product.slug}: ${JSON.stringify(state)}`);
+  }
+  ok(`all ${catalog.length} product pages show their offer and a cover within 320×844 without overflow`, bad.length === 0, bad.slice(0, 5).join(' | '));
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(BASE + '/products/portrait-mastery-kit-46-brushes/', { waitUntil: 'load' });
+  const peek = page.locator('.pdp-cover-peek');
+  await peek.focus();
+  await page.keyboard.press('Tab');
+  ok('mobile keyboard order reaches the Payhip CTA after the cover link',
+     await page.evaluate(() => document.activeElement.matches('.buy-panel .btn')));
+  await peek.click();
+  ok('mobile cover link jumps to the gallery below the sticky header',
+     new URL(page.url()).hash === '#product-images' && await page.locator('#product-images').evaluate(el => {
+       const r = el.getBoundingClientRect(), header = document.querySelector('.site-header').getBoundingClientRect();
+       return r.top >= header.bottom && r.top <= header.bottom + 40;
+     }));
+  await page.locator('.pdp-quicklinks a[href="#p-requirements"]').click();
+  ok('requirements link jumps to a visible section heading',
+     new URL(page.url()).hash === '#p-requirements' && await page.locator('#p-requirements').evaluate(el => {
+       const r = el.getBoundingClientRect(), header = document.querySelector('.site-header').getBoundingClientRect();
+       return r.top >= header.bottom && r.top <= header.bottom + 40;
+     }));
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(BASE + '/products/portrait-mastery-kit-46-brushes/', { waitUntil: 'load' });
+  const desktop = await page.evaluate(() => {
+    const media = document.querySelector('.pdp-media').getBoundingClientRect();
+    const info = document.querySelector('.pdp-info').getBoundingClientRect();
+    return { mediaLeft: media.left, infoLeft: info.left, mediaTop: media.top, infoTop: info.top,
+             coverVisible: !!document.querySelector('.pdp-cover-peek').getClientRects().length };
+  });
+  ok('desktop keeps the gallery to the left of the offer',
+     desktop.mediaLeft < desktop.infoLeft && Math.abs(desktop.mediaTop - desktop.infoTop) < 2 && !desktop.coverVisible, JSON.stringify(desktop));
+  await page.locator('.pdp-info .meta-chip.cat').focus();
+  await page.keyboard.press('Tab');
+  ok('desktop keyboard order reaches the Payhip CTA before the gallery',
+     await page.evaluate(() => document.activeElement.matches('.buy-panel .btn')));
+  await ctx.close();
+}
 async function testGallery() {
   console.log('\n── Product gallery in Chromium ──');
   const { ctx } = await makeContext();
@@ -128,6 +200,45 @@ async function testGallery() {
   await page.waitForTimeout(250);
   ok('Escape closes the dialog', !(await page.locator('.dkp-lb').isVisible()));
   await ctx.close();
+
+  // Use a tall desktop viewport so the thumbnail is stable and unobscured;
+  // a native Control-click must not be canceled by the gallery module.
+  const modified = await makeContext({ viewport: { width: 1440, height: 1200 }, reducedMotion: 'reduce' });
+  const mousePage = await modified.ctx.newPage();
+  await mousePage.goto(BASE + '/products/portrait-mastery-kit-46-brushes/', { waitUntil: 'load' });
+  const third = mousePage.locator('[data-gallery-thumb]').nth(2);
+  const thirdUrl = await third.evaluate(el => el.href);
+  const initial = await mousePage.locator('#product-main-image').getAttribute('src');
+  // In headless Chromium, background image tabs may not emit a Playwright
+  // page event until activated. The navigation request is the reliable signal.
+  const navigation = modified.ctx.waitForEvent('request', {
+    predicate: request => request.isNavigationRequest() && request.url() === thirdUrl,
+    timeout: 10000,
+  });
+  await third.click({ modifiers: ['Control'] });
+  const imageRequest = await navigation;
+  ok('Control-click requests the full image without changing the original gallery',
+     imageRequest.url() === thirdUrl && mousePage.url() === BASE + '/products/portrait-mastery-kit-46-brushes/' &&
+     await mousePage.locator('#product-main-image').getAttribute('src') === initial, imageRequest.url());
+  await modified.ctx.close();
+
+  const nojs = await makeContext({ javaScriptEnabled: false });
+  const plain = await nojs.ctx.newPage();
+  await plain.goto(BASE + '/products/portrait-mastery-kit-46-brushes/', { waitUntil: 'load' });
+  const tile = plain.locator('[data-gallery-thumb]').nth(1);
+  const fullUrl = await tile.evaluate(el => el.href);
+  ok('without JavaScript the gallery hint describes native image links',
+     (await plain.locator('[data-gallery-hint]').textContent()).includes('open the full image'));
+  const [imageResponse] = await Promise.all([plain.waitForNavigation(), tile.click()]);
+  ok('without JavaScript a preview opens its own full-size image',
+     plain.url() === fullUrl && imageResponse.status() === 200 && imageResponse.headers()['content-type'].startsWith('image/'), plain.url());
+  await plain.goto(BASE + '/products/brush-palette-bundle-160/', { waitUntil: 'load' });
+  const fullLink = plain.getByRole('link', { name: 'Open full-size product image' });
+  const singleUrl = await fullLink.evaluate(el => el.href);
+  const [singleResponse] = await Promise.all([plain.waitForNavigation(), fullLink.click()]);
+  ok('without JavaScript a single-image product also links to its full-size image',
+     plain.url() === singleUrl && singleResponse.status() === 200 && singleResponse.headers()['content-type'].startsWith('image/'), plain.url());
+  await nojs.ctx.close();
 }
 async function testPayhip() {
   console.log('\n── Native Payhip links (network stubbed) ──');
@@ -206,7 +317,19 @@ async function testJourneys() {
   const nojs = await makeContext({ javaScriptEnabled: false });
   const p = await nojs.ctx.newPage();
   await p.goto(BASE + '/thank-you.html?lead=free-fine-liner-brushes-100');
-  ok('without JavaScript all four suggestions and mobile navigation remain usable', await p.locator('[data-journey]:visible').count() === 4 && await p.locator('#mobile-menu a').first().isVisible() && !(await p.locator('[data-menu-toggle]').isVisible()));
+  const nojsMenu = p.locator('.noscript-menu');
+  ok('without JavaScript all four suggestions and the compact menu remain available',
+     await p.locator('[data-journey]:visible').count() === 4 && await nojsMenu.locator('summary').isVisible() &&
+     !await nojsMenu.locator('nav a').first().isVisible() && !await p.locator('[data-menu-toggle]').isVisible());
+  await nojsMenu.locator('summary').focus();
+  await p.keyboard.press('Enter');
+  ok('without JavaScript the native menu opens by keyboard without enlarging the sticky header',
+     await nojsMenu.locator('nav a').first().isVisible() && await p.locator('.site-header').evaluate(el => el.getBoundingClientRect().height <= 80));
+  await p.keyboard.press('Space');
+  ok('without JavaScript the native menu closes again by keyboard', !await nojsMenu.locator('nav a').first().isVisible());
+  await nojsMenu.locator('summary').click();
+  await Promise.all([p.waitForURL(BASE + '/products.html'), nojsMenu.getByRole('link', { name: 'Products', exact: true }).click()]);
+  ok('without JavaScript a native menu link opens the product catalog', p.url() === BASE + '/products.html');
   await p.goto(BASE + '/products/free-fine-liner-brushes-100/');
   ok('without JavaScript the free Payhip link and practice link remain present', await p.locator('.buy-panel a[href*="payhip.com"]').isVisible() && await p.locator('.next-step-link a').isVisible());
   await nojs.ctx.close();
@@ -292,17 +415,41 @@ async function testRecovery404() {
         blog: [...document.querySelectorAll('main a')].find(a => a.textContent.trim() === 'art tutorials')?.href,
         css: css?.href, cssLoaded: !!css?.sheet,
         script: document.querySelector('script[src*="/main.js"]')?.src,
+        skip: document.querySelector('.skip-link')?.href,
         navProducts: [...document.querySelectorAll('header a')].find(a => a.textContent.trim() === 'Products')?.href,
       };
     });
     const label = javascriptEnabled ? 'JS on' : 'JS off';
     ok(`${label}: nested 404 stays a 404 and recovery links resolve to the site root`,
-       response.status() === 404 && page.url() === BASE + nested && resolved.home === BASE + '/index.html' &&
+       response.status() === 404 && page.url() === BASE + nested && resolved.home === BASE + '/' &&
        resolved.products === BASE + '/products.html' && resolved.freebies === BASE + '/freebies.html' &&
        resolved.blog === BASE + '/blog.html' && resolved.navProducts === BASE + '/products.html', JSON.stringify(resolved));
     ok(`${label}: nested 404 stylesheet loads and scripts resolve from the site root`,
        resolved.css.startsWith(BASE + '/css/style.css?') && resolved.cssLoaded &&
        resolved.script.startsWith(BASE + '/js/main.js?'), JSON.stringify(resolved));
+    let extraNavigations = 0;
+    page.on('request', request => { if (request.isNavigationRequest()) extraNavigations++; });
+    await page.locator('.skip-link').focus();
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(50);
+    ok(`${label}: Skip to content stays on the missing URL and targets its main content`,
+       resolved.skip === BASE + nested + '#main' && page.url() === BASE + nested + '#main' && extraNavigations === 0, page.url());
+    if (javascriptEnabled) {
+      await page.locator('[data-search-open]').click();
+      await page.locator('[data-search-input]').fill('portrait');
+      const result = page.locator('[data-search-results] a.sr-item').first();
+      await result.waitFor();
+      ok('JS on: 404 search results resolve from the site root',
+         (await result.evaluate(a => a.href)).startsWith(BASE + '/products/'));
+      await page.locator('[data-search-close]').click();
+    } else {
+      const menu = page.locator('.noscript-menu');
+      await menu.locator('summary').click();
+      const products = menu.getByRole('link', { name: 'Products', exact: true });
+      ok('JS off: 404 native menu opens with root-relative links',
+         await products.isVisible() && await products.evaluate(el => el.href) === BASE + '/products.html');
+      await menu.locator('summary').click();
+    }
     await page.getByRole('link', { name: 'Browse Products', exact: true }).click();
     await page.waitForURL(BASE + '/products.html');
     ok(`${label}: 404 Browse Products opens the real product index`, page.url() === BASE + '/products.html');
@@ -310,6 +457,10 @@ async function testRecovery404() {
     await page.waitForTimeout(150);
     ok(`${label}: unknown slashless path keeps its 404, query and fragment without retrying`,
        slashResponse.status() === 404 && page.url() === BASE + slashless, page.url());
+    await page.locator('.skip-link').focus();
+    await page.keyboard.press('Enter');
+    ok(`${label}: 404 skip link preserves the missing path and query`,
+       page.url() === BASE + '/blog/__dkp_missing_qa__?ref=example#main', page.url());
     const doubleResponse = await page.goto(BASE + doubleSlash, { waitUntil: 'load' });
     await page.waitForTimeout(150);
     ok(`${label}: a double-slash missing path cannot trigger an off-origin retry`,
@@ -410,6 +561,7 @@ async function testPrivacy() {
 }
 try {
   await testHeaderAndLayout();
+  await testProductDecisionPath();
   await testGallery();
   await testPayhip();
   await testJourneys();

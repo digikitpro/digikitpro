@@ -1,7 +1,16 @@
 # DigiKitPro: conversion audit and implementation plan
 
 **Review date:** 28 October 2026<br>
-**Status:** Changes are in the working branch and have been tested locally. They have **not been deployed to digikitpro.shop**. Private aggregate GA4 and Search Console exports supplied after the initial audit were reviewed, but direct account access, live orders, free download completion, email delivery, and Payhip administrator settings were not tested. The exports are not published in this repository.
+**Status update, 29 October:** The initial audit changes ([PR #69](https://github.com/digikitpro/digikitpro/pull/69)) and canonical homepage links ([PR #71](https://github.com/digikitpro/digikitpro/pull/71)) were merged and their Pages deployments succeeded. The 29 October improvements below are locally tested in a new branch and are **not yet deployed**. The original audit narrative and checklist below describe the state when written. Private aggregate GA4 and Search Console exports were reviewed, but direct account access, live orders, free download completion, email delivery, and Payhip administrator settings were not tested. The exports are not published in this repository.
+
+### 29 October follow-up: product decisions and recovery
+
+- At 390×844, the original Portrait Mastery page placed the title at approximately y=861 and the buy button at y=1102. The revised layout puts the title, a link to the existing cover, price and Payhip button in the initial viewport; the full gallery follows. On desktop, the gallery remains left of the offer. This is observed layout friction, **not evidence of a conversion impact**.
+- Product pages now link directly to their included items, requirements and FAQ where present. Gallery previews link to the existing full-size assets when JavaScript is off; with JavaScript, normal clicks retain the gallery and modified clicks retain browser link behavior. The gallery also restores selection and labels if an image fails to load. These existing graphics are not newly verified demonstrations.
+- A native collapsible mobile menu replaces the permanently expanded no-JavaScript fallback. The nested 404 template uses root-relative assets and recovery links without a `<base>` element, so the skip link remains on the missing URL. This incorporates the intent of open, conflicting [PR #70](https://github.com/digikitpro/digikitpro/pull/70) while retaining the canonical `/` homepage link; it does not close that PR.
+- The starter-kit guide no longer asserts specific payment methods or instant delivery. Product checkout guidance asks visitors to review Payhip's total and payment options. The Terms page no longer promises an unverified delivery speed; refund policy, prices, products and Payhip settings were not changed.
+- Follow-up QA: 115 static, 2,729 SEO, 144 Chromium and 138 jsdom gallery checks passed; 2,811 local asset references had none missing. All 51 product pages were checked at 320×844, with the offer and cover visible. Nine sampled 390px pages had no automated axe violations. Both default and analytics-disabled builds passed; the static verification no longer rewrites the partner page under a different environment. Payhip and Google requests were stubbed, and GitHub Pages 404 handling was simulated.
+- The owner still needs to verify a real purchase, delivery and iPad import with authorization, confirm the provenance of product demonstrations and artwork claims, review inherited catalog/terms promises and applicable consumer rights, and check Search Console indexing. Local tests cannot establish sales uplift, actual delivery or ranking changes.
 
 ## 1. Executive assessment
 
@@ -45,12 +54,12 @@ The review did identify several concrete problems worth fixing before experiment
 
 | Priority | Action | Why / how to verify | Status |
 |---|---|---|---|
-| **P0** | Review and deploy the search injection fix; re-test a harmless encoded query in production. | Prevent query text from becoming executable HTML. Check the deployed versioned `main.js` and normal search results. | Fixed and regression-tested locally; not deployed. |
-| **P0** | Deploy the native outbound-link, mobile-header and 404 recovery fixes. | Reproduce the single-tab flow and reachable menu on a real phone and desktop; check a nested missing URL returns 404 and its links work; then test actual Payhip separately. | Local tests passed with Payhip stubbed. GitHub Pages' deployed 404 response still needs checking. |
+| **P0** | Review the search injection fix and re-test a harmless encoded query in production. | Prevent query text from becoming executable HTML. Check the deployed versioned `main.js` and normal search results. | Merged and deployed in #69; production retest remains advisable. |
+| **P0** | Verify native outbound links and mobile navigation; deploy the 404 skip-link follow-up. | Reproduce the single-tab flow and reachable menu on a real phone and desktop; check a nested missing URL returns 404 and its links work; then test actual Payhip separately. | #69 was deployed; the root-link recovery works, but its 404 `<base>` breaks the skip link. The new no-`<base>` follow-up is locally tested, not yet deployed. |
 | **P0** | Decide an appropriate analytics consent approach for operating jurisdictions; verify GA enhanced measurement and Payhip cookie behavior. | DNT/GPC/opt-out are not necessarily sufficient consent. Inspect actual network requests, search terms, referrers and vendor settings with counsel as needed. | Account/legal access needed. `DKP_ANALYTICS=false` is available as a build kill switch. |
 | **P1** | Measure real paid orders and check cross-domain continuity. | Use Payhip order reports as financial source of truth; validate GA4 purchase events and deduplication before reporting attributed sales. | Requires owner access and an approved test. |
-| **P1** | Deploy the four relevant, optional free-to-paid comparisons and improved priority pages. | Compare recommendation engagement and downstream paid-product interest by resource; do not call a click a sale. | Built and locally tested. |
-| **P1** | Review inherited Terms and catalog promises before release. | Terms still describe instant delivery; some other catalog listings still contain lifetime/access or performance claims that were not verified. Resolve contradictions with actual policy and legal review; do not silently change customer rights. | Owner review required. |
+| **P1** | Measure the four optional free-to-paid comparisons and improved priority pages. | Compare recommendation engagement and downstream paid-product interest by resource; do not call a click a sale. | Merged and deployed in #69; outcomes are unmeasured. |
+| **P1** | Review inherited Terms, artwork and catalog promises. | The follow-up removes the Terms' unverified delivery-speed claim, but other catalog listings and artwork still contain access or performance claims that were not verified. Resolve contradictions with actual policy and legal review; do not silently change customer rights. | Owner review required. |
 | **P1** | Verify checkout, receipt, file download, import and support on actual devices. | Cover the free guide, each paid priority kit and at least one other file type. A private/sandbox test or any test coupon requires owner approval. | Not done. |
 | **P2** | Add verifiable product demonstrations and preview images. | Confirm rights and the exact brushes used; compare with existing Payhip galleries. Ask customers for permission before using their work or quotes. | No new proof or reviews invented. |
 | **P2** | Reconcile catalog facts and inspect Search Console/field performance. | Review prices, contents, compatibility, indexing, Google's selected canonicals, search queries, and real mobile performance. | Aggregate exports reviewed privately; account/device access is still needed. |
@@ -256,7 +265,7 @@ You opted in to product news and art tips. [Unsubscribe: ESP link]
 
 ## 9. Local QA and release checklist
 
-Latest local results:
+Initial audit results (28 October; the follow-up above has the current results):
 
 - `python3 tools/build.py`: completed; generated pages, feeds, sitemap and search index.
 - `python3 tools/verify.py`: **114/114** checks passed, including internal links, product schema, 51 product records, free journeys, no blanket sitemap lastmod, and current script fingerprints.
