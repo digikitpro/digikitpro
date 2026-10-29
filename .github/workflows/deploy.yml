@@ -16,7 +16,7 @@ on:
   workflow_dispatch:            # "Run workflow" button for a manual rebuild
 
 permissions:
-  contents: write          # IndexNow state manifest (data/indexnow-state.json) is committed after a successful ping
+  contents: write          # Commit the IndexNow state after a successful ping or safe no-op migration
   pages: write
   id-token: write
 
@@ -78,6 +78,11 @@ jobs:
           SITE_URL: https://digikitpro.shop
         run: python3 tools/qa_seo.py
 
+      - name: Check IndexNow selection and retries offline
+        env:
+          SITE_URL: https://digikitpro.shop
+        run: python3 tools/qa_indexnow.py
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
@@ -100,8 +105,8 @@ jobs:
           SITE_URL: https://digikitpro.shop
         run: python3 tools/submit_index.py
 
-      # Only once the ping has produced a manifest (on the very first run it
-      # exists only if the submission succeeded; afterwards it is tracked).
+      # Commit an updated manifest after a successful ping or a safe no-op
+      # migration. Failed submissions leave the previous manifest untouched.
       - name: Commit IndexNow state manifest
         if: ${{ hashFiles('data/indexnow-state.json') != '' }}
         continue-on-error: true

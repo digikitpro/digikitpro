@@ -299,13 +299,14 @@ def main() -> int:
           len(sync_urls) >= 1 and sync_urls[0][1] == 10,
           str(sync_urls[0][1]) if sync_urls else "missing")
 
-    check("sync-payhip.yml ping SITE_URL is https://digikitpro.shop",
-          len(sync_urls) >= 2 and "https://digikitpro.shop" in sync_urls[1][2]
-          and "github.io" not in sync_urls[1][2])
+    check("sync-payhip.yml queues deploy for changes or pending IndexNow retries",
+          "steps.commit.outputs.changed == 'true'" in sync
+          and "steps.indexnow.outputs.pending == 'true'" in sync
+          and "createWorkflowDispatch" in sync and 'workflow_id: "deploy.yml"' in sync)
 
-    check("sync-payhip.yml ping SITE_URL indented 10",
-          len(sync_urls) >= 2 and sync_urls[1][1] == 10,
-          str(sync_urls[1][1]) if len(sync_urls) > 1 else "missing")
+    sync_indexnow_calls = [line for line in sync.splitlines() if "python3 tools/submit_index.py" in line]
+    check("sync-payhip.yml only checks IndexNow; deploy sends the ping",
+          len(sync_indexnow_calls) == 1 and "--check-pending" in sync_indexnow_calls[0])
 
     # ── 13–17 domain ──────────────────────────────────────────────────
     all_wf_urls = deploy_urls + sync_urls
@@ -687,7 +688,7 @@ def main() -> int:
           and "github.rest.actions.createWorkflowDispatch" in sync
           and 'workflow_id: "deploy.yml"' in sync
           and 0 <= commit_sync_pos < deploy_sync_pos,
-          "changed catalog/feed commits explicitly dispatch deploy.yml; unchanged runs do not")
+          "changed catalog/feed commits dispatch deploy.yml; unchanged runs dispatch only for a pending retry")
 
     # Exercise both signup states in memory. Verification must not rewrite an
     # analytics-disabled or otherwise configured artifact. Reload core first

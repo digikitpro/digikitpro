@@ -3,32 +3,37 @@
 DigiKitPro — IndexNow auto-ping
 ================================
 
-Submits only URLs whose built HTML actually changed, diffed via SHA-256
-against data/indexnow-state.json.
+Submits changed, indexable HTML URLs, diffed via SHA-256 against
+data/indexnow-state.json. The public /tools/ pages are included. Generic
+robots noindex/none pages are excluded from routine updates; a previously
+tracked indexable URL is notified on becoming noindex or disappearing, with
+retries until the notification is accepted.
 
-Wired into .github/workflows/deploy.yml to run AFTER actions/deploy-pages,
-so crawlers are never sent to content that is not live. Always exits 0:
-a ping failure must never fail a deploy (the workflow also sets
-continue-on-error).
+The deploy workflow runs this AFTER actions/deploy-pages. A ping failure must
+never fail a deploy (the workflow also sets continue-on-error).
 
-Gated on INDEXNOW_KEY. With the variable unset this script prints a skip
-message and writes nothing — dormant and harmless until the owner sets
-the repo variable.
+Normal submissions are gated on INDEXNOW_KEY. With the variable unset the
+script skips without writing; --dry-run can preview the changes without a key.
 
 Does NOT ping the retired Google or Bing sitemap-ping endpoints. Both
 have been dead for years (Google 404 since Jun 2023, Bing 410 since
 May 2022) and Google does not consume IndexNow at all.
 
 Run:
+    python3 tools/submit_index.py --dry-run  # preview only; no key needed
     INDEXNOW_KEY=abc123 SITE_URL=https://digikitpro.shop python3 tools/submit_index.py
 """
+import argparse
 import hashlib
 import json
 import os
+import re
 import sys
+import tempfile
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATE_PATH = os.path.join(ROOT, "data", "indexnow-state.json")
@@ -58,54 +63,135 @@ def _file_to_url(relpath):
     return SITE + "/" + relpath
 
 
-def iter_html_pages():
-    """Yield (relpath, url, sha256) for every public HTML page."""
-    for dirpath, dirnames, filenames in os.walk(ROOT):
-        dirnames[:] = [d for d in dirnames if d not in
-                       {".git", ".github", "tools", "data", "content",
-                        "docs", "scraped", "shots", "uploads", ".cache",
-                        "__pycache__", "node_modules"}]
-        for name in filenames:
+class RobotsMetaParser(HTMLParser):
+    """Read actual generic robots meta elements, not strings in scripts/comments."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.noindex = False
+        self.inert_element = None
+        self.template_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        # HTMLParser already treats script/style as raw text. These elements
+        # can also contain inactive or literal markup rather than page metadata.
+        if self.inert_element:
+            if self.inert_element == "template" and tag == "template":
+                self.template_depth += 1
+            return
+        if tag in {"template", "textarea", "title"}:
+            self.inert_element = tag
+            self.template_depth = 1 if tag == "template" else 0
+            return
+        if tag != "meta":
+            return
+        attrs = dict(attrs)
+        if (attrs.get("name") or "").strip().lower() != "robots":
+            return
+        # Keep a value such as "max-image-preview: none" attached to its
+        # directive, rather than mistaking the value for a standalone "none".
+        directives = re.findall(
+            r"([a-z][a-z0-9_-]*)(?:\s*:\s*[^,\s]+)?",
+            attrs.get("content") or "",
+            flags=re.IGNORECASE,
+        )
+        if {directive.lower() for directive in directives} & {"noindex", "none"}:
+            self.noindex = True
+
+    def handle_endtag(self, tag):
+        if tag == self.inert_element:
+            if tag == "template":
+                self.template_depth -= 1
+                if self.template_depth:
+                    return
+            self.inert_element = None
+
+
+def is_noindex(html):
+    parser = RobotsMetaParser()
+    parser.feed(html)
+    parser.close()
+    return parser.noindex
+
+
+def _raise_walk_error(error):
+    # A partially unreadable tree must not be recorded as a complete state.
+    raise error
+
+
+def _iter_html_with_indexability():
+    """Yield (relpath, url, sha256, is_noindex) for public HTML files."""
+    for dirpath, dirnames, filenames in os.walk(ROOT, onerror=_raise_walk_error):
+        dirnames[:] = sorted(d for d in dirnames if d not in
+                            {".git", ".github", "data", "content", "docs",
+                             "scraped", "shots", "uploads", ".cache",
+                             "__pycache__", "node_modules"})
+        for name in sorted(filenames):
             if not name.endswith(".html"):
                 continue
             full = os.path.join(dirpath, name)
             rel = os.path.relpath(full, ROOT)
             if _skip_file(rel):
                 continue
-            h = hashlib.sha256()
             with open(full, "rb") as f:
-                for chunk in iter(lambda: f.read(1 << 16), b""):
-                    h.update(chunk)
-            yield rel, _file_to_url(rel), h.hexdigest()
+                data = f.read()
+            yield (rel, _file_to_url(rel), hashlib.sha256(data).hexdigest(),
+                   is_noindex(data.decode("utf-8", errors="replace")))
+
+
+def iter_html_pages():
+    """Yield (relpath, url, sha256) for indexable public HTML pages."""
+    for rel, url, digest, noindex in _iter_html_with_indexability():
+        if not noindex:
+            yield rel, url, digest
 
 
 def load_state():
-    if not os.path.exists(STATE_PATH):
-        return {}
+    """Read v1 or v2 state; v1 may contain previously submitted noindex pages."""
     try:
-        data = json.load(open(STATE_PATH, encoding="utf-8"))
-    except Exception:
-        return {}
-    pages = data.get("pages")
-    return pages if isinstance(pages, dict) else {}
+        with open(STATE_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        return {"version": 0, "pages": {}}
+    except (OSError, ValueError) as error:
+        raise ValueError("Cannot read IndexNow state; refusing to submit") from error
+    if (not isinstance(data, dict) or not isinstance(data.get("pages"), dict)
+            or data.get("version") not in (1, 2)
+            or not all(isinstance(url, str) and isinstance(digest, str)
+                       for url, digest in data["pages"].items())):
+        raise ValueError("Invalid or unsupported IndexNow state; refusing to submit")
+    if data.get("site") not in (None, SITE):
+        return {"version": 0, "pages": {}}
+    # Never put another host's URL into a removal notification if a state
+    # file was malformed or created without a site field.
+    data["pages"] = {url: digest for url, digest in data["pages"].items()
+                     if url.startswith(SITE + "/")}
+    return data
 
 
 def save_state(pages):
     os.makedirs(os.path.dirname(STATE_PATH), exist_ok=True)
     payload = {
-        "version": 1,
+        "version": 2,
         "site": SITE,
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "pages": pages,
     }
-    with open(STATE_PATH, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2, sort_keys=False)
-        f.write("\n")
+    # Replace atomically so a write failure cannot truncate the last state.
+    fd, temporary = tempfile.mkstemp(prefix=".indexnow-state-", suffix=".tmp",
+                                     dir=os.path.dirname(STATE_PATH))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2, sort_keys=False)
+            f.write("\n")
+        os.replace(temporary, STATE_PATH)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 def changed_urls(current, previous):
-    """URLs whose SHA-256 changed, or that are new. Drops vanished pages
-    from the next state without submitting a delete (IndexNow has none)."""
+    """Return new indexable URLs and URLs whose SHA-256 changed."""
     out = []
     for url, digest in current.items():
         if previous.get(url) != digest:
@@ -134,25 +220,59 @@ def submit(urls):
     )
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
-            print(f"IndexNow submitted {len(urls)} URLs (HTTP {r.status}).")
-            return r.status in (200, 202)
+            if r.status in (200, 202):
+                print(f"IndexNow submitted {len(urls)} URLs (HTTP {r.status}).")
+                return True
+            print(f"IndexNow submission not accepted (HTTP {r.status}).")
+            return False
     except Exception as e:
         print(f"IndexNow submission failed: {e}")
         return False
 
 
-def main():
-    if not KEY:
-        print("INDEXNOW_KEY is not set; skipping IndexNow ping (dormant).")
-        return 0
+def collect_changes():
     current_pages = {}
-    for rel, url, digest in iter_html_pages():
-        current_pages[url] = digest
-    previous = load_state()
+    for _rel, url, digest, noindex in _iter_html_with_indexability():
+        if not noindex:
+            current_pages[url] = digest
+    state = load_state()
+    previous = state["pages"]
     to_ping = changed_urls(current_pages, previous)
-    print(f"IndexNow: {len(current_pages)} HTML pages, {len(to_ping)} changed.")
+
+    # V2 tracks only indexable pages. A previously tracked URL that no longer
+    # qualifies is either newly noindex or absent from the built tree; notify
+    # it once after deployment. V1 also tracked noindex pages, so we cannot
+    # safely infer transitions or deletions during migration from V1.
+    if state.get("version") == 2:
+        to_ping.extend(sorted(set(previous) - set(current_pages)))
+    return state, current_pages, to_ping
+
+
+def main(dry_run=False, check_pending=False):
+    if not KEY and not dry_run:
+        if check_pending:
+            print("false")
+        else:
+            print("INDEXNOW_KEY is not set; skipping IndexNow ping (dormant).")
+        return 0
+    state, current_pages, to_ping = collect_changes()
+    if check_pending:
+        # Used by the daily sync to queue a post-deployment retry when needed.
+        print("true" if to_ping else "false")
+        return 0
+    print(f"IndexNow: {len(current_pages)} indexable HTML pages, "
+          f"{len(to_ping)} URLs to notify.")
+    if dry_run:
+        for url in to_ping:
+            print(url)
+        print("Dry run: no submission or state changes.")
+        return 0
     if not to_ping:
-        print("IndexNow: nothing to submit.")
+        if state.get("version") != 2 or current_pages != state["pages"]:
+            save_state(current_pages)
+            print("IndexNow: refreshed state; nothing to submit.")
+        else:
+            print("IndexNow: nothing to submit.")
         return 0
     if submit(to_ping):
         save_state(current_pages)
@@ -163,4 +283,10 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    parser = argparse.ArgumentParser(description="Notify IndexNow about changed pages.")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--dry-run", action="store_true", help="preview URLs without sending or writing")
+    mode.add_argument("--check-pending", action="store_true",
+                      help="print true/false without sending or writing (requires a key)")
+    args = parser.parse_args()
+    sys.exit(main(dry_run=args.dry_run, check_pending=args.check_pending))

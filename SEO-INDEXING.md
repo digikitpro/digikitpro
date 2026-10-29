@@ -18,7 +18,7 @@ What this update adds (and how to use it):
    It reads your public Payhip store, discovers new product IDs, fetches the product
    details, adds them to `data/products.json`, rebuilds the site, and commits. Products you add on
    Payhip appear on the site automatically. (It never overwrites hand-written SEO copy.)
-4. **IndexNow** - optional free instant indexing for Bing/Yandex/Seznam.
+4. **IndexNow** - free change notifications for participating engines, including Bing/Yandex/Seznam (not a guarantee of indexing).
 
 ---
 
@@ -63,7 +63,8 @@ This uses **GitHub Actions variables**, not code edits, so you don’t break any
 
 ## 2. IndexNow (recommended, free)
 
-IndexNow tells Bing, Yandex and Seznam the instant your URLs change.
+IndexNow notifies participating engines, including Bing, Yandex and Seznam, about URL changes.
+Google does not use IndexNow, and an accepted notification does not guarantee crawling or indexing.
 
 It is **on by default**: `.github/workflows/deploy.yml` and `sync-payhip.yml` carry a default key
 (an IndexNow key is public by design — engines fetch it from your site — so it is not a secret).
@@ -71,9 +72,27 @@ It is **on by default**: `.github/workflows/deploy.yml` and `sync-payhip.yml` ca
 1. Nothing to configure. To rotate the key, create a repository variable **`INDEXNOW_KEY`**; it
    overrides the default in both workflows.
 2. Build/deploy. `tools/build.py` writes `<key>.txt` to the site root automatically.
-3. The deploy workflow then calls `tools/submit_index.py`, which posts your changed pages to IndexNow.
+3. After Pages is deployed, `tools/submit_index.py` posts new or changed eligible HTML pages,
+   including `/tools/`. The daily catalog sync queues a deployment when it has changes or a
+   pending IndexNow retry; it does not submit before the deployment.
 
-You can also run it locally:
+The script checks actual generic `robots` meta elements in the built HTML, excluding `noindex` and
+`none` pages from routine updates. It does not inspect HTTP `X-Robots-Tag` headers. Once the new v2
+state is recorded, a previously tracked indexable URL is notified when its page becomes `noindex`
+or disappears from the built HTML. Once accepted, later edits to a `noindex` page are not routinely
+submitted. The previous v1 state did not record indexability, so earlier `noindex` transitions and
+removals cannot safely be inferred during migration. A failed POST leaves state unchanged for retry;
+an unreadable or invalid state stops submission rather than triggering a mass re-submit. Redirects
+configured only at the server, without a detectable built-file change, are not automatically detected.
+
+Preview the URLs selected from the local build and state without contacting IndexNow or writing state:
+```bash
+python3 tools/submit_index.py --dry-run
+python3 tools/qa_indexnow.py  # offline regression tests
+```
+
+To submit manually, run the following **only after those pages are live**; it sends a real notification
+and updates local state on success:
 ```bash
 INDEXNOW_KEY=a1b2c3d4e5f67890 SITE_URL=https://YOUR-SITE python3 tools/submit_index.py
 ```
