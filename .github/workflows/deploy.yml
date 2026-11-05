@@ -78,6 +78,11 @@ jobs:
           SITE_URL: https://digikitpro.shop
         run: python3 tools/qa_seo.py
 
+      - name: Check Merchant feed description provenance offline
+        env:
+          SITE_URL: https://digikitpro.shop
+        run: python3 tools/qa_merchant_feed.py
+
       - name: Check IndexNow selection and retries offline
         env:
           SITE_URL: https://digikitpro.shop

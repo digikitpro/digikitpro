@@ -1081,8 +1081,9 @@ def main() -> int:
                       if _google_slug and "ebook" in _google_slug.lower()),
           f"{len(merchant_ids)} stable unique IDs; no book products")
 
-    merchant_required = ("id", "title", "description", "link", "image_link",
-                         "availability", "price", "brand", "condition", "product_type")
+    # A Merchant description can be plain text or a structured AI disclosure.
+    merchant_required = ("id", "title", "link", "image_link", "availability",
+                         "price", "brand", "condition", "product_type")
     merchant_bad = []
     for p in merchant_eligible:
         row = merchant_by_id.get(p["slug"])
@@ -1093,6 +1094,17 @@ def main() -> int:
         if any(not values[name] for name in merchant_required):
             merchant_bad.append(f"{p['slug']}: missing required feed field")
             continue
+        plain_desc = row.find("g:description", namespaces=gns)
+        structured_desc = row.find("g:structured_description", namespaces=gns)
+        if (plain_desc is None) == (structured_desc is None):
+            merchant_bad.append(f"{p['slug']}: expected exactly one description field")
+        elif structured_desc is not None:
+            ai_kind = structured_desc.findtext("g:digital_source_type", namespaces=gns)
+            content = structured_desc.findtext("g:content", namespaces=gns)
+            if ai_kind != "trained_algorithmic_media" or content != (p.get("short") or p.get("seoDesc") or p["name"]).strip():
+                merchant_bad.append(f"{p['slug']}: structured description missing or differs from catalog")
+        elif plain_desc.text != (p.get("short") or p.get("seoDesc") or p["name"]).strip():
+            merchant_bad.append(f"{p['slug']}: plain description differs from catalog")
         if values["link"] != f"{HOST}/products/{p['slug']}/":
             merchant_bad.append(f"{p['slug']}: link is not its DigiKitPro landing page")
         if not values["image_link"].startswith("https://"):
