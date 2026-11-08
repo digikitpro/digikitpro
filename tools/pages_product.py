@@ -427,7 +427,7 @@ def build_product_pages():
         trust_items = (["Launches soon, right here on Payhip", "Newsletter subscribers get it first", "Procreate on iPad recommended"]
                        if coming else
                        ["Digital delivery via Payhip", "No physical item ships",
-                        'Procreate on iPad required' if p['category'] not in ('Other', 'Guides & eBooks') else 'See requirements below'])
+                        'Procreate on iPad only — not Photoshop, Clip Studio or Android' if p['category'] not in ('Other', 'Guides & eBooks') else 'See requirements below'])
         trust = "".join(f"<li>{t}</li>" for t in trust_items)
         get_copy = ("Launches soon on our Payhip store. Join the newsletter below and you will be the first to know."
                     if coming else "Continue to the product on Payhip for checkout and digital delivery.")
@@ -506,6 +506,7 @@ def build_product_pages():
     </article>
 
     {features}
+    {reviews_block(p, depth)}
     {free_next_step(p, depth)}
     {kit_comparison(p, depth)}
     {bundle_block}

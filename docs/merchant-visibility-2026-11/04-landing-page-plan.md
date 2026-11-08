@@ -25,11 +25,11 @@ Audited via live fetch (homepage/PDPs render, `robots.txt` clean, 104 pages pass
 
 ## Priority actions (template fixes — one PR each or batched)
 
-**P1 — do first**
+**P1 — done (this branch's PR, 2026-11-08)**
 
-1. **Compatibility + licence box** immediately above the Payhip button on every PDP: "iPad + Procreate only · `.brushset`/ZIP · [licence line] · Digital delivery via Payhip · Refunds: refunds.html". Variables per product already exist in catalog (`technical`, `requirements`).
-2. **Install help strip** (2 lines + link to install article) — reduces "file won't open" tickets; especially for the 12MB ZIPs.
-3. **Reviews block** — even 3 founding-buyer quotes per flagship (Skin, Mastery, Essential Line Art, Bundle) beats zero trust vs Etsy.
+1. ~~Compatibility statement~~ → every non-guide PDP now carries **"Procreate on iPad only — not Photoshop, Clip Studio or Android"** in the trust list directly under the buy panel (verification line stays in requirements). Full compatibility+licence box in the ideal wording remains optional polish.
+2. ~~Install help strip~~ → already present via `install_steps()` (format-aware: PDF/.brushset/.swatches) — verified present on all PDPs; no re-add needed.
+3. **Reviews block** → machinery merged: PDP renders "What buyers say" + Product JSON-LD `review` only when real quotes exist in `data/products.json` (see [../owner-kits/founding-reviews.md](../owner-kits/founding-reviews.md)). Content pending owner-collected founding quotes — **never fabricated**.
 
 **P2 — next 30 days**
 
