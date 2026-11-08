@@ -229,8 +229,10 @@ def build_google_merchant_feed():
     """Build a dedicated Google Merchant Center XML source from the catalog.
 
     This is not a blanket eligibility claim for digital goods. Hold out
-    zero-price downloads under Google's price requirements and digital books
-    (including the PDF travel guide) pending destination-specific review.
+    zero-price downloads under Google's price requirements, digital books
+    (including the PDF travel guide) pending destination-specific review, and
+    anything in merchant_feed.FEED_HOLDS — products deliberately paused, with
+    an audit reference, until a specific owner action clears (see that dict).
     All products retain their organic site pages and direct Payhip links.
     Remaining paid, non-book products still require individual Merchant
     Center policy and destination review.
@@ -247,7 +249,12 @@ def build_google_merchant_feed():
     """
     products = [p for p in PRODUCTS
                 if not p.get("comingSoon") and not p.get("free")
-                and float(p.get("price") or 0) > 0 and not _google_merchant_book(p)]
+                and float(p.get("price") or 0) > 0 and not _google_merchant_book(p)
+                and p.get("slug") not in merchant_feed.FEED_HOLDS]
+    held = [p["slug"] for p in PRODUCTS
+            if not p.get("comingSoon") and not p.get("free")
+            and float(p.get("price") or 0) > 0 and not _google_merchant_book(p)
+            and p.get("slug") in merchant_feed.FEED_HOLDS]
     provenance = load_provenance()
     categories = merchant_feed.load_categories()
     titles = merchant_feed.load_titles()
@@ -335,6 +342,8 @@ def build_google_merchant_feed():
 """
     write("google-merchant-feed.xml", xml)
     print(f"Google Merchant feed: {len(products)} paid non-book candidates -> google-merchant-feed.xml (eligibility unverified)")
+    if held:
+        print(f"NOTE: {len(held)} product(s) held out of the feed pending owner action: {', '.join(held)}")
     if missing_categories:
         print("WARNING: no reviewed Google product category for "
               f"{len(missing_categories)} product(s); they were emitted without one. "

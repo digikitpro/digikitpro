@@ -3,7 +3,7 @@ title: The Complete Procreate Portrait Workflow: Sketch to Final Polish
 slug: procreate-portrait-workflow
 description: Follow a repeatable Procreate portrait workflow from reference and canvas setup through construction, values, skin, hair, edges, and final polish.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-11-08
 category: Tutorials
 howto: true
 primary_keyword: Procreate portrait workflow

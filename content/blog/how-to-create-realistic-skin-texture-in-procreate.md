@@ -1,13 +1,13 @@
 ---
 title: How to Create Realistic Skin Texture in Procreate
 slug: how-to-create-realistic-skin-texture-in-procreate
-description: Learn how to add believable pores, freckles, blemishes, and wrinkles in Procreate without covering your portrait in repetitive digital noise.
+description: Why digital portrait skin looks plastic (and flat) in Procreate — and how to fix it with form-led texture, not more blending or noise.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-11-08
 category: Tutorials
 howto: true
 primary_keyword: how to create realistic skin texture in Procreate
-secondary_keywords: [Procreate pores brush, digital skin texture, realistic freckles Procreate, Procreate wrinkles brush]
+secondary_keywords: [Procreate pores brush, digital skin texture, realistic freckles Procreate, Procreate wrinkles brush, why do digital portraits look plastic, plastic skin digital art]
 search_intent: Informational
 target_audience: Portrait painters, character artists, and Procreate users whose digital skin looks too smooth or artificial
 tags: [skin texture, portraits, pores, freckles, wrinkles, Procreate tutorial]
@@ -82,6 +82,10 @@ Temporarily hide the texture layer. If the portrait only works when every mark i
 {{products}}
 
 ## FAQ
+
+### Why do digital portraits look plastic or waxy?
+
+Usually because the surface is too smooth and the edges everywhere are the same soft mark. Fix the form first (larger value shapes), stop blending so much, then add selective texture — pores and freckles where the light turns, not evenly across the face. More texture everywhere looks as artificial as no texture.
 
 ### What is the best Procreate brush for pores?
 

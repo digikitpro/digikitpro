@@ -122,7 +122,8 @@ class MerchantDescriptionTests(unittest.TestCase):
     def test_generated_feed_matches_catalog_and_recorded_provenance(self):
         products = json.loads((ROOT / "data/products.json").read_text(encoding="utf-8"))
         eligible = {p["slug"]: p for p in products if not p.get("comingSoon") and not p.get("free")
-                    and float(p.get("price") or 0) > 0 and not pages_misc._google_merchant_book(p)}
+                    and float(p.get("price") or 0) > 0 and not pages_misc._google_merchant_book(p)
+                    and p.get("slug") not in merchant_feed.FEED_HOLDS}
         manifest = load_provenance()
         titles = merchant_feed.load_titles()
         items = ET.parse(ROOT / "google-merchant-feed.xml").findall("./channel/item")
@@ -169,13 +170,14 @@ class MerchantEnrichmentTests(unittest.TestCase):
     def _catalog():
         products = json.loads((ROOT / "data/products.json").read_text(encoding="utf-8"))
         return {p["slug"]: p for p in products if not p.get("comingSoon") and not p.get("free")
-                and float(p.get("price") or 0) > 0 and not pages_misc._google_merchant_book(p)}
+                and float(p.get("price") or 0) > 0 and not pages_misc._google_merchant_book(p)
+                and p.get("slug") not in merchant_feed.FEED_HOLDS}
 
     def test_every_item_carries_a_reviewed_verified_category(self):
         nodes = merchant_feed.load_taxonomy_nodes()
         reviewed = merchant_feed.load_categories()
         items = self._feed()
-        self.assertEqual(len(items), 45)
+        self.assertEqual(len(items), 44)
         seen = set()
         for row in items:
             slug = row.findtext("g:id", namespaces=NS)
@@ -185,7 +187,10 @@ class MerchantEnrichmentTests(unittest.TestCase):
                 self.assertEqual(value, reviewed[slug]["id"])
                 seen.add(value)
         self.assertGreater(len(seen), 1, "a single blanket category would misclassify the catalogue")
-        self.assertEqual(set(reviewed), {r.findtext("g:id", namespaces=NS) for r in items})
+        held = set(merchant_feed.FEED_HOLDS)
+        self.assertLessEqual(held, set(reviewed),
+                             "a hold must keep its reviewed category so it is ready to re-enable")
+        self.assertEqual(set(reviewed) - held, {r.findtext("g:id", namespaces=NS) for r in items})
 
     def test_highlights_and_details_stay_inside_google_limits(self):
         for row in self._feed():
@@ -250,8 +255,8 @@ class MerchantEnrichmentTests(unittest.TestCase):
         self.assertGreaterEqual(min(details), 4)
         rich_hl = sum(1 for n in highlights if n > 4)
         rich_dt = sum(1 for n in details if n > 5)
-        self.assertGreaterEqual(rich_hl, 18, f"only {rich_hl}/45 reach more than 4 highlights")
-        self.assertGreaterEqual(rich_dt, 14, f"only {rich_dt}/45 reach more than 5 details")
+        self.assertGreaterEqual(rich_hl, 18, f"only {rich_hl}/44 reach more than 4 highlights")
+        self.assertGreaterEqual(rich_dt, 14, f"only {rich_dt}/44 reach more than 5 details")
 
     def test_highlights_do_not_restate_the_description(self):
         """A bullet may summarise the same fact, but must not repeat the prose.
@@ -297,6 +302,51 @@ class MerchantEnrichmentTests(unittest.TestCase):
                 tmp.unlink()
         self.assertEqual(len(merchant_feed.load_categories(ROOT / "data/merchant-categories.json", nodes)),
                          len(good["categories"]))
+
+
+class FeedHoldTests(unittest.TestCase):
+    """Products paused from the Google feed must be deliberate and documented.
+
+    Any hold in merchant_feed.FEED_HOLDS is buyer-protective: it keeps a
+    known-broken deliverable away from Google until the owner resolves it.
+    A hold without an audit reference is a silent editorial choice and fails.
+    """
+
+    def test_holds_are_audit_referenced_and_excluded(self):
+        items = self._feed()
+        ids = {row.findtext("g:id", namespaces=NS) for row in items}
+        for slug, why in merchant_feed.FEED_HOLDS.items():
+            self.assertNotIn(slug, ids, f"held product {slug} still appears in the feed")
+            self.assertGreaterEqual(len(why.split()), 8,
+                                    f"hold for {slug} lacks a documented reason")
+            self.assertRegex(why, r"(?i)(audit|merchant|feed|zip|archive|cover|verif)",
+                             f"hold for {slug} does not cite the blocker")
+
+    def test_held_product_keeps_its_pdp(self):
+        """The hold is a feed pause, not a delisting: organic page must exist."""
+        for slug in merchant_feed.FEED_HOLDS:
+            pdp = ROOT / "products" / slug / "index.html"
+            self.assertTrue(pdp.is_file(), f"held product {slug} lost its landing page")
+
+    def test_feed_carries_no_internal_audit_language(self):
+        xml = (ROOT / "google-merchant-feed.xml").read_text(encoding="utf-8")
+        # Tight list on purpose. Highlight caveats on unconfirmed-count
+        # products ("exactly confirmed in the text listing" style) are the
+        # owner-approved transitional state from PR #77, tracked as register
+        # item D; they are not re-introduced by this test's mercy. The phrases
+        # banned here are audit-workroom language in ALL cases.
+        banned = (
+            "owner verification", "owner verify", "owner to confirm", "need owner",
+            "unverified", " audit ", "internal note", "do not ship",
+            "awaiting confirmation", "to be confirmed",
+        )
+        low = xml.lower()
+        for phrase in banned:
+            self.assertNotIn(phrase, low, f"internal audit language leaked into the feed: {phrase!r}")
+
+    @staticmethod
+    def _feed():
+        return ET.parse(ROOT / "google-merchant-feed.xml").findall("./channel/item")
 
 
 if __name__ == "__main__":

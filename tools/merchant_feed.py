@@ -45,6 +45,27 @@ CLASS_LABELS = {
     "canva_templates": "Editable Canva Templates",
 }
 
+# Temporary, deliberate holds from the Google Merchant feed. Each entry is an
+# audit reference, not a judgement that the product is bad. A held product
+# keeps its organic site page and direct Payhip link; it only leaves Google's
+# Shopping surface until the blocker clears. Re-enable by removing the entry
+# and rebuilding — never by editing generated XML by hand.
+FEED_HOLDS = {
+    # Merchant-audit HIGH item H (docs/merchant-audit-2026-11/00-HIGH-status.md,
+    # 2026-11-08): the delivered download is a .rar archive, which the iPad
+    # Files app cannot extract, and the owner has not yet verified the cover
+    # image or the advertised contents for this SKU. It must NOT be promoted
+    # to Google until the owner re-uploads a verified .zip on Payhip and
+    # confirms the cover; at that point this entry is removed and the feed
+    # rebuilt. Do not 'fix' this by rewriting the highlight copy — the file
+    # itself is the defect.
+    "pro-sketch-traditional-art-kit": (
+        "delivers a .rar archive; cover and advertised contents unverified "
+        "by owner (merchant-audit HIGH item H, 2026-11-08); restore to the "
+        "feed only after a Payhip ZIP re-upload and cover verification"
+    ),
+}
+
 # The owner's declared priority cluster: portrait + library + bundle value.
 PRIORITY = (
     "portrait-skin-brushes-procreate",
