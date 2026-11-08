@@ -17,6 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
+import merchant_feed  # noqa: E402
 from seo_engine import should_fill  # noqa: E402
 from export_product_seo import make_csv  # noqa: E402
 
@@ -122,7 +123,28 @@ def main():
     merchant_ids = {x.text for x in merchant.findall(".//g:id", ns)}
     check(not any(p["slug"] in merchant_ids for p in products if p.get("free")), "Free download sent to Merchant source")
     check("morocco-7-day-itinerary" not in merchant_ids, "PDF travel guide sent to common Merchant source")
-    check(not merchant.findall(".//g:google_product_category", ns), "Unverified Merchant category was added")
+
+    # Merchant categories must be reviewed per product and verified against the
+    # official taxonomy subset: no blanket category, no unlisted node, and no
+    # product silently shipped without one. Digital downloads belong under
+    # Software > Digital Goods & Currency, not a physical art-supply node.
+    reviewed = merchant_feed.load_categories()
+    merchant_cats = {}
+    for item in merchant.findall(".//item", ns):
+        slug = item.findtext("g:id", namespaces=ns)
+        value = item.findtext("g:google_product_category", namespaces=ns)
+        check(value is not None, f"{slug}: no Google product category")
+        merchant_cats[slug] = value
+    check(len(set(merchant_cats.values())) > 1, "blanket Google category applied to the whole feed")
+    check(len(merchant_cats) == len(merchant_ids), "Merchant category coverage differs from item count")
+    for slug, value in merchant_cats.items():
+        entry = reviewed.get(slug)
+        check(entry is not None, f"{slug}: no reviewed category in data/merchant-categories.json")
+        if entry:
+            check(value == entry["id"], f"{slug}: feed category {value} != reviewed {entry['id']}")
+            check(not entry["path"].startswith("Arts & Entertainment"),
+                  f"{slug}: physical arts-and-crafts category used for a digital download")
+            check(entry["reason"].strip(), f"{slug}: category has no recorded reason")
 
     if failures:
         print(f"FAILED: {len(failures)} of {checks} editorial checks")

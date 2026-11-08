@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "data/merchant-ai-provenance.json"
 AI_SOURCE = "trained_algorithmic_media"
-TRACKED_FIELDS = {"short", "seoDesc"}
+TRACKED_FIELDS = {"merchantDescription", "short", "seoDesc"}
 ORIGINS = {"ai", "non_ai"}
 
 
@@ -43,8 +43,14 @@ def load_provenance(path: Path = MANIFEST) -> dict[str, dict[str, dict[str, str]
 
 
 def select_description(product: dict) -> tuple[str, str]:
-    """Use the same short/SEO/name fallback order as the existing feed."""
-    for field in ("short", "seoDesc", "name"):
+    """Feed description: the reviewed Merchant copy, else short/SEO/name.
+
+    ``merchantDescription`` is written specifically for the feed (it states the
+    format, contents and requirements in one block) and is recorded as AI text
+    in the provenance manifest, so it is disclosed through
+    ``structured_description`` rather than passed off as merchant-written copy.
+    """
+    for field in ("merchantDescription", "short", "seoDesc", "name"):
         if product.get(field):
             return field, str(product[field]).strip()
     raise ValueError(f"Product {product.get('slug', '<unknown>')} has no description")

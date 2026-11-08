@@ -354,11 +354,14 @@ Editorial plan and the 30-day posting calendar: **`docs/PINTEREST-30-DAY-PLAN.md
 
 `tools/build.py` generates a dedicated scheduled-fetch feed at
 `https://digikitpro.shop/google-merchant-feed.xml`; it is not the Pinterest feed
-and does not connect to or modify a Merchant Center account. The initial source
-includes available non-book products (including free downloads), links to
-DigiKitPro product pages, and excludes the two eBooks pending a separate policy
-review. Setup steps, shipping/market prerequisites, and the catalog's identifier
-caveat are in **`docs/GOOGLE-MERCHANT.md`**.
+and does not connect to or modify a Merchant Center account. The source includes
+available **paid** non-book products, links to DigiKitPro product pages, and
+excludes free downloads, the two eBooks and the PDF travel guide pending separate
+policy review. Every item carries a reviewed Google category, highlights, detail
+rows and reporting labels from `data/merchant-categories.json` and
+`data/merchant-titles.json`; setup steps, shipping/market prerequisites and the
+identifier caveat are in **`docs/GOOGLE-MERCHANT.md`**, and the 2026-11 audit is
+in **`docs/merchant-feed-audit-2026-11.md`**.
 
 ### Free-resource journeys
 

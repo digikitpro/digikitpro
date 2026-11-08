@@ -3,208 +3,694 @@
   "note": "Fingerprints of the AI-written short and SEO description fields from the 2026-10-29 review rewrite. Match exact current text before labeling; do not infer the origin of later edits, new products, or product names.",
   "products": {
     "adhd-planner-2026": {
-      "short": {"source": "ai", "sha256": "922e226eecfb590c4ea706e08cca370e4d7269eb29e5efe7f71b0f8f2f4b1b98"},
-      "seoDesc": {"source": "ai", "sha256": "d68ff9615796a0b2039fb08817e5c3a29935cec4be9d2a8aa55e438ca7a46f7b"}
+      "short": {
+        "source": "ai",
+        "sha256": "922e226eecfb590c4ea706e08cca370e4d7269eb29e5efe7f71b0f8f2f4b1b98"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "d68ff9615796a0b2039fb08817e5c3a29935cec4be9d2a8aa55e438ca7a46f7b"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "abd4eafe485e38d3b3f2f3a45c45a9024413e4b901fa61cac015a2ae3e5ec3a8"
+      }
     },
     "animal-fur-brushes-2": {
-      "short": {"source": "ai", "sha256": "e2e97348bf14202a230cfbadab1b898bace0e774a0539abf29ac8ca2a6ee02f5"},
-      "seoDesc": {"source": "ai", "sha256": "ebaa1404edf773e774165d75bd6147699ce7033934f6ab9c95d3530102412b3d"}
+      "short": {
+        "source": "ai",
+        "sha256": "e2e97348bf14202a230cfbadab1b898bace0e774a0539abf29ac8ca2a6ee02f5"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "ebaa1404edf773e774165d75bd6147699ce7033934f6ab9c95d3530102412b3d"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "3865aa75e178e67ef5b398456f192243baca8103d95de48aff0043b5f3030bef"
+      }
     },
     "anime-soft-style-brushes-100": {
-      "short": {"source": "ai", "sha256": "acb18294d20664107894c341544a2dad54b9bd82bd07bed0e8293df361ecf461"},
-      "seoDesc": {"source": "ai", "sha256": "160350163aa277ca535cccd6c94178b26048264d4eddccd3363c7b99369c0530"}
+      "short": {
+        "source": "ai",
+        "sha256": "acb18294d20664107894c341544a2dad54b9bd82bd07bed0e8293df361ecf461"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "160350163aa277ca535cccd6c94178b26048264d4eddccd3363c7b99369c0530"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "d09cd3fba1e3b5fd25021d2b5a7eb559018f1f6032d0d061a01c5b99197328d3"
+      }
     },
     "anime-soft-style-studio-kit": {
-      "short": {"source": "ai", "sha256": "54110cfc5a23de57834f769dfccf8257952ef20f917a1c10fa3ec737d15bf543"},
-      "seoDesc": {"source": "ai", "sha256": "fe305d69867a535bae7607f914833af0591c1f2a33b879d4bed611cfc740e4a2"}
+      "short": {
+        "source": "ai",
+        "sha256": "54110cfc5a23de57834f769dfccf8257952ef20f917a1c10fa3ec737d15bf543"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "fe305d69867a535bae7607f914833af0591c1f2a33b879d4bed611cfc740e4a2"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "774ac17f8941945bbca75b64bca7f16879f29d660cf25281a0c4952b41792bdc"
+      }
     },
     "artista-studio-kit-76-brushes": {
-      "short": {"source": "ai", "sha256": "bbdfef40031547ab692cdd473d27452635cd522d077e4bb71a17cf77d7856e7d"},
-      "seoDesc": {"source": "ai", "sha256": "c072e79cfb1ee561e7ed1e8f9be71d4b1dab353757470b7da673a078b7d67436"}
+      "short": {
+        "source": "ai",
+        "sha256": "bbdfef40031547ab692cdd473d27452635cd522d077e4bb71a17cf77d7856e7d"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "c072e79cfb1ee561e7ed1e8f9be71d4b1dab353757470b7da673a078b7d67436"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "1672d472dfe61c4ffb2a47ed0b286f1f3be42ab7f5f33290e0ff8d9be5f3722b"
+      }
     },
     "brush-palette-bundle-160": {
-      "short": {"source": "ai", "sha256": "1086e55b3e192ef6aa53d27e1460d45182c7f6d26ea89d7e878054368882f2c4"},
-      "seoDesc": {"source": "ai", "sha256": "644e2237dbe164072bab4a5bc3225711a72e70dbdc011d8f3e6a3061e9352d7a"}
+      "short": {
+        "source": "ai",
+        "sha256": "1086e55b3e192ef6aa53d27e1460d45182c7f6d26ea89d7e878054368882f2c4"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "644e2237dbe164072bab4a5bc3225711a72e70dbdc011d8f3e6a3061e9352d7a"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "01dd3b7bf23447b4aab39fb1b077a15f968819403a4635c66e460312c0355659"
+      }
     },
     "christmas-brushes-bundle": {
-      "short": {"source": "ai", "sha256": "7ce99077c80399e355d1ed268415125ababdc2d5166d7a4c3ee9057ac157734c"},
-      "seoDesc": {"source": "ai", "sha256": "d8a08d09ed3d044c7be32cc3f618fe205273df4a4d18a7594873350a079e8c85"}
+      "short": {
+        "source": "ai",
+        "sha256": "7ce99077c80399e355d1ed268415125ababdc2d5166d7a4c3ee9057ac157734c"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "d8a08d09ed3d044c7be32cc3f618fe205273df4a4d18a7594873350a079e8c85"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "e01320438480786893b51d8bd19433e46e312abf7ca51747261a6d23d1c027f4"
+      }
     },
     "dreamy-pastel-art-kit": {
-      "short": {"source": "ai", "sha256": "ab9813975c1573cfa3fbd8fe6601d19dcdddb6f84d4698ee452ad1d40879a1c9"},
-      "seoDesc": {"source": "ai", "sha256": "709912a4b0ed0085207370a8af4062c8fc5b376e41c7f0cda28040004259c953"}
+      "short": {
+        "source": "ai",
+        "sha256": "ab9813975c1573cfa3fbd8fe6601d19dcdddb6f84d4698ee452ad1d40879a1c9"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "709912a4b0ed0085207370a8af4062c8fc5b376e41c7f0cda28040004259c953"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "adecd00fe07ebe632163b4d644767563f535807293f7416d08c63d4485bbe90c"
+      }
     },
     "essential-line-art-sketch-kit": {
-      "short": {"source": "ai", "sha256": "046d48ccf02ad7f7a5ab4f1c2285d3d2c3c1d217e1e27d44e6b9502473d2199b"},
-      "seoDesc": {"source": "ai", "sha256": "75a3e688251c2b91b97dea20f6bc5caf9d5ae139f96c9e452c2b78f5b63ff4aa"}
+      "short": {
+        "source": "ai",
+        "sha256": "046d48ccf02ad7f7a5ab4f1c2285d3d2c3c1d217e1e27d44e6b9502473d2199b"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "75a3e688251c2b91b97dea20f6bc5caf9d5ae139f96c9e452c2b78f5b63ff4aa"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "526294d90de14f33aa570622670d42f926cf1c26b040b7305aa15c6b4a2d0d57"
+      }
     },
     "female-pose-brushes-figure-drawing": {
-      "short": {"source": "ai", "sha256": "69e4b68d2192bfad4a6437b7750c9528d64c4487fa2e6c8074a50164500396d2"},
-      "seoDesc": {"source": "ai", "sha256": "fbbbf58787b3e39a27f42dcb085dba9971aff21560931eb1c30d6d27d263fd89"}
+      "short": {
+        "source": "ai",
+        "sha256": "69e4b68d2192bfad4a6437b7750c9528d64c4487fa2e6c8074a50164500396d2"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "fbbbf58787b3e39a27f42dcb085dba9971aff21560931eb1c30d6d27d263fd89"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "d6614068f6c46b2e16f08cdf9373d8306d39d00907ee36513a739dd15ce4666b"
+      }
     },
     "free-chalkboard-artists-toolkit": {
-      "short": {"source": "ai", "sha256": "d3fdc124e3026d8a30d5540b2a4a88b9a5ea3cd302bc655320a3e71240f8e43c"},
-      "seoDesc": {"source": "ai", "sha256": "af4e100395ac5ce2f94d71e97d95df29f14eafe308f25c1d6d24fa4d15c2cb10"}
+      "short": {
+        "source": "ai",
+        "sha256": "d3fdc124e3026d8a30d5540b2a4a88b9a5ea3cd302bc655320a3e71240f8e43c"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "af4e100395ac5ce2f94d71e97d95df29f14eafe308f25c1d6d24fa4d15c2cb10"
+      }
     },
     "free-color-vault-1200-swatches": {
-      "short": {"source": "ai", "sha256": "3c0e9287d55800455a7714bbba3d644294419b4fc970a4b89e0617ee4d97277c"},
-      "seoDesc": {"source": "ai", "sha256": "c4c49078d997a2aeb32a52f8f0cb37a388878d5b2400b99deab64c2bc6718734"}
+      "short": {
+        "source": "ai",
+        "sha256": "3c0e9287d55800455a7714bbba3d644294419b4fc970a4b89e0617ee4d97277c"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "c4c49078d997a2aeb32a52f8f0cb37a388878d5b2400b99deab64c2bc6718734"
+      }
     },
     "free-fine-liner-brushes-100": {
-      "short": {"source": "ai", "sha256": "3cbbcbfa8b2bdd62db2f364b6570a98c5faa666c5578883cdea17383c74391eb"},
-      "seoDesc": {"source": "ai", "sha256": "ab4d34f8a91389796bc56493ccc69216923a6e65522fe0638e1050b5ad52a7b2"}
+      "short": {
+        "source": "ai",
+        "sha256": "3cbbcbfa8b2bdd62db2f364b6570a98c5faa666c5578883cdea17383c74391eb"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "ab4d34f8a91389796bc56493ccc69216923a6e65522fe0638e1050b5ad52a7b2"
+      }
     },
     "glitter-brushes-sparkle-shine-30": {
-      "short": {"source": "ai", "sha256": "c5db54f5866330e29e469c6db3f20c6683848942d26f2a28f2fcaabfdafca0dd"},
-      "seoDesc": {"source": "ai", "sha256": "3550425178f389b4e8256965177258f1ec9aead92e3d7e57b4d0d45225bbccf8"}
+      "short": {
+        "source": "ai",
+        "sha256": "c5db54f5866330e29e469c6db3f20c6683848942d26f2a28f2fcaabfdafca0dd"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "3550425178f389b4e8256965177258f1ec9aead92e3d7e57b4d0d45225bbccf8"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "3eaa50daede5426e4233bc57914e719d897a9e85e5c4e67e57fd0f6bdc476778"
+      }
     },
     "hair-hairstyle-stamp-kit": {
-      "short": {"source": "ai", "sha256": "7628e925770f3eb72e4439a2909f470c263e5c80cc34675e22eae19d4c66627b"},
-      "seoDesc": {"source": "ai", "sha256": "8b34390fd1871de82c3c8151ee6267a398b052cf0df380f0841ef7831d53e872"}
+      "short": {
+        "source": "ai",
+        "sha256": "7628e925770f3eb72e4439a2909f470c263e5c80cc34675e22eae19d4c66627b"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "8b34390fd1871de82c3c8151ee6267a398b052cf0df380f0841ef7831d53e872"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "8eb9c37093057afbc995e7bf1ee97771b88656282049a704d09b62a1beb922a3"
+      }
     },
     "halloween-pumpkin-bundle": {
-      "short": {"source": "ai", "sha256": "12c0b1fa8f09d94bbe1e3973a608cb4f1f54b711451c0fc541c4ec1aa22b7cb9"},
-      "seoDesc": {"source": "ai", "sha256": "aa29daa86d8b38946c1b8e86be5cd8b6e094f6b9dd8d69610adbea4abae3136d"}
+      "short": {
+        "source": "ai",
+        "sha256": "12c0b1fa8f09d94bbe1e3973a608cb4f1f54b711451c0fc541c4ec1aa22b7cb9"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "aa29daa86d8b38946c1b8e86be5cd8b6e094f6b9dd8d69610adbea4abae3136d"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "d1afc6cef75eb200281f06decf8a340b312bd0fe60d59c5d913e950cd8adbe4e"
+      }
     },
     "illustration-brushes-2": {
-      "short": {"source": "ai", "sha256": "45b23c123a61133f95519047e6a866b86782e66ff4c070ffd063e3f4cef1323d"},
-      "seoDesc": {"source": "ai", "sha256": "40883d47ec0a375ab6a0d126ac15cdfd1d66216fea6b8ab0627f068c55304933"}
+      "short": {
+        "source": "ai",
+        "sha256": "45b23c123a61133f95519047e6a866b86782e66ff4c070ffd063e3f4cef1323d"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "40883d47ec0a375ab6a0d126ac15cdfd1d66216fea6b8ab0627f068c55304933"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "3d51723e0a61e4f6eb1b98942891e509fc7f4ad2a71447ad946c0c53ab2711ca"
+      }
     },
     "japanese-watercolour-collection": {
-      "short": {"source": "ai", "sha256": "6f21030910f46890d0464348446541ec2e8fff97fa56174ab62a80699a461b9e"},
-      "seoDesc": {"source": "ai", "sha256": "b90263af4948e3f5c8418b94766bb77c6c3e9800fcfd9c0a08ae1207e8fd92fb"}
+      "short": {
+        "source": "ai",
+        "sha256": "6f21030910f46890d0464348446541ec2e8fff97fa56174ab62a80699a461b9e"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "b90263af4948e3f5c8418b94766bb77c6c3e9800fcfd9c0a08ae1207e8fd92fb"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "c99b61958fe382ae9088521564b5a2c161828b4e197ef82c4517bb1562902fd5"
+      }
     },
     "kdp-templates-bundle-100": {
-      "short": {"source": "ai", "sha256": "4ebff9e651cd4eb87eae8cd8ae44bd6f259dc95da6fd8917b86187e04e4cfd97"},
-      "seoDesc": {"source": "ai", "sha256": "835298e9e8d33b0d4adeabe4410eb7c56c8b020f4c2cda7145673821420aca25"}
+      "short": {
+        "source": "ai",
+        "sha256": "4ebff9e651cd4eb87eae8cd8ae44bd6f259dc95da6fd8917b86187e04e4cfd97"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "835298e9e8d33b0d4adeabe4410eb7c56c8b020f4c2cda7145673821420aca25"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "0e78ddc81f3ecfd3723c789783cc9876954aba456cd4434e7e1a64cf671329c7"
+      }
     },
     "koi-fish-tattoo-brushes": {
-      "short": {"source": "ai", "sha256": "0e05a3937c086e4037ca4b7de94c6349a8b1c152ee50eb8f5d1d799c370d0598"},
-      "seoDesc": {"source": "ai", "sha256": "a148ce3d089d96cb61172645460d079e02716a821c962c54deb4bba748b7bccc"}
+      "short": {
+        "source": "ai",
+        "sha256": "0e05a3937c086e4037ca4b7de94c6349a8b1c152ee50eb8f5d1d799c370d0598"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "a148ce3d089d96cb61172645460d079e02716a821c962c54deb4bba748b7bccc"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "7dc238cc64b929027e86f110e3de7a11fb794bc03141746eaeb4d2ca24960263"
+      }
     },
     "liner-marker-studio-39-brushes": {
-      "short": {"source": "ai", "sha256": "3874c51fe1affa10fba76775019fd03d2d743f4dd5682d098596d19ac6b8f10c"},
-      "seoDesc": {"source": "ai", "sha256": "57d0ef24c9e041e62becfbba13abf36a77cf3ad6ab8a942c57a28e54f97877ad"}
+      "short": {
+        "source": "ai",
+        "sha256": "3874c51fe1affa10fba76775019fd03d2d743f4dd5682d098596d19ac6b8f10c"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "57d0ef24c9e041e62becfbba13abf36a77cf3ad6ab8a942c57a28e54f97877ad"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "96489b334c9faa48819d9f0398f9ebd1ae2a459d59a495795e9800649ffe9f44"
+      }
     },
     "male-pose-brushes-figure-drawing": {
-      "short": {"source": "ai", "sha256": "dfe7daa6c5a1f9083ba6d80d752e188dd6d51bbc396c30406d1675b176d74780"},
-      "seoDesc": {"source": "ai", "sha256": "962eb1784be70bef5d067611cc280afa533f105e43733198d4134060df15bd3d"}
+      "short": {
+        "source": "ai",
+        "sha256": "dfe7daa6c5a1f9083ba6d80d752e188dd6d51bbc396c30406d1675b176d74780"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "962eb1784be70bef5d067611cc280afa533f105e43733198d4134060df15bd3d"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "1690db9aac9bbadf3697d78779ab50fafbed1f3f2ec89db3bd3b041b578f73a0"
+      }
     },
     "master-library-2000-brushes": {
-      "short": {"source": "ai", "sha256": "d3730477385e94037b5751c0f43f2563cf8adf8a541de3bd1986d0029b053615"},
-      "seoDesc": {"source": "ai", "sha256": "1981282a6393b02771839741ee7e53c8a7fe4fa80290989b67769393da02d573"}
+      "short": {
+        "source": "ai",
+        "sha256": "d3730477385e94037b5751c0f43f2563cf8adf8a541de3bd1986d0029b053615"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "1981282a6393b02771839741ee7e53c8a7fe4fa80290989b67769393da02d573"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "a923738eb91713a84fe2e68721800e9286a0f8da51ac9ea18b9a97c7d71e4e65"
+      }
     },
     "master-line-art-vault-300": {
-      "short": {"source": "ai", "sha256": "7a0768628ff41f17f956a56edc9318498fc14212ca47010fd052c69e1b5ccf3e"},
-      "seoDesc": {"source": "ai", "sha256": "be74c7191454dd4ff96c0e6d81ce0ea239bdb19679c9361f7ae05ea42ce9d83d"}
+      "short": {
+        "source": "ai",
+        "sha256": "7a0768628ff41f17f956a56edc9318498fc14212ca47010fd052c69e1b5ccf3e"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "be74c7191454dd4ff96c0e6d81ce0ea239bdb19679c9361f7ae05ea42ce9d83d"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "d50f54790a326d5b1e1d991802410f03b66e2e7fdd9d555bd01b3072ca41b37c"
+      }
     },
     "master-vault-1000-brushes": {
-      "short": {"source": "ai", "sha256": "88dd356ca16903743bea59d470275a48d383cb30a15f340b3824b793dab7eba7"},
-      "seoDesc": {"source": "ai", "sha256": "6e39a139309b7a4749eaebfdb8d41d637b19901253b642d34034639dc8ac55b2"}
+      "short": {
+        "source": "ai",
+        "sha256": "88dd356ca16903743bea59d470275a48d383cb30a15f340b3824b793dab7eba7"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "6e39a139309b7a4749eaebfdb8d41d637b19901253b642d34034639dc8ac55b2"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "d520dbb4a5df19236fa68ce98b23ed78d2143f352949684d791bd7b128d5295d"
+      }
     },
     "mindfulness-system-planner": {
-      "short": {"source": "ai", "sha256": "748507856cc3f9f89f6412c42a834f4aa7ae0103af082323638ca36dce9bcff8"},
-      "seoDesc": {"source": "ai", "sha256": "d15da3b3d9df11c651fe5943f5e2855698e6e979739f88a7a9644671fdb187e8"}
+      "short": {
+        "source": "ai",
+        "sha256": "748507856cc3f9f89f6412c42a834f4aa7ae0103af082323638ca36dce9bcff8"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "d15da3b3d9df11c651fe5943f5e2855698e6e979739f88a7a9644671fdb187e8"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "26e6fec37ae66ed7e83f210af841e25fe13a53ecdfc7732f286a1ab810b506b0"
+      }
     },
     "morocco-7-day-itinerary": {
-      "short": {"source": "ai", "sha256": "600c68d18a7d7bb53b2f097151193afb234c6fd2f9d2ab8cd6a7a663a92e4722"},
-      "seoDesc": {"source": "ai", "sha256": "ee397b9f1381e8563185eda30a41a5648b31b2c5303c2dfdafe53ee3c086188a"}
+      "short": {
+        "source": "ai",
+        "sha256": "600c68d18a7d7bb53b2f097151193afb234c6fd2f9d2ab8cd6a7a663a92e4722"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "ee397b9f1381e8563185eda30a41a5648b31b2c5303c2dfdafe53ee3c086188a"
+      }
     },
     "organic-watercolor-80-brushes": {
-      "short": {"source": "ai", "sha256": "120ae680a4cb8c081bb8aafe5754c25c47cb9f48dfdfd3b13aac4a5c9213234b"},
-      "seoDesc": {"source": "ai", "sha256": "70d538a18bbd39422f203f0eb707152812d79b8539c0af9521539d007e7f45ff"}
+      "short": {
+        "source": "ai",
+        "sha256": "120ae680a4cb8c081bb8aafe5754c25c47cb9f48dfdfd3b13aac4a5c9213234b"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "70d538a18bbd39422f203f0eb707152812d79b8539c0af9521539d007e7f45ff"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "f2894f7768b9ed972f0d2ee82e8a3670fbc1b6477d87b87f69ed1fe837417eaa"
+      }
     },
     "portrait-mastery-kit-46-brushes": {
-      "short": {"source": "ai", "sha256": "0f4970facc37cc0d9b54d20b7a845313c1206863048483daabac9069584b57a6"},
-      "seoDesc": {"source": "ai", "sha256": "f7631f58d83315a0888180d646655f83bdfff447b07867e2987b6b760bab2743"}
+      "short": {
+        "source": "ai",
+        "sha256": "0f4970facc37cc0d9b54d20b7a845313c1206863048483daabac9069584b57a6"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "f7631f58d83315a0888180d646655f83bdfff447b07867e2987b6b760bab2743"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "218e24fd1d9944ee67a8badd2a89854d6d24e59023cea4b7f3f9240edf31ef81"
+      }
     },
     "portrait-skin-brushes-procreate": {
-      "short": {"source": "ai", "sha256": "7af38feefa66ba8ce3eb9197612ce35328dd3f6fc4701da86a3206a16fc94509"},
-      "seoDesc": {"source": "ai", "sha256": "223c86f624413b8578e0e3508553083c6c452b748e5741efb0e5f18843bc041b"}
+      "short": {
+        "source": "ai",
+        "sha256": "7af38feefa66ba8ce3eb9197612ce35328dd3f6fc4701da86a3206a16fc94509"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "223c86f624413b8578e0e3508553083c6c452b748e5741efb0e5f18843bc041b"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "50c2c84d98cb79eb40fdb1b7b1f53c9c27e8131b768ff70d6238a9c9914690c7"
+      }
     },
     "premium-hair-brushes-10": {
-      "short": {"source": "ai", "sha256": "d2bd0cc066da7c4eaf3f56c011b628dffa87ab384b5521e5803208f3f513ec5e"},
-      "seoDesc": {"source": "ai", "sha256": "e20c8c92872863866895e8d8a640737e4dbe0ee2d368b6a4ed71df1d3945dfe4"}
+      "short": {
+        "source": "ai",
+        "sha256": "d2bd0cc066da7c4eaf3f56c011b628dffa87ab384b5521e5803208f3f513ec5e"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "e20c8c92872863866895e8d8a640737e4dbe0ee2d368b6a4ed71df1d3945dfe4"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "b7393a7201f56aba70636e408c9c65eecb18967755cbf7e183b36b56cebcc85f"
+      }
     },
     "premium-texture-effects-10-brushes": {
-      "short": {"source": "ai", "sha256": "88272cb30c701ef0baefc981dccdd065660a053bf564650fd93ed5d65840c732"},
-      "seoDesc": {"source": "ai", "sha256": "df2f8b1e4faa87132816f657201ac3149517f9680204d7b91c818dbe97119b8d"}
+      "short": {
+        "source": "ai",
+        "sha256": "88272cb30c701ef0baefc981dccdd065660a053bf564650fd93ed5d65840c732"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "df2f8b1e4faa87132816f657201ac3149517f9680204d7b91c818dbe97119b8d"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "a65984be129723ace114a942bf17af7f7a7b326dad64bd8572f7fcc0a9cc4ae5"
+      }
     },
     "pro-sketch-traditional-art-kit": {
-      "short": {"source": "ai", "sha256": "746c2e25973871e3c5fc3d3137470f1cea5575545a9b06b671f660f9f60c55ac"},
-      "seoDesc": {"source": "ai", "sha256": "d519f7b623adc50df688ce0acbfacbebc6860b08dfe5a427e82c35a62f0ace9e"}
+      "short": {
+        "source": "ai",
+        "sha256": "746c2e25973871e3c5fc3d3137470f1cea5575545a9b06b671f660f9f60c55ac"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "d519f7b623adc50df688ce0acbfacbebc6860b08dfe5a427e82c35a62f0ace9e"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "8e474d3abceffc2e0bce692cbdc6bb7f8bae4bd498893d20cfb64045e5e5d374"
+      }
     },
     "procreate-mega-bundle-650": {
-      "short": {"source": "ai", "sha256": "9b6bde8a155a3a4db8298ade8447211b6775f9997a860742d2e46d17352bb4f3"},
-      "seoDesc": {"source": "ai", "sha256": "a4782263bfff329a8c6af22e7cba13fd321dad60f2d1ed478ea76ccf9ac1bea5"}
+      "short": {
+        "source": "ai",
+        "sha256": "9b6bde8a155a3a4db8298ade8447211b6775f9997a860742d2e46d17352bb4f3"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "a4782263bfff329a8c6af22e7cba13fd321dad60f2d1ed478ea76ccf9ac1bea5"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "973c386de489677add9dd7c2b4ea1a98acdad8a63eac540c01a935614dc89466"
+      }
     },
     "procreate-palettes-bundle-50": {
-      "short": {"source": "ai", "sha256": "296a71d8bde533635c3680e2b914ba25757738dad165ce188d45a76b013c86cd"},
-      "seoDesc": {"source": "ai", "sha256": "582ed17b3b6402ca3c367c671c66381eeba263f3591549355d24a4b7cc734024"}
+      "short": {
+        "source": "ai",
+        "sha256": "296a71d8bde533635c3680e2b914ba25757738dad165ce188d45a76b013c86cd"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "582ed17b3b6402ca3c367c671c66381eeba263f3591549355d24a4b7cc734024"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "5eb39014b6ab0b3674ffe1c89791db30ded326d0a9fd300fc72d21cc03411b9f"
+      }
     },
     "procreate-portrait-masterclass-ebook": {
-      "short": {"source": "ai", "sha256": "5ea93890a9d97ed53514813dce3d0745f6f661c41fec076ff90dcdabe78e2b2e"},
-      "seoDesc": {"source": "ai", "sha256": "9efd7f42064bca5ec6d9c8402797b1f810a3f246429c260f80fa656d6870d40f"}
+      "short": {
+        "source": "ai",
+        "sha256": "5ea93890a9d97ed53514813dce3d0745f6f661c41fec076ff90dcdabe78e2b2e"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "9efd7f42064bca5ec6d9c8402797b1f810a3f246429c260f80fa656d6870d40f"
+      }
     },
     "procreate-starter-guide-free-ebook": {
-      "short": {"source": "ai", "sha256": "2e0834b99c04aa37e24fc2302de524b94e343d21c2ebf8b79d9f5e02e874c24b"},
-      "seoDesc": {"source": "ai", "sha256": "dfcfb995a7785b499dffb6da2a50439c84af4405112546680d637b76bdbb5645"}
+      "short": {
+        "source": "ai",
+        "sha256": "2e0834b99c04aa37e24fc2302de524b94e343d21c2ebf8b79d9f5e02e874c24b"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "dfcfb995a7785b499dffb6da2a50439c84af4405112546680d637b76bdbb5645"
+      }
     },
     "professional-charcoal-studio": {
-      "short": {"source": "ai", "sha256": "6e6b17d1309ca55aa75c9ba90ae44e5725e40e38b19d3f47c809834038f0bd12"},
-      "seoDesc": {"source": "ai", "sha256": "a40aa0a5dea68e8ddd80b1d751f3d88dea837c373565e1f6d4527f4192bcef20"}
+      "short": {
+        "source": "ai",
+        "sha256": "6e6b17d1309ca55aa75c9ba90ae44e5725e40e38b19d3f47c809834038f0bd12"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "a40aa0a5dea68e8ddd80b1d751f3d88dea837c373565e1f6d4527f4192bcef20"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "11e5f93d64ba03aa9538a4b936141b7d51634542ec0b03d0f37799f0c4cd25f2"
+      }
     },
     "professional-digital-sketchbook": {
-      "short": {"source": "ai", "sha256": "d93e278c56674774daffbf402a027649235e8483c9a45cd9a9ce9707c76c29dd"},
-      "seoDesc": {"source": "ai", "sha256": "ceb2e943d4686e86d4fbfad2c2787aaef1e09984a62aa3d226618c5b0548d534"}
+      "short": {
+        "source": "ai",
+        "sha256": "d93e278c56674774daffbf402a027649235e8483c9a45cd9a9ce9707c76c29dd"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "ceb2e943d4686e86d4fbfad2c2787aaef1e09984a62aa3d226618c5b0548d534"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "56eacb1b57d39ba4032bedf8363a11efd3a6fe08d3ab6463608498b5513956c0"
+      }
     },
     "professional-hair-brushes": {
-      "short": {"source": "ai", "sha256": "8148aef5ce3b922d17f487f266f2b57b26b85d9d264914372e057808715623a8"},
-      "seoDesc": {"source": "ai", "sha256": "c16659537632d8449ec2403f2f37f1ee44f58e6be86bfad2e185e2efc239509b"}
+      "short": {
+        "source": "ai",
+        "sha256": "8148aef5ce3b922d17f487f266f2b57b26b85d9d264914372e057808715623a8"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "c16659537632d8449ec2403f2f37f1ee44f58e6be86bfad2e185e2efc239509b"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "693024d73951873f619ec273683dd54c89fae14eade73d2a2a3d951a2d2a2ba4"
+      }
     },
     "sketchbook-traditional-media-kit": {
-      "short": {"source": "ai", "sha256": "86d0449f51f3fd85a5ff04503149f6409692b93775383357df0972e4f5e315b6"},
-      "seoDesc": {"source": "ai", "sha256": "2c6b9b3f4de24c219baafe3d1f097354871a77029f275b07111765e320a500fd"}
+      "short": {
+        "source": "ai",
+        "sha256": "86d0449f51f3fd85a5ff04503149f6409692b93775383357df0972e4f5e315b6"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "2c6b9b3f4de24c219baafe3d1f097354871a77029f275b07111765e320a500fd"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "54b44ca893096d098bd1786373d52ca819933b76c5cae60220c5428a84b4b78b"
+      }
     },
     "smoke-brushes-12": {
-      "short": {"source": "ai", "sha256": "6e5838ba46447b1d73f5e5e620cf7ab9aebf4c4dd52db26fd713f2a39417827f"},
-      "seoDesc": {"source": "ai", "sha256": "420ff0e7de6e0e1e7a45727694b8d15794da2128276f9ff75c9debe7a3cf49ae"}
+      "short": {
+        "source": "ai",
+        "sha256": "6e5838ba46447b1d73f5e5e620cf7ab9aebf4c4dd52db26fd713f2a39417827f"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "420ff0e7de6e0e1e7a45727694b8d15794da2128276f9ff75c9debe7a3cf49ae"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "9740b1312c9f484c0ea7b1f5d82c6459eb660937f73ca134fe04f4fc8c91f874"
+      }
     },
     "tattoo-artist-studio-kit-200": {
-      "short": {"source": "ai", "sha256": "c64448a98be7efea0b652292f1bd659684f1a6aad85833270a3ed069b29184b9"},
-      "seoDesc": {"source": "ai", "sha256": "ba80d27bd2c246b0bab8b9e608a3b25841f2f9ebe68b64f685e4ba8984e21e4f"}
+      "short": {
+        "source": "ai",
+        "sha256": "c64448a98be7efea0b652292f1bd659684f1a6aad85833270a3ed069b29184b9"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "ba80d27bd2c246b0bab8b9e608a3b25841f2f9ebe68b64f685e4ba8984e21e4f"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "90ca7ea32980792380ed28bf012f0227d1e9006d103297748deea3746d5352dc"
+      }
     },
     "tie-dye-brushes-studio": {
-      "short": {"source": "ai", "sha256": "acf2b77096e10340f285eb321aecf0c4987a2f56de1719f3f2d1464768e6b4b8"},
-      "seoDesc": {"source": "ai", "sha256": "b9eb0c3f25867fbd557b8c237c5628c46de7f46eec3b69cec1ab2a4f5900eda5"}
+      "short": {
+        "source": "ai",
+        "sha256": "acf2b77096e10340f285eb321aecf0c4987a2f56de1719f3f2d1464768e6b4b8"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "b9eb0c3f25867fbd557b8c237c5628c46de7f46eec3b69cec1ab2a4f5900eda5"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "5e22afb912aa370234b1f8474c33395c71b38a70104ca5276f2356bdd6f508a9"
+      }
     },
     "ultimate-fitness-planner": {
-      "short": {"source": "ai", "sha256": "34f7b136bb0ee4b175ae3507f654875d27d79621b0f5d7fc0c28debef4af400d"},
-      "seoDesc": {"source": "ai", "sha256": "762e599e09a71449c6fdcd214d768fc8b54fb21328eec390e0ecd601e608dfb4"}
+      "short": {
+        "source": "ai",
+        "sha256": "34f7b136bb0ee4b175ae3507f654875d27d79621b0f5d7fc0c28debef4af400d"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "762e599e09a71449c6fdcd214d768fc8b54fb21328eec390e0ecd601e608dfb4"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "55a3727407c65e2ecdcacd50138dde33baa81a8c0cfebdd4d4b6d8eedd8b4c49"
+      }
     },
     "ultimate-portrait-mastery-bundle": {
-      "short": {"source": "ai", "sha256": "cac2cef322be411c09c67fe482675105b83a9b9cb9d9efc71f3299af3e6048d7"},
-      "seoDesc": {"source": "ai", "sha256": "2e21fb0fa866f3400b25b39f7c9e403cb6500714a2bcb97adc6d141768919827"}
+      "short": {
+        "source": "ai",
+        "sha256": "cac2cef322be411c09c67fe482675105b83a9b9cb9d9efc71f3299af3e6048d7"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "2e21fb0fa866f3400b25b39f7c9e403cb6500714a2bcb97adc6d141768919827"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "add97e66af693b955b48733888fc6ae3365cfc9f5f1c0299c980ccd50e98a10e"
+      }
     },
     "undated-planner-dark-mode": {
-      "short": {"source": "ai", "sha256": "1e337901dc879bdeb1076af384ce467b44f11545cb0727733d10866f2a41ce40"},
-      "seoDesc": {"source": "ai", "sha256": "e297fb4f94e20f1d7d741d6b2fafa198d5d9fcd8a2ceda07c610571c0e4101f7"}
+      "short": {
+        "source": "ai",
+        "sha256": "1e337901dc879bdeb1076af384ce467b44f11545cb0727733d10866f2a41ce40"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "e297fb4f94e20f1d7d741d6b2fafa198d5d9fcd8a2ceda07c610571c0e4101f7"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "402ddb6c3445350642667d5595fbc485c9c7ab4fe9e00f78dd02c903f93f00de"
+      }
     },
     "watercolor-studio-kit-50-brushes": {
-      "short": {"source": "ai", "sha256": "c7da0e87bdaa066c4d58bfc2654e1824db1d390c46242d5d4f20e8b5d2147308"},
-      "seoDesc": {"source": "ai", "sha256": "71b07a90a077b6745cd056fd63ea0b5a341ad74470bf30a2e61a92c2789b40c7"}
+      "short": {
+        "source": "ai",
+        "sha256": "c7da0e87bdaa066c4d58bfc2654e1824db1d390c46242d5d4f20e8b5d2147308"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "71b07a90a077b6745cd056fd63ea0b5a341ad74470bf30a2e61a92c2789b40c7"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "d306b84b69f884aeb84c12fc3b58e7e42a1f95a13cb59c0a5d489b06019aff68"
+      }
     },
     "wellness-fitness-planner-goodnotes": {
-      "short": {"source": "ai", "sha256": "2d3e8ad2506511abb61603adb0e45dde29d03e10145d72e26c1244b683a89384"},
-      "seoDesc": {"source": "ai", "sha256": "1b008d3d2c67a120875cfd9dd8d89372dcfe57cb70e60d58469e893acbe210db"}
+      "short": {
+        "source": "ai",
+        "sha256": "2d3e8ad2506511abb61603adb0e45dde29d03e10145d72e26c1244b683a89384"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "1b008d3d2c67a120875cfd9dd8d89372dcfe57cb70e60d58469e893acbe210db"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "163721f9f8fb16c34e2911551cd51d7ff4323fcdef169d97d78d646ba7a901db"
+      }
     },
     "wellness-journal-2026": {
-      "short": {"source": "ai", "sha256": "c3371799db958f05f1b4ae97be34169e5824793bcbb2cdc1141405fd694aaa5a"},
-      "seoDesc": {"source": "ai", "sha256": "3e07ef7298162df7d290975fd7f72fdd103ea8607c174c4379622afbf8ce9980"}
+      "short": {
+        "source": "ai",
+        "sha256": "c3371799db958f05f1b4ae97be34169e5824793bcbb2cdc1141405fd694aaa5a"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "3e07ef7298162df7d290975fd7f72fdd103ea8607c174c4379622afbf8ce9980"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "bbef34dacc8b8724aa004c1734255bd75f37485b38dd319c712f36a88ef1704e"
+      }
     },
     "wellness-journal-365": {
-      "short": {"source": "ai", "sha256": "318a97548552225b12e6cb17a764da915f5ab1e400b747c58f7981a0775dc370"},
-      "seoDesc": {"source": "ai", "sha256": "14ee439097bc0579fd65b07e67187a6524a22c2952cfd1934933e08bb73d0c12"}
+      "short": {
+        "source": "ai",
+        "sha256": "318a97548552225b12e6cb17a764da915f5ab1e400b747c58f7981a0775dc370"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "14ee439097bc0579fd65b07e67187a6524a22c2952cfd1934933e08bb73d0c12"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "fdfa7380b218efa5babbc442f348b9da65be7435aef161ea69ba208466780e0f"
+      }
     }
   }
 }
