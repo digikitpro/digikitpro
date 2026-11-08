@@ -3,7 +3,7 @@ title: Best Procreate Brushes for Portraits: A Workflow-Based Guide
 slug: best-procreate-brushes-for-portraits
 description: Compare Procreate portrait brushes for sketching, skin, hair and detail. See when a free guide, focused skin set or broader kit may fit.
 date: 2026-09-14
-modified: 2026-10-29
+modified: 2026-11-08
 category: Procreate Brushes
 primary_keyword: best Procreate brushes for portraits
 secondary_keywords: [Procreate portrait brushes, portrait painting brushes for iPad, Procreate skin brushes, digital portrait brush set]

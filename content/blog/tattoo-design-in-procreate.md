@@ -3,7 +3,7 @@ title: How to Design a Tattoo in Procreate: From Sketch to Stencil
 slug: tattoo-design-in-procreate
 description: Learn a responsible Procreate workflow for tattoo concepts: plan the body placement, build clear linework, add value, and prepare a clean stencil reference.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-11-08
 category: Tutorials
 howto: true
 primary_keyword: how to design a tattoo in Procreate

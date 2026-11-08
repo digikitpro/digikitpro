@@ -4,7 +4,7 @@ seo_title: How to Paint Realistic Skin in Procreate: 8 Steps
 slug: how-to-create-realistic-skin-in-procreate
 description: Paint skin in Procreate with eight steps for values, undertones, blending and texture. Built-in brushes work; specialist tools are optional.
 date: 2026-09-14
-modified: 2026-10-29
+modified: 2026-11-08
 lead_before_hero: true
 category: Tutorials
 howto: true

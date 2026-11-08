@@ -3,7 +3,7 @@ title: How to Install Procreate Brushes on iPad: .brushset Step by Step
 slug: how-to-install-procreate-brushes
 description: Learn how to install Procreate brushes and .brushset files on iPad from Files, including ZIP extraction, in-app import, drag-and-drop, and fixes.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-11-08
 category: Guides
 howto: true
 primary_keyword: how to install Procreate brushes on iPad
