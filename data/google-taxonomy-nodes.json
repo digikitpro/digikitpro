@@ -1,0 +1,11 @@
+{
+  "_meta": {
+    "source": "https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt",
+    "version": "Google_Product_Taxonomy_Version 2021-09-21",
+    "note": "Vendored subset: only the taxonomy nodes the feed actually uses, so QA can verify every google_product_category offline."
+  },
+  "nodes": {
+    "8022": "Software > Digital Goods & Currency > Document Templates",
+    "500046": "Software > Digital Goods & Currency > Digital Artwork"
+  }
+}

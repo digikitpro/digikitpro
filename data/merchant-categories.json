@@ -1,0 +1,279 @@
+{
+  "_meta": {
+    "purpose": "Per-product Google product category for google-merchant-feed.xml. One reviewed entry per Merchant-eligible product.",
+    "taxonomy": "Google_Product_Taxonomy_Version 2021-09-21",
+    "ids_verified_against": "https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt"
+  },
+  "categories": {
+    "adhd-planner-2026": {
+      "class": "digital_planner",
+      "id": "8022",
+      "path": "Software > Digital Goods & Currency > Document Templates",
+      "reason": "Downloadable hyperlinked PDF planner/journal; a document the buyer fills in, not a printed book."
+    },
+    "animal-fur-brushes-2": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "anime-soft-style-brushes-100": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "anime-soft-style-studio-kit": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "artista-studio-kit-76-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "brush-palette-bundle-160": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "christmas-brushes-bundle": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "dreamy-pastel-art-kit": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "essential-line-art-sketch-kit": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "female-pose-brushes-figure-drawing": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "glitter-brushes-sparkle-shine-30": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "hair-hairstyle-stamp-kit": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "halloween-pumpkin-bundle": {
+      "class": "digital_art_assets",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable PNG art/pattern asset pack; not a printed poster or physical artwork."
+    },
+    "illustration-brushes-2": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "japanese-watercolour-collection": {
+      "class": "digital_art_assets",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable PNG art/pattern asset pack; not a printed poster or physical artwork."
+    },
+    "kdp-templates-bundle-100": {
+      "class": "canva_templates",
+      "id": "8022",
+      "path": "Software > Digital Goods & Currency > Document Templates",
+      "reason": "Downloadable editable document templates; the buyer customises the layouts."
+    },
+    "koi-fish-tattoo-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "liner-marker-studio-39-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "male-pose-brushes-figure-drawing": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "master-library-2000-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "master-line-art-vault-300": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "master-vault-1000-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "mindfulness-system-planner": {
+      "class": "digital_planner",
+      "id": "8022",
+      "path": "Software > Digital Goods & Currency > Document Templates",
+      "reason": "Downloadable hyperlinked PDF planner/journal; a document the buyer fills in, not a printed book."
+    },
+    "organic-watercolor-80-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "portrait-mastery-kit-46-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "portrait-skin-brushes-procreate": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "premium-hair-brushes-10": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "premium-texture-effects-10-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "pro-sketch-traditional-art-kit": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "procreate-mega-bundle-650": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "procreate-palettes-bundle-50": {
+      "class": "procreate_palettes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .swatches colour-palette asset for Procreate; not a physical palette."
+    },
+    "professional-charcoal-studio": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "professional-digital-sketchbook": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "professional-hair-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "sketchbook-traditional-media-kit": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "smoke-brushes-12": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "tattoo-artist-studio-kit-200": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "tie-dye-brushes-studio": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "ultimate-fitness-planner": {
+      "class": "digital_planner",
+      "id": "8022",
+      "path": "Software > Digital Goods & Currency > Document Templates",
+      "reason": "Downloadable hyperlinked PDF planner/journal; a document the buyer fills in, not a printed book."
+    },
+    "ultimate-portrait-mastery-bundle": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "undated-planner-dark-mode": {
+      "class": "digital_planner",
+      "id": "8022",
+      "path": "Software > Digital Goods & Currency > Document Templates",
+      "reason": "Downloadable hyperlinked PDF planner/journal; a document the buyer fills in, not a printed book."
+    },
+    "watercolor-studio-kit-50-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset asset pack for Procreate; not a physical art brush and not software."
+    },
+    "wellness-fitness-planner-goodnotes": {
+      "class": "digital_planner",
+      "id": "8022",
+      "path": "Software > Digital Goods & Currency > Document Templates",
+      "reason": "Downloadable hyperlinked PDF planner/journal; a document the buyer fills in, not a printed book."
+    },
+    "wellness-journal-2026": {
+      "class": "digital_planner",
+      "id": "8022",
+      "path": "Software > Digital Goods & Currency > Document Templates",
+      "reason": "Downloadable hyperlinked PDF planner/journal; a document the buyer fills in, not a printed book."
+    },
+    "wellness-journal-365": {
+      "class": "digital_planner",
+      "id": "8022",
+      "path": "Software > Digital Goods & Currency > Document Templates",
+      "reason": "Downloadable hyperlinked PDF planner/journal; a document the buyer fills in, not a printed book."
+    }
+  }
+}

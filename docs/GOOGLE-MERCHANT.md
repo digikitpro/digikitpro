@@ -25,6 +25,42 @@ options. The current flow's eligibility is unconfirmed; ask Merchant Center
 support about it rather than assuming it is compliant or the cause of a review
 delay. This feed change does not modify checkout.
 
+## Categories, titles and listing attributes
+
+Since 2026-11-08 the feed also carries `google_product_category`,
+`product_highlight`, `product_detail` and `custom_label_0..3`. They come from two
+reviewed data files, not from rules applied to the whole catalogue:
+
+| File | Holds | Rule |
+|---|---|---|
+| `data/merchant-categories.json` | One category per Merchant item, with a recorded reason | The id must exist in `data/google-taxonomy-nodes.json` and the stored path must match it exactly, or the build fails. A product with no entry is emitted **without** a category plus a build warning; it is never given a guessed or catalogue-wide default. |
+| `data/merchant-titles.json` | Feed titles that differ from `name` | Only attributes the product's own record already states may be added, and every number in the title is checked against that record. Products not listed keep `name` as the title. Titles are feed-only: product page H1s and `<title>` tags are unchanged, so no landing page drifts from its feed entry. |
+
+Why the digital-goods branch: Google's taxonomy has no node for a digital
+brush, and the literal match (`... > Arts & Crafts > Art & Crafting Tools > Craft
+Measuring & Marking Tools > Art Brushes`) describes a physical paintbrush. All
+downloadable creative assets therefore use
+`Software > Digital Goods & Currency > Digital Artwork` (`500046`), and
+page-based products (hyperlinked PDF planners, Canva templates) use
+`Software > Digital Goods & Currency > Document Templates` (`8022`).
+`qa_product_editorial.py` fails if a Merchant item uses an `Arts & Entertainment`
+category, if the feed falls back to one blanket category, or if any item has no
+reviewed category.
+
+`product_highlight` and `product_detail` are derived from the existing
+`features`, `technical` and `requirements` fields. `custom_label_0` is the
+product class, `custom_label_1` the internal category, `custom_label_2` a price
+band, and `custom_label_3` marks the owner's priority cluster so Merchant Center
+reports can be read per segment instead of as one undifferentiated catalogue.
+
+To change a category or a title: edit the JSON, run the build, run
+`qa_merchant_feed.py` and `qa_product_editorial.py`. Do not add the values as
+Merchant Center attribute rules — the feed is the source of truth and a rule
+would be silently overridden on the next fetch.
+
+Full 2026-11 audit, corrected mapping and the 45-product table:
+**`docs/merchant-feed-audit-2026-11.md`**.
+
 ## AI description provenance
 
 Google requires descriptions created with generative AI to use
@@ -120,11 +156,14 @@ destination rules and the account's diagnostics remain authoritative.
 ```bash
 python3 tools/build.py
 python3 tools/qa_merchant_feed.py
+python3 tools/qa_product_editorial.py
 python3 tools/verify.py
 ```
 
 The offline checks parse the XML, test structured descriptions, escaping,
-provenance drift, unknown-source fallback and product coverage; `verify.py` also
+provenance drift, unknown-source fallback, product coverage, reviewed categories
+against the vendored taxonomy nodes, Google's per-field limits, unbacked title
+claims and reporting-label segmentation; `verify.py` also
 checks prices, images, product landing URLs, availability, exclusions and
 matching Product structured data. They do not access Merchant Center, verify
 product eligibility or test checkout. Both existing build workflows run the

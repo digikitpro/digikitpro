@@ -1,0 +1,87 @@
+{
+  "_meta": {
+    "purpose": "Merchant feed titles that differ from products.json name. Only verified attributes from the product's own record are added; products not listed keep their name as the feed title."
+  },
+  "titles": {
+    "adhd-planner-2026": {
+      "title": "2026 ADHD Balanced Mind Planner & Wellness Journal: 55-Page PDF",
+      "reason": "Adds the verified page count and PDF format."
+    },
+    "animal-fur-brushes-2": {
+      "title": "Animal Fur 2: 35 Procreate Brushes for Fur, Hair & Feathers",
+      "reason": "Adds 'Procreate' from the .brushset format and requirements."
+    },
+    "anime-soft-style-brushes-100": {
+      "title": "100+ Anime Soft-Style Procreate Brushes: Watercolor, Shading & Line Art",
+      "reason": "Adds 'Procreate' from the .brushset format and requirements."
+    },
+    "christmas-brushes-bundle": {
+      "title": "Christmas Procreate Brushes & Stamps Bundle: 173 Brushes + 44 Washi Tapes",
+      "reason": "Adds the verified counts from technical contents."
+    },
+    "hair-hairstyle-stamp-kit": {
+      "title": "Professional Hair & Hairstyle Stamp Kit for Procreate: 160 Stamps",
+      "reason": "Adds the verified 160-stamp count from technical contents."
+    },
+    "halloween-pumpkin-bundle": {
+      "title": "Halloween Pumpkin Bundle: 20 PNG Illustrations at 300 DPI",
+      "reason": "Adds the verified 300 DPI spec and that they are illustrations."
+    },
+    "illustration-brushes-2": {
+      "title": "Illustration Brushes 2 for Procreate: 15 Textures + 5 Palettes",
+      "reason": "Adds the verified contents (15 texture brushes + 5 palettes)."
+    },
+    "japanese-watercolour-collection": {
+      "title": "Japanese Watercolour Collection: 43 Illustrations + PNG Patterns",
+      "reason": "Adds the verified PNG format for image-search matching."
+    },
+    "liner-marker-studio-39-brushes": {
+      "title": "Liner & Marker Studio: 39 High-Fidelity Procreate Brushes",
+      "reason": "Adds 'Procreate', which the format and requirements both state."
+    },
+    "master-line-art-vault-300": {
+      "title": "Master Line-Art Vault: 300+ Fine Line Procreate Brushes",
+      "reason": "Adds 'Procreate' from the .brushset format and requirements."
+    },
+    "mindfulness-system-planner": {
+      "title": "10-Minute Daily Mindfulness Planner: 57-Page Hyperlinked PDF",
+      "reason": "Adds the verified format (hyperlinked PDF) and drops the vague 'System'."
+    },
+    "portrait-mastery-kit-46-brushes": {
+      "title": "Portrait Mastery Kit: 46 Procreate Brushes + 4 Paper Textures",
+      "reason": "Adds the four paper textures listed in technical contents."
+    },
+    "portrait-skin-brushes-procreate": {
+      "title": "19 Portrait Skin Texture Brushes for Procreate",
+      "reason": "Adds the verified brush count from technical contents; 'skin texture' is the product's category."
+    },
+    "procreate-palettes-bundle-50": {
+      "title": "Procreate Color Palettes Bundle: 50 Sets, 1,500 Swatches",
+      "reason": "Swaps '×' for a readable swatch total already stated in technical contents."
+    },
+    "tie-dye-brushes-studio": {
+      "title": "Tie-Dye Brushes Studio for Procreate: 21 Brushes & Stamps",
+      "reason": "Adds the verified 21-item count."
+    },
+    "ultimate-fitness-planner": {
+      "title": "Ultimate Fitness Planner for Peak Performance: Digital PDF",
+      "reason": "Adds the verified PDF format."
+    },
+    "ultimate-portrait-mastery-bundle": {
+      "title": "Ultimate Portrait Mastery Bundle: 4 Procreate Brush Kits",
+      "reason": "States that the four kits are brush kits, which every included item confirms."
+    },
+    "undated-planner-dark-mode": {
+      "title": "Undated Digital Planner: Dark Mode, Hyperlinked PDF + 1,000 Stickers",
+      "reason": "Adds verified format and the 1,000-sticker contents."
+    },
+    "wellness-journal-2026": {
+      "title": "2026 Digital Wellness Journal: Hyperlinked PDF",
+      "reason": "Adds the verified format so the listing reads as a digital download."
+    },
+    "wellness-journal-365": {
+      "title": "365-Page Digital Wellness Journal: Hyperlinked PDF, Dark Mode",
+      "reason": "Leads with the page count and states the verified PDF format."
+    }
+  }
+}

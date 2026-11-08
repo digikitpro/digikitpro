@@ -7,6 +7,7 @@ from pages_season import SEASON_DEFS
 from pages_guides import GUIDES_DIR, GUIDE_URLS, GUIDE_DEFS, GUIDES_INDEX
 from pages_partner import PARTNER_DIR, PARTNER_URL
 from merchant_description import load_provenance, render_description
+import merchant_feed
 from datetime import datetime
 from email.utils import format_datetime
 # SEO tools ( /tools/ + /tools/canvas-calculator/ )
@@ -239,12 +240,19 @@ def build_google_merchant_feed():
     has no assigned unique item identifier; it never reuses a Payhip ID or SKU
     slug as a GTIN/MPN. Generate this file on every site build; Merchant Center
     can fetch its public URL on a schedule.
+
+    Category, title, highlight, detail-row and reporting-label enrichment comes
+    from merchant_feed.py and the reviewed data files it loads; see that module
+    for what is verified and what is deliberately left blank.
     """
     products = [p for p in PRODUCTS
                 if not p.get("comingSoon") and not p.get("free")
                 and float(p.get("price") or 0) > 0 and not _google_merchant_book(p)]
     provenance = load_provenance()
+    categories = merchant_feed.load_categories()
+    titles = merchant_feed.load_titles()
     unknown_origins = []
+    missing_categories = []
     items = []
     for p in products:
         slug = p["slug"]
@@ -265,7 +273,30 @@ def build_google_merchant_feed():
         mpn = str(p.get("mpn") or "").strip()
         brand = str(p.get("brand") or SITE_NAME).strip()
         identifier_exists = "yes" if gtin or (mpn and brand) else "no"
-        product_type = " > ".join(x for x in (SITE_NAME, p.get("category", "Digital downloads")) if x)
+        title = merchant_feed.title_for(p, titles)
+        category = merchant_feed.category_for(slug, categories)
+        if category is None:
+            missing_categories.append(slug)
+        product_type = merchant_feed.product_type(p, categories, SITE_NAME)
+        highlights = "".join(
+            f"\n    <g:product_highlight>{esc(text)}</g:product_highlight>"
+            for text in merchant_feed.highlights(p)
+        )
+        details = "".join(
+            "\n    <g:product_detail>"
+            f"\n      <g:attribute_name>{esc(name)}</g:attribute_name>"
+            f"\n      <g:attribute_value>{esc(value)}</g:attribute_value>"
+            "\n    </g:product_detail>"
+            for name, value in merchant_feed.details(p)
+        )
+        labels = "".join(
+            f"\n    <g:{key}>{esc(value)}</g:{key}>"
+            for key, value in merchant_feed.custom_labels(p, categories).items()
+        )
+        category_xml = (
+            f"\n    <g:google_product_category>{esc(category['id'])}</g:google_product_category>"
+            if category else ""
+        )
         extra_images = "\n".join(
             f"    <g:additional_image_link>{esc(url)}</g:additional_image_link>"
             for url in full_images[1:11]
@@ -278,7 +309,7 @@ def build_google_merchant_feed():
         identifiers.append(f"    <g:identifier_exists>{identifier_exists}</g:identifier_exists>")
         items.append(f"""  <item>
     <g:id>{esc(slug)}</g:id>
-    <g:title>{esc(p['name'])}</g:title>
+    <g:title>{esc(title)}</g:title>
 {description_xml}
     <g:link>{esc(product_url)}</g:link>
     <g:image_link>{esc(image_url)}</g:image_link>
@@ -286,9 +317,9 @@ def build_google_merchant_feed():
     <g:availability>in_stock</g:availability>
     <g:price>{esc(price)}</g:price>
     <g:brand>{esc(brand)}</g:brand>
-    <g:condition>new</g:condition>
+    <g:condition>new</g:condition>{category_xml}
     <g:product_type>{esc(product_type)}</g:product_type>
-{chr(10).join(identifiers)}
+{chr(10).join(identifiers)}{highlights}{details}{labels}
   </item>""")
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
@@ -302,6 +333,14 @@ def build_google_merchant_feed():
 """
     write("google-merchant-feed.xml", xml)
     print(f"Google Merchant feed: {len(products)} paid non-book candidates -> google-merchant-feed.xml (eligibility unverified)")
+    if missing_categories:
+        print("WARNING: no reviewed Google product category for "
+              f"{len(missing_categories)} product(s); they were emitted without one. "
+              "Add a reviewed entry to data/merchant-categories.json: "
+              + ", ".join(missing_categories))
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            print("::warning title=Merchant categories::"
+                  f"{len(missing_categories)} product(s) have no reviewed category; see the build log.")
     if unknown_origins:
         print("WARNING: Merchant description provenance is unknown or changed for "
               f"{len(unknown_origins)} product(s); plain descriptions were retained. "
