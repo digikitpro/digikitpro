@@ -349,6 +349,28 @@ def schema_org_home():
         "urlTemplate":SITE_URL+"/search.html?q={search_term_string}"},"query-input":"required name=search_term_string"}}
     ]
 
+def _schema_reviews(p):
+    """Review JSON-LD nodes from catalog data — only when real reviews exist.
+
+    Feeds schema_product(). Ratings are published verbatim only if the owner
+    entered an integer 1-5; anything missing/invalid is omitted rather than
+    defaulted. AggregateRating is never synthesised from a handful of quotes.
+    """
+    out = []
+    for r in (p.get("reviews") or []):
+        if not r or not r.get("quote") or not r.get("name"):
+            continue
+        node = {"@type":"Review","reviewBody":r["quote"],
+                "author":{"@type":"Person","name":r["name"]}}
+        try:
+            rating = int(r.get("rating"))
+        except (TypeError, ValueError):
+            rating = None
+        if rating and 1 <= rating <= 5:
+            node["reviewRating"] = {"@type":"Rating","ratingValue":rating,"bestRating":5}
+        out.append(node)
+    return out
+
 def schema_product(p):
     im = p.get("images") or {}
     # Merchant Center and Search should see the full product artwork, not the
@@ -374,6 +396,9 @@ def schema_product(p):
         product["gtin"] = str(p["gtin"])
     if p.get("mpn"):
         product["mpn"] = str(p["mpn"])
+    reviews = _schema_reviews(p)
+    if reviews:
+        product["review"] = reviews
     return [product]
 
 def schema_itemlist(items):
@@ -1555,6 +1580,38 @@ def _is_ebook(p):
     ]).lower()
     return ("pdf" in blob and any(k in blob for k in
             ("ebook", "e-book", "guide", "masterclass", "coursebook")))
+
+
+def reviews_block(p, depth=0):
+    """Founding-customer reviews on a product page.
+
+    Renders NOTHING unless the catalog carries real reviews
+    (data/products.json -> "reviews": [{"quote","name"[,"role"][,"rating"]}]).
+    No invented quotes, no placeholder cards, no synthesised star averages.
+    Quotes must be verbatim from a real customer; rating is optional and
+    passed through only when it is an integer 1-5 the owner entered.
+    """
+    reviews = [r for r in (p.get("reviews") or [])
+               if r and r.get("quote") and r.get("name")]
+    if not reviews:
+        return ""
+    cards = []
+    for r in reviews:
+        role = f' <span class="review-role">· {esc(r["role"])}</span>' if r.get("role") else ""
+        try:
+            rating = int(r.get("rating") or 0)
+        except (TypeError, ValueError):
+            rating = 0
+        stars = (f'<div class="review-rating" aria-label="{rating} out of 5">'
+                 f'{"★" * rating}{"☆" * (5 - rating)}</div>') if 1 <= rating <= 5 else ""
+        cards.append(
+            f'<figure class="review-card">{stars}'
+            f'<blockquote>{esc(r["quote"])}</blockquote>'
+            f'<figcaption>{esc(r["name"])}{role}</figcaption></figure>')
+    return (f'<section class="psec reviews-block" aria-labelledby="p-reviews">'
+            f'<div class="sec-head"><div><p class="eyebrow">Founding customers</p>'
+            f'<h2 id="p-reviews">What buyers say</h2></div></div>'
+            f'<div class="review-grid">{"".join(cards)}</div></section>')
 
 
 def licence_line(p=None):

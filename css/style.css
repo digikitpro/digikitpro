@@ -1686,3 +1686,13 @@ html.js-motion .hero-in .hero-showcase .hero-card.h3{animation:none;opacity:1;tr
    relying on color alone. Keep the existing gold, typography and surfaces. */
 .foot-bottom,.trust-bridge,.dl-note{color:#928e86}
 main :is(p,li) > a:not(.btn):not(.text-link){text-decoration:underline;text-underline-offset:3px}
+
+/* Founding-customer reviews (renders only when the catalog carries real quotes) */
+.review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:.6rem}
+.review-card{margin:0;padding:1rem 1.15rem;border:1px solid var(--border);border-left:2px solid var(--gold);border-radius:var(--radius-sm);background:var(--surface)}
+.review-rating{color:var(--gold);letter-spacing:.12em;font-size:1.05rem;margin-bottom:.35rem}
+.review-card blockquote{margin:0 0 .6rem;font-size:.93rem;line-height:1.55;color:var(--text)}
+.review-card blockquote::before{content:"“"}
+.review-card blockquote::after{content:"”"}
+.review-card figcaption{font-size:.82rem;color:var(--muted)}
+.review-role{color:var(--muted)}
