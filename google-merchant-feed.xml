@@ -24,15 +24,14 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Skin Texture</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>19 brushes for skin texture and portrait details</g:product_highlight>
     <g:product_highlight>Textured blenders, sketch and base tools</g:product_highlight>
+    <g:product_highlight>Realistic skin texture brushes</g:product_highlight>
+    <g:product_highlight>Freckles brush</g:product_highlight>
+    <g:product_highlight>Blemishes and pores brushes</g:product_highlight>
+    <g:product_highlight>Wrinkles and crinkles brushes</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>19 professional brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -41,6 +40,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Professional brushes</g:attribute_name>
+      <g:attribute_value>19</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -74,13 +77,11 @@
     <g:product_highlight>76 brushes across eight drawing and painting groups</g:product_highlight>
     <g:product_highlight>Linework, markers, graphite, charcoal and effects</g:product_highlight>
     <g:product_highlight>A broad toolkit for Procreate illustration</g:product_highlight>
+    <g:product_highlight>Linework &amp; Inking brushes</g:product_highlight>
+    <g:product_highlight>Graphite &amp; Charcoal brushes</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>76 versatile brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -89,6 +90,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Versatile brushes</g:attribute_name>
+      <g:attribute_value>76</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -121,13 +126,10 @@
     <g:product_highlight>46 brushes organized by seven portrait tasks</g:product_highlight>
     <g:product_highlight>Four paper textures included in the listing</g:product_highlight>
     <g:product_highlight>Sketch, blend, add hair and finish in Procreate</g:product_highlight>
+    <g:product_highlight>PAPER, 4 high-quality textures for a traditional feel</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>46 brushes + 4 paper textures</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -136,6 +138,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brushes</g:attribute_name>
+      <g:attribute_value>46</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Paper textures</g:attribute_name>
+      <g:attribute_value>4</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -168,7 +178,8 @@
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
     <g:product_highlight>Pencil, liner, ink, detail and sketch-tool groups</g:product_highlight>
     <g:product_highlight>Bonus texture brush</g:product_highlight>
-    <g:product_highlight>For line art and sketching in Procreate</g:product_highlight>
+    <g:product_highlight>Pencil brushes for sketching</g:product_highlight>
+    <g:product_highlight>Detail and sketch tools</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -212,6 +223,7 @@
     <g:product_highlight>Four listed kits for different portrait tasks</g:product_highlight>
     <g:product_highlight>Skin brushes, hairstyle stamps and glitter tools</g:product_highlight>
     <g:product_highlight>Line-art count and total await confirmation</g:product_highlight>
+    <g:product_highlight>Procreate brush sets in four ZIP downloads, according to the listing</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -256,13 +268,11 @@
     <g:product_highlight>100+ anime-style brushes</g:product_highlight>
     <g:product_highlight>Liners, shading, washes and detail tools</g:product_highlight>
     <g:product_highlight>Paper textures and a bonus set</g:product_highlight>
+    <g:product_highlight>Linework, shading, watercolor-style and detail tools</g:product_highlight>
+    <g:product_highlight>Bonus brush set listed; contents not independently verified</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>100+ handcrafted brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -271,6 +281,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>10</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate brushes listed</g:attribute_name>
+      <g:attribute_value>100+</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -300,15 +318,13 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Glitter &amp; Effects</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>30 glitter and sparkle brushes</g:product_highlight>
     <g:product_highlight>Lettering, stamps, patterns and highlight effects</g:product_highlight>
+    <g:product_highlight>Lettering, rainbow, star and overlay brushes</g:product_highlight>
+    <g:product_highlight>Glitter stamps and patterns</g:product_highlight>
+    <g:product_highlight>Gold flecks and decorative sparkle effects</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>30 brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -317,6 +333,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brushes</g:attribute_name>
+      <g:attribute_value>30</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate glitter brushes</g:attribute_name>
+      <g:attribute_value>30</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -346,16 +370,12 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Watercolor</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>30 watercolor-style brushes and five blenders</g:product_highlight>
     <g:product_highlight>15 splash stamps and three paper textures</g:product_highlight>
     <g:product_highlight>For botanical art, landscapes and illustration</g:product_highlight>
+    <g:product_highlight>15 splash and splatter stamps</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>50+ brushes incl. 30 pigment core + 5 blenders</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -366,8 +386,24 @@
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
-      <g:attribute_name>Requires</g:attribute_name>
-      <g:attribute_value>App: This bundle is exclusively for the Procreate App.</g:attribute_value>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>5</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Blenders</g:attribute_name>
+      <g:attribute_value>5</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Watercolor-style brushes</g:attribute_name>
+      <g:attribute_value>30</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Splash and splatter stamps</g:attribute_name>
+      <g:attribute_value>15</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Paper textures</g:attribute_name>
+      <g:attribute_value>3</g:attribute_value>
     </g:product_detail>
     <g:custom_label_0>procreate_brushes</g:custom_label_0>
     <g:custom_label_1>watercolor</g:custom_label_1>
@@ -394,7 +430,6 @@
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
     <g:product_highlight>Sketching brushes and torn-paper stamps</g:product_highlight>
-    <g:product_highlight>13 paper textures</g:product_highlight>
     <g:product_highlight>For digital studies and scrapbook-style compositions</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
@@ -411,6 +446,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Paper textures listed</g:attribute_name>
+      <g:attribute_value>13</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -440,16 +479,14 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Line Art</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>39 liner and marker brushes for Procreate</g:product_highlight>
     <g:product_highlight>Includes stipple and rough-texture tools</g:product_highlight>
     <g:product_highlight>For character art, comics and sketching</g:product_highlight>
+    <g:product_highlight>Marker-style brushes and precision liners</g:product_highlight>
+    <g:product_highlight>Wet, dry and grainy texture brushes</g:product_highlight>
+    <g:product_highlight>Flat, stipple and rough brushes</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>39 high-fidelity brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -458,6 +495,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>High-fidelity brushes</g:attribute_name>
+      <g:attribute_value>39</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate brushes listed</g:attribute_name>
+      <g:attribute_value>39</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -490,6 +535,8 @@
     <g:product_highlight>Charcoal-style drawing and smudging tools</g:product_highlight>
     <g:product_highlight>Broad marks and fine textured details</g:product_highlight>
     <g:product_highlight>For portraits, figures and value studies</g:product_highlight>
+    <g:product_highlight>Compressed charcoal-style brushes</g:product_highlight>
+    <g:product_highlight>Vine and willow charcoal-style brushes</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -534,9 +581,8 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Figure Drawing</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>Male figure pose stamps</g:product_highlight>
     <g:product_highlight>One Procreate .brushset file</g:product_highlight>
-    <g:product_highlight>For character sketches and figure studies</g:product_highlight>
+    <g:product_highlight>Exact stamp count not confirmed in the text listing</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -581,9 +627,9 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Figure Drawing</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>Female figure pose stamps</g:product_highlight>
     <g:product_highlight>One Procreate .brushset file</g:product_highlight>
     <g:product_highlight>For character art and figure studies</g:product_highlight>
+    <g:product_highlight>Exact stamp count not confirmed in the text listing</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -628,16 +674,12 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Bundles</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>650+ brushes and paper textures</g:product_highlight>
     <g:product_highlight>24 brush sets described in the listing</g:product_highlight>
     <g:product_highlight>Bundle overlap requires confirmation</g:product_highlight>
+    <g:product_highlight>Exact contents and overlap with other bundles require confirmation</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>650+ brushes + paper textures</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -646,6 +688,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>65</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brush sets described</g:attribute_name>
+      <g:attribute_value>24</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -677,6 +727,7 @@
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
     <g:product_highlight>Ten pastel-style tools</g:product_highlight>
     <g:product_highlight>Chalk textures, soft shading and blenders</g:product_highlight>
+    <g:product_highlight>Soft-edge outline pen and textured fills</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -717,16 +768,12 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Hair</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>160 hairstyle stamps</g:product_highlight>
     <g:product_highlight>Use as starting shapes for portrait or character hair</g:product_highlight>
     <g:product_highlight>Also listed in the Ultimate Portrait bundle</g:product_highlight>
+    <g:product_highlight>Procreate .brushset format</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>160 hair stamps</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -735,6 +782,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Hair stamps</g:attribute_name>
+      <g:attribute_value>160</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -763,15 +814,10 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Glitter &amp; Effects</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>10 texture and effects brushes</g:product_highlight>
     <g:product_highlight>For backgrounds, lettering and illustration</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>10 brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -780,6 +826,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brushes</g:attribute_name>
+      <g:attribute_value>10</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -808,16 +858,11 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Hair</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>10 hair-focused Procreate brushes</g:product_highlight>
-    <g:product_highlight>For strands and texture in portraits</g:product_highlight>
     <g:product_highlight>A smaller set than the hairstyle-stamp kit</g:product_highlight>
+    <g:product_highlight>10 Procreate brushes for hair effects</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>10 brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -826,6 +871,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brushes</g:attribute_name>
+      <g:attribute_value>10</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -856,13 +905,10 @@
     <g:product_highlight>2,000+ Procreate brushes</g:product_highlight>
     <g:product_highlight>Multiple themed drawing and painting categories</g:product_highlight>
     <g:product_highlight>Exact bundle contents and overlap need confirmation</g:product_highlight>
+    <g:product_highlight>Exact contents and overlap with other bundles require confirmation</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>2,000+ organized brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -871,6 +917,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>00</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -904,13 +954,10 @@
     <g:product_highlight>200+ tattoo-design brushes</g:product_highlight>
     <g:product_highlight>Linework, stipple and shading tools</g:product_highlight>
     <g:product_highlight>Paper textures listed for digital flash</g:product_highlight>
+    <g:product_highlight>Liners, stipple, dotwork and shading tools</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>200+ brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -919,6 +966,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>20</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate brushes listed</g:attribute_name>
+      <g:attribute_value>200+</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -946,16 +1001,11 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Bundles</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>160 pattern brushes and 12 palettes</g:product_highlight>
     <g:product_highlight>Filled and transparent pattern versions</g:product_highlight>
-    <g:product_highlight>For Procreate illustration and surface design</g:product_highlight>
+    <g:product_highlight>Filled and transparent versions described; counting method unconfirmed</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>160 brushes + 12 color palettes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -964,6 +1014,18 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brushes</g:attribute_name>
+      <g:attribute_value>160</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Color palettes</g:attribute_name>
+      <g:attribute_value>12</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate color palettes</g:attribute_name>
+      <g:attribute_value>12</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -997,6 +1059,8 @@
     <g:product_highlight>Koi-themed Procreate brush set</g:product_highlight>
     <g:product_highlight>For digital flash and illustration concepts</g:product_highlight>
     <g:product_highlight>Exact brush count requires confirmation</g:product_highlight>
+    <g:product_highlight>One koi fish Procreate .brushset</g:product_highlight>
+    <g:product_highlight>Exact count is not confirmed in the text listing</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -1040,13 +1104,11 @@
     <g:product_highlight>35 brushes for fur, hair and feather effects</g:product_highlight>
     <g:product_highlight>Base, detail and dual-color tools</g:product_highlight>
     <g:product_highlight>For animal and fantasy illustration</g:product_highlight>
+    <g:product_highlight>35 Procreate fur, hair and feather brushes</g:product_highlight>
+    <g:product_highlight>Smooth, fluffy, stylized and dual-color brushes</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>35 brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1055,6 +1117,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brushes</g:attribute_name>
+      <g:attribute_value>35</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate fur</g:attribute_name>
+      <g:attribute_value>35</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1085,15 +1155,11 @@
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
     <g:product_highlight>15 textured illustration brushes</g:product_highlight>
-    <g:product_highlight>Five Procreate color palettes</g:product_highlight>
     <g:product_highlight>For lettering and children’s illustration</g:product_highlight>
+    <g:product_highlight>Brushes listed as .brushset and palettes as .swatches</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>15 texture brushes + 5 color palettes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1102,6 +1168,22 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Texture brushes</g:attribute_name>
+      <g:attribute_value>15</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Color palettes</g:attribute_name>
+      <g:attribute_value>5</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate texture brushes</g:attribute_name>
+      <g:attribute_value>15</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate color palettes</g:attribute_name>
+      <g:attribute_value>5</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1134,6 +1216,7 @@
     <g:product_highlight>Hair stamps and textured strand brushes</g:product_highlight>
     <g:product_highlight>For Procreate portrait and character art</g:product_highlight>
     <g:product_highlight>Exact brush count requires confirmation</g:product_highlight>
+    <g:product_highlight>Exact count is not confirmed in the text listing</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -1178,16 +1261,12 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Watercolor</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>80 watercolor-style brushes</g:product_highlight>
     <g:product_highlight>Washes, textured details, liners and blenders</g:product_highlight>
     <g:product_highlight>For Procreate illustration on iPad</g:product_highlight>
+    <g:product_highlight>Wash, detail, liner and blender tools</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>80 organic brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1196,6 +1275,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Organic brushes</g:attribute_name>
+      <g:attribute_value>80</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1225,16 +1308,12 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Anime</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>100+ anime-style brushes</g:product_highlight>
     <g:product_highlight>Watercolor-style, shading and line-art tools</g:product_highlight>
     <g:product_highlight>Paper textures</g:product_highlight>
+    <g:product_highlight>Watercolor-style washes, shading, detail and highlight tools</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>100+ brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1243,6 +1322,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>10</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate brushes listed</g:attribute_name>
+      <g:attribute_value>100+</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1272,9 +1359,10 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Sketching</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>27 sketching brushes</g:product_highlight>
     <g:product_highlight>Two canvas files and 13 color palettes</g:product_highlight>
     <g:product_highlight>Graphite and charcoal-style marks</g:product_highlight>
+    <g:product_highlight>27 Procreate sketching brushes (.brushset)</g:product_highlight>
+    <g:product_highlight>13 Procreate color palettes (.swatches)</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -1290,6 +1378,18 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate sketching brushes</g:attribute_name>
+      <g:attribute_value>27</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Canvas files</g:attribute_name>
+      <g:attribute_value>2</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate color palettes</g:attribute_name>
+      <g:attribute_value>13</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1320,13 +1420,10 @@
     <g:product_highlight>50 palettes with 30 swatches each</g:product_highlight>
     <g:product_highlight>Procreate .swatches format</g:product_highlight>
     <g:product_highlight>A range of color themes for digital art</g:product_highlight>
+    <g:product_highlight>Procreate .swatches files in a ZIP</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.swatches (Procreate color palettes)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>50 palettes / 1,500 swatches</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1335,6 +1432,22 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Palettes</g:attribute_name>
+      <g:attribute_value>50</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Swatches</g:attribute_name>
+      <g:attribute_value>500</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate color palettes</g:attribute_name>
+      <g:attribute_value>50</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Swatches per palette listed</g:attribute_name>
+      <g:attribute_value>30</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1365,13 +1478,11 @@
     <g:product_highlight>1,000+ Procreate brushes</g:product_highlight>
     <g:product_highlight>Themed portrait, anime, traditional and effect tools</g:product_highlight>
     <g:product_highlight>Exact bundle contents and overlap need confirmation</g:product_highlight>
+    <g:product_highlight>Themed brush folders described in the listing</g:product_highlight>
+    <g:product_highlight>Exact contents and overlap with other bundles require confirmation</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>1,000+ brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1380,6 +1491,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>00</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1409,16 +1524,13 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Line Art</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>300+ linework brushes</g:product_highlight>
     <g:product_highlight>Sketch, ink, shading and hatching tools</g:product_highlight>
     <g:product_highlight>Paper texture overlays</g:product_highlight>
+    <g:product_highlight>300+ Procreate fine-line brushes</g:product_highlight>
+    <g:product_highlight>Sketching, inking, shading and hatching tools</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>300+ brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1427,6 +1539,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>30</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1458,17 +1574,19 @@
     <g:product_highlight>57 page layouts and a 2026 calendar</g:product_highlight>
     <g:product_highlight>Hyperlinked PDF and editable Canva template</g:product_highlight>
     <g:product_highlight>Daily reflection and intention prompts</g:product_highlight>
+    <g:product_highlight>57 page layouts with a 2026 calendar</g:product_highlight>
+    <g:product_highlight>Daily, weekly and monthly reflection pages</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>Hyperlinked PDF</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>57 pages, hyperlinked PDF + Canva template</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Pages</g:attribute_name>
+      <g:attribute_value>57</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1500,6 +1618,9 @@
     <g:product_highlight>Dated daily pages for 2026</g:product_highlight>
     <g:product_highlight>Weekly, monthly and yearly reflections</g:product_highlight>
     <g:product_highlight>PDF journal and sticker files</g:product_highlight>
+    <g:product_highlight>Digital PDF Journal</g:product_highlight>
+    <g:product_highlight>Individual PNG Stickers</g:product_highlight>
+    <g:product_highlight>Pre-cropped Goodnotes Sticker Book</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>Hyperlinked PDF</g:attribute_value>
@@ -1540,9 +1661,9 @@
     <g:product_type>DigiKitPro &gt; Digital Planners &amp; Journals &gt; Other</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>Opens in GoodNotes and other PDF annotation apps</g:product_highlight>
-    <g:product_highlight>Hyperlinked PDF planner</g:product_highlight>
     <g:product_highlight>Planning pages and stickers</g:product_highlight>
     <g:product_highlight>Files and dates require owner confirmation</g:product_highlight>
+    <g:product_highlight>Hyperlinked PDF planner and stickers</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>Hyperlinked PDF</g:attribute_value>
@@ -1589,13 +1710,12 @@
     <g:product_highlight>55 layouts and a 2026 calendar</g:product_highlight>
     <g:product_highlight>Hyperlinked PDF with focus and reflection pages</g:product_highlight>
     <g:product_highlight>Canva template listed; Canva Pro may be needed</g:product_highlight>
+    <g:product_highlight>55 page layouts with a 2026 calendar</g:product_highlight>
+    <g:product_highlight>Editable Canva template listed; Canva Pro may be required</g:product_highlight>
+    <g:product_highlight>Focus, routine, energy and reflection pages</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>Hyperlinked PDF</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>55 pages</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1604,6 +1724,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Pages</g:attribute_name>
+      <g:attribute_value>55</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1635,13 +1759,12 @@
     <g:product_highlight>43 watercolour illustrations</g:product_highlight>
     <g:product_highlight>Patterns, compositions and posters</g:product_highlight>
     <g:product_highlight>PNG, JPEG and selected vector formats</g:product_highlight>
+    <g:product_highlight>37 individual abstract watercolour and gold elements (PNG)</g:product_highlight>
+    <g:product_highlight>10 pre-made watercolour compositions (PNG)</g:product_highlight>
+    <g:product_highlight>10 pre-made abstract compositions (PNG)</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>PNG illustrations &amp; patterns</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>43 illustrations + seamless patterns + posters</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1652,8 +1775,24 @@
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
-      <g:attribute_name>Requires</g:attribute_name>
-      <g:attribute_value>Any design software that opens PNG files</g:attribute_value>
+      <g:attribute_name>Illustrations</g:attribute_name>
+      <g:attribute_value>43</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Pre-made abstract compositions</g:attribute_name>
+      <g:attribute_value>10</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Pre-made posters/cards</g:attribute_name>
+      <g:attribute_value>10</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Unique seamless patterns</g:attribute_name>
+      <g:attribute_value>9</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Black ink line elements</g:attribute_name>
+      <g:attribute_value>10</g:attribute_value>
     </g:product_detail>
     <g:custom_label_0>digital_art_assets</g:custom_label_0>
     <g:custom_label_1>other</g:custom_label_1>
@@ -1679,16 +1818,14 @@
     <g:product_type>DigiKitPro &gt; Digital Planners &amp; Journals &gt; Other</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>Opens in GoodNotes and other PDF annotation apps</g:product_highlight>
-    <g:product_highlight>365 undated daily pages</g:product_highlight>
     <g:product_highlight>Hyperlinked dark-mode PDF</g:product_highlight>
     <g:product_highlight>Five covers and stickers</g:product_highlight>
+    <g:product_highlight>16 page templates</g:product_highlight>
+    <g:product_highlight>5 notebook covers</g:product_highlight>
+    <g:product_highlight>Pre-cropped digital stickers</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>Hyperlinked PDF</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>365 pages, minimalist dark mode</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1697,6 +1834,18 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Pages</g:attribute_name>
+      <g:attribute_value>365</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Page templates listed</g:attribute_name>
+      <g:attribute_value>16</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Notebook covers</g:attribute_name>
+      <g:attribute_value>5</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1726,9 +1875,10 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Traditional</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>Pencil, crayon and pastel-style tools</g:product_highlight>
     <g:product_highlight>Blenders and soft-edge liners</g:product_highlight>
     <g:product_highlight>Cover and text need owner verification</g:product_highlight>
+    <g:product_highlight>Pencil, crayon and oil-pastel-style brushes</g:product_highlight>
+    <g:product_highlight>Cover and advertised contents require confirmation</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
@@ -1769,16 +1919,12 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Glitter &amp; Effects</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>12 smoke-effect brushes</g:product_highlight>
     <g:product_highlight>Procreate .brushset format</g:product_highlight>
     <g:product_highlight>For atmospheric illustration and overlays</g:product_highlight>
+    <g:product_highlight>Procreate .brushset file</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>12 brushes</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1787,6 +1933,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brushes</g:attribute_name>
+      <g:attribute_value>12</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Smoke-effect Procreate brushes</g:attribute_name>
+      <g:attribute_value>12</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1816,16 +1970,14 @@
     <g:product_type>DigiKitPro &gt; Editable Canva Templates &gt; Other</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>Requires a Canva account to edit the templates</g:product_highlight>
-    <g:product_highlight>100+ Canva templates</g:product_highlight>
     <g:product_highlight>Planners, journals, logbooks and workbooks</g:product_highlight>
     <g:product_highlight>Some elements may require Canva Pro</g:product_highlight>
+    <g:product_highlight>100+ editable Canva templates</g:product_highlight>
+    <g:product_highlight>Dated 2026 and some multi-year planner layouts</g:product_highlight>
+    <g:product_highlight>Review the supplied license and KDP requirements before publishing</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>Editable Canva templates</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>100+ Canva templates</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1834,6 +1986,10 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>0</g:attribute_name>
+      <g:attribute_value>10</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1862,16 +2018,11 @@
     <g:product_type>DigiKitPro &gt; Procreate Brushes &amp; Stamps &gt; Glitter &amp; Effects</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>For iPad with the Procreate app</g:product_highlight>
-    <g:product_highlight>21 tie-dye brushes and stamps</g:product_highlight>
-    <g:product_highlight>Two Procreate startup files</g:product_highlight>
     <g:product_highlight>For digital patterns and illustration</g:product_highlight>
+    <g:product_highlight>2 Procreate startup files with rainbow and watercolor-style effects</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>21 brushes &amp; stamps</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1880,6 +2031,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Brushes &amp; stamps</g:attribute_name>
+      <g:attribute_value>21</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Procreate brushes and stamps</g:attribute_name>
+      <g:attribute_value>21</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1912,13 +2071,11 @@
     <g:product_highlight>173 Christmas brushes and stamps</g:product_highlight>
     <g:product_highlight>44 washi tape brushes</g:product_highlight>
     <g:product_highlight>Extra frames, papers and chalkboards</g:product_highlight>
+    <g:product_highlight>Installation Guide</g:product_highlight>
+    <g:product_highlight>Instructions for adjusting brush settings</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>.brushset (Procreate)</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>173 stamps &amp; brushes + 44 washi tapes + more</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1927,6 +2084,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Stamps &amp; brushes</g:attribute_name>
+      <g:attribute_value>173</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Washi tapes</g:attribute_name>
+      <g:attribute_value>44</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -1955,16 +2120,13 @@
     <g:google_product_category>8022</g:google_product_category>
     <g:product_type>DigiKitPro &gt; Digital Planners &amp; Journals &gt; Other</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
-    <g:product_highlight>Two undated planners: Monday and Sunday starts</g:product_highlight>
     <g:product_highlight>Hyperlinked planning and lifestyle sections</g:product_highlight>
     <g:product_highlight>1,000 stickers with color variations</g:product_highlight>
+    <g:product_highlight>Hyperlinked yearly, monthly, weekly and daily pages</g:product_highlight>
+    <g:product_highlight>Finance, fitness, wellness, project and productivity sections</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>Hyperlinked PDF</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>2 planners + 1,000 stickers</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>File size</g:attribute_name>
@@ -1973,6 +2135,14 @@
     <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Planners</g:attribute_name>
+      <g:attribute_value>2</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>Stickers</g:attribute_name>
+      <g:attribute_value>000</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>
@@ -2002,6 +2172,9 @@
     <g:product_highlight>Goal-setting and workout planning pages</g:product_highlight>
     <g:product_highlight>Meal, habit and progress trackers</g:product_highlight>
     <g:product_highlight>Digital PDF; no physical product</g:product_highlight>
+    <g:product_highlight>Personalized goal-setting pages</g:product_highlight>
+    <g:product_highlight>Workout schedules and progress trackers</g:product_highlight>
+    <g:product_highlight>Meal planning pages</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>PDF</g:attribute_value>
@@ -2044,19 +2217,22 @@
     <g:product_type>DigiKitPro &gt; Digital Art &amp; Pattern Assets &gt; Other</g:product_type>
     <g:identifier_exists>no</g:identifier_exists>
     <g:product_highlight>20 Halloween pumpkin PNG files</g:product_highlight>
-    <g:product_highlight>300 DPI</g:product_highlight>
     <g:product_highlight>For seasonal cards, crafts and digital designs</g:product_highlight>
     <g:product_detail>
       <g:attribute_name>Format</g:attribute_name>
       <g:attribute_value>PNG (300 DPI)</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
-      <g:attribute_name>Contents</g:attribute_name>
-      <g:attribute_value>20 PNGs at 300 DPI</g:attribute_value>
-    </g:product_detail>
-    <g:product_detail>
       <g:attribute_name>Delivery</g:attribute_name>
       <g:attribute_value>Digital download via Payhip</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>PNGs at 300 DPI</g:attribute_name>
+      <g:attribute_value>20</g:attribute_value>
+    </g:product_detail>
+    <g:product_detail>
+      <g:attribute_name>DPI listed</g:attribute_name>
+      <g:attribute_value>300</g:attribute_value>
     </g:product_detail>
     <g:product_detail>
       <g:attribute_name>Requires</g:attribute_name>

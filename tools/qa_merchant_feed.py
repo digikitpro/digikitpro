@@ -232,6 +232,35 @@ class MerchantEnrichmentTests(unittest.TestCase):
                                  slug in merchant_feed.PRIORITY)
                 self.assertTrue(row.findtext("g:custom_label_0", namespaces=NS))
 
+
+    def test_rich_product_description_coverage(self):
+        """Google asks for >4 highlights and >5 details; both must keep improving."""
+        items = self._feed()
+        highlights = [len(r.findall("g:product_highlight", NS)) for r in items]
+        details = [len(r.findall("g:product_detail", NS)) for r in items]
+        # Hard floor: the specification itself requires at least 2 highlights.
+        self.assertGreaterEqual(min(highlights), 2)
+        self.assertGreaterEqual(min(details), 4)
+        rich_hl = sum(1 for n in highlights if n > 4)
+        rich_dt = sum(1 for n in details if n > 5)
+        self.assertGreaterEqual(rich_hl, 18, f"only {rich_hl}/45 reach more than 4 highlights")
+        self.assertGreaterEqual(rich_dt, 14, f"only {rich_dt}/45 reach more than 5 details")
+
+    def test_highlights_do_not_restate_the_description(self):
+        from merchant_description import select_description
+        catalog = self._catalog()
+        for row in self._feed():
+            slug = row.findtext("g:id", namespaces=NS)
+            _, description = select_description(catalog[slug])
+            desc_words = {w for w in re.findall(r"[a-z0-9]+", description.lower()) if len(w) > 2}
+            for node in row.findall("g:product_highlight", NS):
+                words = {w for w in re.findall(r"[a-z0-9]+", (node.text or "").lower()) if len(w) > 2}
+                if not words:
+                    continue
+                with self.subTest(slug=slug, highlight=node.text):
+                    overlap = len(words & desc_words) / len(words)
+                    self.assertLess(overlap, 0.95, f"highlight restates description: {node.text!r}")
+
     def test_category_loader_rejects_unverified_entries(self):
         nodes = merchant_feed.load_taxonomy_nodes()
         good = json.loads((ROOT / "data/merchant-categories.json").read_text(encoding="utf-8"))

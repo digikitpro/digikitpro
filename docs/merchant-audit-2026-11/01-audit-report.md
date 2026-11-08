@@ -100,8 +100,8 @@ mismatches, dead images or a blocked page. Those are the usual suspects and they
 
 | Finding | Count | Source |
 |---|---|---|
-| Items with fewer than 5 highlights | **45 / 45** | Google rich-PDP guidance asks for >4 |
-| Items with fewer than 6 detail rows | **45 / 45** | Google rich-PDP guidance asks for >5 |
+| Items with fewer than 5 highlights | **18 / 45** (was 45/45) | Google rich-PDP guidance asks for >4; fixed where the catalogue states enough facts |
+| Items with fewer than 6 detail rows | **25 / 45** (was 45/45) | Google rich-PDP guidance asks for >5; the rest are capped by unstated facts |
 | Items with only one image | **6** | `master-library-2000-brushes`, `brush-palette-bundle-160`, `procreate-palettes-bundle-50`, `master-vault-1000-brushes`, `ultimate-fitness-planner`, `halloween-pumpkin-bundle` |
 | Items whose brush/stamp count is unconfirmed in the catalogue | **9** | see "Data flag" column below |
 | Items priced under $10 | 41 | catalogue |
@@ -192,8 +192,10 @@ provisional and reading back what Merchant Center reports.
    Listings had a title and an image and almost nothing else to be matched on.
 2. **11 of 45 titles lacked the platform keyword.** For a `.brushset`, the words people search
    ("Procreate", "brushes for iPad") were absent from 4 brush titles and 7 planner/asset titles.
-3. **Zero items meet Google's rich-PDP thresholds** (§2.2). Every free listing is under-supplied
-   with the structured data Google asks for.
+3. **Every item failed Google's rich-PDP thresholds** (§2.2) — 45/45 on both counts. This was
+   fixable in code and has since been fixed for the items whose records state enough facts:
+   **27/45 now exceed 4 highlights, 20/45 exceed 5 details.** The remainder cannot be padded
+   without inventing facts, which is why steps 6 and 7 below matter.
 4. **6 items have one image**, including two flagship bundles.
 5. **9 items cannot state their strongest number** (brush/stamp count) because the catalogue marks
    it unconfirmed. Count is the single most persuasive spec in this niche.

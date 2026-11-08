@@ -91,7 +91,14 @@ Proposed descriptions are in the same CSV. They are machine-written, so:
 
 ---
 
-## Step 5 — Rich product data: the measurable gap (🟢, highest volume of work, fully in-repo)
+## Step 5 — Rich product data: the measurable gap (🟢, **partly done**)
+
+**Status:** the code change has landed. Highlights now draw on `features` **and** `included`
+(de-duplicated against the description), and detail rows break the stated contents line into
+countable specs ("Brushes: 160", "Color palettes: 12"). Result: **27/45 items exceed 4 highlights
+and 20/45 exceed 5 details, up from 0/45 and 0/45.** The remaining items are blocked by missing
+facts, not by code — see Step 7.
+
 
 This is the one item where Google states a target and the catalogue fails it **45 times out of 45**:
 

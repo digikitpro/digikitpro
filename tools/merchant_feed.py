@@ -153,52 +153,129 @@ def _words(text: str) -> set[str]:
     return {w for w in re.findall(r"[a-z0-9]+", text.lower()) if len(w) > 2}
 
 
-def highlights(product: dict) -> list[str]:
-    """[product_highlight] bullets: existing feature text, cleaned and capped.
+def _restates(text: str, reference: set[str]) -> bool:
+    """True when a label is almost entirely contained in the description."""
+    words = _words(text)
+    return bool(words) and len(words & reference) / len(words) >= 0.9
 
-    A feature that only restates a bullet already present (e.g. the generated
-    "For Procreate on iPad" against the compatibility line) is dropped rather
-    than repeated on the listing.
+
+def highlights(product: dict, description: str = "") -> list[str]:
+    """[product_highlight] bullets for a rich product description page.
+
+    Google recommends more than four highlights, asks that they not repeat the
+    description, and wants them to describe the product rather than list
+    keywords. The catalogue's three ``features`` are topped up with short
+    ``included`` labels; long contents lines and group breakdowns are left to
+    ``product_detail`` so the two fields do not say the same thing.
     """
     out: list[str] = []
-    seen_words: list[set[str]] = []
+    seen: list[set[str]] = []
+    description_words = _words(description)
     compat = _compatibility_line(product)
     if compat:
         out.append(compat)
-        seen_words.append(_words(compat))
-    for raw in (product.get("features") or []):
+        seen.append(_words(compat))
+    candidates = list(product.get("features") or []) + list(product.get("included") or [])
+    for raw in candidates:
         text = _clean_highlight(raw)
-        if not text or len(text) > HIGHLIGHT_MAX_CHARS or _HEDGE.search(text):
+        if not text or len(text) > 70 or ":" in text or _HEDGE.search(text):
             continue
+        if text.split()[0].isupper() and text.split()[0].isalpha() and len(text.split()[0]) > 3:
+            continue  # "SKETCH, 8 brushes" style group heading: belongs in details
         words = _words(text)
         if not words:
             continue
-        if any(words <= previous or previous <= words for previous in seen_words):
+        if any(words <= previous or previous <= words for previous in seen):
+            continue
+        if description_words and _restates(text, description_words):
             continue
         out.append(text)
-        seen_words.append(words)
-    return out[:HIGHLIGHT_MAX_COUNT]
+        seen.append(words)
+    return out[:6]
+
+
+_COUNT = re.compile(r"^([0-9][0-9,+]*)\s*(.+)$")
+
+
+def _content_specs(contents: str) -> list[tuple[str, str]]:
+    """Split a stated contents line into countable specs.
+
+    ``"160 brushes + 12 color palettes"`` becomes ``Brushes: 160`` and
+    ``Colour palettes: 12``. Only numbers already present in the catalogue are
+    emitted; a fragment without a count is ignored rather than guessed.
+    """
+    rows: list[tuple[str, str]] = []
+    fragments = re.split(r"\s*\+|,|/|\band\b", contents)
+    for fragment in fragments:
+        fragment = fragment.strip().rstrip(".")
+        if not fragment or _HEDGE.search(fragment):
+            continue
+        match = _COUNT.match(fragment)
+        if not match:
+            continue
+        count, noun = match.group(1), match.group(2).strip()
+        noun = re.sub(r"^(?:x\s*)", "", noun, flags=re.I)
+        if not noun or len(noun) > 40:
+            continue
+        label = noun[:1].upper() + noun[1:]
+        rows.append((label, count))
+    return rows
 
 
 def details(product: dict) -> list[tuple[str, str]]:
-    """[product_detail] rows parsed from the record's own technical lines."""
+    """[product_detail] rows for a rich product description page.
+
+    Google requires more than five detail rows and only confirmed values. The
+    technical lines supply format, size and requirements; the contents line is
+    split into its stated counts so a bundle reports "Brushes: 160" instead of
+    one long sentence. The raw contents row is dropped when it was fully
+    broken down, to avoid submitting the same fact twice.
+    """
     rows: list[tuple[str, str]] = []
+    contents_value = ""
     for line in (product.get("technical") or []):
         line = str(line)
         if ":" not in line:
             continue
         key, _, value = line.partition(":")
         key, value = key.strip(), value.strip()
-        if key in DETAIL_KEYS and value and not _HEDGE.search(value):
+        if key == "Contents":
+            contents_value = value
+        elif key in DETAIL_KEYS and value and not _HEDGE.search(value):
             rows.append((DETAIL_KEYS[key], value))
+
+    specs = _content_specs(contents_value) if contents_value and not _HEDGE.search(contents_value) else []
+    if specs:
+        rows.extend(specs)
+    elif contents_value and not _HEDGE.search(contents_value):
+        rows.insert(1, ("Contents", contents_value))
+
+    # `included` often states a component count the technical line omits
+    # (e.g. "2 canvas files ... 300 DPI", "5 Procreate color palettes").
+    for item in (product.get("included") or []):
+        item = str(item).strip()
+        if _HEDGE.search(item) or ":" in item:
+            continue
+        head = re.split(r",|\(", item)[0].strip()
+        match = _COUNT.match(head)
+        if not match:
+            continue
+        count, noun = match.group(1), match.group(2).strip()
+        if not noun or len(noun) > 30 or re.search(r"\d", noun):
+            continue
+        name = noun[:1].upper() + noun[1:]
+        if not any(name.lower() == seen_name for seen_name, _ in rows):
+            rows.append((name, count))
+
     requires = [str(r).strip() for r in (product.get("requirements") or []) if str(r).strip()]
     if requires and len(requires[0]) <= HIGHLIGHT_MAX_CHARS:
         rows.append(("Requires", requires[0]))
     seen: set[str] = set()
     unique: list[tuple[str, str]] = []
     for name, value in rows:
-        if name.lower() not in seen:
-            seen.add(name.lower())
+        key = name.lower()
+        if key not in seen:
+            seen.add(key)
             unique.append((name, value))
     return unique[:DETAIL_MAX_COUNT]
 

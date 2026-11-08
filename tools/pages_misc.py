@@ -6,7 +6,7 @@ from core import *
 from pages_season import SEASON_DEFS
 from pages_guides import GUIDES_DIR, GUIDE_URLS, GUIDE_DEFS, GUIDES_INDEX
 from pages_partner import PARTNER_DIR, PARTNER_URL
-from merchant_description import load_provenance, render_description
+from merchant_description import load_provenance, render_description, select_description
 import merchant_feed
 from datetime import datetime
 from email.utils import format_datetime
@@ -278,9 +278,11 @@ def build_google_merchant_feed():
         if category is None:
             missing_categories.append(slug)
         product_type = merchant_feed.product_type(p, categories, SITE_NAME)
+        # Pass the exact description text so a highlight never restates it.
+        _, description_text = select_description(p)
         highlights = "".join(
             f"\n    <g:product_highlight>{esc(text)}</g:product_highlight>"
-            for text in merchant_feed.highlights(p)
+            for text in merchant_feed.highlights(p, description_text)
         )
         details = "".join(
             "\n    <g:product_detail>"
