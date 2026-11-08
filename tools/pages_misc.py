@@ -94,7 +94,7 @@ ABOUT_FAQS = [
 # counts, sales figures, scarcity or deadlines are invented here.
 SITE_FAQS = [
     ("What do I need to use DigiKitPro brushes?",
-     "The .brushset files require the Procreate app on an iPad. Brushes are calibrated for Apple Pencil pressure and tilt. Some products are PDFs, palettes or PNG files instead; each product page lists its file types under Technical Details."),
+     "The .brushset files require the Procreate app on an iPad. Brush settings and input-device behavior can vary; check the product details or contact the store if pressure or tilt response matters to you. Some products are PDFs, palettes or PNG files instead; check each product page for its listed file types."),
     ("How are the files delivered?",
      "Payhip handles checkout and digital delivery. Check the Payhip confirmation and receipt for access details; if you need help, use the contact page. No physical item is shipped."),
     ("How do I install a .brushset file on my iPad?",

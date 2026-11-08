@@ -1073,7 +1073,7 @@ def trend_topics(depth=0):
         ("Hair brushes", rel(depth, "category/hair/")),
         ("Procreate bundles", rel(depth, "bundles.html")),
         ("Free brush packs", rel(depth, "freebies.html")),
-        ("Starter guide", rel(depth, "blog/best-procreate-brushes-for-beginners/")),
+        ("Free portrait guide", rel(depth, "products/procreate-starter-guide-free-ebook/")),
     ]
     pills = "".join(f'<a class="trend-pill" href="{u}">{n}</a>' for n, u in topics)
     return f'<p class="trend-label">Explore by topic</p><div class="trend-pills">{pills}</div>'
@@ -1366,15 +1366,15 @@ def bundle_ladder(depth=0, section_cls="section section-alt",
 """
 
 
-def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
+def flagship_band(depth=0, bridge=True, ladder_href=None, home=False, neutral_compare=False):
     """Level 4 — the Master Library, given the prominence its value deserves.
     Positioned as '2,000+ organized Procreate brushes — one library, multiple
     workflows, less tool hunting' — affordable and useful, not cheap per-brush.
     The comparison is arithmetic on real prices, never a scarcity or
     popularity claim. ``bridge=False`` drops the checkout/refund line
     (the homepage keeps its product bands free of legal copy).
-    ``ladder_href`` adds the "top rung of the bundle ladder" link back to the
-    bundle ladder, so the two sections read as one climb instead of two.
+    ``ladder_href`` adds a comparison link; ``neutral_compare=True`` presents
+    the link without suggesting a required purchase order on buyer guides.
     ``home=True`` renders the homepage variant (2026-09-18 reorder): headline
     swapped to "One Library. Multiple Workflows. Less Tool Hunting.", the nine
     workflows as chips, and Compare Bundles as the secondary CTA."""
@@ -1414,6 +1414,14 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
         compare = (f'Single specialist packs run <b>{lo_s}\u2013{hi_s}</b> each across '
                    f'{len(prices)} kits. The Master Library is listed at {esc(f["priceText"])}; '
                    'confirm contents and possible overlap before buying.')
+    ladder_link = ""
+    if ladder_href:
+        if neutral_compare:
+            ladder_link = (f'<p class="flag-ladder muted">Explore other collections — '
+                           f'<a href="{esc(ladder_href)}">compare brush bundles</a>.</p>')
+        else:
+            ladder_link = (f'<p class="flag-ladder muted">Top rung of the bundle ladder — '
+                           f'<a href="{esc(ladder_href)}">see Starter → Advanced → Ultimate → Master Library</a>.</p>')
     if home:
         # ── Homepage variant (2026-09-18 reorder): the library is the
         #    advanced option AFTER the bundle ladder, so the headline sells
@@ -1445,7 +1453,7 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
         <a class="btn btn-line" href="{rel(depth, 'guides/procreate-bundles-compared/')}">Compare Bundles</a>
       </div>
       {trust_bridge(depth) if bridge else ""}
-      {f'<p class="flag-ladder muted">Top rung of the bundle ladder — <a href="{esc(ladder_href)}">see Starter → Advanced → Ultimate → Master Library</a>.</p>' if ladder_href else ""}
+      {ladder_link}
     </div>
   </div>
 </section>
@@ -1470,7 +1478,7 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False):
         <a class="btn btn-gold" href="{rel(depth, 'products/' + f['slug'] + '/')}">View Product</a>
       </div>
       {trust_bridge(depth) if bridge else ""}
-      {f'<p class="flag-ladder muted">Top rung of the bundle ladder — <a href="{esc(ladder_href)}">see Starter → Advanced → Ultimate → Master Library</a>.</p>' if ladder_href else ""}
+      {ladder_link}
     </div>
   </div>
 </section>
