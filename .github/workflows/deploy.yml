@@ -78,6 +78,11 @@ jobs:
           SITE_URL: https://digikitpro.shop
         run: python3 tools/qa_seo.py
 
+      - name: Check buyer-guide navigation and accuracy offline
+        env:
+          SITE_URL: https://digikitpro.shop
+        run: python3 tools/qa_guide_accuracy.py
+
       - name: Check Merchant feed description provenance offline
         env:
           SITE_URL: https://digikitpro.shop

@@ -11,10 +11,10 @@ CATEGORY_DEFS = [
         "name": "Portrait Brushes",
         "category_key": "Portrait",
         "seo_title": "Procreate Portrait Brushes | DigiKitPro Studio",
-        "seo_desc": "Hand-crafted Procreate portrait brushes for iPad artists. Sketch, blend, paint skin tones, and render expressive portrait artwork.",
+        "seo_desc": "Explore Procreate portrait brushes for sketching, blending and illustration on iPad. Compare the listed tools and requirements.",
         "h1": "Procreate Portrait Brushes",
         "eyebrow": "Portrait studio collection",
-        "intro": "Painting portraits on the iPad requires brush tools that mimic the subtlety of physical media. DigiKitPro portrait brush sets are tuned for the Apple Pencil with realistic pressure response, so you can transition smoothly from preliminary layout sketches to luminous skin rendering and expressive facial features.",
+        "intro": "Explore Procreate brush sets listed for portrait sketching, blending and illustration on iPad. Compare the included tools and requirements on each product page, and browse the skin and hair categories for more focused options.",
         "guides": ["best-procreate-brushes-for-portraits", "how-to-create-realistic-skin-in-procreate", "procreate-portrait-workflow"]
     },
     {
@@ -22,10 +22,10 @@ CATEGORY_DEFS = [
         "name": "Skin Texture Brushes",
         "category_key": "Skin Texture",
         "seo_title": "Procreate Skin Texture Brushes | DigiKitPro",
-        "seo_desc": "Realistic Procreate skin texture brushes for pores, freckles, wrinkles, and blemishes. Hand-tested for lifelike portrait rendering on iPad.",
+        "seo_desc": "Explore Procreate skin texture brushes listed for pores, freckles and portrait details. Check the included tools and iPad requirements.",
         "h1": "Procreate Skin Texture Brushes",
         "eyebrow": "Realistic portrait textures",
-        "intro": "Smooth, flat colors make digital portraits look synthetic. These skin texture brushes add authentic pores, micro-textures, freckles, and delicate wrinkles without muddying your underlying color values. Built specifically to work with Procreate blending modes and Apple Pencil tilt.",
+        "intro": "Explore Procreate brushes listed for pores, freckles and other skin details. Try texture on a separate layer and adjust the opacity to suit your portrait; check the product page for the listed contents and requirements.",
         "guides": ["how-to-create-realistic-skin-texture-in-procreate", "how-to-create-realistic-skin-in-procreate", "procreate-blending-brushes-guide"]
     },
     {
@@ -91,7 +91,7 @@ CATEGORY_DEFS = [
         "seo_desc": "Anatomical figure drawing stamps and dynamic pose brushes for Procreate. Speed up character layout, proportioning, and anatomy studies.",
         "h1": "Figure Drawing & Pose Stamps",
         "eyebrow": "Anatomy and character layout",
-        "intro": "Constructing dynamic human figures requires solid anatomy and quick iteration. These pose stamps and figure drawing brushes provide clean anatomical guidelines for male and female characters, letting concept artists and illustrators block out proportions with accuracy.",
+        "intro": "These Procreate pose stamp sets are listed as starting references for figure drawing and character sketches. Compare the product details, and use your own references when checking anatomy and proportions.",
         "guides": ["stamp-brushes-vs-painting-brushes", "procreate-portrait-workflow"]
     },
     {
@@ -110,10 +110,10 @@ CATEGORY_DEFS = [
         "name": "Sketching Brushes",
         "category_key": "Sketching",
         "seo_title": "Procreate Sketching Brushes | DigiKitPro Studio",
-        "seo_desc": "Responsive sketching pencils and digital sketchbooks for Procreate. Natural tilt shading, graphite grain, and gesture drawing tools on iPad.",
+        "seo_desc": "Explore sketching pencils and digital sketchbook tools for Procreate on iPad. Compare listed brushes, textures and requirements.",
         "h1": "Procreate Sketching Brushes",
         "eyebrow": "Graphite and gesture tools",
-        "intro": "The initial sketch is where every creative concept begins. DigiKitPro sketching brushes respond accurately to Apple Pencil tilt and pressure, giving illustrators the organic drag and grain of graphite on paper for gesture studies, architectural layouts, and concept art.",
+        "intro": "Explore Procreate tools listed for sketching, graphite-style marks and digital sketchbooks. Compare each product's contents and requirements for gesture studies, layouts and concept art.",
         "guides": ["best-procreate-brushes-for-beginners", "procreate-portrait-workflow"]
     }
 ]

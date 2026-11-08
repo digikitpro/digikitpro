@@ -550,8 +550,9 @@ def main() -> int:
     after = {p["slug"]: facts(p) for p in json.loads(read("data/products.json"))}
     check("catalog identity, prices and Payhip destinations match HEAD",
           bool(before) and before == after, f"{len(after)} product records compared")
-    # Permit only the two fact-correcting ladder edits, not arbitrary changes
-    # to other rung text, routing, product assignments, filters or structure.
+    # Permit only the two previously approved rung edits and the reviewed
+    # animation notice/CTA, not arbitrary changes to product assignments,
+    # filters, routing or discovery structure.
     old_discovery = subprocess.run(["git", "show", "HEAD:data/discovery.json"], cwd=ROOT,
                                    capture_output=True, text=True)
     allowed_rung_copy = {
@@ -566,9 +567,17 @@ def main() -> int:
             if rung.get("slug") in allowed_rung_copy:
                 seen_rungs.add(rung["slug"])
                 rung["rung"] = allowed_rung_copy[rung["slug"]]
+        expected_discovery["animationNotice"] = {
+            "title": "Animation & Procreate Dreams",
+            "body": ("We do not currently list a Procreate Dreams-specific brush pack. "
+                     "Explore the listed Procreate liners, effects and palettes as options "
+                     "for artwork used in animation. Check each product's format and "
+                     "compatibility with your workflow before buying."),
+            "cta": {"label": "Explore free resources", "href": "freebies.html"},
+        }
         discovery_same = (seen_rungs == set(allowed_rung_copy) and
                           expected_discovery == json.loads(read("data/discovery.json")))
-    check("discovery configuration preserved apart from two specified rung edits", discovery_same)
+    check("discovery preserved apart from reviewed rung and animation notice copy", discovery_same)
     # Look at the build step only — the file header also mentions tools/build.py.
     build_from = deploy.find("Build static site")
     build_to = deploy.find("configure-pages")

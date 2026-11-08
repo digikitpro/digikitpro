@@ -4,9 +4,9 @@
 The /blog articles answer technique questions ("how do I paint skin").
 The /guides pages answer shopping questions ("which procreate pencil
 brushes", "which bundle should I buy"), using only the real catalog:
-explicit tag-derived product selections, live prices, honest trade-offs
-and a clear buying order (free first, one matched $5 kit, library when
-you outgrow it).
+explicit tag-derived product selections, catalog price snapshots and honest
+trade-offs. Free resources, focused packs and broader libraries are options,
+not a required buying sequence.
 
 Rules this module lives by:
   - Selections are explicit slug lists, chosen from the data/discovery.json
@@ -14,9 +14,9 @@ Rules this module lives by:
     when a referenced slug disappears, so a Payhip sync can never leave a
     silent hole on a money page — safer than keyword matching, which would
     silently drop a renamed product.
-  - Nothing is fabricated: no review counts, no popularity claims, no
-    strikethrough "was" pricing. Prices and contents are read from
-    data/products.json at build time, so a sync keeps every number true.
+  - No fabricated review counts, popularity claims or "was" pricing. Prices
+    and listed contents come from data/products.json at build time, not a live
+    Payhip query. Exact files and bundle overlap still need verification.
   - Whole-catalog libraries (aggregate: true in discovery.json) are kept
     OUT of the guide grids — for the same reason they are excluded from
     Brush Finder ranking: they match everything, so they tell the shopper
@@ -67,41 +67,41 @@ GUIDE_DEFS = [
     {
         "slug": "procreate-starter-kits",
         "nav": "Starter Kits",
-        "card_blurb": "New to Procreate? The honest buying order: free packs first, one $5 kit matched to what you draw, a library only when you outgrow it.",
+        "card_blurb": "Compare free resources, focused brush packs and a broader library for your Procreate workflow. No paid purchase is required to use the free resources.",
         "seo_title": "Procreate Starter Kits for Beginners | DigiKitPro",
-        "seo_desc": "New to Procreate? Start with genuinely free brush packs, then one $5 kit matched to what you draw. The honest buying order, with live prices.",
+        "seo_desc": "Compare free Procreate resources, focused brush kits and a broader library. Choose the tools that fit your work; confirm prices on Payhip.",
         "eyebrow": "Buyer's guide · Start here",
         "h1": "Procreate Starter Kits for Beginners",
-        "lead": "The fastest way to waste money on Procreate brushes is to buy a giant library before you know what you draw. The order that actually works: take the free packs, learn on them, buy one $5 kit that matches your subject, and only then decide whether the Master Library earns its place. This page is that order.",
-        "intro_h2": "The buying order we recommend to every beginner",
+        "lead": "Choose the tools that suit what you draw: free resources, a focused brush kit or a broader library. None is a required step before another, and no paid purchase is required to use the free resources.",
+        "intro_h2": "Choose the resources that fit your work",
         "intro": [
-            "Every product below exists at exactly the price shown, and each product page lists precisely what is inside — we do not inflate counts, and we do not run countdown timers. If you want the editorial companion to this page — what makes a beginner brush good in the first place — read <a href=\"../../blog/best-procreate-brushes-for-beginners/\">Best Procreate Brushes for Beginners</a>. This page is the shop version: what to take home, and in what order.",
-            "One honest boundary worth stating up front: Procreate itself is a separate paid app for iPad, made by Savage Interactive and sold on the App Store. DigiKitPro makes brush kits and learning material <em>for</em> Procreate — no kit on this page includes the app.",
+            "Prices shown reflect our catalog when the site was built; confirm the current total on Payhip before checkout. Compare the listed contents on each product page and contact the store if overlap matters. For help choosing brushes, read <a href=\"../../blog/best-procreate-brushes-for-beginners/\">Best Procreate Brushes for Beginners</a>.",
+            "Procreate itself is a separate paid app for iPad, made by Savage Interactive and sold on the App Store. DigiKitPro lists brush kits and learning material <em>for</em> Procreate — no kit on this page includes the app.",
         ],
         "groups": [
             {
                 "id": "free",
-                "title": "Step 1 · Start free",
-                "sub": "Real kits, not samples — the same file quality as the paid packs. $0, and the free guide walks you through a first portrait.",
+                "title": "Free resources",
+                "sub": "Explore the free brushes, color palettes and portrait guide independently. The guide's listing says you can practise with Procreate's built-in brushes.",
                 "slugs": ["free-fine-liner-brushes-100", "free-color-vault-1200-swatches",
                            "free-chalkboard-artists-toolkit", "procreate-starter-guide-free-ebook"],
             },
             {
                 "id": "five",
-                "title": "Step 2 · One $5 kit, matched to your subject",
-                "sub": "Pick the one that matches what you actually draw. Skip the rest until you hit the first kit's limits — you will know when.",
+                "title": "Focused kits for your subject",
+                "sub": "Compare the listed tools for skin, line art, anime, watercolor and more. Check each product's contents and requirements before buying.",
                 "slugs": ["portrait-skin-brushes-procreate", "anime-soft-style-studio-kit",
                            "essential-line-art-sketch-kit", "artista-studio-kit-76-brushes",
                            "organic-watercolor-80-brushes", "brush-palette-bundle-160"],
             },
         ],
         "flagship": True,
-        "flagship_note": "Step 3 · Only when you work across subjects",
+        "flagship_note": "Optional: explore a broader brush library",
         "faqs": [
-            ("Do I need to buy anything to start drawing in Procreate?",
-             "No. The three free packs install exactly like the paid ones, and the free starter guide takes you from a blank canvas to a first structured portrait. Remember that Procreate itself is a separate paid App Store app by Savage Interactive — our kits are content for it, not the app."),
-            ("What is the real difference between a $5 kit and the $19 Master Library?",
-             "Depth versus breadth. A $5 kit goes deep on one subject — skin, line art, watercolour — and is the cheaper, faster answer when you know what you are making. The Master Library is 2,000+ brushes organised across every style: it makes sense once you work across subjects and would otherwise be buying several packs one by one."),
+            ("Do I need to buy a DigiKitPro kit to start drawing in Procreate?",
+             "No paid DigiKitPro purchase is required to use the free resources. The free portrait guide's listing describes exercises using Procreate's built-in brushes. Procreate itself is a separate paid iPad app by Savage Interactive."),
+            ("How does a focused kit compare with the Master Library?",
+             "A focused kit is listed for particular tasks, such as skin or line art. The Master Library is listed as a broad collection across several drawing styles. Compare the product pages and ask the store about possible overlap before buying."),
             ("Will these kits work on my iPad?",
              "Every .brushset kit requires the Procreate app on an iPad. Check each product page for its contents and requirements. Payhip handles checkout and digital delivery; review the total and available payment options there before paying."),
             ("Can I sell artwork I make with these brushes?",
@@ -114,16 +114,16 @@ GUIDE_DEFS = [
     {
         "slug": "procreate-pencil-brushes",
         "nav": "Pencil Brushes",
-        "card_blurb": "Graphite-feel sketching kits, pose stamps for honest proportions, and the clean liners to finish a pencil rough.",
+        "card_blurb": "Explore sketching kits, pose references and liners for your Procreate workflow.",
         "seo_title": "Procreate Pencil Brushes & Sketching Kits | DigiKitPro",
-        "seo_desc": "Procreate pencil brushes that behave like real graphite: pressure, tilt shading and honest tooth. Sketching kits from $5, plus a 100-brush free set.",
+        "seo_desc": "Compare Procreate pencil, sketching and line-art tools for iPad. Explore listed brush packs, pose stamps and a free fine-liner set.",
         "eyebrow": "Buyer's guide · Sketching & graphite",
         "h1": "Procreate Pencil Brushes",
-        "lead": "A pencil brush is judged on three things: does it darken with pressure the way graphite does, does it shade on the tilt like the side of a lead, and does it leave honest tooth on the canvas instead of a plastic glide. These are the kits in the catalog built around those three tests — from full traditional sketchbooks down to a $0 fine-liner set.",
-        "intro_h2": "What a pencil brush has to get right",
+        "lead": "Compare Procreate tools listed for sketching, graphite-style marks, pose references and linework. Consider the type of stroke you need as well as each kit's format and contents.",
+        "intro_h2": "What to look for in a pencil brush",
         "intro": [
-            "Procreate ships with a serviceable pencil, and most artists outgrow it quickly. The difference a tuned pencil kit makes is not a bigger brush count — it is a better pressure curve. A good sketching pencil stays light at the start of the stroke so you can ghost in a gesture, darkens smoothly as you commit, and on the tilt it shades like the side of graphite rather than spraying like an airbrush.",
-            "The kits below are organised by where they sit in a drawing: sketch first, block the figure, then ink over the rough. If you are unsure whether Procreate pencils suit you at all, start with the free fine-liner set — it installs exactly the same way as the paid kits, so it is a zero-cost test of the whole workflow.",
+            "When choosing a sketching brush, consider its texture, line weight and how it responds to your hand. Brush settings and device behavior vary; check the individual product details if pressure or tilt response is important to you.",
+            "The resources below cover sketching, figure references and linework. The free fine-liner set is an independent option for line art; it does not verify the behavior of every paid kit.",
         ],
         "groups": [
             {
@@ -149,12 +149,12 @@ GUIDE_DEFS = [
             },
         ],
         "flagship": True,
-        "flagship_note": "Sketching in every style, one library",
+        "flagship_note": "Optional: a broader library for varied drawing styles",
         "faqs": [
             ("Do these pencil brushes respond to Apple Pencil tilt?",
-             "Yes. The sketching kits are tuned for pressure and tilt inside Procreate, so an angled stroke shades like the side of a graphite lead instead of behaving like an airbrush. Each product page lists its own brush behaviour and file contents under Technical Details."),
+             "Brush behavior can vary with its settings and your device. Tilt response has not been independently verified for every listed kit; check the product details or contact the store if it matters to your purchase."),
             ("Is there a free pencil or ink brush I can test first?",
-             "Yes — the free Fine Liner Set includes 100 liner, micron and marker brushes plus 13 paper textures for $0. It installs exactly like the paid kits, so it doubles as a compatibility test for your iPad before you spend anything."),
+             "The free Fine Liner Set is listed with 100 liner and marker brushes plus 13 paper textures. It is a standalone line-art resource; it does not establish how other kits will perform."),
             ("What canvas size should I sketch on?",
              "Bigger than you think. Sketching on a small canvas and scaling the drawing up later blurs your strokes. The canvas size and DPI guide below walks through pixel dimensions for studies, prints and commissions."),
             ("Pencil first or ink first?",
@@ -176,7 +176,7 @@ GUIDE_DEFS = [
         "intro_h2": "Where texture belongs in a painting",
         "intro": [
             "Texture is a finishing discipline, not a starting one. Lay it over flat colour on its own layer, keep the opacity low, and let the underlying values do the work — the moment the texture fights the colours, it is too strong. Skin pores at low opacity read as realism; the same stamp at full strength reads as dirt.",
-            "The groupings below are the order working artists usually buy in. Portraits start with the skin set. Traditional-media work starts with paper grain and chalk. Painterly illustrators live in the watercolour and pastel kits. Atmosphere — smoke, sparkle, dust — is the last pass before export.",
+            "The groups below organize the catalog by use: skin and fur, paper and chalk, painterly marks, and atmosphere. Explore whichever tools suit your work; there is no required purchase order.",
         ],
         "groups": [
             {
@@ -208,10 +208,10 @@ GUIDE_DEFS = [
             },
         ],
         "flagship": True,
-        "flagship_note": "Every texture family, one organised library",
+        "flagship_note": "Optional: explore a broader brush library",
         "faqs": [
             ("How do I add texture without muddying my colours?",
-             "On its own layer, above the colour, at low opacity. Texture brushes are built to sit over base colour and respond to blend modes, so the values underneath keep doing the work. If the surface starts to look dirty, the layer is too strong — drop the opacity before you reach for a different brush."),
+             "Try adding texture on a separate layer at low opacity and adjust the opacity or blend mode to suit the image. Check that the values underneath still read clearly."),
             ("Should I use stamp textures or painting textures?",
              "Both, for different jobs. A stamp lays a complete surface down in one tap — fast and repeatable, ideal for paper grain and canvas. A painting texture brush builds up with the stroke, which is how skin and fur stay organic. The stamp-versus-painting guide below shows where each one wins."),
             ("Is there a free texture set?",
@@ -226,30 +226,30 @@ GUIDE_DEFS = [
     {
         "slug": "procreate-animation-brushes",
         "nav": "Animation Brushes",
-        "card_blurb": "Clean liners for readable frames, colour that stays consistent across cels, and glow FX — with an honest note on Procreate Dreams.",
+        "card_blurb": "Explore listed line, color and effects resources, with a note on checking Procreate Dreams compatibility.",
         "seo_title": "Procreate Animation & Dreams Brushes | DigiKitPro",
-        "seo_desc": "The brushes animation artists actually use in Procreate: clean liners for readable frames, consistent palettes, glow and smoke FX — plus an honest note on Procreate Dreams.",
+        "seo_desc": "Explore Procreate liners, palettes and effects for animation artwork. Check individual file formats and Procreate Dreams compatibility.",
         "eyebrow": "Buyer's guide · Animation",
         "h1": "Procreate Animation Brushes",
-        "lead": "Animation punishes brushes that painting forgives. A lively line on a still becomes noise across twenty frames; a colour that drifts between cels reads as flicker; and every effect stroke is multiplied by days of frame count. These are the catalog tools frame-by-frame artists actually reach for — with one honest caveat, stated plainly below.",
-        "intro_h2": "What frame-by-frame work demands from a brush",
+        "lead": "Compare listed Procreate liners, color palettes and effects for artwork you may use in animation. Check each file's format and compatibility with your own workflow before buying.",
+        "intro_h2": "Choosing tools for frame-by-frame work",
         "intro": [
-            "Readability beats richness. Lines have to hold a silhouette at thumbnail size on a phone screen, palettes have to survive four hundred frames without drifting, and effects — a glow pass, a smoke drift — have to be repeatable stroke after stroke, frame after frame.",
-            "That is why the selection below leans on clean liners, locked-in colour and stylised shading rather than heavy realism: those are the tools that stay consistent when a shot is redrawn all week.",
+            "Readable lines and a consistent color palette can help a sequence feel coherent. Test your chosen process on a short sample before committing to a longer project.",
+            "The resources below are listed for linework, color and effects in Procreate. They are not sold as a dedicated Procreate Dreams brush pack; their behavior in Dreams has not been independently verified here.",
         ],
         "notice": True,  # render data/discovery.json → animationNotice verbatim
         "groups": [
             {
                 "id": "line",
                 "title": "Clean line & silhouette",
-                "sub": "Readable at thumbnail size, consistent across hundreds of frames.",
+                "sub": "Listed line-art tools for sketches, outlines and silhouettes.",
                 "slugs": ["essential-line-art-sketch-kit", "master-line-art-vault-300",
                            "liner-marker-studio-39-brushes", "free-fine-liner-brushes-100"],
             },
             {
                 "id": "color",
-                "title": "Colour that stays consistent",
-                "sub": "The same swatches on frame 1 and frame 400 — no drift, no flicker.",
+                "title": "Colour palettes",
+                "sub": "Listed Procreate swatches to organize your color choices.",
                 "slugs": ["free-color-vault-1200-swatches", "procreate-palettes-bundle-50"],
             },
             {
@@ -265,13 +265,13 @@ GUIDE_DEFS = [
         "flagship_note": "Line, colour and effects in one organised library",
         "faqs": [
             ("Do these brushes work in Procreate Dreams?",
-             "Everything here is a Procreate .brushset, built for Procreate on iPad. Procreate Dreams can import Procreate brush files, but a brush behaves differently inside an animation timeline than on a painting canvas. Test the pipeline with the free fine-liner set before buying anything — that is what it is for."),
-            ("Why do animators insist on clean liners?",
-             "Because frames are viewed small and in motion. A textured, varied line that looks painterly on a poster becomes visual noise when it redraws twenty-four times a second. Clean, predictable liners keep silhouettes readable at every frame size."),
-            ("Is there a free way to test the whole workflow?",
-             "Yes: the free Fine Liner Set covers clean line work and the free Color Vault covers palette consistency — $0 for both, installed exactly like the paid kits. If they hold up across your test shot, the paid kits will too."),
-            ("Will you make a Dreams-specific brush pack?",
-             "Possibly — what gets built next is decided by what artists actually ask for. The mailing list below is where new tools are announced, and requests sent via the Payhip store contact form are read and answered."),
+             "These resources are listed for Procreate on iPad and include different formats, including .brushset brushes and .swatches palettes. Their behavior in Procreate Dreams has not been independently verified here; check the current app documentation and each product's format before buying."),
+            ("Why might I choose a clean liner for animation?",
+             "A simpler line can help a silhouette remain readable across frames. Try both smooth and textured lines in a short sample to see what suits your style."),
+            ("Are there free resources I can try?",
+             "The Fine Liner Set and Color Vault are separate free resources for Procreate. Trying them does not establish compatibility or performance for other products."),
+            ("Is there a Dreams-specific brush pack?",
+             "A Procreate Dreams-specific brush pack is not currently listed. Contact the store with questions about formats or to share a product request."),
         ],
         "guides": ["best-procreate-brushes-for-anime", "best-procreate-brushes-for-line-art",
                     "how-to-install-procreate-brushes"],
@@ -280,27 +280,27 @@ GUIDE_DEFS = [
     {
         "slug": "procreate-bundles-compared",
         "nav": "Bundles Compared",
-        "card_blurb": "All six brush bundles side by side: live prices, real contents, who each one is for, and the one-pass chooser.",
+        "card_blurb": "Compare brush bundles by their listed contents, intended uses and catalog prices; confirm the total on Payhip.",
         "seo_title": "Procreate Bundles Compared: Which Kit to Buy | DigiKitPro",
-        "seo_desc": "Every DigiKitPro Procreate bundle side by side — live prices, real contents, who each one is for. From the $5 Starter bundle to the 2,000+ brush Master Library.",
+        "seo_desc": "Compare Procreate brush bundles by listed contents and use. Prices shown are catalog snapshots; confirm the total on Payhip before buying.",
         "eyebrow": "Buyer's guide · Bundles",
         "h1": "Procreate Bundles, Compared",
-        "lead": "Six brush bundles, one page, live store prices. No \"was\" strikethroughs, no countdown timers, no invented savings — the price shown is what Payhip charges today. The right bundle is the smallest one that covers what you make; the table below is built to find it in one pass.",
+        "lead": "Compare the listed brush bundles by contents and intended use. Prices shown reflect our catalog when the site was built; confirm the current total on Payhip before checkout. Exact inventory and overlap have not been independently verified.",
         "intro_h2": "Every brush bundle, side by side",
         "intro": [],  # the comparison table takes this slot (custom renderer)
         "bundles_table": True,
         "groups": [],
         "flagship": True,
-        "flagship_note": "The library the ladder climbs to",
+        "flagship_note": "Optional: explore a broader brush library",
         "faqs": [
-            ("Which bundle should I buy first?",
-             "The smallest one that covers your subject. New to the shop: the $5 Starter bundle patches the two things a fresh library lacks — pattern brushes and colour. Portraits are the main event: the $15 Ultimate Portrait Mastery bundle wires four kits into one workflow. You genuinely make everything: a whole-catalog library. Seasonal work: the Christmas bundle, when the season calls for it."),
+            ("Which bundle should I choose?",
+             "Choose according to the tools and subject you need. Compare the listed components, requirements and possible overlap on each product page; no bundle is a prerequisite for another."),
             ("Master Library or Mega Bundle — what is the difference?",
-             "The numbers on this page come from the product records: the Master Library is 2,000+ brushes organised into category folders — built so you stop hunting; the Mega Bundle is 650+ brushes plus paper textures in one download. Both are whole-catalog libraries; compare the itemised contents on their product pages and pick the organisation that suits how you work."),
-            ("Are the big libraries just the $5 packs repackaged?",
-             "We do not claim a one-to-one overlap, and you should be suspicious of any shop that does. Specialist packs go deeper on one subject; the libraries span every subject. Every product page lists exactly what is inside, so if overlap matters to you, compare contents directly before buying."),
-            ("Why is there no \"save 60%\" pricing on this page?",
-             "Because it would not be true. A discount claim needs a real \"was\" price, and these bundles sell at the prices shown. What is honest arithmetic is shown instead — for example the per-brush cost on the library — calculated from the product's own live price and count."),
+             "The Master Library is listed as 2,000+ brushes, while the Mega Bundle is listed as 650+ brushes and paper textures. Exact contents and overlap have not been independently verified. Contact the store if a specific set matters to your decision."),
+            ("Do the large libraries overlap smaller packs?",
+             "The exact overlap has not been independently confirmed. Compare the listed contents and contact the store before buying both if a file-by-file comparison matters to you."),
+            ("How current are the prices shown here?",
+             "The prices come from our catalog when the site was built. Confirm the current price and total on Payhip before completing a purchase."),
         ],
         "guides": ["how-to-choose-procreate-brushes", "how-to-install-procreate-brushes"],
         "cats": [],
@@ -312,7 +312,7 @@ GUIDES_INDEX = {
     "seo_desc": "Honest buyer's guides to DigiKitPro Procreate brushes: starter kits for beginners, pencil & sketching kits, texture brushes, animation tools and every bundle compared.",
     "eyebrow": "Shop by question",
     "h1": "Procreate Buyer's Guides",
-    "lead": "The right kit is the one that matches what you actually make. These guides organise the catalog by the question you arrived with — every price live from the store, every product page listing exactly what is inside, and no pretend urgency anywhere.",
+    "lead": "Explore the catalog by the question you arrived with. Compare listed contents and requirements, and confirm current prices on Payhip before checkout.",
 }
 
 BY_GUIDE = {g["slug"]: g for g in GUIDE_DEFS}
@@ -344,7 +344,7 @@ def guide_pills(depth, current_slug=None):
     pills = "".join(
         f'<a class="trend-pill" href="../{gd["slug"]}/">{esc(gd["h1"])}</a>'
         for gd in GUIDE_DEFS if gd["slug"] != current_slug)
-    all_link = (f'<a class="trend-pill" href="./">All buyer guides →</a>'
+    all_link = (f'<a class="trend-pill" href="{rel(depth, f"{GUIDES_DIR}/")}">All buyer guides →</a>'
                 if current_slug else "")
     return f"""<div class="trend-pills-wrap" style="margin:2.5rem 0 0">
   <p class="trend-label">More buyer guides</p>
@@ -426,7 +426,7 @@ def _notice_block():
     title, body, cta = n.get("title"), n.get("body"), n.get("cta") or {}
     if not (title and body):
         return ""
-    href = cta.get("href", "freebies.html#newsletter")
+    href = cta.get("href", "freebies.html")
     link = (f'<p><a class="btn btn-line" href="../../{esc(href)}">{esc(cta.get("label", "Tell us"))} →</a></p>'
             if cta.get("label") else "")
     return f"""<section class="section">
@@ -439,11 +439,9 @@ def _notice_block():
 
 
 def _bundles_comparison(depth):
-    """The honest side-by-side. Every cell is read from the product record at
-    build time (name, priceText, assets, perfectFor) — nothing typed by hand,
-    so a Payhip sync keeps the table true. Excludes the three 'Other'-category
-    bundles (palettes, PNG pack, Canva templates): they are not brush kits and
-    comparing them with brushes would be marketing, not information."""
+    """Compare catalog records at build time; verify prices on Payhip and
+    contents against actual files. Exclude the three 'Other'-category bundles
+    (palettes, PNG pack, Canva templates) because they are not brush kits."""
     rows = [p for p in PRODUCTS if p.get("category") == "Bundles"]
     rows.sort(key=lambda p: (p.get("price") or 0, p["name"]))
     body = ""
@@ -459,10 +457,12 @@ def _bundles_comparison(depth):
   <div class="wrap">
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Bundle</th><th>Price</th><th>What you get</th><th>Best for</th></tr></thead>
+        <thead><tr><th>Bundle</th><th>Catalog price</th><th>Listed contents</th><th>Best for</th></tr></thead>
         <tbody>{body}</tbody>
       </table>
     </div>
+    <p class="muted">Prices and contents reflect catalog records when the site was built.
+    Confirm the current total on Payhip and contact the store if exact contents or overlap matter.</p>
     <p class="muted">Not brush bundles, so not compared here: the 50-palette colour bundle, the
     Halloween PNG pack and the KDP Canva templates — they live in the
     <a href="{rel(depth, 'products.html')}">full catalog</a> and state their own formats on their product pages.</p>
@@ -470,13 +470,13 @@ def _bundles_comparison(depth):
 </section>
 <section class="section section-alt">
   <div class="wrap narrow prose">
-    <h2>How to choose in one pass</h2>
-    <ol>
-      <li><strong>New to the shop</strong> — start at the bottom rung. The $5 Starter bundle patches the two gaps every fresh library has: pattern brushes and colour.</li>
-      <li><strong>Portraits are the main thing</strong> — the Ultimate Portrait Mastery bundle wires four portrait kits into a single line → skin → hair → finish workflow.</li>
-      <li><strong>You genuinely make everything</strong> — a whole-catalog library. The Master Library is the organised one; the Mega Bundle is the one that adds paper textures.</li>
-      <li><strong>Holiday work</strong> — the Christmas bundle earns its place when the season calls, and goes back in the drawer after.</li>
-    </ol>
+    <h2>Choose by your work</h2>
+    <ul>
+      <li><strong>Pattern and colour</strong> — compare the listed pattern brushes and palettes in the Brush &amp; Palette Bundle.</li>
+      <li><strong>Portraits</strong> — the Ultimate Portrait Mastery bundle lists four kits for line art, skin, hair and glitter. Check for overlap with any packs you already own.</li>
+      <li><strong>Broader collections</strong> — compare the listed brush counts, paper textures and requirements of the Mega Bundle and Master Library; exact overlap is unconfirmed.</li>
+      <li><strong>Seasonal artwork</strong> — explore the Christmas bundle if its listed contents suit your project.</li>
+    </ul>
   </div>
 </section>"""
 
@@ -575,10 +575,10 @@ def build_guides():
   <div class="wrap narrow"><p class="eyebrow" style="margin-bottom:0.5rem">{esc(note)}</p></div>
 </section>
 """
-            # "top rung of the ladder" link — pointless when it points at the
-            # page it sits on, so the comparison page renders without it.
+            # Keep the comparison link, without presenting the library as a
+            # required next purchase. Omit the link on the comparison page.
             lh = None if g.get("bundles_table") else rel(depth, f"{GUIDES_DIR}/procreate-bundles-compared/")
-            flag_html += flagship_band(depth, ladder_href=lh)
+            flag_html += flagship_band(depth, ladder_href=lh, neutral_compare=True)
 
         html_out = head(g["seo_title"], g["seo_desc"], absurl(f"{GUIDES_DIR}/{slug}/"), depth,
                         schemas=schemas, ctx=page_ctx("guide", slug=slug, category=g["nav"]))

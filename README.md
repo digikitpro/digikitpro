@@ -180,8 +180,10 @@ and meta tags do not guarantee a particular Google result, ranking or indexing.
 After building, run `python3 tools/qa_seo.py` to check generated canonicals,
 indexability, HTTPS internal links, canonical homepage navigation, sitemaps,
 JSON-LD, article dates and local Open Graph image sizes. Run
+`python3 tools/qa_guide_accuracy.py` to check resolved buyer-guide links,
+comparison disclaimers and visible FAQ/schema agreement, and
 `python3 tools/qa_indexnow.py` for offline URL-selection and retry tests. The
-deploy and catalog-sync workflows run both checks before publishing; use Search
+deploy and catalog-sync workflows run these checks before publishing; use Search
 Console separately to inspect Google's selected canonicals and indexing.
 For article authors, the optional `seo_title` frontmatter is an **unbranded**
 human-written search title; the generator appends ` | DigiKitPro`. Set `modified`
@@ -431,11 +433,11 @@ product selections:
 
 | Page | URL | It answers |
 |---|---|---|
-| Starter Kits | `guides/procreate-starter-kits/` | "what should a beginner buy first?" — free packs → one $5 kit → library |
+| Starter Kits | `guides/procreate-starter-kits/` | Free resources, focused kits and a broader library as independent options |
 | Pencil Brushes | `guides/procreate-pencil-brushes/` | "procreate pencil brushes" — graphite/charcoal kits, pose stamps, ink liners |
 | Texture Brushes | `guides/procreate-texture-brushes/` | "procreate texture brushes" — skin/fur, paper grain, painterly, atmosphere |
-| Animation Brushes | `guides/procreate-animation-brushes/` | "procreate dreams brushes" — liners, palettes, FX + the honest Dreams notice |
-| Bundles Compared | `guides/procreate-bundles-compared/` | "which procreate bundle?" — all 6 real brush bundles side by side, live data |
+| Animation Brushes | `guides/procreate-animation-brushes/` | Liners, palettes and effects, with an unverified Dreams-compatibility caveat |
+| Bundles Compared | `guides/procreate-bundles-compared/` | Brush bundles side by side using build-time catalog data |
 
 Plus `guides/index.html` as the hub. Contract (enforced by `tools/verify.py`,
 checks 63–70):
@@ -443,17 +445,18 @@ checks 63–70):
 - **Selections are explicit slug lists** in `GUIDE_DEFS`, chosen from the
   `data/discovery.json` tags. The build **fails loudly** on a stale slug, so a
   Payhip sync can never leave a silent hole on a money page.
-- **No aggregates in the grids** — whole-catalog libraries match everything, so
-  they would tell the shopper nothing; the Master Library appears once per
-  page in its clearly-labelled flagship band.
+- **No aggregates in the grids** — broadly tagged libraries are excluded from
+  the topic grids; the Master Library appears once per page in its own band.
+  This tag does not verify the exact contents or overlap of those libraries.
 - **No lifestyle products** (planners, travel, Canva templates) — buyer guides
   are a brush context (owner decision: they stay in the general catalog).
-- **Nothing invented** — prices, asset counts and bundle rows are read from
-  `data/products.json` at build time; no "was" strikethroughs, no countdowns,
-  no fake urgency (also guarded by the honesty checks).
+- Prices, asset counts and bundle rows come from `data/products.json` at build
+  time; they are catalog snapshots, not live checkout data or independently
+  verified file inventories. Confirm the current total on Payhip. Do not add
+  unsupported "was" prices, countdowns or urgency.
 - Every guide carries BreadcrumbList + ItemList + FAQPage JSON-LD, cross-links
-  its sibling guides, the matching `/category/` pages and the technique
-  articles, and is in the sitemap, the search index and the footer.
+  its sibling guides, the guide index, matching `/category/` pages and
+  technique articles, and is in the sitemap, search index and footer.
 
 To edit a guide: change `GUIDE_DEFS` in `tools/pages_guides.py` (copy,
 groups, FAQs, cross-links) and run `python3 tools/build.py`.
