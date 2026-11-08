@@ -58,6 +58,10 @@ Environment: live site fetched (homepage + robots.txt reachable; site fully rend
 12. Quarterly refresh of the 2026 list articles; date-stamp and re-validate "best" claims; keep "252+/43" counts synced to `products.json` on every rebuild (QA enforces).
 13. IndexNow: keep `data/indexnow-state.json` updated; ignore Google (it doesn't consume it).
 
+## Addendum — 2026-11-08 (same day, PR #81)
+
+P0-1 is **resolved by exclusion, not rewording**: `pro-sketch-traditional-art-kit` was removed from `google-merchant-feed.xml` via `FEED_HOLDS` in `tools/merchant_feed.py` (feed now 44 items) until the owner re-uploads a verified ZIP on Payhip and confirms the cover. The P0-1 wording above describes the state found at audit time; the audit-caveat highlights are no longer emitted. A further nine items carry buyer-visible confirmation-caveat highlights (register item D) — left untouched pending owner decision.
+
 ## What was NOT audited
 
 Core Web Vitals field data · mobile rendering on-device · GSC canonical selection · backlink profile (no third-party tool access here; use free Ahrefs Webmaster Tools) · Merchant Center diagnostics UI · Payhip fulfilment reliability · actual indexing of the 101 sitemap URLs.

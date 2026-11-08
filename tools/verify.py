@@ -89,6 +89,7 @@ from html import escape as html_escape
 from urllib.parse import urlparse
 import xml.etree.ElementTree as ET
 from merchant_description import select_description
+from merchant_feed import FEED_HOLDS
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -1056,6 +1057,8 @@ def main() -> int:
     # ── 94–99 Google Merchant Center source + structured data ──────────
     # Zero-price downloads and digital books are held out of the shared
     # Merchant source; their organic pages and checkout links remain intact.
+    # merchant_feed.FEED_HOLDS additionally pauses specific SKUs with an
+    # audit reference until a named owner action clears (see that dict).
     # The remaining candidates still need destination-specific policy review.
     merchant_xml = read("google-merchant-feed.xml") if exists("google-merchant-feed.xml") else ""
     merchant_root = None
@@ -1072,7 +1075,8 @@ def main() -> int:
                          and "ebook" not in p.get("slug", "").lower()
                          and not any("pdf travel guide" in str(t).lower() for t in p.get("technical", []))
                          and not p.get("free") and float(p.get("price") or 0) > 0
-                         and not p.get("comingSoon")]
+                         and not p.get("comingSoon")
+                         and p.get("slug") not in FEED_HOLDS]
     merchant_ids = [x.findtext("g:id", namespaces=gns) for x in merchant_items]
     merchant_by_id = {x.findtext("g:id", namespaces=gns): x for x in merchant_items}
     check("94 Google Merchant feed is well-formed RSS/XML with the Google namespace",
