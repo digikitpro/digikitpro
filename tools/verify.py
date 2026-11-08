@@ -88,6 +88,7 @@ from pathlib import Path
 from html import escape as html_escape
 from urllib.parse import urlparse
 import xml.etree.ElementTree as ET
+from merchant_description import select_description
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -1101,7 +1102,8 @@ def main() -> int:
         elif structured_desc is not None:
             ai_kind = structured_desc.findtext("g:digital_source_type", namespaces=gns)
             content = structured_desc.findtext("g:content", namespaces=gns)
-            if ai_kind != "trained_algorithmic_media" or content != (p.get("short") or p.get("seoDesc") or p["name"]).strip():
+            expected_desc = select_description(p)[1]
+            if ai_kind != "trained_algorithmic_media" or content != expected_desc:
                 merchant_bad.append(f"{p['slug']}: structured description missing or differs from catalog")
         elif plain_desc.text != (p.get("short") or p.get("seoDesc") or p["name"]).strip():
             merchant_bad.append(f"{p['slug']}: plain description differs from catalog")

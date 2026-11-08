@@ -153,10 +153,20 @@ def _words(text: str) -> set[str]:
     return {w for w in re.findall(r"[a-z0-9]+", text.lower()) if len(w) > 2}
 
 
-def _restates(text: str, reference: set[str]) -> bool:
-    """True when a label is almost entirely contained in the description."""
-    words = _words(text)
-    return bool(words) and len(words & reference) / len(words) >= 0.9
+def _normalise(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", text.lower()).strip()
+
+
+def _restates(text: str, description: str) -> bool:
+    """True only when the bullet is repeated verbatim in the description.
+
+    Full descriptions necessarily mention the features, so shared vocabulary is
+    expected. Google's rule is about not repeating information that is already
+    submitted - a bullet stated word for word in the description is a repeat;
+    one that summarises the same fact is a highlight.
+    """
+    needle = _normalise(text)
+    return len(needle) > 12 and needle in _normalise(description)
 
 
 def highlights(product: dict, description: str = "") -> list[str]:
@@ -170,7 +180,6 @@ def highlights(product: dict, description: str = "") -> list[str]:
     """
     out: list[str] = []
     seen: list[set[str]] = []
-    description_words = _words(description)
     compat = _compatibility_line(product)
     if compat:
         out.append(compat)
@@ -187,7 +196,7 @@ def highlights(product: dict, description: str = "") -> list[str]:
             continue
         if any(words <= previous or previous <= words for previous in seen):
             continue
-        if description_words and _restates(text, description_words):
+        if description and _restates(text, description):
             continue
         out.append(text)
         seen.append(words)

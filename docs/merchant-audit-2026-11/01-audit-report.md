@@ -30,9 +30,13 @@ An audit is only as good as its sourcing. This is the line between the two halve
 Where a conclusion depends on those, it is labelled **probable** or **needs data**. That
 distinction is deliberate: it is what the previous report in your transcript lacked.
 
-Evidence files: `05-landing-evidence.csv` (per-item page audit),
-`02-feed-proposed.csv` (proposed feed), `03-keyword-research.md`, `04-action-plan.md`,
-`06-policy-references.md`.
+Evidence files: `00-HIGH-status.md` (what is fixed, what is blocked),
+`05-landing-evidence.csv` (per-item page audit), `02-feed-proposed.csv` (the feed copy that is
+now live in the source), `04-action-plan.md` (ordering and rollbacks).
+
+*Two documents from the first draft — keyword research and a policy reference list — were removed:
+the keyword one had no real volume data behind it, and every policy URL that matters is cited
+inline in §1 below.*
 
 ---
 
@@ -228,7 +232,9 @@ is at least as large as the data-side one.
 
 ## 5. Phases 5–7 — Titles, descriptions, attributes
 
-All 45 titles and 45 descriptions are written and waiting in `02-feed-proposed.csv`. Rules applied:
+**Status: implemented.** All 45 titles and 45 descriptions from `02-feed-proposed.csv` are now in
+the feed source (titles in `data/merchant-titles.json`, descriptions as `merchantDescription` on each
+product, disclosed as AI text through `structured_description`). Rules applied:
 
 - Primary product type first ("Portrait Brushes for Procreate: …", "Procreate Color Palettes: …").
 - `Procreate`/`iPad` only where the record states the format and requirements.

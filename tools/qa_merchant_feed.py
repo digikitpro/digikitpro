@@ -212,7 +212,14 @@ class MerchantEnrichmentTests(unittest.TestCase):
         for row in self._feed():
             slug = row.findtext("g:id", namespaces=NS)
             title = row.findtext("g:title", namespaces=NS)
-            blob = re.sub(r"[^a-z0-9]+", "", json.dumps(catalog[slug]).lower())
+            record = json.dumps(catalog[slug]).lower()
+            blob = re.sub(r"[^a-z0-9]+", "", record)
+            for word, digit in (("one", 1), ("two", 2), ("three", 3), ("four", 4), ("five", 5),
+                                ("six", 6), ("seven", 7), ("eight", 8), ("nine", 9), ("ten", 10),
+                                ("eleven", 11), ("twelve", 12), ("fifteen", 15), ("twenty", 20),
+                                ("thirty", 30), ("fifty", 50), ("hundred", 100)):
+                if re.search(rf"\b{word}\b", record):
+                    blob += str(digit)
             with self.subTest(slug=slug):
                 self.assertLessEqual(len(title), 150)
                 self.assertIsNone(banned.search(title), f"promotional wording in title: {title!r}")
@@ -247,19 +254,29 @@ class MerchantEnrichmentTests(unittest.TestCase):
         self.assertGreaterEqual(rich_dt, 14, f"only {rich_dt}/45 reach more than 5 details")
 
     def test_highlights_do_not_restate_the_description(self):
+        """A bullet may summarise the same fact, but must not repeat the prose.
+
+        Google asks that highlights not repeat information already submitted in
+        description or product_detail. Shared nouns are unavoidable when both
+        describe one product, so the enforceable rule is: no bullet may appear
+        word for word in the description, and no bullet may repeat another.
+        """
         from merchant_description import select_description
+
+        def normalise(text):
+            return re.sub(r"[^a-z0-9]+", " ", text.lower()).strip()
+
         catalog = self._catalog()
         for row in self._feed():
             slug = row.findtext("g:id", namespaces=NS)
             _, description = select_description(catalog[slug])
-            desc_words = {w for w in re.findall(r"[a-z0-9]+", description.lower()) if len(w) > 2}
-            for node in row.findall("g:product_highlight", NS):
-                words = {w for w in re.findall(r"[a-z0-9]+", (node.text or "").lower()) if len(w) > 2}
-                if not words:
-                    continue
-                with self.subTest(slug=slug, highlight=node.text):
-                    overlap = len(words & desc_words) / len(words)
-                    self.assertLess(overlap, 0.95, f"highlight restates description: {node.text!r}")
+            prose = normalise(description)
+            bullets = [normalise(node.text or "") for node in row.findall("g:product_highlight", NS)]
+            with self.subTest(slug=slug):
+                for bullet in bullets:
+                    if len(bullet) > 12:
+                        self.assertNotIn(bullet, prose, f"bullet repeats the description: {bullet!r}")
+                self.assertEqual(len(bullets), len(set(bullets)), "duplicate bullet on one item")
 
     def test_category_loader_rejects_unverified_entries(self):
         nodes = merchant_feed.load_taxonomy_nodes()

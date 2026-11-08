@@ -1,87 +1,187 @@
 {
   "_meta": {
-    "purpose": "Merchant feed titles that differ from products.json name. Only verified attributes from the product's own record are added; products not listed keep their name as the feed title."
+    "purpose": "Merchant feed titles. All 45 are keyword-first rewrites of the catalogue name; every added word and number is verified against the product record by tools/qa_merchant_feed.py. Feed-only: page titles and H1s are unchanged."
   },
   "titles": {
-    "adhd-planner-2026": {
-      "title": "2026 ADHD Balanced Mind Planner & Wellness Journal: 55-Page PDF",
-      "reason": "Adds the verified page count and PDF format."
+    "portrait-skin-brushes-procreate": {
+      "title": "Skin Texture Brushes for Procreate: 19 Portrait Detail Brushes",
+      "reason": "Leads with the product type ('Skin Texture Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Skin, Texture, Brushes, Procreate, 19, Portrait, Detail, all taken from this product's own record."
     },
-    "animal-fur-brushes-2": {
-      "title": "Animal Fur 2: 35 Procreate Brushes for Fur, Hair & Feathers",
-      "reason": "Adds 'Procreate' from the .brushset format and requirements."
-    },
-    "anime-soft-style-brushes-100": {
-      "title": "100+ Anime Soft-Style Procreate Brushes: Watercolor, Shading & Line Art",
-      "reason": "Adds 'Procreate' from the .brushset format and requirements."
-    },
-    "christmas-brushes-bundle": {
-      "title": "Christmas Procreate Brushes & Stamps Bundle: 173 Brushes + 44 Washi Tapes",
-      "reason": "Adds the verified counts from technical contents."
-    },
-    "hair-hairstyle-stamp-kit": {
-      "title": "Professional Hair & Hairstyle Stamp Kit for Procreate: 160 Stamps",
-      "reason": "Adds the verified 160-stamp count from technical contents."
-    },
-    "halloween-pumpkin-bundle": {
-      "title": "Halloween Pumpkin Bundle: 20 PNG Illustrations at 300 DPI",
-      "reason": "Adds the verified 300 DPI spec and that they are illustrations."
-    },
-    "illustration-brushes-2": {
-      "title": "Illustration Brushes 2 for Procreate: 15 Textures + 5 Palettes",
-      "reason": "Adds the verified contents (15 texture brushes + 5 palettes)."
-    },
-    "japanese-watercolour-collection": {
-      "title": "Japanese Watercolour Collection: 43 Illustrations + PNG Patterns",
-      "reason": "Adds the verified PNG format for image-search matching."
-    },
-    "liner-marker-studio-39-brushes": {
-      "title": "Liner & Marker Studio: 39 High-Fidelity Procreate Brushes",
-      "reason": "Adds 'Procreate', which the format and requirements both state."
-    },
-    "master-line-art-vault-300": {
-      "title": "Master Line-Art Vault: 300+ Fine Line Procreate Brushes",
-      "reason": "Adds 'Procreate' from the .brushset format and requirements."
-    },
-    "mindfulness-system-planner": {
-      "title": "10-Minute Daily Mindfulness Planner: 57-Page Hyperlinked PDF",
-      "reason": "Adds the verified format (hyperlinked PDF) and drops the vague 'System'."
+    "artista-studio-kit-76-brushes": {
+      "title": "Procreate Brush Set: Artista Studio Kit, 76 Brushes for Sketch, Ink & Shade",
+      "reason": "Leads with the product type ('Procreate Brush Set') so the listing matches a search phrase rather than a brand; adds Procreate, Brush, Artista, Studio, Brushes, Sketch, Ink, Shade, all taken from this product's own record."
     },
     "portrait-mastery-kit-46-brushes": {
-      "title": "Portrait Mastery Kit: 46 Procreate Brushes + 4 Paper Textures",
-      "reason": "Adds the four paper textures listed in technical contents."
+      "title": "Portrait Brushes for Procreate: 46-Brush Mastery Kit + 4 Paper Textures",
+      "reason": "Leads with the product type ('Portrait Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Portrait, Brushes, Procreate, Brush, Mastery, +, 4, Paper, Textures, all taken from this product's own record."
     },
-    "portrait-skin-brushes-procreate": {
-      "title": "19 Portrait Skin Texture Brushes for Procreate",
-      "reason": "Adds the verified brush count from technical contents; 'skin texture' is the product's category."
-    },
-    "procreate-palettes-bundle-50": {
-      "title": "Procreate Color Palettes Bundle: 50 Sets, 1,500 Swatches",
-      "reason": "Swaps '×' for a readable swatch total already stated in technical contents."
-    },
-    "tie-dye-brushes-studio": {
-      "title": "Tie-Dye Brushes Studio for Procreate: 21 Brushes & Stamps",
-      "reason": "Adds the verified 21-item count."
-    },
-    "ultimate-fitness-planner": {
-      "title": "Ultimate Fitness Planner for Peak Performance: Digital PDF",
-      "reason": "Adds the verified PDF format."
+    "essential-line-art-sketch-kit": {
+      "title": "Line Art & Sketch Brushes for Procreate: Pencil, Liner & Ink Kit",
+      "reason": "Leads with the product type ('Line Art & Sketch Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Line, Art, Sketch, Brushes, Procreate, Pencil, Liner, Ink, all taken from this product's own record."
     },
     "ultimate-portrait-mastery-bundle": {
-      "title": "Ultimate Portrait Mastery Bundle: 4 Procreate Brush Kits",
-      "reason": "States that the four kits are brush kits, which every included item confirms."
+      "title": "Portrait Brush Bundle for Procreate: 4 Kits - Skin, Hair, Line Art & Glitter",
+      "reason": "Leads with the product type ('Portrait Brush Bundle for Procreate') so the listing matches a search phrase rather than a brand; adds Portrait, Brush, Bundle, Procreate, Kits, Skin, Hair, Line, Art, Glitter, all taken from this product's own record."
     },
-    "undated-planner-dark-mode": {
-      "title": "Undated Digital Planner: Dark Mode, Hyperlinked PDF + 1,000 Stickers",
-      "reason": "Adds verified format and the 1,000-sticker contents."
+    "anime-soft-style-studio-kit": {
+      "title": "Anime Brushes for Procreate: 100+ Soft-Style Brush Set",
+      "reason": "Leads with the product type ('Anime Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Anime, Brushes, Procreate, Soft, Style, Brush, all taken from this product's own record."
+    },
+    "glitter-brushes-sparkle-shine-30": {
+      "title": "Glitter Brushes for Procreate: 30 Sparkle, Star & Lettering Brushes",
+      "reason": "Leads with the product type ('Glitter Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Glitter, Brushes, Procreate, Sparkle, Star, Lettering, all taken from this product's own record."
+    },
+    "watercolor-studio-kit-50-brushes": {
+      "title": "Watercolor Brushes for Procreate: 50+ Paints, Blenders & Splatter Stamps",
+      "reason": "Leads with the product type ('Watercolor Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Watercolor, Brushes, Procreate, Paints, Blenders, Splatter, Stamps, all taken from this product's own record."
+    },
+    "professional-digital-sketchbook": {
+      "title": "Digital Sketchbook Brushes for Procreate: Paper Textures & Torn-Paper Stamps",
+      "reason": "Leads with the product type ('Digital Sketchbook Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Digital, Sketchbook, Brushes, Procreate, Paper, Textures, Torn, Stamps, all taken from this product's own record."
+    },
+    "liner-marker-studio-39-brushes": {
+      "title": "Professional Liner & Marker Brushes for Procreate: 39 Fine-Line Tools",
+      "reason": "Leads with the product type ('Professional Liner & Marker Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Professional, Liner, Marker, Brushes, Procreate, Fine, Line, Tools, all taken from this product's own record."
+    },
+    "professional-charcoal-studio": {
+      "title": "Professional Charcoal Brushes for Procreate: Compressed, Vine & Smudge",
+      "reason": "Leads with the product type ('Professional Charcoal Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Professional, Charcoal, Brushes, Procreate, Compressed, Vine, Smudge, all taken from this product's own record."
+    },
+    "male-pose-brushes-figure-drawing": {
+      "title": "Male Pose Stamps for Procreate: Figure Drawing Brush Set",
+      "reason": "Leads with the product type ('Male Pose Stamps for Procreate') so the listing matches a search phrase rather than a brand; adds Male, Pose, Stamps, Procreate, Figure, Drawing, Brush, all taken from this product's own record."
+    },
+    "female-pose-brushes-figure-drawing": {
+      "title": "Female Pose Stamps for Procreate: Figure Drawing Brush Set",
+      "reason": "Leads with the product type ('Female Pose Stamps for Procreate') so the listing matches a search phrase rather than a brand; adds Female, Pose, Stamps, Procreate, Figure, Drawing, Brush, all taken from this product's own record."
+    },
+    "procreate-mega-bundle-650": {
+      "title": "650+ Procreate Brushes Mega Bundle: 24 Brush Sets for iPad Artists",
+      "reason": "Leads with the product type ('650+ Procreate Brushes Mega Bundle') so the listing matches a search phrase rather than a brand; adds 650+, Procreate, Brushes, Mega, Bundle, 24, Brush, Sets, iPad, Artists, all taken from this product's own record."
+    },
+    "dreamy-pastel-art-kit": {
+      "title": "Pastel Brushes for Procreate: 10 Chalk, Soft Shading & Blender Tools",
+      "reason": "Leads with the product type ('Pastel Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Pastel, Brushes, Procreate, 10, Chalk, Soft, Shading, Blender, Tools, all taken from this product's own record."
+    },
+    "hair-hairstyle-stamp-kit": {
+      "title": "Hair Stamps for Procreate: 160 Hairstyle Stamps for Portraits",
+      "reason": "Leads with the product type ('Hair Stamps for Procreate') so the listing matches a search phrase rather than a brand; adds Hair, Stamps, Procreate, 160, Hairstyle, Portraits, all taken from this product's own record."
+    },
+    "premium-texture-effects-10-brushes": {
+      "title": "Texture & Effects Brushes for Procreate: 10 Background & Lettering Tools",
+      "reason": "Leads with the product type ('Texture & Effects Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Texture, Effects, Brushes, Procreate, Background, Lettering, Tools, all taken from this product's own record."
+    },
+    "premium-hair-brushes-10": {
+      "title": "Hair Brushes for Procreate: 10 Strand & Texture Brushes",
+      "reason": "Leads with the product type ('Hair Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Hair, Brushes, Procreate, Strand, Texture, all taken from this product's own record."
+    },
+    "master-library-2000-brushes": {
+      "title": "2,000+ Procreate Brushes: DigiKitPro Master Library",
+      "reason": "Leads with the product type ('2,000+ Procreate Brushes') so the listing matches a search phrase rather than a brand; adds Procreate, Brushes, DigiKitPro, Master, Library, all taken from this product's own record."
+    },
+    "tattoo-artist-studio-kit-200": {
+      "title": "Tattoo Brushes for Procreate: 200+ Linework, Stipple & Shading Tools",
+      "reason": "Leads with the product type ('Tattoo Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Tattoo, Brushes, Procreate, Linework, Stipple, Shading, Tools, all taken from this product's own record."
+    },
+    "brush-palette-bundle-160": {
+      "title": "Procreate Pattern Brushes & Color Palettes: 160 Brushes + 12 Palettes",
+      "reason": "Leads with the product type ('Procreate Pattern Brushes & Color Palettes') so the listing matches a search phrase rather than a brand; adds Procreate, Pattern, Brushes, Color, Palettes, all taken from this product's own record."
+    },
+    "koi-fish-tattoo-brushes": {
+      "title": "Koi Fish Tattoo Brushes for Procreate: Digital Flash Brush Set",
+      "reason": "Leads with the product type ('Koi Fish Tattoo Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Koi, Fish, Tattoo, Brushes, Procreate, Digital, Flash, Brush, all taken from this product's own record."
+    },
+    "animal-fur-brushes-2": {
+      "title": "Animal Fur Brushes for Procreate: 35 Fur, Hair & Feather Brushes",
+      "reason": "Leads with the product type ('Animal Fur Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Animal, Fur, Brushes, Procreate, Hair, Feather, all taken from this product's own record."
+    },
+    "illustration-brushes-2": {
+      "title": "Illustration Brushes for Procreate: 15 Texture Brushes + 5 Palettes",
+      "reason": "Leads with the product type ('Illustration Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Illustration, Brushes, Procreate, 15, Texture, +, 5, Palettes, all taken from this product's own record."
+    },
+    "professional-hair-brushes": {
+      "title": "Professional Hair Brushes for Procreate: Strand Stamps & Texture Tools",
+      "reason": "Leads with the product type ('Professional Hair Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Professional, Hair, Brushes, Procreate, Strand, Stamps, Texture, Tools, all taken from this product's own record."
+    },
+    "organic-watercolor-80-brushes": {
+      "title": "Watercolor Brushes for Procreate: 80 Organic Wash & Blender Tools",
+      "reason": "Leads with the product type ('Watercolor Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Watercolor, Brushes, Procreate, Organic, Wash, Blender, Tools, all taken from this product's own record."
+    },
+    "anime-soft-style-brushes-100": {
+      "title": "Anime Brushes for Procreate: 100+ Soft-Style Line Art & Shading",
+      "reason": "Leads with the product type ('Anime Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Anime, Brushes, Procreate, Soft, Style, Line, Art, Shading, all taken from this product's own record."
+    },
+    "sketchbook-traditional-media-kit": {
+      "title": "Sketchbook Brushes for Procreate: 27 Brushes, 13 Palettes & 2 Canvases",
+      "reason": "Leads with the product type ('Sketchbook Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Sketchbook, Brushes, Procreate, 27, 13, Palettes, 2, Canvases, all taken from this product's own record."
+    },
+    "procreate-palettes-bundle-50": {
+      "title": "Procreate Color Palettes: 50 Sets, 1,500 Swatches in .swatches Format",
+      "reason": "Leads with the product type ('Procreate Color Palettes') so the listing matches a search phrase rather than a brand; adds Procreate, Color, Palettes, Sets, 1, 500, Swatches, swatches, Format, all taken from this product's own record."
+    },
+    "master-vault-1000-brushes": {
+      "title": "1,000+ Procreate Brushes: Master Vault Mega Bundle",
+      "reason": "Leads with the product type ('1,000+ Procreate Brushes') so the listing matches a search phrase rather than a brand; adds Procreate, Brushes, Master, Vault, Mega, Bundle, all taken from this product's own record."
+    },
+    "master-line-art-vault-300": {
+      "title": "Fine Line Art Brushes for Procreate: 300+ Inking & Hatching Tools",
+      "reason": "Leads with the product type ('Fine Line Art Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Fine, Line, Art, Brushes, Procreate, Inking, Hatching, Tools, all taken from this product's own record."
+    },
+    "mindfulness-system-planner": {
+      "title": "Daily Mindfulness Planner: 57-Page Hyperlinked PDF + Canva Template",
+      "reason": "Leads with the product type ('Daily Mindfulness Planner') so the listing matches a search phrase rather than a brand; adds Daily, Mindfulness, Planner, Page, Hyperlinked, PDF, +, Canva, Template, all taken from this product's own record."
     },
     "wellness-journal-2026": {
-      "title": "2026 Digital Wellness Journal: Hyperlinked PDF",
-      "reason": "Adds the verified format so the listing reads as a digital download."
+      "title": "2026 Wellness Journal: Dated Daily Hyperlinked PDF + Stickers",
+      "reason": "Leads with the product type ('2026 Wellness Journal') so the listing matches a search phrase rather than a brand; adds Wellness, Journal, Dated, Daily, Hyperlinked, PDF, +, Stickers, all taken from this product's own record."
+    },
+    "wellness-fitness-planner-goodnotes": {
+      "title": "Wellness & Fitness Planner for GoodNotes: Hyperlinked PDF",
+      "reason": "Leads with the product type ('Wellness & Fitness Planner for GoodNotes') so the listing matches a search phrase rather than a brand; adds Wellness, Fitness, Planner, GoodNotes, Hyperlinked, PDF, all taken from this product's own record."
+    },
+    "adhd-planner-2026": {
+      "title": "ADHD Planner 2026: 55-Page Hyperlinked PDF + Canva Template",
+      "reason": "Leads with the product type ('ADHD Planner 2026') so the listing matches a search phrase rather than a brand; adds ADHD, Planner, 55, Page, Hyperlinked, PDF, +, Canva, Template, all taken from this product's own record."
+    },
+    "japanese-watercolour-collection": {
+      "title": "Japanese Watercolour Illustrations: 43 PNGs, Patterns & Posters",
+      "reason": "Leads with the product type ('Japanese Watercolour Illustrations') so the listing matches a search phrase rather than a brand; adds Japanese, Watercolour, Illustrations, PNGs, Patterns, Posters, all taken from this product's own record."
     },
     "wellness-journal-365": {
-      "title": "365-Page Digital Wellness Journal: Hyperlinked PDF, Dark Mode",
-      "reason": "Leads with the page count and states the verified PDF format."
+      "title": "365-Day Wellness Journal: Undated Hyperlinked PDF, Dark Mode",
+      "reason": "Leads with the product type ('365-Day Wellness Journal') so the listing matches a search phrase rather than a brand; adds Day, Wellness, Journal, Undated, Hyperlinked, PDF, Dark, Mode, all taken from this product's own record."
+    },
+    "pro-sketch-traditional-art-kit": {
+      "title": "Traditional Art Brushes for Procreate: Pencil, Crayon & Pastel Tools",
+      "reason": "Leads with the product type ('Traditional Art Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Traditional, Art, Brushes, Procreate, Pencil, Crayon, Pastel, Tools, all taken from this product's own record."
+    },
+    "smoke-brushes-12": {
+      "title": "Smoke Brushes for Procreate: 12 Realistic Smoke Effect Brushes",
+      "reason": "Leads with the product type ('Smoke Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Smoke, Brushes, Procreate, Realistic, Effect, all taken from this product's own record."
+    },
+    "kdp-templates-bundle-100": {
+      "title": "KDP Templates: 100+ Editable Canva Book Templates for 2026",
+      "reason": "Leads with the product type ('KDP Templates') so the listing matches a search phrase rather than a brand; adds KDP, Templates, Editable, Canva, Book, all taken from this product's own record."
+    },
+    "tie-dye-brushes-studio": {
+      "title": "Tie-Dye Brushes for Procreate: 21 Brushes & Stamps + 2 Startup Files",
+      "reason": "Leads with the product type ('Tie-Dye Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Tie, Dye, Brushes, Procreate, 21, Stamps, +, 2, Startup, Files, all taken from this product's own record."
+    },
+    "christmas-brushes-bundle": {
+      "title": "Christmas Brushes for Procreate: 173 Stamps & Brushes + 44 Washi Tapes",
+      "reason": "Leads with the product type ('Christmas Brushes for Procreate') so the listing matches a search phrase rather than a brand; adds Christmas, Brushes, Procreate, 173, Stamps, +, 44, Washi, Tapes, all taken from this product's own record."
+    },
+    "undated-planner-dark-mode": {
+      "title": "Undated Digital Planner: 2 Hyperlinked Planners + 1,000 Stickers",
+      "reason": "Leads with the product type ('Undated Digital Planner') so the listing matches a search phrase rather than a brand; adds Undated, Digital, Planner, 2, Hyperlinked, Planners, +, 1, 000, Stickers, all taken from this product's own record."
+    },
+    "ultimate-fitness-planner": {
+      "title": "Ultimate Fitness Planner PDF: Workout, Meal & Habit Trackers",
+      "reason": "Leads with the product type ('Ultimate Fitness Planner PDF') so the listing matches a search phrase rather than a brand; adds Ultimate, Fitness, Planner, PDF, Workout, Meal, Habit, Trackers, all taken from this product's own record."
+    },
+    "halloween-pumpkin-bundle": {
+      "title": "Halloween Pumpkin PNGs: 20 Illustration Files at 300 DPI",
+      "reason": "Leads with the product type ('Halloween Pumpkin PNGs') so the listing matches a search phrase rather than a brand; adds Halloween, Pumpkin, PNGs, Illustration, Files, at, 300, DPI, all taken from this product's own record."
     }
   }
 }

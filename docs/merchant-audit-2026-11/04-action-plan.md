@@ -65,7 +65,7 @@ testing precisely because it is cheap to revert.
 
 ---
 
-## Step 3 — Titles (🟡, high impact, low risk)
+## Step 3 — Titles (✅ **done** — all 45 applied, feed-only)
 
 All 45 proposed titles are in `02-feed-proposed.csv` (50–76 characters, count-bearing where
 confirmed).
@@ -79,7 +79,7 @@ confirmed).
 
 ---
 
-## Step 4 — Descriptions, with the AI declaration (🟡, medium impact, policy-sensitive)
+## Step 4 — Descriptions, with the AI declaration (✅ **done** — AI disclosure in place)
 
 Proposed descriptions are in the same CSV. They are machine-written, so:
 
