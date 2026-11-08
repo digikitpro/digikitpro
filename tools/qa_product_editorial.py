@@ -100,11 +100,26 @@ def main():
                     check(len(parsed.thumb_alts) >= index and parsed.thumb_alts[index - 1] == wanted,
                           f"{slug}: gallery image {index} inherited incorrect cover description")
 
-    for slug in ("essential-line-art-sketch-kit", "ultimate-portrait-mastery-bundle"):
+    # Counts for these two products were confirmed against their Payhip
+    # listings on 2026-11-08 (source of truth for delivered contents):
+    #   https://payhip.com/b/b70QE (Essential Line Art & Sketch Kit) states
+    #     "43 professional brushes + 1 bonus texture brush": 14 PENCIL,
+    #     12 LINERS, 7 INK, 6 DETAILERS, 3 SKETCH TOOLS + 1 BONUS TEXTURE.
+    #   https://payhip.com/b/2h0iG (Ultimate Portrait Mastery Bundle) states
+    #     "252+ professional assets" across 4 kits (43 + 19 + 160 + 30 = 252).
+    # The copy must state the confirmed counts; the old "disputed count" ban
+    # and mandatory "awaiting confirmation" caveat were retired with them.
+    confirmed_counts = {
+        "essential-line-art-sketch-kit": ("43", "14", "12", "7", "6", "3", "bonus"),
+        "ultimate-portrait-mastery-bundle": ("252+", "43", "19", "160", "30"),
+    }
+    for slug, needles in confirmed_counts.items():
         text = " ".join(str(by_slug[slug].get(k, "")) for k in
                         ("assets", "short", "descriptionHtml", "included", "features", "technical", "bundleContents"))
-        check(not re.search(r"(?:\b252\+|\b43 (?:brushes|professional)\b)", text, re.I), f"{slug}: disputed count reintroduced")
-        check("confirm" in text.lower(), f"{slug}: missing count caveat")
+        check(not re.search(r"awaiting confirmation|await confirmation|count (?:is )?(?:un)?confirmed|total (?:asset|brush) count unconfirmed|to be confirmed|\btbc\b", text, re.I),
+              f"{slug}: stale unconfirmed-count hedge reintroduced")
+        for needle in needles:
+            check(needle in text, f"{slug}: confirmed count {needle!r} missing (source: Payhip listing)")
     for slug in ("anime-soft-style-studio-kit", "anime-soft-style-brushes-100"):
         check("overlap" in by_slug[slug]["descriptionHtml"].lower(), f"{slug}: no overlap caveat")
     for slug in ("mindfulness-system-planner", "wellness-journal-2026"):

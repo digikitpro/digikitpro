@@ -60,7 +60,7 @@ The [Professional Hair Brushes](/products/professional-hair-brushes/) are the mo
 
 ### For a multi-stage upgrade: Ultimate Portrait Mastery Bundle
 
-The [Ultimate Portrait Mastery Bundle](/products/ultimate-portrait-mastery-bundle/) is catalogued as four kits: line art and sketch, 19 skin brushes, 160 hair stamps, and 30 glitter and shine brushes. The line-art count needs confirmation because the listing's total and group breakdown disagree. If you only paint skin, the smaller skin set is a more focused option; compare what you already own before buying the bundle.
+The [Ultimate Portrait Mastery Bundle](/products/ultimate-portrait-mastery-bundle/) is catalogued as four kits: line art and sketch (43 brushes plus 1 bonus texture brush), 19 skin brushes, 160 hair stamps, and 30 glitter and shine brushes — 252+ assets in total. If you only paint skin, the smaller skin set is a more focused option; compare what you already own before buying the bundle.
 
 ## A practical brush test for portraits
 

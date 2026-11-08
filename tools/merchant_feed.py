@@ -214,9 +214,15 @@ def _content_specs(contents: str) -> list[tuple[str, str]]:
     emitted; a fragment without a count is ignored rather than guessed.
     """
     rows: list[tuple[str, str]] = []
-    fragments = re.split(r"\s*\+|,|/|\band\b", contents)
+    # Split on spaced " + " only: a plus glued to a digit trails a count
+    # ("252+ assets"), so splitting there would corrupt the count into junk
+    # rows like ("2", "25"). _COUNT below accepts the trailing plus instead.
+    # Thousands separators inside a count ("2,000+ brushes") are protected from
+    # the comma split and restored per fragment.
+    protected = re.sub(r"(?<=[0-9]),(?=[0-9])", "\x00", contents)
+    fragments = re.split(r"\s+\+\s+|,|/|\band\b", protected)
     for fragment in fragments:
-        fragment = fragment.strip().rstrip(".")
+        fragment = fragment.replace("\x00", ",").strip().rstrip(".")
         if not fragment or _HEDGE.search(fragment):
             continue
         match = _COUNT.match(fragment)

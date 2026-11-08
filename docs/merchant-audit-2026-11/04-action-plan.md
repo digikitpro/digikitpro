@@ -129,18 +129,20 @@ so nothing is said twice. This is a code change in `tools/merchant_feed.py` plus
 
 ## Step 7 — Close the data gaps that block better copy (🔴, your knowledge only)
 
-9 products cannot state their strongest number because the catalogue marks it unconfirmed. The fix
+7 products cannot state their strongest number because the catalogue marks it unconfirmed (2 were
+confirmed on 2026-11-08: `essential-line-art-sketch-kit` = 43 brushes, `ultimate-portrait-mastery-bundle`
+= 252+ assets; titles, highlights and detail rows were regenerated for both). The fix
 is one question per product to yourself, then a data edit:
 
 | Product | Missing fact |
 |---|---|
-| `essential-line-art-sketch-kit` | total brush count |
+| ~~`essential-line-art-sketch-kit`~~ | ~~total brush count~~ — ✅ confirmed 2026-11-08: 43 brushes + 1 bonus (Payhip `b/b70QE`) |
 | `male-pose-brushes-figure-drawing` | stamp count |
 | `female-pose-brushes-figure-drawing` | stamp count |
 | `koi-fish-tattoo-brushes` | brush count |
 | `professional-hair-brushes` | brush count |
-| `pro-sketch-traditional-art-kit` | advertised contents |
-| `ultimate-portrait-mastery-bundle` | total asset count |
+| `pro-sketch-traditional-art-kit` | advertised contents (and the download ships as a **RAR** iPad Files can't extract — see `00-HIGH-status.md` item H) |
+| ~~`ultimate-portrait-mastery-bundle`~~ | ~~total asset count~~ — ✅ confirmed 2026-11-08: 252+ assets across 4 kits (Payhip `b/2h0iG`) |
 | `anime-soft-style-studio-kit` | bonus set contents |
 | `wellness-fitness-planner-goodnotes` | current page/sticker count and dates |
 
