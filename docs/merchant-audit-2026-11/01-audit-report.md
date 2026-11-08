@@ -104,10 +104,10 @@ mismatches, dead images or a blocked page. Those are the usual suspects and they
 
 | Finding | Count | Source |
 |---|---|---|
-| Items with fewer than 5 highlights | **18 / 45** (was 45/45) | Google rich-PDP guidance asks for >4; fixed where the catalogue states enough facts |
-| Items with fewer than 6 detail rows | **25 / 45** (was 45/45) | Google rich-PDP guidance asks for >5; the rest are capped by unstated facts |
+| Items with fewer than 5 highlights | **9 / 45** (was 45/45, 18 at audit time) | Google rich-PDP guidance asks for >4; fixed where the catalogue states enough facts |
+| Items with fewer than 6 detail rows | **23 / 45** (was 45/45, 25 at audit time) | Google rich-PDP guidance asks for >5; the rest are capped by unstated facts |
 | Items with only one image | **6** | `master-library-2000-brushes`, `brush-palette-bundle-160`, `procreate-palettes-bundle-50`, `master-vault-1000-brushes`, `ultimate-fitness-planner`, `halloween-pumpkin-bundle` |
-| Items whose brush/stamp count is unconfirmed in the catalogue | **9** | see "Data flag" column below |
+| Items whose brush/stamp count is unconfirmed in the catalogue | **7** (2 confirmed 2026-11-08: line-art kit 43 brushes, portrait bundle 252+ assets) | see "Data flag" column below |
 | Items priced under $10 | 41 | catalogue |
 
 The 6 single-image items include **two of your flagship bundles**. For a visual product, one image
@@ -124,8 +124,8 @@ in the feed. Priority is explained in §4.
 | 1 | `portrait-skin-brushes-procreate` | $5.00 | Digital Artwork | A | 623w · 4 img · 3hl | — |
 | 2 | `artista-studio-kit-76-brushes` | $5.00 | Digital Artwork | B | 575w · 4 img · 4hl | — |
 | 3 | `portrait-mastery-kit-46-brushes` | $8.00 | Digital Artwork | A | 649w · 4 img · 4hl | — |
-| 4 | `essential-line-art-sketch-kit` | $5.00 | Digital Artwork | C | 521w · 4 img · 4hl | brush count unconfirmed in catalog |
-| 5 | `ultimate-portrait-mastery-bundle` | $15.00 | Digital Artwork | A | 515w · 4 img · 4hl | total asset count unconfirmed |
+| 4 | `essential-line-art-sketch-kit` | $5.00 | Digital Artwork | C | 559w · 4 img · 6hl | brush count confirmed 2026-11-08 (43 + 1 bonus) |
+| 5 | `ultimate-portrait-mastery-bundle` | $15.00 | Digital Artwork | A | 551w · 4 img · 6hl | total asset count confirmed 2026-11-08 (252+ across 4 kits) |
 | 6 | `anime-soft-style-studio-kit` | $5.00 | Digital Artwork | B | 506w · 4 img · 4hl | bonus set contents unverified |
 | 7 | `glitter-brushes-sparkle-shine-30` | $5.00 | Digital Artwork | A | 491w · 4 img · 3hl | — |
 | 8 | `watercolor-studio-kit-50-brushes` | $10.00 | Digital Artwork | A | 492w · 4 img · 4hl | — |
@@ -198,10 +198,10 @@ provisional and reading back what Merchant Center reports.
    ("Procreate", "brushes for iPad") were absent from 4 brush titles and 7 planner/asset titles.
 3. **Every item failed Google's rich-PDP thresholds** (§2.2) — 45/45 on both counts. This was
    fixable in code and has since been fixed for the items whose records state enough facts:
-   **27/45 now exceed 4 highlights, 20/45 exceed 5 details.** The remainder cannot be padded
+   **36/45 now exceed 4 highlights, 22/45 exceed 5 details.** The remainder cannot be padded
    without inventing facts, which is why steps 6 and 7 below matter.
 4. **6 items have one image**, including two flagship bundles.
-5. **9 items cannot state their strongest number** (brush/stamp count) because the catalogue marks
+5. **7 items cannot state their strongest number** (brush/stamp count) because the catalogue marks
    it unconfirmed. Count is the single most persuasive spec in this niche.
 
 ### Probable (not provable from here)
@@ -238,7 +238,7 @@ product, disclosed as AI text through `structured_description`). Rules applied:
 
 - Primary product type first ("Portrait Brushes for Procreate: …", "Procreate Color Palettes: …").
 - `Procreate`/`iPad` only where the record states the format and requirements.
-- Counts only where the catalogue confirms them; **9 products deliberately state no count** and
+- Counts only where the catalogue confirms them; **7 products deliberately state no count** and
   say so.
 - No added hype. Note one deliberate deviation from your rule 7: **"Ultimate" and "Professional"
   are kept where they are part of the actual product name** (`Ultimate Portrait Mastery Bundle`,
@@ -289,8 +289,9 @@ crowded field of similar packs; they benefit from the §2.2 fixes rather than ne
 `female-pose-brushes-figure-drawing`, `koi-fish-tattoo-brushes`, `professional-hair-brushes`,
 `pro-sketch-traditional-art-kit`, `wellness-fitness-planner-goodnotes`,
 `kdp-templates-bundle-100`, `halloween-pumpkin-bundle`, `smoke-brushes-12`.
-Why: five have unconfirmed counts (you cannot sell "the number of brushes" if the number is not
-confirmed), one is a stale listing, one carries licence questions, one is seasonal, one is a very
+Why: four have unconfirmed counts or contents (you cannot sell "the number of brushes" if the
+number is not confirmed; `essential-line-art-sketch-kit` left this list on 2026-11-08 with 43
+brushes confirmed), one is a stale listing, one carries licence questions, one is seasonal, one is a very
 small set at a price that leaves no margin for Shopping discovery.
 
 ---
@@ -323,3 +324,32 @@ title, and whether the 45 items are eligible in the countries you actually sell 
 
 The action plan (`04-action-plan.md`) is ordered accordingly — and the first step needs your login,
 not more copywriting.
+---
+
+## Addendum — 2026-11-08 (after this audit was filed; PR pending)
+
+Two of the nine unconfirmed counts were confirmed by the owner against the Payhip listings and are
+now live copy:
+
+- `essential-line-art-sketch-kit` → `https://payhip.com/b/b70QE`: **43 professional brushes + 1
+  bonus texture brush** — 14 pencil, 12 liners, 7 ink, 6 detailers, 3 sketch tools.
+- `ultimate-portrait-mastery-bundle` → `https://payhip.com/b/2h0iG`: **252+ professional assets**
+  across 4 kits (43 + 19 + 160 + 30 = 252).
+
+Applied: product records, Merchant feed titles (count-bearing), derived highlights/detail rows, the
+AI-provenance fingerprints, the product pages (rebuilt), the portraits blog sentence that asked for
+confirmation, `docs/PRODUCT-SEO-REWRITE-2026-10-29.csv` (regenerated), and the guard in
+`tools/qa_product_editorial.py` (the "disputed count" ban and mandatory "awaiting confirmation"
+caveat were retired; the counts are now asserted present, citing the two Payhip URLs).
+
+`tools/merchant_feed.py` also fixed a parser bug in `_content_specs`: counts with a trailing `+`
+glued to the number (`650+ brushes`, `200+ brushes`, `1,000+ brushes`, `300+ brushes`, `252+ assets`)
+were split at the `+`, emitting junk detail rows such as `0 / 65`. Detail rows now read `Brushes:
+650+`, `Organized brushes: 2,000+`, `Assets across 4 kits: 252+`, etc. Result vs. this audit:
+highlights >4 stay at 36/45, detail rows >5 moved 20 → 22/45 (`portrait-mastery-kit-46-brushes` and
+`anime-soft-style-studio-kit` crossed via the parser fix), and items below the detail bar moved
+25 → 23. `05-landing-evidence.csv` was regenerated with `tools/audit_merchant_landing.py` (the
+checked-in copy was stale — it predated PR #77's highlights work).
+
+All four suites pass after the rebuild: 15 merchant tests, 1,239 editorial checks, 115 verify
+checks, 3,207 SEO checks.
