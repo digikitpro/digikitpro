@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """About, legal, search, 404, robots, sitemap, feeds, search index."""
+import os
+
 from core import *
 from pages_season import SEASON_DEFS
 from pages_guides import GUIDES_DIR, GUIDE_URLS, GUIDE_DEFS, GUIDES_INDEX
 from pages_partner import PARTNER_DIR, PARTNER_URL
+from merchant_description import load_provenance, render_description
 from datetime import datetime
 from email.utils import format_datetime
 # SEO tools ( /tools/ + /tools/canvas-calculator/ )
@@ -240,6 +243,8 @@ def build_google_merchant_feed():
     products = [p for p in PRODUCTS
                 if not p.get("comingSoon") and not p.get("free")
                 and float(p.get("price") or 0) > 0 and not _google_merchant_book(p)]
+    provenance = load_provenance()
+    unknown_origins = []
     items = []
     for p in products:
         slug = p["slug"]
@@ -251,7 +256,9 @@ def build_google_merchant_feed():
             if fallback:
                 full_images = [asset_abs(slug, fallback)]
         image_url = full_images[0] if full_images else absurl("assets/img/og-cover.jpg")
-        desc = (p.get("short") or p.get("seoDesc") or p["name"]).strip()
+        description_xml, origin = render_description(p, provenance)
+        if origin == "unknown":
+            unknown_origins.append(slug)
         currency = p.get("currency", "USD").upper()
         price = f"{float(p['price']):.2f} {currency}"
         gtin = str(p.get("gtin") or "").strip()
@@ -272,7 +279,7 @@ def build_google_merchant_feed():
         items.append(f"""  <item>
     <g:id>{esc(slug)}</g:id>
     <g:title>{esc(p['name'])}</g:title>
-    <g:description>{esc(desc)}</g:description>
+{description_xml}
     <g:link>{esc(product_url)}</g:link>
     <g:image_link>{esc(image_url)}</g:image_link>
 {extra_images}
@@ -295,6 +302,13 @@ def build_google_merchant_feed():
 """
     write("google-merchant-feed.xml", xml)
     print(f"Google Merchant feed: {len(products)} paid non-book candidates -> google-merchant-feed.xml (eligibility unverified)")
+    if unknown_origins:
+        print("WARNING: Merchant description provenance is unknown or changed for "
+              f"{len(unknown_origins)} product(s); plain descriptions were retained. "
+              "Review before submitting: " + ", ".join(unknown_origins))
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            print("::warning title=Merchant description provenance::"
+                  f"{len(unknown_origins)} product(s) need an origin review; see the build log.")
 
 
 def build_misc():
