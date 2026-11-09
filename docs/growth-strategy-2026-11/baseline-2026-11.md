@@ -1,6 +1,6 @@
 # Growth baseline — November 2026 (template + repo-derived metrics filled)
 
-Owner-side gap flagged throughout: **nothing here changes until your GSC/MC/Payhip/Pinterest exports land.** This file is the intake point; fill every cell marked `OWNER` and the strategy becomes measurable. Repo-derived figures (all re-verified 2026-11-08 on `arena/09bf8858-digikitpro` after the PR #81 feed hold):
+Owner-side gap flagged throughout: GSC/MC/Payhip/Pinterest exports landed 2026-11-08 (GSC) — §B is filled with real values; the rest remains `OWNER` until those land. Repo-derived figures (all re-verified 2026-11-08 on `arena/09bf8858-digikitpro` after the PR #81 feed hold):
 
 ## A. Store & feed (filled from repo)
 
@@ -21,18 +21,23 @@ Owner-side gap flagged throughout: **nothing here changes until your GSC/MC/Payh
 | Known buyer-visible caveats | 9 items (see register addendum / PR #81) — pending your decision | feed XML |
 | Structural schema | Product + Breadcrumb + HowTo (10×) + article markup present; validated structurally only | qa_seo |
 
-## B. Google Search Console — OWNER export (16 months)
+## B. Google Search Console — export received 2026-11-08 (Web search, last 3 months; analyzed in [../gsc-baseline-2026-11-08.md](../gsc-baseline-2026-11-08.md))
+
+Sources: owner exports `Chart.csv`, `Pages.csv`, `Queries.csv`, `Countries.csv`, `Devices.csv`, `Chart-2.csv` (Indexing, dated 2026-10-23), `Critical issues.csv` — Web type, "Last 3 months", range 2026-09-12 → 2026-11-06. Note: the index counts are from the Indexing export (to 2026-10-23); treat with a 2-week lag. Pages export sums to 299 vs Chart/Countries 294 — export rounding; use 294.
 
 | Metric | Value |
 |---|---|
-| Total impressions / clicks / CTR / avg position | OWNER |
-| Indexed vs submitted (101 URLs) | OWNER |
-| Top 20 queries (impressions, clicks, position) | OWNER |
-| Top 10 pages by clicks; 10 striking-distance (pos 5–20) | OWNER |
-| Coverage issues ("Crawled – currently not indexed") | OWNER |
-| Country split (US vs other) | OWNER |
+| Total impressions / clicks / CTR / avg position | **294 / 0 / 0.00% / ≈10.0** (impr-weighted) |
+| Indexed vs submitted (101 URLs) | **6 of ~12 known/processed** (Indexing report, 2026-10-23); fell from 9 between Sep 15–22 |
+| Top queries (all tiny) | *procreate brushes difference* 2 imp @10 · *best lineart brush procreate* 2 @42 · *procreate skin brush* 1 @29 · *procreate portrait brushes* 1 @51 · *procreate line brush(es)* 1 each @62–71 |
+| Impression-earning pages (all blog; clicks 0) | how-to-choose-procreate-brushes 109 @8.59 · best-procreate-brushes-for-anime 78 @8.41 · realistic-skin-in-procreate 31 @8.0 · make-digital-art-look-traditional 27 @10.33 · best-line-art 16 @28 · best-portraits 15 @12.33 · blending-brushes 13 @10.31 · realistic-hair 10 @7.6 (top-4 carry ≈83%) |
+| Striking distance (pos 5–20) | how-to-choose 8.59, anime 8.41, realistic-skin 8.0, make-traditional 10.33, best-portraits 12.33, blending 10.31, realistic-hair 7.6 — all 0 clicks (CTR problem / rich-result eligibility) |
+| Coverage issues ("Crawled – currently not indexed") | **1 page** (identity unknown — needs URL Inspection); plus "Alternate page with proper canonical tag" ×3 and "Page with redirect" ×2, all Validation: Started |
+| Country split | US 113 (38%) · UK 30 · CA 14 · AU 12 · IN 10 · TH 8 — 53 countries total |
 
-Export path: GSC → Performance → Search results → Export (CSV), last 16 months; Coverage → Export.
+Export path: GSC → Performance → Search results → Export (CSV); Indexing → Pages → Export.
+
+**Action gating:** coverage knowledge here precedes the first impressions/clicks growth — see [../owner-kits/first-clicks-2026-11.md](../owner-kits/first-clicks-2026-11.md) §A–B. No title/content churn accepted from this data.
 
 ## C. Merchant Center — OWNER export (90 days)
 
