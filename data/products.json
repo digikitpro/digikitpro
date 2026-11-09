@@ -2185,7 +2185,35 @@
       "cardH": 500,
       "fullW": 1200,
       "fullH": 800,
-      "gallery": []
+      "gallery": [
+        {
+          "file": "master-library-2000-brushes-2.webp",
+          "card": "master-library-2000-brushes-2-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic promoting the full DigiKitPro brush library, 2,000+ brushes in one download"
+        },
+        {
+          "file": "master-library-2000-brushes-3.webp",
+          "card": "master-library-2000-brushes-3-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic showing themed category panels: linework, traditional media, watercolour and character work"
+        },
+        {
+          "file": "master-library-2000-brushes-4.webp",
+          "card": "master-library-2000-brushes-4-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic describing one permanent library for professional artists and studios"
+        }
+      ]
     },
     "seoTitle": "Master Library: 2,000+ Procreate Brushes | DigiKitPro",
     "seoDesc": "Explore the listed 2,000+ brush Master Library for Procreate, with linework, traditional media, watercolor and character tools.",
@@ -3357,7 +3385,35 @@
       "cardH": 500,
       "fullW": 1200,
       "fullH": 800,
-      "gallery": []
+      "gallery": [
+        {
+          "file": "procreate-palettes-bundle-50-2.webp",
+          "card": "procreate-palettes-bundle-50-2-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic promoting 50 palettes with 1,500 swatches across five colour themes"
+        },
+        {
+          "file": "procreate-palettes-bundle-50-3.webp",
+          "card": "procreate-palettes-bundle-50-3-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic showing a 30-swatch palette panel in Procreate with a range of colour themes"
+        },
+        {
+          "file": "procreate-palettes-bundle-50-4.webp",
+          "card": "procreate-palettes-bundle-50-4-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic showing .swatches files importing into the Procreate palette library"
+        }
+      ]
     },
     "seoTitle": "50 Procreate Color Palettes Bundle | DigiKitPro",
     "seoDesc": "Explore 50 Procreate color palettes with 30 swatches each, including soft, earthy, vibrant and skin-tone color themes.",
@@ -3441,7 +3497,35 @@
       "cardH": 500,
       "fullW": 1200,
       "fullH": 800,
-      "gallery": []
+      "gallery": [
+        {
+          "file": "master-vault-1000-brushes-2.webp",
+          "card": "master-vault-1000-brushes-2-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic showing four themed brush folders: portrait, anime, traditional media and effects"
+        },
+        {
+          "file": "master-vault-1000-brushes-3.webp",
+          "card": "master-vault-1000-brushes-3-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic showing themed .brushset folders in the iPad Files app, straight into Procreate"
+        },
+        {
+          "file": "master-vault-1000-brushes-4.webp",
+          "card": "master-vault-1000-brushes-4-card.webp",
+          "w": 1200,
+          "h": 1514,
+          "cardW": 750,
+          "cardH": 946,
+          "alt": "Product graphic showing download via Payhip opening directly in Procreate"
+        }
+      ]
     },
     "seoTitle": "Master Vault: 1,000+ Procreate Brushes | DigiKitPro",
     "seoDesc": "Explore the listed 1,000+ brush Master Vault for Procreate, with themed sets for portraits, anime, traditional media and effects.",
