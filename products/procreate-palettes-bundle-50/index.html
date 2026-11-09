@@ -74,6 +74,26 @@
     document.head.appendChild(tag);
   })();
   </script>
+  <!-- Google Tag Manager — loaded under the same host + opt-out guard as GA. -->
+  <script>
+  (function(){
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false;
+    try {
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) {}
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent("GTM-ND84XKW4");
+    document.head.appendChild(tag);
+  })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>50 Procreate Color Palettes Bundle | DigiKitPro</title>
