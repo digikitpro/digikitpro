@@ -14,6 +14,10 @@ no frame keeps a srcset that belongs to another image (that override is what mad
 the thumbnails look dead) and js/main.js holds no gallery code any more; the CSS
 carries the active-tile ring, the prev/next pair, the modal viewer with its scroll
 lock and the sideways-scrolling tiles on a phone. Page design itself: untouched.)
+(173 -> 182 image:loc on 2026-11-09: + 9 from the six-SKU Merchant image backfill —
+procreate-palettes-bundle-50, master-vault-1000-brushes and master-library-2000-brushes
+gained the three gallery mockups their other 38 products already ship. Gallery machinery
+and checks untouched.)
 (93 -> 94 on 2026-09-20, merged on top of the above: + 1 from the product-card
 frame pass — the cards' shared .card-media frame moves 1:1 -> 4:3 (check 81
 re-pinned from `aspect-ratio:1/1` to `aspect-ratio:4/3`) and a new check asserts
@@ -367,7 +371,7 @@ def main() -> int:
         r"<url><loc>([^<]+)</loc>", img_xml)
     img_locs = re.findall(r"<image:loc>([^<]+)</image:loc>", img_xml)
     check("sitemap-images.xml has 51 <url>", len(img_urls) == 51, str(len(img_urls)))
-    check("sitemap-images.xml has 173 <image:loc>", len(img_locs) == 173, str(len(img_locs)))
+    check("sitemap-images.xml has 182 <image:loc>", len(img_locs) == 182, str(len(img_locs)))
     check("sitemap-images.xml all locs on digikitpro.shop",
           bool(img_urls) and bool(img_locs)
           and all(u.startswith(HOST) for u in img_urls + img_locs)
