@@ -84,6 +84,9 @@ PINTEREST_VERIFY = (os.environ.get("PINTEREST_VERIFY") or "990d08b5349bfcbb0171e
 # Pinterest Tag (ads / conversion measurement). DORMANT unless set: with no
 # PINTEREST_TAG_ID nothing is loaded and no Pinterest request is made.
 PINTEREST_TAG_ID = os.environ.get("PINTEREST_TAG_ID", "").strip()
+# Google Tag Manager. GSC "verify via Google Tag Manager" needs this
+# container reachable on the homepage. Env-overridable like the other tags.
+GTM_CONTAINER_ID = os.environ.get("GTM_CONTAINER_ID", "GTM-ND84XKW4").strip()
 # Languages offered by the in-page translation switcher (Google Translate).
 LANGUAGES = [
     ("en", "English"),
@@ -578,7 +581,32 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
   }})();
   </script>
 """
-    # ── Pinterest Tag: ONLY rendered when PINTEREST_TAG_ID is set ────────
+    gtm = ""
+    if GTM_CONTAINER_ID and ANALYTICS_ENABLED:
+        gtm_id = json.dumps(GTM_CONTAINER_ID)
+        gtm_host = json.dumps(urllib.parse.urlparse(SITE_URL).hostname or "")
+        gtm = f"""  <!-- Google Tag Manager — loaded under the same host + opt-out guard as GA. -->
+  <script>
+  (function(){{
+    var canonicalHost = {gtm_host};
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false;
+    try {{
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    }} catch (e) {{}}
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({{'gtm.start': new Date().getTime(), event: 'gtm.js'}});
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent({gtm_id});
+    document.head.appendChild(tag);
+  }})();
+  </script>
+"""
+
     pin_tag = ""
     if PINTEREST_TAG_ID:
         tid = esc(PINTEREST_TAG_ID)
@@ -604,7 +632,7 @@ def head(title, desc, canonical, depth, schemas=None, og_image=None, page_type="
 <html lang="en">
 <head>
 {_GITHUB_KILL}
-{ga}{pin_tag}  <meta charset="UTF-8">
+{ga}{gtm}{pin_tag}  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(desc)}">
