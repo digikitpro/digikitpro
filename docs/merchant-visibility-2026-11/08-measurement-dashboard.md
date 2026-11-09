@@ -17,9 +17,9 @@
 | MC | Impressions / clicks / CTR (28d) | OWNER | MC performance |
 | MC | Impressions, clicks per product (export CSV; keep 44-row table) | OWNER | MC → All products → download |
 | MC | Free listings destinationsplit (Search/Images/Shopping tab/YouTube/other) | OWNER | MC performance (if shown) |
-| GSC | Clicks / impressions / CTR / avg position (28d + 16mo) | OWNER | GSC Performance |
-| GSC | Indexed pages (of 101) / coverage errors | OWNER | GSC Coverage |
-| GSC | Top 20 queries; striking-distance (pos 5–20) list | OWNER | GSC export |
+| GSC | Clicks / impressions / CTR / avg position (last 3 months, Web) | **0 / 294 / 0.00% / ≈10.0** (2026-11-08 export; 28d window ≈ same shape) | GSC Performance |
+| GSC | Indexed pages (of 101) / coverage errors | **6 of ~12 known/processed; fell from 9**; 1× Crawled–not indexed, 3× alternate-canonical (Started), 2× redirect (Started) | GSC Indexing → Pages |
+| GSC | Top queries; striking-distance list | *procreate brushes difference* 2 @10 · *best lineart brush procreate* 2 @42 · *procreate skin brush* 1 @29 · *procreate portrait brushes* 1 @51 · line-brush cluster @62–71; striking distance = 7 blog pages listed in baseline-2026-11.md §B | GSC export |
 | Site | Organic sessions → PDP; conversion assist | OWNER | Plausible/GA4 + Payhip |
 | Store | Orders / revenue / refunds (90d) | OWNER | Payhip dashboard |
 | Funnel | Freebie downloads; email signups; list size | OWNER | Payhip + ESP |
