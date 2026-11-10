@@ -23,9 +23,10 @@ christmas-sweater-knit-pattern-brushes, christmas-tree-stamp-brushes and
 christmas-stamp-brushes-hand-drawn each ship main + 2 gallery full-size images.
 The sitemap-images <url> pin (51 -> 54) and the card-rung crop-cost pins were re-pinned
 in the same change; the rung crop-cost check moves to 54 covers, 53 of which
-are expected under the 5% crop bar (knit and tree covers are 750x946 and take the 4:5 rung;
-the hand-drawn cover moved to 750x500 on the 3:2 rung the same day, so the bar now sits
-at "53 of 54 under 5%" with headroom to spare).)
+are expected under the 5% crop bar (knit cover is 750x946 on the 4:5 rung;
+the hand-drawn and tree-stamp covers moved to 750x500 on the 3:2 rung the same day
+as the owner supplied original Payhip listing photos, so the bar sits at "53 of 54
+under 5%" with headroom to spare).)
 (191 -> 195 image:loc on 2026-11-10: + 4 when the owner supplied the original Payhip
 listing photos for christmas-stamp-brushes-hand-drawn — main + 6 gallery full-size
 images at the originals' native 3:2 aspect (real rung, no crop), replacing the
