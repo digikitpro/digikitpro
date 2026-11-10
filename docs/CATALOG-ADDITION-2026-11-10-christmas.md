@@ -84,3 +84,35 @@ images) · `tools/qa_merchant_feed.py` OK (18 tests) · `tools/qa_guide_accuracy
 Browser-level suites (qa_conversion.mjs, qa_accessibility.mjs, tools/qa_round.py) could not
 run in this sandbox (no Chromium / no playwright); CI's build+QA jobs do not cover them
 either.
+
+---
+
+## Update 2026-11-10 (same day): original listing photos wired in for 1vTuy
+
+The owner supplied the seven original listing photos for
+`christmas-stamp-brushes-hand-drawn` (https://payhip.com/b/1vTuy) after the AI-placeholder
+covers merged on main (PR #91). Changes:
+
+- `assets/products/christmas-stamp-brushes-hand-drawn/`: the AI-placeholder cover and 2
+  gallery mocks are REPLACED by the originals (`1.png` = cover; `2.png`–`7.png` = gallery,
+  listing order), converted to house-size WebP (full 1200×800 at the originals' native 3:2
+  aspect — the 3:2 rung, zero crop; card 750×500). New gallery files `-4`..`-7` added.
+- `data/products.json`: this product's images block now lists 1 main + 6 gallery entries
+  (mainW/fullW 1200, fullH 800, cardW 750, cardH 500). All other facts unchanged.
+- `docs/PRODUCT-BASELINE-AUDIT-2026-10-29.csv`: the extension row for this slug only —
+  `gallery_images` and `current_alt` updated. The original 51 rows and the two other
+  extension rows are untouched.
+- `docs/PRODUCT-SEO-REWRITE-2026-10-29.csv` regenerated (54 rows).
+- `tools/verify.py`: sitemap-images pin 191 -> 195 `<image:loc>`; catalog-identity check
+  made merge-safe (it failed on merged main and would have kept failing: HEAD already
+  carries the three sanctioned SKUs, and this SKU's image file list legitimately differs
+  by the four added gallery files — pinned explicitly). Discovery check made merge-safe
+  the same way (literal pins retained).
+- `tools/qa_gallery.mjs` 138/138; `tools/verify.py` ALL 115 CHECKS PASSED; `qa_seo.py`
+  PASS (195 sitemap images); `qa_product_editorial.py` reports ONLY the same three
+  pre-existing, unrelated failures (master-library-2000-brushes /
+  procreate-palettes-bundle-50 / master-vault-1000-brushes — stale baseline vs the
+  2026-11-09 backfill; untouched).
+
+The knit (`Iq8D4`) and tree-stamp (`AwePR`) products still ship the AI-generated placeholder
+covers until the owner supplies originals for those listings.
