@@ -24,6 +24,12 @@ christmas-stamp-brushes-hand-drawn each ship main + 2 gallery full-size images.
 The sitemap-images <url> pin (51 -> 54) and the card-rung crop-cost pins were re-pinned
 in the same change; the rung crop-cost check moves to 54 covers, 53 of which
 are expected under the 5% crop bar (all three Christmas covers are 750x946 and take the 4:5 rung).)
+(191 -> 193 image:loc later on 2026-11-10: + 2 when the owner-supplied Payhip listing
+artwork replaced the AI placeholder mocks for christmas-sweater-knit-pattern-brushes —
+main + 4 gallery full-size images now. The cover goes 750x946/4:5 -> 750x499/3:2, still
+under the 5% crop bar, so the rung crop-cost counts are unchanged; the sitemap-images
+pin was re-pinned and the catalog-identity check learned the one sanctioned image-set
+update, pinned literally. docs/IMAGE-UPDATE-2026-11-10-christmas-sweater.md.)
 (93 -> 94 on 2026-09-20, merged on top of the above: + 1 from the product-card
 frame pass — the cards' shared .card-media frame moves 1:1 -> 4:3 (check 81
 re-pinned from `aspect-ratio:1/1` to `aspect-ratio:4/3`) and a new check asserts
@@ -381,8 +387,13 @@ def main() -> int:
     # sanctioned Christmas SKUs were added (christmas-sweater-knit-pattern-brushes,
     # christmas-tree-stamp-brushes, christmas-stamp-brushes-hand-drawn), each
     # shipping main + 2 gallery full-size images.
+    # 2026-11-10 (later same day): 191 -> 193 image:loc when the owner supplied
+    # the real Payhip listing artwork for christmas-sweater-knit-pattern-brushes,
+    # replacing the two AI placeholder gallery mocks with the four remaining
+    # listing images (main + 4 gallery now; see
+    # docs/IMAGE-UPDATE-2026-11-10-christmas-sweater.md).
     check("sitemap-images.xml has 54 <url>", len(img_urls) == 54, str(len(img_urls)))
-    check("sitemap-images.xml has 191 <image:loc>", len(img_locs) == 191, str(len(img_locs)))
+    check("sitemap-images.xml has 193 <image:loc>", len(img_locs) == 193, str(len(img_locs)))
     check("sitemap-images.xml all locs on digikitpro.shop",
           bool(img_urls) and bool(img_locs)
           and all(u.startswith(HOST) for u in img_urls + img_locs)
@@ -564,23 +575,49 @@ def main() -> int:
         return tuple(p.get(k) for k in invariant), files
     before = {p["slug"]: facts(p) for p in reference}
     after = {p["slug"]: facts(p) for p in json.loads(read("data/products.json"))}
-    # 2026-11-10: the owner sanctioned three new Christmas SKUs on this branch,
-    # so HEAD is no longer the complete "after" set. HEAD's 51 records must
-    # match exactly (nothing about existing products may drift), and the ONLY
-    # records allowed to be absent from HEAD are these three sanctioned additions:
-    sanctioned_additions = {
-        "christmas-sweater-knit-pattern-brushes",
-        "christmas-tree-stamp-brushes",
-        "christmas-stamp-brushes-hand-drawn",
+    # 2026-11-10: the owner sanctioned three new Christmas SKUs; while that
+    # branch was ahead of HEAD the check allowed exactly those three slugs to
+    # be absent from HEAD. They merged into HEAD the same day, so the addition
+    # allowance was RETIRED back to strict zero-drift (any new slug must be
+    # sanctioned by a fresh, dated pin like the one below):
+    # 2026-11-10 (later same day): the owner then supplied the real Payhip
+    # listing artwork for christmas-sweater-knit-pattern-brushes, replacing the
+    # AI placeholder mocks that had to stand in when payhip.com was unreachable
+    # (docs/CATALOG-ADDITION-2026-11-10-christmas.md → "Owner action"). The
+    # cover keeps its filename; the gallery grows from 2 mocks to the 4 real
+    # listing images. The complete new image file set is pinned LITERALLY below
+    # so this stays a drift check, not a rubber stamp: identity fields must
+    # still match HEAD exactly, the image set must match this pin exactly, and
+    # every other record is untouched.
+    sanctioned_image_updates = {
+        "christmas-sweater-knit-pattern-brushes": (
+            "christmas-sweater-knit-pattern-brushes.webp",       # main
+            "christmas-sweater-knit-pattern-brushes-card.webp",  # card
+            None,                                               # thumb
+            "christmas-sweater-knit-pattern-brushes-2.webp",
+            "christmas-sweater-knit-pattern-brushes-3.webp",
+            "christmas-sweater-knit-pattern-brushes-4.webp",
+            "christmas-sweater-knit-pattern-brushes-5.webp",
+        ),
     }
     added = set(after) - set(before)
     removed = set(before) - set(after)
-    changed = [s for s in before if s in after and before[s] != after[s]]
-    identity_ok = bool(before) and not removed and not changed and added == sanctioned_additions
+    changed = []
+    for s in before:
+        if s not in after:
+            continue
+        if before[s] != after[s]:
+            if s in sanctioned_image_updates:
+                before_id, _ = before[s]
+                after_id, after_files = after[s]
+                if before_id == after_id and tuple(after_files) == sanctioned_image_updates[s]:
+                    continue  # the one sanctioned image swap, pinned literally
+            changed.append(s)
+    identity_ok = bool(before) and not removed and not changed and not added
     check("catalog identity, prices and Payhip destinations match HEAD",
           identity_ok,
-          f"{len(after)} product records compared; 0 drift in the 51 pre-existing records, "
-          f"{len(added)} sanctioned additions")
+          f"{len(after)} product records compared; 0 drift, "
+          f"{len(sanctioned_image_updates)} sanctioned image-set update(s)")
     # Permit only the two previously approved rung edits and the reviewed
     # animation notice/CTA, not arbitrary changes to product assignments,
     # filters, routing or discovery structure.
@@ -607,34 +644,15 @@ def main() -> int:
             "cta": {"label": "Explore free resources", "href": "freebies.html"},
         }
         # 2026-11-10: the same sanctioned Christmas addition appended three
-        # catalog entries to data/discovery.json. Everything else in HEAD's
-        # discovery structure must be byte-identical; the new entries are pinned
-        # literally (tier, craft, level, style, stage, priority) so the pass
-        # stays meaningful rather than "anything goes now".
-        sanctioned_catalog = {
-            "christmas-sweater-knit-pattern-brushes": {"tier": "entry", "line": "procreate",
-                "craft": ["illustration", "texture", "lettering"], "improve": ["texture", "color"],
-                "level": ["beginner", "intermediate"], "style": ["stylized"], "stage": "pattern",
-                "priority": 58},
-            "christmas-tree-stamp-brushes": {"tier": "entry", "line": "procreate",
-                "craft": ["illustration", "lettering"], "improve": ["color", "texture"],
-                "level": ["beginner", "intermediate"], "style": ["stylized"], "stage": "finish",
-                "priority": 57},
-            "christmas-stamp-brushes-hand-drawn": {"tier": "entry", "line": "procreate",
-                "craft": ["illustration", "texture", "lettering"], "improve": ["texture", "color"],
-                "level": ["beginner", "intermediate", "advanced"], "style": ["stylized"],
-                "stage": "finish", "priority": 57},
-        }
+        # catalog entries to data/discovery.json, pinned literally (tier, craft,
+        # level, style, stage, priority) while that branch was ahead of HEAD.
+        # The entries merged into HEAD the same day, so the addition allowance
+        # was RETIRED: the current file must now equal HEAD's discovery
+        # structure exactly, apart from only the two approved rung copy edits
+        # and the reviewed animation notice rewritten above.
         current_discovery = json.loads(read("data/discovery.json"))
-        extra_catalog = set(current_discovery.get("catalog", {})) - set(expected_discovery.get("catalog", {}))
-        stripped = json.loads(json.dumps(current_discovery))
-        for slug in extra_catalog:
-            stripped["catalog"].pop(slug, None)
-        new_entries_exact = all(current_discovery["catalog"].get(s) == expected for s, expected in sanctioned_catalog.items())
         discovery_same = (seen_rungs == set(allowed_rung_copy) and
-                          extra_catalog == set(sanctioned_catalog) and
-                          stripped == expected_discovery and
-                          new_entries_exact)
+                          current_discovery == expected_discovery)
     check("discovery preserved apart from reviewed rung and animation notice copy", discovery_same)
     # Look at the build step only — the file header also mentions tools/build.py.
     build_from = deploy.find("Build static site")
@@ -842,7 +860,7 @@ def main() -> int:
     # A cover of ratio R inside a frame of ratio F keeps min(F,R)/max(F,R) of its
     # area, the same arithmetic object-fit:cover performs. Computed from the real
     # cardW/cardH in data/products.json (54 products as of 2026-11-10, the three
-    # Christmas 750x946 covers included), with each cover in the rung
+    # Christmas covers included), with each cover in the rung
     # core.media_rung() picks for it: 0.6% of the cover's own box on average
     # (0.4% of its painted content, measured with a content bounding box over the
     # .webp files in tools/card_frame_mock.py's lab), 50 of 51 covers under 5%,
