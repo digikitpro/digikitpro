@@ -18,6 +18,12 @@ lock and the sideways-scrolling tiles on a phone. Page design itself: untouched.
 procreate-palettes-bundle-50, master-vault-1000-brushes and master-library-2000-brushes
 gained the three gallery mockups their other 38 products already ship. Gallery machinery
 and checks untouched.)
+(182 -> 191 image:loc on 2026-11-10: + 9 from the sanctioned Christmas catalog addition —
+christmas-sweater-knit-pattern-brushes, christmas-tree-stamp-brushes and
+christmas-stamp-brushes-hand-drawn each ship main + 2 gallery full-size images.
+The sitemap-images <url> pin (51 -> 54) and the card-rung crop-cost pins were re-pinned
+in the same change; the rung crop-cost check moves to 54 covers, 53 of which
+are expected under the 5% crop bar (all three Christmas covers are 750x946 and take the 4:5 rung).)
 (93 -> 94 on 2026-09-20, merged on top of the above: + 1 from the product-card
 frame pass — the cards' shared .card-media frame moves 1:1 -> 4:3 (check 81
 re-pinned from `aspect-ratio:1/1` to `aspect-ratio:4/3`) and a new check asserts
@@ -350,6 +356,7 @@ def main() -> int:
         page_locs = re.findall(r"<url><loc>([^<]+)</loc>", sm_xml)
     # 99 = 11 static + 10 categories + 2 seasons + 6 buyer guides +
     # 1 partner portal + 51 products + 18 blog articles (after cleanup of 4 orphaned drafts).
+    # 2026-11-10: 3 Christmas SKUs added (54 products); the >=99 floor still holds.
     # The check allows >=99 to accommodate SEO tools and future safe additions.
     # The 11 /seo-audit/ URLs were removed on 2026-09-20; the site now sits at 101.
     check("sitemap.xml has 99+ page URLs",
@@ -370,8 +377,12 @@ def main() -> int:
     img_urls = re.findall(r"<url>\s*<loc>([^<]+)</loc>", img_xml) or re.findall(
         r"<url><loc>([^<]+)</loc>", img_xml)
     img_locs = re.findall(r"<image:loc>([^<]+)</image:loc>", img_xml)
-    check("sitemap-images.xml has 51 <url>", len(img_urls) == 51, str(len(img_urls)))
-    check("sitemap-images.xml has 182 <image:loc>", len(img_locs) == 182, str(len(img_locs)))
+    # 2026-11-10: 51 -> 54 pages and 182 -> 191 image:loc after the three
+    # sanctioned Christmas SKUs were added (christmas-sweater-knit-pattern-brushes,
+    # christmas-tree-stamp-brushes, christmas-stamp-brushes-hand-drawn), each
+    # shipping main + 2 gallery full-size images.
+    check("sitemap-images.xml has 54 <url>", len(img_urls) == 54, str(len(img_urls)))
+    check("sitemap-images.xml has 191 <image:loc>", len(img_locs) == 191, str(len(img_locs)))
     check("sitemap-images.xml all locs on digikitpro.shop",
           bool(img_urls) and bool(img_locs)
           and all(u.startswith(HOST) for u in img_urls + img_locs)
@@ -553,8 +564,23 @@ def main() -> int:
         return tuple(p.get(k) for k in invariant), files
     before = {p["slug"]: facts(p) for p in reference}
     after = {p["slug"]: facts(p) for p in json.loads(read("data/products.json"))}
+    # 2026-11-10: the owner sanctioned three new Christmas SKUs on this branch,
+    # so HEAD is no longer the complete "after" set. HEAD's 51 records must
+    # match exactly (nothing about existing products may drift), and the ONLY
+    # records allowed to be absent from HEAD are these three sanctioned additions:
+    sanctioned_additions = {
+        "christmas-sweater-knit-pattern-brushes",
+        "christmas-tree-stamp-brushes",
+        "christmas-stamp-brushes-hand-drawn",
+    }
+    added = set(after) - set(before)
+    removed = set(before) - set(after)
+    changed = [s for s in before if s in after and before[s] != after[s]]
+    identity_ok = bool(before) and not removed and not changed and added == sanctioned_additions
     check("catalog identity, prices and Payhip destinations match HEAD",
-          bool(before) and before == after, f"{len(after)} product records compared")
+          identity_ok,
+          f"{len(after)} product records compared; 0 drift in the 51 pre-existing records, "
+          f"{len(added)} sanctioned additions")
     # Permit only the two previously approved rung edits and the reviewed
     # animation notice/CTA, not arbitrary changes to product assignments,
     # filters, routing or discovery structure.
@@ -580,8 +606,35 @@ def main() -> int:
                      "compatibility with your workflow before buying."),
             "cta": {"label": "Explore free resources", "href": "freebies.html"},
         }
+        # 2026-11-10: the same sanctioned Christmas addition appended three
+        # catalog entries to data/discovery.json. Everything else in HEAD's
+        # discovery structure must be byte-identical; the new entries are pinned
+        # literally (tier, craft, level, style, stage, priority) so the pass
+        # stays meaningful rather than "anything goes now".
+        sanctioned_catalog = {
+            "christmas-sweater-knit-pattern-brushes": {"tier": "entry", "line": "procreate",
+                "craft": ["illustration", "texture", "lettering"], "improve": ["texture", "color"],
+                "level": ["beginner", "intermediate"], "style": ["stylized"], "stage": "pattern",
+                "priority": 58},
+            "christmas-tree-stamp-brushes": {"tier": "entry", "line": "procreate",
+                "craft": ["illustration", "lettering"], "improve": ["color", "texture"],
+                "level": ["beginner", "intermediate"], "style": ["stylized"], "stage": "finish",
+                "priority": 57},
+            "christmas-stamp-brushes-hand-drawn": {"tier": "entry", "line": "procreate",
+                "craft": ["illustration", "texture", "lettering"], "improve": ["texture", "color"],
+                "level": ["beginner", "intermediate", "advanced"], "style": ["stylized"],
+                "stage": "finish", "priority": 57},
+        }
+        current_discovery = json.loads(read("data/discovery.json"))
+        extra_catalog = set(current_discovery.get("catalog", {})) - set(expected_discovery.get("catalog", {}))
+        stripped = json.loads(json.dumps(current_discovery))
+        for slug in extra_catalog:
+            stripped["catalog"].pop(slug, None)
+        new_entries_exact = all(current_discovery["catalog"].get(s) == expected for s, expected in sanctioned_catalog.items())
         discovery_same = (seen_rungs == set(allowed_rung_copy) and
-                          expected_discovery == json.loads(read("data/discovery.json")))
+                          extra_catalog == set(sanctioned_catalog) and
+                          stripped == expected_discovery and
+                          new_entries_exact)
     check("discovery preserved apart from reviewed rung and animation notice copy", discovery_same)
     # Look at the build step only — the file header also mentions tools/build.py.
     build_from = deploy.find("Build static site")
@@ -788,7 +841,8 @@ def main() -> int:
     # ── 82b what the ladder's crop costs, per cover (2026-09-20) ──
     # A cover of ratio R inside a frame of ratio F keeps min(F,R)/max(F,R) of its
     # area, the same arithmetic object-fit:cover performs. Computed from the real
-    # cardW/cardH in data/products.json (51 products), with each cover in the rung
+    # cardW/cardH in data/products.json (54 products as of 2026-11-10, the three
+    # Christmas 750x946 covers included), with each cover in the rung
     # core.media_rung() picks for it: 0.6% of the cover's own box on average
     # (0.4% of its painted content, measured with a content bounding box over the
     # .webp files in tools/card_frame_mock.py's lab), 50 of 51 covers under 5%,
@@ -809,7 +863,7 @@ def main() -> int:
     mean_loss = sum(losses) / len(losses)
     lt5 = sum(1 for x in losses if x < 0.05)
     check("the rung each cover is framed in costs its artwork almost nothing",
-          len(losses) == 51 and mean_loss <= 0.02 and lt5 >= 50 and max(losses) <= 0.17,
+          len(losses) == 54 and mean_loss <= 0.02 and lt5 >= 53 and max(losses) <= 0.17,
           f"mean {100*mean_loss:.1f}% of the cover cropped, {lt5}/{len(losses)} covers under 5%, "
           f"worst {100*max(losses):.1f}% (one 4:3 frame for all of them: "
           f"16.1% mean, 5/51 under 5%, 57.8% worst)")

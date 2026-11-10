@@ -177,7 +177,11 @@ class MerchantEnrichmentTests(unittest.TestCase):
         nodes = merchant_feed.load_taxonomy_nodes()
         reviewed = merchant_feed.load_categories()
         items = self._feed()
-        self.assertEqual(len(items), 44)
+        # 2026-11-10: 44 -> 47 eligible feed items after the owner-sanctioned
+        # addition of three $5 Christmas brush/stamp packs to the catalog
+        # (Iq8D4, AwePR, 1vTuy). The 51->54 catalog change keeps pro-sketch-
+        # traditional-art-kit on hold; the hold is unchanged.
+        self.assertEqual(len(items), 47)
         seen = set()
         for row in items:
             slug = row.findtext("g:id", namespaces=NS)
@@ -255,8 +259,8 @@ class MerchantEnrichmentTests(unittest.TestCase):
         self.assertGreaterEqual(min(details), 4)
         rich_hl = sum(1 for n in highlights if n > 4)
         rich_dt = sum(1 for n in details if n > 5)
-        self.assertGreaterEqual(rich_hl, 18, f"only {rich_hl}/44 reach more than 4 highlights")
-        self.assertGreaterEqual(rich_dt, 14, f"only {rich_dt}/44 reach more than 5 details")
+        self.assertGreaterEqual(rich_hl, 18, f"only {rich_hl}/47 reach more than 4 highlights")
+        self.assertGreaterEqual(rich_dt, 14, f"only {rich_dt}/47 reach more than 5 details")
 
     def test_highlights_do_not_restate_the_description(self):
         """A bullet may summarise the same fact, but must not repeat the prose.

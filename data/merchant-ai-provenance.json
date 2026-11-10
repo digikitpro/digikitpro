@@ -691,6 +691,48 @@
         "source": "ai",
         "sha256": "fdfa7380b218efa5babbc442f348b9da65be7435aef161ea69ba208466780e0f"
       }
+    },
+    "christmas-sweater-knit-pattern-brushes": {
+      "short": {
+        "source": "ai",
+        "sha256": "05200eb27b651edac9f5bf290480703998da5a3d4ddba513330582dd1ff537a6"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "4fc1039f0c46950045ecb031a6bf8970f6947cdaf79ed99fa3dec4b66892cec9"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "131bf99bedba55ccd74557c8125394d5f63bde518666226748d30c7258d1cf35"
+      }
+    },
+    "christmas-tree-stamp-brushes": {
+      "short": {
+        "source": "ai",
+        "sha256": "e9f95d3b9fbf946ccb1b9113ba9c57509f2a6cba263c1801abe7805a732a068e"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "79652b961cbcb6cfaa97e3bf1be872594e71872fd8b8bd4fc196c382d537c6c7"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "7b86ca7dddf8a81accfd1b92fcbbecd541489ea2d8b0745d728a68af59d71b9d"
+      }
+    },
+    "christmas-stamp-brushes-hand-drawn": {
+      "short": {
+        "source": "ai",
+        "sha256": "9a6bb110633b4fcca4b0ff6ca22776d23590c91e38c22abde0ba98c38d175887"
+      },
+      "seoDesc": {
+        "source": "ai",
+        "sha256": "72d129f1ee09c1e623ad6d84353da7c210f494c49f62f7236ffb238c531dbfb1"
+      },
+      "merchantDescription": {
+        "source": "ai",
+        "sha256": "348a298a44402b0deb04c915614651af75cc1d21407cc6c1a8eeecb3f97933b6"
+      }
     }
   }
 }

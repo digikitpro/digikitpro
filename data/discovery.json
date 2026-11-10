@@ -1480,6 +1480,72 @@
       "style": [],
       "stage": "travel",
       "priority": 0
+    },
+    "christmas-sweater-knit-pattern-brushes": {
+      "tier": "entry",
+      "line": "procreate",
+      "craft": [
+        "illustration",
+        "texture",
+        "lettering"
+      ],
+      "improve": [
+        "texture",
+        "color"
+      ],
+      "level": [
+        "beginner",
+        "intermediate"
+      ],
+      "style": [
+        "stylized"
+      ],
+      "stage": "pattern",
+      "priority": 58
+    },
+    "christmas-tree-stamp-brushes": {
+      "tier": "entry",
+      "line": "procreate",
+      "craft": [
+        "illustration",
+        "lettering"
+      ],
+      "improve": [
+        "color",
+        "texture"
+      ],
+      "level": [
+        "beginner",
+        "intermediate"
+      ],
+      "style": [
+        "stylized"
+      ],
+      "stage": "finish",
+      "priority": 57
+    },
+    "christmas-stamp-brushes-hand-drawn": {
+      "tier": "entry",
+      "line": "procreate",
+      "craft": [
+        "illustration",
+        "texture",
+        "lettering"
+      ],
+      "improve": [
+        "texture",
+        "color"
+      ],
+      "level": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ],
+      "style": [
+        "stylized"
+      ],
+      "stage": "finish",
+      "priority": 57
     }
   }
 }

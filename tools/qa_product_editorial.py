@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline regression checks for the 51-product SEO review snapshot.
+"""Offline regression checks for the product SEO review snapshot (54 products).
 
 Run after tools/build.py and tools/export_product_seo.py. These assertions do
 not inspect delivered archives, verify licenses, contact Payhip, measure field
@@ -60,7 +60,13 @@ def main():
         if not ok:
             failures.append(message)
 
-    check(len(products) == 51 == len(records) == expected_count, "Snapshot must cover 51 unique products")
+    # Catalog expanded 2026-11-10 with three Christmas SKUs (owner-sanctioned
+    # addition, listed in the PR for this change): Iq8D4 Christmas Sweater Knit
+    # Pattern Brushes, AwePR Christmas Tree Stamp Brushes, 1vTuy Hand-Drawn
+    # Christmas Stamp Brushes. The 2026-10-29 snapshot CSVs were EXTENDED with
+    # matching new rows; the original 51 rows are byte-identical to the dated
+    # snapshot. Re-pin alongside verify.py and the baseline CSVs.
+    check(len(products) == 54 == len(records) == expected_count, "Snapshot must cover 54 unique products")
     check(sheet_path.is_file() and sheet_path.read_text(encoding="utf-8") == expected_sheet,
           "Product SEO CSV missing or stale")
     for field in ("pdpH1", "seoTitle", "seoDesc", "short", "alt"):
