@@ -392,7 +392,24 @@ def schema_product(p):
                  # Offer.url must describe the landing page in this schema;
                  # the actual Buy button can still send shoppers to Payhip.
                  "url":product_url,
-                 "seller":{"@type":"Organization","name":SITE_NAME}}}
+                 "seller":{"@type":"Organization","name":SITE_NAME},
+                 # GSC enhancement-report suggestions ("Merchant listings" missing
+                 # fields), resolved with what is actually true of this store:
+                 # digital downloads delivered via Payhip, $0 delivery, all sales
+                 # final once files are downloaded (refunds.html). No transit or
+                 # handling-time claims are made because none are published or
+                 # verified — Payhip's delivery latency is not ours to promise.
+                 # Reviews/AggregateRating are deliberately absent: no genuine
+                 # customer reviews exist yet, and they are never synthesised.
+                 "shippingDetails":{
+                     "@type":"OfferShippingDetails",
+                     "shippingRate":{"@type":"MonetaryAmount","value":"0.00","currency":"USD"},
+                     "shippingDestination":{"@type":"DefinedRegion","addressCountry":"US"}},
+                 "hasMerchantReturnPolicy":{
+                     "@type":"MerchantReturnPolicy",
+                     "applicableCountry":"US",
+                     "returnPolicyCategory":"MerchantReturnNotPermitted",
+                     "merchantReturnLink":absurl("refunds.html")}}}
     # Only publish identifiers explicitly assigned in the catalog. In
     # particular, never treat a Payhip ID or our SKU slug as a GTIN/MPN.
     if p.get("gtin"):
