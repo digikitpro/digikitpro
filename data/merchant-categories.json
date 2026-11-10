@@ -274,6 +274,24 @@
       "id": "8022",
       "path": "Software > Digital Goods & Currency > Document Templates",
       "reason": "Downloadable hyperlinked PDF planner/journal; a document the buyer fills in, not a printed book."
+    },
+    "christmas-sweater-knit-pattern-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset/.brush asset pack for Procreate; not a physical art brush and not software."
+    },
+    "christmas-tree-stamp-brushes": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset/.brush asset pack for Procreate; not a physical art brush and not software."
+    },
+    "christmas-stamp-brushes-hand-drawn": {
+      "class": "procreate_brushes",
+      "id": "500046",
+      "path": "Software > Digital Goods & Currency > Digital Artwork",
+      "reason": "Downloadable .brushset/.brush asset pack for Procreate; not a physical art brush and not software."
     }
   }
 }
