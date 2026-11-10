@@ -66,6 +66,11 @@ def main():
     # Christmas Stamp Brushes. The 2026-10-29 snapshot CSVs were EXTENDED with
     # matching new rows; the original 51 rows are byte-identical to the dated
     # snapshot. Re-pin alongside verify.py and the baseline CSVs.
+    # Later on 2026-11-10 the owner supplied the real Payhip listing artwork for
+    # christmas-sweater-knit-pattern-brushes, so its baseline row's current_alt
+    # and gallery_images were re-pinned to the real image set (main + 4 gallery,
+    # 1160x772 / 750x499) — see docs/IMAGE-UPDATE-2026-11-10-christmas-sweater.md.
+    # The original 51 rows remain byte-identical to the dated snapshot.
     check(len(products) == 54 == len(records) == expected_count, "Snapshot must cover 54 unique products")
     check(sheet_path.is_file() and sheet_path.read_text(encoding="utf-8") == expected_sheet,
           "Product SEO CSV missing or stale")
