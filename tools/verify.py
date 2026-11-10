@@ -23,7 +23,13 @@ christmas-sweater-knit-pattern-brushes, christmas-tree-stamp-brushes and
 christmas-stamp-brushes-hand-drawn each ship main + 2 gallery full-size images.
 The sitemap-images <url> pin (51 -> 54) and the card-rung crop-cost pins were re-pinned
 in the same change; the rung crop-cost check moves to 54 covers, 53 of which
-are expected under the 5% crop bar (all three Christmas covers are 750x946 and take the 4:5 rung).)
+are expected under the 5% crop bar (knit and tree covers are 750x946 and take the 4:5 rung;
+the hand-drawn cover moved to 750x500 on the 3:2 rung the same day, so the bar now sits
+at "53 of 54 under 5%" with headroom to spare).)
+(191 -> 195 image:loc on 2026-11-10: + 4 when the owner supplied the original Payhip
+listing photos for christmas-stamp-brushes-hand-drawn — main + 6 gallery full-size
+images at the originals' native 3:2 aspect (real rung, no crop), replacing the
+AI-placeholder cover and 2 gallery mocks.)
 (93 -> 94 on 2026-09-20, merged on top of the above: + 1 from the product-card
 frame pass — the cards' shared .card-media frame moves 1:1 -> 4:3 (check 81
 re-pinned from `aspect-ratio:1/1` to `aspect-ratio:4/3`) and a new check asserts
@@ -378,11 +384,12 @@ def main() -> int:
         r"<url><loc>([^<]+)</loc>", img_xml)
     img_locs = re.findall(r"<image:loc>([^<]+)</image:loc>", img_xml)
     # 2026-11-10: 51 -> 54 pages and 182 -> 191 image:loc after the three
-    # sanctioned Christmas SKUs were added (christmas-sweater-knit-pattern-brushes,
-    # christmas-tree-stamp-brushes, christmas-stamp-brushes-hand-drawn), each
-    # shipping main + 2 gallery full-size images.
+    # sanctioned Christmas SKUs were added, then 191 -> 195 the same day when the
+    # owner supplied the original Payhip listing photos for
+    # christmas-stamp-brushes-hand-drawn (1 main + 6 gallery full-size images,
+    # replacing 1 main + 2 AI-placeholder gallery mocks).
     check("sitemap-images.xml has 54 <url>", len(img_urls) == 54, str(len(img_urls)))
-    check("sitemap-images.xml has 191 <image:loc>", len(img_locs) == 191, str(len(img_locs)))
+    check("sitemap-images.xml has 195 <image:loc>", len(img_locs) == 195, str(len(img_locs)))
     check("sitemap-images.xml all locs on digikitpro.shop",
           bool(img_urls) and bool(img_locs)
           and all(u.startswith(HOST) for u in img_urls + img_locs)
@@ -564,10 +571,11 @@ def main() -> int:
         return tuple(p.get(k) for k in invariant), files
     before = {p["slug"]: facts(p) for p in reference}
     after = {p["slug"]: facts(p) for p in json.loads(read("data/products.json"))}
-    # 2026-11-10: the owner sanctioned three new Christmas SKUs on this branch,
-    # so HEAD is no longer the complete "after" set. HEAD's 51 records must
-    # match exactly (nothing about existing products may drift), and the ONLY
-    # records allowed to be absent from HEAD are these three sanctioned additions:
+    # 2026-11-10: the owner sanctioned three new Christmas SKUs (PR #91).
+    # Identity rule, valid both before and after that merge lands on main:
+    #   * every record already present in HEAD must be byte-identical (nothing may drift),
+    #   * the catalog may gain AT MOST the three sanctioned Christmas slugs,
+    #   * and those three must be present with their sanctioned identity facts.
     sanctioned_additions = {
         "christmas-sweater-knit-pattern-brushes",
         "christmas-tree-stamp-brushes",
@@ -575,12 +583,36 @@ def main() -> int:
     }
     added = set(after) - set(before)
     removed = set(before) - set(after)
-    changed = [s for s in before if s in after and before[s] != after[s]]
-    identity_ok = bool(before) and not removed and not changed and added == sanctioned_additions
+    changed = [s for s in before if s in after and before[s][0] != after[s][0]]
+    # 2026-11-10: the owner supplied the ORIGINAL Payhip listing photos for
+    # christmas-stamp-brushes-hand-drawn and asked to use them everywhere.
+    # The identity (pre-merge) record's image file list may therefore differ
+    # exactly by the four new gallery files -4..-7 appended after the pre-existing
+    # main/card/thumb + -2/-3 files — nothing else. Identity fields, price,
+    # payhipUrl and every other product's file list must stay identical.
+    gallery_extension_slug = "christmas-stamp-brushes-hand-drawn"
+    allowed_extra = tuple(f"{gallery_extension_slug}-{i}.webp" for i in (4, 5, 6, 7))
+    files_bad = []
+    for s in before:
+        if s not in after:
+            continue
+        fb, fa = before[s][1], after[s][1]
+        if fb == fa:
+            continue
+        is_allowed = (s == gallery_extension_slug
+                      and len(fa) == len(fb) + 4
+                      and fa[:len(fb)] == fb
+                      and tuple(fa[len(fb):]) == allowed_extra)
+        if not is_allowed:
+            files_bad.append(s)
+    identity_ok = (bool(before) and not removed and not changed and not files_bad
+                   and added <= sanctioned_additions
+                   and sanctioned_additions <= set(after))
     check("catalog identity, prices and Payhip destinations match HEAD",
           identity_ok,
-          f"{len(after)} product records compared; 0 drift in the 51 pre-existing records, "
-          f"{len(added)} sanctioned additions")
+          f"{len(after)} product records compared; 0 drift in identity fields, "
+          f"sanctioned Christmas SKUs present: {len(sanctioned_additions)}/3, "
+          f"image-list drift: {files_bad or 'none (hand-drawn SKU extended by owner-supplied originals)'}")
     # Permit only the two previously approved rung edits and the reviewed
     # animation notice/CTA, not arbitrary changes to product assignments,
     # filters, routing or discovery structure.
@@ -626,13 +658,15 @@ def main() -> int:
                 "stage": "finish", "priority": 57},
         }
         current_discovery = json.loads(read("data/discovery.json"))
+        # Post-merge HEAD already contains the three sanctioned entries, so
+        # "extra" is the empty set there and the literal pins still apply.
         extra_catalog = set(current_discovery.get("catalog", {})) - set(expected_discovery.get("catalog", {}))
         stripped = json.loads(json.dumps(current_discovery))
         for slug in extra_catalog:
             stripped["catalog"].pop(slug, None)
         new_entries_exact = all(current_discovery["catalog"].get(s) == expected for s, expected in sanctioned_catalog.items())
         discovery_same = (seen_rungs == set(allowed_rung_copy) and
-                          extra_catalog == set(sanctioned_catalog) and
+                          extra_catalog <= set(sanctioned_catalog) and
                           stripped == expected_discovery and
                           new_entries_exact)
     check("discovery preserved apart from reviewed rung and animation notice copy", discovery_same)
