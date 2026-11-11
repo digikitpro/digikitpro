@@ -395,16 +395,19 @@ def schema_product(p):
                  "seller":{"@type":"Organization","name":SITE_NAME},
                  # GSC enhancement-report suggestions ("Merchant listings" missing
                  # fields), resolved with what is actually true of this store:
-                 # digital downloads delivered via Payhip, $0 delivery, all sales
-                 # final once files are downloaded (refunds.html). No transit or
-                 # handling-time claims are made because none are published or
-                 # verified — Payhip's delivery latency is not ours to promise.
+                 # digital downloads delivered via Payhip, $0 delivery, 0-day
+                 # same-day handling/transit (no physical carrier transit), all
+                 # sales final once files are downloaded (refunds.html).
                  # Reviews/AggregateRating are deliberately absent: no genuine
                  # customer reviews exist yet, and they are never synthesised.
                  "shippingDetails":{
                      "@type":"OfferShippingDetails",
                      "shippingRate":{"@type":"MonetaryAmount","value":"0.00","currency":"USD"},
-                     "shippingDestination":{"@type":"DefinedRegion","addressCountry":"US"}},
+                     "shippingDestination":{"@type":"DefinedRegion","addressCountry":"US"},
+                     "deliveryTime":{
+                         "@type":"ShippingDeliveryTime",
+                         "handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":0,"unitCode":"DAY"},
+                         "transitTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":0,"unitCode":"DAY"}}},
                  "hasMerchantReturnPolicy":{
                      "@type":"MerchantReturnPolicy",
                      "applicableCountry":"US",
