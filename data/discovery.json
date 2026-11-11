@@ -448,7 +448,7 @@
         "clean"
       ],
       "stage": "ink",
-      "priority": 86
+      "priority": 89
     },
     "master-line-art-vault-300": {
       "tier": "entry",
@@ -497,7 +497,7 @@
         "clean"
       ],
       "stage": "library",
-      "priority": 89
+      "priority": 86
     },
     "anime-soft-style-brushes-100": {
       "tier": "entry",

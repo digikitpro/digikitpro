@@ -82,6 +82,7 @@ homepage-IA checks were re-pinned on 2026-09-19 to the proof-first order —
 results → ebooks → popular → craft → bundles → master-library → free → articles → newsletter — a re-pin of the same two checks, so the count is unchanged.
 And re-pinned again on 2026-11-10 to insert `christmas` ahead of `popular`
 (owner brief: special Christmas section with festive colours, ornaments and inline SVG characters).
+(2026-11-11: the owner then asked to swap the two $5 kits in the catalog order — priority 89 ↔ 86 in discovery's catalog between anime-soft-style-studio-kit and essential-line-art-sketch-kit — sanctioned inside this check.)
 + 2 from the 2026-09-19 ebooks CTA uncrop: the Starter Guide & Masterclass
 pills must never be clipped by their card's overflow:hidden, and they must
 keep a full measure on a 320px phone + 2 from that day's no-clip second pass:
@@ -695,6 +696,20 @@ def main() -> int:
                 "level": ["beginner", "intermediate", "advanced"], "style": ["stylized"], "stage": "finish",
                 "priority": 57},
         }
+        # 2026-11-11: owner instructed to swap the order of the two $5 kits in
+        # the store catalog — "swap order of those two products on store …
+        # put one in place of the other" (Anime Soft-Style Studio Kit and
+        # Essential Line Art & Sketch Kit). The catalog grid order
+        # (pages_main.build_products) is keyed on this priority, so the swap is
+        # exactly these two values; every other field stays byte-identical.
+        sanctioned_priority_swaps = {
+            "anime-soft-style-studio-kit": 86,
+            "essential-line-art-sketch-kit": 89,
+        }
+        for slug, value in sanctioned_priority_swaps.items():
+            entry = (expected_discovery.get("catalog") or {}).get(slug)
+            if entry is not None:
+                entry["priority"] = value
         current_discovery = json.loads(read("data/discovery.json"))
         # Post-merge HEAD already contains the three sanctioned entries, so
         # "extra" is the empty set there and the literal pins still apply.
@@ -707,7 +722,7 @@ def main() -> int:
                           extra_catalog <= set(sanctioned_catalog) and
                           stripped == expected_discovery and
                           new_entries_exact)
-    check("discovery preserved apart from reviewed rung and animation notice copy", discovery_same)
+    check("discovery preserved apart from reviewed rung, animation notice copy and owner-sanctioned anime/line-art priority swap", discovery_same)
     # Look at the build step only — the file header also mentions tools/build.py.
     build_from = deploy.find("Build static site")
     build_to = deploy.find("configure-pages")
