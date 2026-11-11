@@ -116,3 +116,25 @@ covers merged on main (PR #91). Changes:
 
 The knit (`Iq8D4`) and tree-stamp (`AwePR`) products still ship the AI-generated placeholder
 covers until the owner supplies originals for those listings.
+
+---
+
+## Update 2026-11-10 (same day): original listing photos wired in for AwePR
+
+The owner supplied the three original listing photos (`1.png`, `2.png`, `3.png`) for
+`christmas-tree-stamp-brushes` (https://payhip.com/b/AwePR). Changes:
+
+- `assets/products/christmas-tree-stamp-brushes/`: the AI-placeholder cover and 2 gallery
+  mocks are REPLACED in-place (same 6 filenames) by the originals (`1.png` = cover;
+  `2.png`, `3.png` = gallery, listing order), converted to house-size WebP at the originals'
+  native 3:2 aspect (full 1200×800, card 750×500 — the 3:2 rung, zero crop).
+- `data/products.json`: `christmas-tree-stamp-brushes` images block updated to `mainW`/`fullW`
+  1200, `fullH` 800, `cardW` 750, `cardH` 500, and accurate alt texts for the three original
+  photos. All other facts unchanged.
+- `docs/PRODUCT-BASELINE-AUDIT-2026-10-29.csv`: extension row for `christmas-tree-stamp-brushes`
+  updated (`current_alt` and `gallery_images`); original 51 rows untouched.
+- `docs/PRODUCT-SEO-REWRITE-2026-10-29.csv` regenerated (54 rows).
+- `sitemap-images.xml` stays at 54 URLs / 197 `<image:loc>` (image count for `AwePR` was
+  already 1 main + 2 gallery).
+- All three Christmas products (`1vTuy`, `Iq8D4`, `AwePR`) now ship the owner's original
+  Payhip listing photos.
