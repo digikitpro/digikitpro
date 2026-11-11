@@ -134,7 +134,7 @@ The owner supplied the three original listing photos (`1.png`, `2.png`, `3.png`)
 - `docs/PRODUCT-BASELINE-AUDIT-2026-10-29.csv`: extension row for `christmas-tree-stamp-brushes`
   updated (`current_alt` and `gallery_images`); original 51 rows untouched.
 - `docs/PRODUCT-SEO-REWRITE-2026-10-29.csv` regenerated (54 rows).
-- `sitemap-images.xml` stays at 54 URLs / 195 `<image:loc>` (image count for `AwePR` was
+- `sitemap-images.xml` stays at 54 URLs / 197 `<image:loc>` (image count for `AwePR` was
   already 1 main + 2 gallery).
-- Only the knit product (`christmas-sweater-knit-pattern-brushes`, `Iq8D4`) still ships the
-  AI-generated placeholder cover until the owner supplies its originals.
+- All three Christmas products (`1vTuy`, `Iq8D4`, `AwePR`) now ship the owner's original
+  Payhip listing photos.

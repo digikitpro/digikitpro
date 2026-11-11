@@ -5681,33 +5681,47 @@
     "images": {
       "card": "christmas-sweater-knit-pattern-brushes-card.webp",
       "main": "christmas-sweater-knit-pattern-brushes.webp",
-      "mainW": 1200,
+      "mainW": 1160,
       "cardW": 750,
-      "cardH": 946,
-      "fullW": 1200,
-      "fullH": 1514,
+      "cardH": 499,
+      "fullW": 1160,
+      "fullH": 772,
       "gallery": [
         {
           "file": "christmas-sweater-knit-pattern-brushes-2.webp",
           "card": "christmas-sweater-knit-pattern-brushes-2-card.webp",
-          "w": 1200,
-          "h": 1514,
+          "w": 1160,
+          "h": 772,
           "cardW": 750,
-          "cardH": 946,
-          "alt": "Knit pattern swatch tile beside a Christmas sweater illustration filled with the same seamless motif"
+          "cardH": 499
         },
         {
           "file": "christmas-sweater-knit-pattern-brushes-3.webp",
           "card": "christmas-sweater-knit-pattern-brushes-3-card.webp",
-          "w": 1200,
-          "h": 1514,
+          "w": 1160,
+          "h": 772,
           "cardW": 750,
-          "cardH": 946,
-          "alt": "Four horizontal knit sample bands showing the same motif recolored in classic red and cream, forest and mustard, pastel rose, and monochrome"
+          "cardH": 499
+        },
+        {
+          "file": "christmas-sweater-knit-pattern-brushes-4.webp",
+          "card": "christmas-sweater-knit-pattern-brushes-4-card.webp",
+          "w": 1160,
+          "h": 772,
+          "cardW": 750,
+          "cardH": 499
+        },
+        {
+          "file": "christmas-sweater-knit-pattern-brushes-5.webp",
+          "card": "christmas-sweater-knit-pattern-brushes-5-card.webp",
+          "w": 1160,
+          "h": 772,
+          "cardW": 750,
+          "cardH": 499
         }
       ]
     },
-    "alt": "Grid of chunky knit swatch tiles — snowflake, zigzag, reindeer, bells, fair-isle — in red, cream, forest and mustard",
+    "alt": "62 Christmas Sweater Knit Pattern Brushes for Procreate — Payhip listing cover artwork",
     "seoTitle": "62 Christmas Knit Pattern Brushes for Procreate | DigiKitPro",
     "seoDesc": "Create festive Procreate artwork with 62 seamless Christmas sweater knit pattern brushes. Recolour freely. Digital download via Payhip for iPad.",
     "tags": [
