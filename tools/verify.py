@@ -1327,10 +1327,18 @@ def main() -> int:
         expected_url = f"{HOST}/products/{p['slug']}/"
         node = nodes[0] if nodes else {}
         offer = node.get("offers") or {}
+        ship = offer.get("shippingDetails") or {}
+        dtime = ship.get("deliveryTime") or {}
+        htime = dtime.get("handlingTime") or {}
+        ttime = dtime.get("transitTime") or {}
+        qval_zero_day = {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 0, "unitCode": "DAY"}
         if (node.get("sku") != p["slug"] or node.get("url") != expected_url
                 or offer.get("url") != expected_url
                 or offer.get("itemCondition") != "https://schema.org/NewCondition"
-                or offer.get("priceCurrency") != p.get("currency", "USD")):
+                or offer.get("priceCurrency") != p.get("currency", "USD")
+                or ship.get("@type") != "OfferShippingDetails"
+                or dtime.get("@type") != "ShippingDeliveryTime"
+                or htime != qval_zero_day or ttime != qval_zero_day):
             schema_bad.append(p["slug"])
     check("99 product structured data matches Merchant landing URLs, SKU, condition and currency",
           not schema_bad,
