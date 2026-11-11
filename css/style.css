@@ -1696,3 +1696,75 @@ main :is(p,li) > a:not(.btn):not(.text-link){text-decoration:underline;text-unde
 .review-card blockquote::after{content:"”"}
 .review-card figcaption{font-size:.82rem;color:var(--muted)}
 .review-role{color:var(--muted)}
+
+/* ── Christmas collection section (homepage, 2026-11-10) ─────────────── */
+.xmas-section{position:relative;overflow:hidden;isolation:isolate;
+  background:radial-gradient(120% 90% at 85% -10%,rgba(178,58,58,.22) 0%,transparent 55%),
+             radial-gradient(110% 100% at 4% 112%,rgba(46,139,87,.18) 0%,transparent 55%),
+             linear-gradient(158deg,#16221B 0%,#101812 46%,#191218 100%);
+  border-top:1px solid rgba(201,168,106,.32);border-bottom:1px solid rgba(201,168,106,.32)}
+.xmas-section::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(rgba(255,255,255,.14) 1.1px,transparent 1.4px),
+    radial-gradient(rgba(255,255,255,.085) 1.7px,transparent 2px),
+    radial-gradient(rgba(201,168,106,.18) 1.3px,transparent 1.6px);
+  background-size:92px 92px,138px 138px,110px 110px;
+  background-position:8px 12px,44px 58px,20px 82px}
+.xmas-inner{position:relative;z-index:2}
+.xmas-lights{position:absolute;top:-2px;left:0;width:100%;height:44px;z-index:1;pointer-events:none}
+.xmas-orn{position:absolute;z-index:1;pointer-events:none;filter:drop-shadow(0 8px 16px rgba(0,0,0,.5))}
+.xmas-orn--tl{top:40px;left:max(1.2vw,10px);width:clamp(84px,9vw,138px)}
+.xmas-orn--tr{top:52px;right:max(1.6vw,12px);width:clamp(84px,9vw,138px)}
+.xmas-char{position:absolute;z-index:1;pointer-events:none;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55))}
+.xmas-santa{left:max(.4vw,2px);bottom:-16px;width:clamp(88px,9.5vw,148px);transform-origin:50% 100%}
+.xmas-reindeer{right:max(.2vw,2px);top:64px;width:clamp(92px,10.5vw,156px);transform-origin:50% 0%}
+.xmas-snowman{left:6.4vw;top:60px;width:clamp(68px,7.6vw,110px)}
+.xmas-elf{right:5.6vw;bottom:-12px;width:clamp(76px,8.4vw,126px);transform-origin:50% 100%}
+.xmas-santa,.xmas-elf{animation:xmas-sway 5.6s ease-in-out infinite}
+.xmas-reindeer{animation:xmas-sway 6.8s ease-in-out infinite reverse}
+@keyframes xmas-sway{0%,100%{rotate:-2deg}50%{rotate:2.4deg}}
+@media (prefers-reduced-motion:reduce){.xmas-santa,.xmas-elf,.xmas-reindeer{animation:none}}
+
+.xmas-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.82fr);gap:2.4rem;align-items:center;
+  padding:2.6rem 0 2rem}
+.xmas-eyebrow{color:#E5B45B}
+.xmas-title{font-size:clamp(2rem,4.6vw,3.05rem);line-height:1.08;color:#F4EBDC;margin:.4rem 0 .85rem}
+.xmas-title em{font-style:italic;color:#E5B45B}
+.xmas-sub{color:#CFC9BC;max-width:48ch;font-size:1rem;line-height:1.55;margin-bottom:1.35rem}
+.xmas-ctas{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+
+.xmas-list{position:relative;background:linear-gradient(172deg,#1B2A21 0%,#131F18 70%);
+  border:1px solid rgba(201,168,106,.42);border-radius:var(--radius,18px);
+  box-shadow:0 28px 56px -28px rgba(0,0,0,.75),inset 0 0 0 1px rgba(244,235,220,.04);
+  padding:1.15rem 1.3rem 1.2rem}
+.xmas-list::after{content:"";position:absolute;top:-14px;left:50%;width:120px;height:26px;
+  transform:translateX(-50%) rotate(-1.5deg);background:rgba(201,168,106,.32);
+  border-top:1px solid rgba(244,235,220,.35);border-bottom:1px solid rgba(0,0,0,.25);border-radius:3px}
+.xmas-list-cap{font:700 .76rem/1.3 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:#E5B45B;margin-bottom:.7rem}
+.xmas-list ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.42rem}
+.xmas-list li{display:flex;align-items:baseline;gap:.6rem;padding:.42rem .2rem;border-bottom:1px dashed rgba(244,235,220,.16);font-size:.9rem}
+.xmas-list li:last-child{border-bottom:0}
+.xmas-list-dot{flex:none;width:.62rem;height:.62rem;border-radius:50%;background:var(--dot,#E5B45B);
+  align-self:center;box-shadow:0 0 0 2px rgba(255,255,255,.06)}
+.xmas-list a{color:#F4EBDC;text-decoration:none;flex:1}
+.xmas-list a:hover{color:#E5B45B;text-decoration:underline;text-underline-offset:3px}
+.xmas-list-price{color:#E5B45B;font-weight:600;white-space:nowrap}
+.xmas-list-foot{margin-top:.65rem;color:#8F8A7E;font-size:.72rem;letter-spacing:.04em}
+
+.xmas-cards{position:relative}
+.xmas-section .card{background:linear-gradient(168deg,#1A241D 0%,#111A14 78%);
+  border-color:rgba(201,168,106,.24);transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease}
+.xmas-section .card:hover{border-color:rgba(229,180,91,.55);box-shadow:0 22px 48px -22px rgba(178,58,58,.35)}
+.xmas-foot{margin-top:1rem;color:#8F8A7E;font-size:.82rem;letter-spacing:.03em}
+
+@media (max-width:1080px){
+  .xmas-snowman{display:none}
+  .xmas-head{grid-template-columns:1fr;padding-top:2.1rem}
+  .xmas-list{max-width:560px}
+}
+@media (max-width:760px){
+  .xmas-santa,.xmas-elf{display:none}
+  .xmas-reindeer{width:84px;top:54px}
+  .xmas-orn--tr{display:none}
+  .xmas-sub{font-size:.94rem}
+}
