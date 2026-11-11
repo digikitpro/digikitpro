@@ -3,7 +3,7 @@ title: Christmas Procreate Tutorial: Design a Holiday Card with Brushes
 slug: christmas-procreate-tutorial
 description: Follow this Christmas Procreate tutorial to build a printable holiday card with stamps, washi tape, chalk lettering, paper, and controlled sparkle.
 date: 2026-09-14
-modified: 2026-09-14
+modified: 2026-11-11
 category: Tutorials
 howto: true
 primary_keyword: Christmas Procreate tutorial
@@ -11,38 +11,38 @@ secondary_keywords: [Christmas card Procreate, holiday Procreate brushes, digita
 search_intent: Informational with commercial investigation
 target_audience: Procreate beginners, card makers, digital scrapbookers, illustrators, and artists creating seasonal graphics
 tags: [Christmas, Procreate tutorial, greeting cards, seasonal art, brushes]
-products: [christmas-brushes-bundle, glitter-brushes-sparkle-shine-30, free-chalkboard-artists-toolkit]
+products: [christmas-brushes-bundle, christmas-sweater-knit-pattern-brushes, christmas-tree-stamp-brushes, christmas-stamp-brushes-hand-drawn, glitter-brushes-sparkle-shine-30, free-chalkboard-artists-toolkit]
 related: [halloween-procreate-tutorial, how-to-install-procreate-brushes, best-procreate-brushes-for-beginners]
 ---
 
-A holiday card becomes easier to revise when the paper, decorations, message, and sparkle live on separate layers. This Christmas Procreate tutorial builds a simple card composition with the current [Christmas Procreate Brushes Bundle](/products/christmas-brushes-bundle/), then shows how to keep the design printable and readable.
+A holiday card becomes easier to revise when the paper, decorations, message, and sparkle live on separate layers. This Christmas Procreate tutorial builds a simple card composition with the [Christmas Procreate Brushes Bundle](/products/christmas-brushes-bundle/) and companion packs from the [Christmas Procreate collection](/season/christmas/), then shows how to keep the design printable and readable.
 
-The product catalogue lists 173 Christmas stamps and brushes, 44 hand-drawn washi tape brushes, five glitter papers, two photo frames, four Christmas photo frames in PNG and AI format, five chalkboards, and an installation guide. Confirm current included files on the product page before starting.
+The bundle catalogue lists 173 Christmas stamps and brushes, 44 hand-drawn washi tape brushes, five glitter papers, two photo frames, four Christmas photo frames in PNG and AI format, five chalkboards, and an installation guide. You can also work with standalone seasonal packs: [62 Christmas Sweater Knit Pattern Brushes](/products/christmas-sweater-knit-pattern-brushes/), [25 Christmas Tree Stamp Brushes](/products/christmas-tree-stamp-brushes/), and [100 Hand-Drawn Christmas Stamp Brushes](/products/christmas-stamp-brushes-hand-drawn/). Confirm current included files on each product page before starting.
 
 ## What you need
 
 - Procreate on iPad and an Apple Pencil if you want pressure-sensitive marks.
-- A card size that matches your printer or delivery format.
-- The Christmas bundle, or any comparable stamps, paper, and lettering tools.
+- A card size that matches your printer or delivery format (use the free [Procreate Greeting Card & Print Bleed Calculator](/tools/card-print-calculator/) to calculate exact 300 DPI trim and bleed pixels).
+- The Christmas bundle, one of the standalone Christmas stamp or knit pattern sets, or any comparable stamps, paper, and lettering tools.
 - Optional sparkle brushes and the free [Chalkboard Artist’s Toolkit](/products/free-chalkboard-artists-toolkit/).
 
 If you need help with the download, follow the [Procreate brush installation guide](/blog/how-to-install-procreate-brushes/) first.
 
 ## Step 1: Create a card canvas
 
-Create a portrait or landscape document based on the final card. As a suggested starting point, a 3:4 canvas such as 1,800 × 2,400 pixels at 300 DPI can work for a small print study, but use the printer’s exact size, bleed, and colour requirements when available.
+Create a portrait or landscape document based on the final card. As a suggested starting point, a 5×7 inch card at 300 DPI is 1,500 × 2,100 pixels at trim (or 1,575 × 2,175 pixels with 0.125 inch bleed per edge in the [Card & Print Bleed Calculator](/tools/card-print-calculator/)), and a 3:4 canvas such as 1,800 × 2,400 pixels at 300 DPI also works for a print study—always use your printer’s exact size, bleed, and colour requirements when available.
 
 Set up layers named **Paper**, **Decor**, **Washi**, **Lettering**, and **Sparkle**. Add a **Guide** layer if you need margins or a centre line; hide it before export.
 
 ## Step 2: Choose a quiet background
 
-Use a cream, muted red, deep green, or chalkboard surface. If the bundle’s paper or chalkboard files suit the format, place one on the Paper layer and keep it at full size. Leave enough contrast for the greeting to remain readable.
+Use a cream, muted red, deep green, or chalkboard surface, or paint a subtle Nordic jumper backdrop using the [62 Christmas Sweater Knit Pattern Brushes](/products/christmas-sweater-knit-pattern-brushes/). If the bundle’s paper or chalkboard files suit the format, place one on the Paper layer and keep it at full size. Leave enough contrast for the greeting to remain readable.
 
 Do not add glitter before checking the background value. Sparkle cannot rescue a message that disappears into the paper.
 
 ## Step 3: Build the main decoration
 
-On the Decor layer, place a wreath, tree, bauble group, floral motif, or another central shape from the bundle. Use a new layer for each major stamp while experimenting. Transform, rotate, and recolour the elements to create a composition rather than a single untouched stamp.
+On the Decor layer, place a wreath, tree, bauble group, floral motif, or another central shape from the bundle—or stamp silhouettes from the [25 Christmas Tree Stamp Brushes](/products/christmas-tree-stamp-brushes/) or loose icons from the [100 Hand-Drawn Christmas Stamp Brushes](/products/christmas-stamp-brushes-hand-drawn/). Use a new layer for each major stamp while experimenting. Transform, rotate, and recolour the elements to create a composition rather than a single untouched stamp.
 
 Leave a clear area for the greeting. View the card at the size it will be printed or shared, not only zoomed in on the iPad.
 

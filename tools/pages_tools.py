@@ -30,7 +30,18 @@ TOOL_DEFS = [
         "eyebrow": "Free tool · Procreate",
         "h1": "Procreate Canvas Size & DPI Calculator",
         "lead": "Convert canvas dimensions between pixels and print sizes, estimate uncompressed layer size, and compare illustrative layer budgets. Check actual canvas and layer limits in Procreate on your device.",
-    }
+    },
+    {
+        "slug": "card-print-calculator",
+        "nav": "Card & Print Bleed Calculator",
+        "title": "Procreate Greeting Card & Print Bleed Calculator",
+        "short": "Calculate exact Procreate pixel dimensions with print bleed and safe margins for 5×7 holiday cards, A2/A6 cards, gift tags and KDP interiors.",
+        "seo_title": "Procreate Greeting Card & Print Bleed Calculator (300 DPI) | DigiKitPro",
+        "seo_desc": "Calculate Procreate pixel dimensions with bleed and safe text margins for 5×7 Christmas cards, A2/A6 greeting cards, gift tags, prints and KDP interiors at 300 DPI.",
+        "eyebrow": "Free tool · Print & Cards",
+        "h1": "Procreate Greeting Card & Print Bleed Calculator",
+        "lead": "Calculate exact pixel dimensions to enter in Procreate—including print bleed and safe lettering margins—for 5×7 Christmas cards, A2/A6 greeting cards, gift tags, wall prints and KDP interiors. Always confirm final bleed and DPI specs with your print shop.",
+    },
 ]
 
 # ── schemas ───────────────────────────────────────────────────────────────
@@ -298,7 +309,8 @@ def build_canvas_calculator():
           <p class="eyebrow">Related</p>
           <h3>Learn canvas & DPI</h3>
           <ul class="aside-links">
-            <li><a href="../../blog/procreate-canvas-size-dpi-guide/">Procreate Canvas Size & DPI Guide</a></li>
+            <li><a href="../card-print-calculator/">Greeting Card &amp; Print Bleed Calculator</a></li>
+            <li><a href="../../blog/procreate-canvas-size-dpi-guide/">Procreate Canvas Size &amp; DPI Guide</a></li>
             <li><a href="../../blog/how-to-install-procreate-brushes/">How to Install Procreate Brushes</a></li>
             <li><a href="../../blog/best-procreate-brushes-for-beginners/">Best Brushes for Beginners</a></li>
           </ul>
@@ -472,9 +484,422 @@ def build_canvas_calculator():
     write(f"{TOOLS_DIR}/{TOOL_DEFS[0]['slug']}/index.html", html_out)
     print(f"Built tool: /{TOOLS_DIR}/{TOOL_DEFS[0]['slug']}/ (WebApplication + HowTo + FAQ)")
 
+
+def _card_print_schemas():
+    td = TOOL_DEFS[1]
+    webapp = {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": td["title"],
+        "description": td["seo_desc"],
+        "url": absurl(f"{TOOLS_DIR}/{td['slug']}/"),
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "iOS, iPadOS, Web",
+        "isAccessibleForFree": True,
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+        "featureList": [
+            "Calculate Procreate canvas pixels with print bleed (0.125 in, 3 mm, 0.25 in)",
+            "Calculate trimmed card/print pixel dimensions at 300 DPI",
+            "Calculate safe lettering margin inset in pixels",
+            "Presets for 5x7 A7 card, A2 card, 4x6 postcard, 5.25x5.25 square card, A6, A5, gift tag and 6x9 KDP trim",
+            "Estimate uncompressed 8-bit RGBA pixel data per layer"
+        ],
+        "publisher": {"@id": SITE_URL + "/#org"},
+        "author": {"@id": SITE_URL + "/#org"},
+        "inLanguage": "en",
+    }
+    howto_steps = [
+        ("Pick a card or print preset", "Choose 5×7 Holiday Card (A7), A2 Folded Card, 4×6 Postcard, Gift Tag, or enter your own trim width and height in inches or millimeters."),
+        ("Choose your print bleed and safe margin", "Select the bleed required by your printer (0.125 in or 3 mm per edge is a common starting point) and a safe inset margin for lettering."),
+        ("Create your Procreate canvas using the Bleed Canvas pixels", "Open Procreate, tap the + icon to create a custom canvas, and enter the Bleed Canvas width and height in pixels at your chosen DPI."),
+        ("Keep greetings and borders inside the safe zone", "Extend background patterns (like knit textures or paper) all the way to the bleed edge, and keep lettering and key stamps inside the safe margin."),
+    ]
+    howto = {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": f"How to use the {td['title']}",
+        "description": "Set up a print-ready Procreate greeting card or art print canvas with bleed and safe margins in four steps.",
+        "step": [
+            {"@type": "HowToStep", "position": i + 1, "name": name, "text": text}
+            for i, (name, text) in enumerate(howto_steps)
+        ],
+    }
+    faqs = [
+        ("What pixel size is a 5×7 greeting card in Procreate at 300 DPI?",
+         "At 300 DPI, a 5×7 inch card is 1500×2100 pixels at trim size. With a standard 0.125 inch bleed on all four edges (5.25×7.25 inches total), set your Procreate canvas to 1575×2175 pixels at 300 DPI. Confirm your print shop's exact bleed specification before printing."),
+        ("How much bleed should I add to a Christmas card in Procreate?",
+         "Many US printers ask for 0.125 inches (1/8 inch) of bleed on each side, which adds 0.25 inches to both width and height (75 pixels total per dimension at 300 DPI). Many European and ISO printers ask for 3 mm of bleed on each side (6 mm total). Always check your printer's template."),
+        ("What is the difference between trim size, bleed area and safe zone?",
+         "Trim size is the final cut size of the card. The bleed area extends past the trim line so background art or seamless knit patterns reach the edge without white slivers after cutting. The safe zone sits inside the trim line so lettering, names and border frames are not accidentally clipped."),
+        ("What size is an A2 or A6 greeting card in pixels at 300 DPI?",
+         "A US A2 card (4.25×5.5 inches) is 1275×1650 pixels at trim, or 1350×1725 pixels with 0.125 inch bleed per side. An international A6 card (105×148 mm) is 1240×1748 pixels at trim, or 1311×1819 pixels with 3 mm bleed per side at 300 DPI."),
+        ("Which Procreate brushes work well for printable holiday cards and gift tags?",
+         "Stamp brushes, seamless knit pattern brushes and washi tape brushes let you test card layouts on separate layers and recolour motifs cleanly. See the Christmas Procreate Brushes Bundle, 62 Christmas Sweater Knit Pattern Brushes, 25 Christmas Tree Stamp Brushes and 100 Hand-Drawn Christmas Stamp Brushes."),
+    ]
+    faq_schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
+            for q, a in faqs
+        ],
+    }
+    return [webapp, howto, faq_schema], faqs, howto_steps
+
+
+def build_card_print_calculator():
+    depth = 2
+    td = TOOL_DEFS[1]
+    schemas_list, faqs, howto_steps = _card_print_schemas()
+    breadcrumb = schema_breadcrumb([
+        ("Home", "/"),
+        ("Tools", f"/{TOOLS_DIR}/"),
+        (td["title"], f"/{TOOLS_DIR}/{td['slug']}/"),
+    ])
+    all_schemas = breadcrumb + schemas_list
+
+    faq_html = "".join(
+        f'<details class="faq-item"><summary>{esc(q)}</summary><div class="faq-body"><p>{esc(a)}</p></div></details>'
+        for q, a in faqs
+    )
+    howto_html = "".join(
+        f"<li><strong>{esc(name)}:</strong> {esc(text)}</li>"
+        for name, text in howto_steps
+    )
+
+    # Pull verified seasonal + print-oriented products from the live catalog
+    rec_slugs = [
+        "christmas-brushes-bundle",
+        "christmas-sweater-knit-pattern-brushes",
+        "christmas-tree-stamp-brushes",
+        "christmas-stamp-brushes-hand-drawn",
+    ]
+    rec_products = [BY_SLUG[s] for s in rec_slugs if s in BY_SLUG]
+    rec_grid = product_grid(rec_products, depth)
+
+    html_out = head(
+        td["seo_title"],
+        td["seo_desc"],
+        absurl(f"{TOOLS_DIR}/{td['slug']}/"),
+        depth,
+        schemas=all_schemas,
+        ctx=page_ctx("tool", slug=td["slug"], name=td["title"]),
+    )
+    html_out += header(depth, active="tools.html")
+    html_out += f"""
+<main id="main">
+  <section class="page-head"><div class="wrap">
+    {crumbs(depth, [("Tools", f"{TOOLS_DIR}/"), (td["title"], f"{TOOLS_DIR}/{td['slug']}/")])}
+    <p class="eyebrow">{esc(td['eyebrow'])}</p>
+    <h1>{esc(td['h1'])}</h1>
+    <p class="lead">{esc(td['lead'])}</p>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="tool-layout">
+      <div class="tool-calc">
+        <div class="calc-card">
+          <h2>Card &amp; Print Bleed Calculator</h2>
+          <div class="calc-presets">
+            <p class="calc-label">Common Card &amp; Print Presets (300 DPI)</p>
+            <div class="preset-row">
+              <button type="button" class="preset-btn" data-preset="a7-5x7">5×7 in Holiday Card (A7)</button>
+              <button type="button" class="preset-btn" data-preset="a2-card">4.25×5.5 in Note Card (A2)</button>
+              <button type="button" class="preset-btn" data-preset="postcard-4x6">4×6 in Postcard</button>
+              <button type="button" class="preset-btn" data-preset="sq-525">5.25×5.25 in Square Card</button>
+              <button type="button" class="preset-btn" data-preset="gift-tag">2×3.5 in Gift Tag</button>
+              <button type="button" class="preset-btn" data-preset="a6-iso">A6 Card (105×148 mm)</button>
+              <button type="button" class="preset-btn" data-preset="a5-iso">A5 Card (148×210 mm)</button>
+              <button type="button" class="preset-btn" data-preset="print-8x10">8×10 in Art Print</button>
+              <button type="button" class="preset-btn" data-preset="kdp-6x9">6×9 in KDP Interior</button>
+            </div>
+          </div>
+
+          <div class="calc-grid">
+            <label class="calc-field">
+              <span>Trim Width (finished cut size)</span>
+              <input type="number" id="cp-w" value="5" min="0.1" step="any" inputmode="decimal">
+            </label>
+            <label class="calc-field">
+              <span>Trim Height (finished cut size)</span>
+              <input type="number" id="cp-h" value="7" min="0.1" step="any" inputmode="decimal">
+            </label>
+            <label class="calc-field">
+              <span>Unit</span>
+              <select id="cp-unit">
+                <option value="in" selected>Inches (in)</option>
+                <option value="mm">Millimeters (mm)</option>
+                <option value="cm">Centimeters (cm)</option>
+              </select>
+            </label>
+            <label class="calc-field">
+              <span>Print DPI</span>
+              <input type="number" id="cp-dpi" value="300" min="72" max="1200" step="1" inputmode="numeric">
+            </label>
+            <label class="calc-field">
+              <span>Bleed per edge (added to all 4 sides)</span>
+              <select id="cp-bleed">
+                <option value="0.125-in" selected>0.125 in (1/8&quot; US standard)</option>
+                <option value="3-mm">3 mm (ISO / Europe standard)</option>
+                <option value="0.25-in">0.25 in (1/4&quot; wide bleed)</option>
+                <option value="0-in">No bleed (0)</option>
+              </select>
+            </label>
+            <label class="calc-field">
+              <span>Safe margin inset (keep text inside)</span>
+              <select id="cp-safe">
+                <option value="0.25-in" selected>0.25 in (1/4&quot; from trim edge)</option>
+                <option value="5-mm">5 mm from trim edge</option>
+                <option value="0.375-in">0.375 in (3/8&quot; for KDP / thick borders)</option>
+              </select>
+            </label>
+          </div>
+
+          <p class="muted">Enter the finished cut size of your card or print. The calculator adds your chosen bleed to all four edges so you know the exact pixel canvas to create in Procreate.</p>
+
+          <div class="calc-outputs">
+            <div class="out-card layer-card--highlight">
+              <p class="out-label">1. Procreate Canvas (with Bleed)</p>
+              <p class="out-value" id="cp-out-bleed-px">1,575 × 2,175 px</p>
+              <p class="out-sub" id="cp-out-bleed-phys">5.25 × 7.25 in · +38 px bleed/side</p>
+            </div>
+            <div class="out-card">
+              <p class="out-label">2. Finished Trim Size</p>
+              <p class="out-value" id="cp-out-trim-px">1,500 × 2,100 px</p>
+              <p class="out-sub" id="cp-out-trim-phys">5.00 × 7.00 in (127.0 × 177.8 mm)</p>
+            </div>
+            <div class="out-card">
+              <p class="out-label">3. Safe Lettering Zone</p>
+              <p class="out-value" id="cp-out-safe-px">1,350 × 1,950 px</p>
+              <p class="out-sub" id="cp-out-safe-inset">Keep text 113 px inside canvas edge</p>
+            </div>
+          </div>
+
+          <div class="calc-layers">
+            <h3>Layer &amp; Print Checklist for Procreate</h3>
+            <p class="muted" style="margin-top:-0.5rem">Estimated uncompressed 8-bit RGBA layer size for this canvas: <strong id="cp-out-mib">13.1 MiB per layer</strong>. Check actual layer limits in Procreate on your iPad.</p>
+            <div class="layer-grid">
+              <div class="layer-card">
+                <p class="layer-ram">Background &amp; Knit Fills</p>
+                <p class="muted">Extend paper textures and seamless knit patterns all the way to the outer <strong>Bleed Canvas</strong> edge.</p>
+              </div>
+              <div class="layer-card">
+                <p class="layer-ram">Stamps &amp; Focal Art</p>
+                <p class="muted">Place trees, ornaments, wreaths and portrait art on separate layers so you can recolour and resize freely.</p>
+              </div>
+              <div class="layer-card">
+                <p class="layer-ram">Greeting &amp; Borders</p>
+                <p class="muted">Keep hand lettering, names and border frames inside the <strong>Safe Lettering Zone</strong> so nothing is clipped.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="tool-aside">
+        <div class="aside-card">
+          <p class="eyebrow">Quick guide</p>
+          <h3>How to set up your card</h3>
+          <ol class="aside-steps">
+            {howto_html}
+          </ol>
+        </div>
+        <div class="aside-card">
+          <p class="eyebrow">Card-making tutorials &amp; tools</p>
+          <h3>Design your holiday card</h3>
+          <ul class="aside-links">
+            <li><a href="../../blog/christmas-procreate-tutorial/">Christmas Card Tutorial in Procreate</a></li>
+            <li><a href="../../season/christmas/">Christmas Procreate Brushes Hub</a></li>
+            <li><a href="../canvas-calculator/">General Canvas Size &amp; DPI Calculator</a></li>
+            <li><a href="../../products/kdp-templates-bundle-100/">100+ Editable KDP Canva Templates ($5)</a></li>
+          </ul>
+        </div>
+        <div class="aside-card">
+          <p class="eyebrow">Free Chalkboard Toolkit</p>
+          <h3>Hand-letter your greeting</h3>
+          <p class="muted">Start with the free Chalkboard Artist’s Toolkit for festive chalk lettering and borders.</p>
+          <a class="btn btn-line btn-sm" href="../../products/free-chalkboard-artists-toolkit/">Get Free Chalk Toolkit</a>
+        </div>
+      </aside>
+    </div>
+  </div></section>
+
+  <section class="section section-alt"><div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Made for holiday cards, tags &amp; prints</p>
+        <h2>Procreate Brushes for Greeting Cards &amp; Seasonal Prints</h2>
+        <p class="muted">Stamp festive trees, paint seamless Christmas sweater knit backgrounds, or layer hand-drawn holiday icons and washi tapes on your print-ready canvas.</p>
+      </div>
+      <a class="text-link" href="../../season/christmas/">View Christmas collection →</a>
+    </div>
+    {rec_grid}
+  </div></section>
+
+  <section class="section"><div class="wrap narrow prose">
+    <h2>Standard Greeting Card &amp; Print Sizes at 300 DPI</h2>
+    <p>When designing greeting cards, postcards or KDP interiors in Procreate, setting your pixel dimensions at <strong>300 DPI with bleed</strong> before your first brush stroke prevents blurry upscaling later. Below are common starting dimensions—always verify the exact template from your print shop.</p>
+    <ul>
+      <li><strong>5×7 in Greeting Card (A7):</strong> 1500×2100 px trim · <strong>1575×2175 px</strong> with 0.125 in bleed per side.</li>
+      <li><strong>4.25×5.5 in Folded Note Card (A2):</strong> 1275×1650 px trim · <strong>1350×1725 px</strong> with 0.125 in bleed per side.</li>
+      <li><strong>4×6 in Postcard / Photo Card:</strong> 1200×1800 px trim · <strong>1275×1875 px</strong> with 0.125 in bleed per side.</li>
+      <li><strong>5.25×5.25 in Square Holiday Card:</strong> 1575×1575 px trim · <strong>1650×1650 px</strong> with 0.125 in bleed per side.</li>
+      <li><strong>A6 International Card (105×148 mm):</strong> 1240×1748 px trim · <strong>1311×1819 px</strong> with 3 mm bleed per side.</li>
+      <li><strong>A5 Greeting Card / Print (148×210 mm):</strong> 1748×2480 px trim · <strong>1819×2551 px</strong> with 3 mm bleed per side.</li>
+      <li><strong>2×3.5 in Holiday Gift Tag:</strong> 600×1050 px trim · <strong>675×1125 px</strong> with 0.125 in bleed per side.</li>
+      <li><strong>6×9 in KDP Interior Page:</strong> 1800×2700 px trim · <strong>1875×2775 px</strong> with 0.125 in bleed on outer edges.</li>
+    </ul>
+  </div></section>
+
+  <section class="section section-alt"><div class="wrap narrow">
+    <div class="sec-head"><div><p class="eyebrow">Straight answers</p><h2>Common questions</h2></div></div>
+    <div class="faq-list">{faq_html}</div>
+  </div></section>
+
+  {newsletter(depth, source="tool", lead="card-print-calculator", uid="tool-card-calc")}
+</main>
+
+<style>
+.tool-layout{{display:grid;grid-template-columns:1.2fr 0.8fr;gap:2rem;align-items:start}}
+@media(max-width:900px){{.tool-layout{{grid-template-columns:1fr}}}}
+.calc-card{{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem}}
+.calc-presets{{margin-bottom:1.25rem}}
+.calc-label{{font-weight:600;margin:0 0 0.5rem;display:block}}
+.preset-row{{display:flex;flex-wrap:wrap;gap:0.5rem}}
+.preset-btn{{border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;padding:0.45rem 0.75rem;border-radius:999px;font-size:0.85rem;cursor:pointer}}
+.preset-btn:hover{{border-color:#C9A86A}}
+.calc-grid{{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}}
+@media(max-width:600px){{.calc-grid{{grid-template-columns:1fr}}}}
+.calc-field{{display:flex;flex-direction:column;gap:0.35rem}}
+.calc-field span{{font-weight:600;font-size:0.9rem}}
+.calc-field input,.calc-field select{{padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:10px;font-size:1rem;background:var(--bg);color:var(--text);color-scheme:dark}}
+.calc-outputs{{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.25rem 0}}
+@media(max-width:700px){{.calc-outputs{{grid-template-columns:1fr}}}}
+.out-card{{background:var(--bg,#faf7f2);border-radius:12px;padding:1rem;border:1px solid var(--border,#eee)}}
+.out-label{{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;opacity:0.7;margin:0 0 0.25rem}}
+.out-value{{font-weight:700;font-size:1.15rem;margin:0}}
+.out-sub{{font-size:0.85rem;opacity:0.7;margin:0.25rem 0 0}}
+.calc-layers{{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border,#eee)}}
+.layer-grid{{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin:0.75rem 0}}
+@media(max-width:600px){{.layer-grid{{grid-template-columns:1fr}}}}
+.layer-card{{border:1px solid var(--border);border-radius:12px;padding:0.9rem;background:var(--surface-2)}}
+.layer-card--highlight{{border-color:#C9A86A;box-shadow:0 0 0 1px #C9A86A inset}}
+.layer-ram{{font-weight:700;margin:0 0 0.25rem}}
+.tool-aside{{display:flex;flex-direction:column;gap:1rem;position:sticky;top:1rem}}
+.aside-card{{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.25rem}}
+.aside-steps{{margin:0.5rem 0 0;padding-left:1.1rem}}
+.aside-steps li{{margin:0.4rem 0}}
+.aside-links{{list-style:none;padding:0;margin:0.5rem 0 0}}
+.aside-links li{{margin:0.35rem 0}}
+</style>
+
+<script>
+(function(){{
+  const $ = (id) => document.getElementById(id);
+  const wEl = $('cp-w'), hEl = $('cp-h'), unitEl = $('cp-unit'), dpiEl = $('cp-dpi');
+  const bleedEl = $('cp-bleed'), safeEl = $('cp-safe');
+  const outBleedPx = $('cp-out-bleed-px'), outBleedPhys = $('cp-out-bleed-phys');
+  const outTrimPx = $('cp-out-trim-px'), outTrimPhys = $('cp-out-trim-phys');
+  const outSafePx = $('cp-out-safe-px'), outSafeInset = $('cp-out-safe-inset');
+  const outMib = $('cp-out-mib');
+
+  const presets = {{
+    'a7-5x7': {{w:5, h:7, unit:'in', dpi:300, bleed:'0.125-in', safe:'0.25-in'}},
+    'a2-card': {{w:4.25, h:5.5, unit:'in', dpi:300, bleed:'0.125-in', safe:'0.25-in'}},
+    'postcard-4x6': {{w:4, h:6, unit:'in', dpi:300, bleed:'0.125-in', safe:'0.25-in'}},
+    'sq-525': {{w:5.25, h:5.25, unit:'in', dpi:300, bleed:'0.125-in', safe:'0.25-in'}},
+    'gift-tag': {{w:2, h:3.5, unit:'in', dpi:300, bleed:'0.125-in', safe:'0.25-in'}},
+    'a6-iso': {{w:105, h:148, unit:'mm', dpi:300, bleed:'3-mm', safe:'5-mm'}},
+    'a5-iso': {{w:148, h:210, unit:'mm', dpi:300, bleed:'3-mm', safe:'5-mm'}},
+    'print-8x10': {{w:8, h:10, unit:'in', dpi:300, bleed:'0.125-in', safe:'0.25-in'}},
+    'kdp-6x9': {{w:6, h:9, unit:'in', dpi:300, bleed:'0.125-in', safe:'0.375-in'}}
+  }};
+
+  function toInches(val, unit){{
+    val = parseFloat(val) || 0;
+    if(unit === 'in') return val;
+    if(unit === 'mm') return val / 25.4;
+    if(unit === 'cm') return val / 2.54;
+    return val;
+  }}
+
+  function parseSpecToInches(spec){{
+    const parts = String(spec || '0-in').split('-');
+    return toInches(parseFloat(parts[0]) || 0, parts[1] || 'in');
+  }}
+
+  function fmtInt(n){{
+    return Math.round(n).toLocaleString();
+  }}
+
+  function calc(){{
+    const w = Number(wEl.value), h = Number(hEl.value), dpi = Number(dpiEl.value);
+    const unit = unitEl.value;
+    if (![w, h, dpi].every(Number.isFinite) || w <= 0 || h <= 0 || dpi <= 0) {{
+      [outBleedPx, outBleedPhys, outTrimPx, outTrimPhys, outSafePx, outSafeInset, outMib].forEach(el => {{ if(el) el.textContent = '—'; }});
+      return;
+    }}
+    const trimWIn = toInches(w, unit);
+    const trimHIn = toInches(h, unit);
+    const bleedEdgeIn = parseSpecToInches(bleedEl.value);
+    const safeEdgeIn = parseSpecToInches(safeEl.value);
+
+    const bleedWIn = trimWIn + 2 * bleedEdgeIn;
+    const bleedHIn = trimHIn + 2 * bleedEdgeIn;
+    const safeWIn = Math.max(0.1, trimWIn - 2 * safeEdgeIn);
+    const safeHIn = Math.max(0.1, trimHIn - 2 * safeEdgeIn);
+
+    const trimPxW = Math.max(1, Math.round(trimWIn * dpi));
+    const trimPxH = Math.max(1, Math.round(trimHIn * dpi));
+    const bleedPxW = Math.max(1, Math.round(bleedWIn * dpi));
+    const bleedPxH = Math.max(1, Math.round(bleedHIn * dpi));
+    const safePxW = Math.max(1, Math.round(safeWIn * dpi));
+    const safePxH = Math.max(1, Math.round(safeHIn * dpi));
+
+    const bleedEdgePx = Math.round(bleedEdgeIn * dpi);
+    const totalInsetPx = Math.round((bleedEdgeIn + safeEdgeIn) * dpi);
+    const mib = (bleedPxW * bleedPxH * 4) / (1024 * 1024);
+
+    outBleedPx.textContent = `${{fmtInt(bleedPxW)}} × ${{fmtInt(bleedPxH)}} px`;
+    outBleedPhys.textContent = `${{bleedWIn.toFixed(2)}} × ${{bleedHIn.toFixed(2)}} in · +${{bleedEdgePx}} px bleed/side`;
+    outTrimPx.textContent = `${{fmtInt(trimPxW)}} × ${{fmtInt(trimPxH)}} px`;
+    outTrimPhys.textContent = `${{trimWIn.toFixed(2)}} × ${{trimHIn.toFixed(2)}} in (${{(trimWIn*25.4).toFixed(1)}} × ${{(trimHIn*25.4).toFixed(1)}} mm)`;
+    outSafePx.textContent = `${{fmtInt(safePxW)}} × ${{fmtInt(safePxH)}} px`;
+    outSafeInset.textContent = `Keep text ${{totalInsetPx}} px inside canvas edge`;
+    if (outMib) outMib.textContent = `${{mib.toFixed(1)}} MiB per layer`;
+  }}
+
+  document.querySelectorAll('.preset-btn').forEach(btn => {{
+    btn.addEventListener('click', () => {{
+      const p = presets[btn.dataset.preset];
+      if (!p) return;
+      wEl.value = p.w;
+      hEl.value = p.h;
+      unitEl.value = p.unit;
+      dpiEl.value = p.dpi;
+      bleedEl.value = p.bleed;
+      safeEl.value = p.safe;
+      calc();
+    }});
+  }});
+
+  [wEl, hEl, unitEl, dpiEl, bleedEl, safeEl].forEach(el => {{
+    el.addEventListener('input', calc);
+    el.addEventListener('change', calc);
+  }});
+  calc();
+}})();
+</script>
+
+{footer(depth)}"""
+    write(f"{TOOLS_DIR}/{td['slug']}/index.html", html_out)
+    print(f"Built tool: /{TOOLS_DIR}/{td['slug']}/ (WebApplication + HowTo + FAQ)")
+
+
 def build_tools():
     build_tools_index()
     build_canvas_calculator()
+    build_card_print_calculator()
     print(f"Built tools: index + {len(TOOL_DEFS)} tool(s) under /{TOOLS_DIR}/")
 
 if __name__ == "__main__":
