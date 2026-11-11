@@ -100,6 +100,7 @@ def build_seasons():
 
         other = [s for s in SEASON_DEFS if s["slug"] != slug]
         pills = "".join(f'<a class="trend-pill" href="../{o["slug"]}/">{esc(o["name"])} art</a>' for o in other)
+        pills += '<a class="trend-pill" href="../../tools/card-print-calculator/">Card &amp; Print Size Calculator</a>'
         pills += '<a class="trend-pill" href="../../bundles.html">All bundles</a>'
         pills += '<a class="trend-pill" href="../../freebies.html">Free brushes</a>'
         season_pills = f"""<div class="trend-pills-wrap" style="margin:2.5rem 0 0">

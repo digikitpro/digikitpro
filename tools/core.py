@@ -1692,7 +1692,7 @@ def install_steps(p=None):
             "Use Procreate on your iPad to follow along; the guide is a PDF, not a brush pack.",
         ]
         note = "Procreate's built-in brushes are enough to practise the lessons."
-    elif ".brushset" in hay or ".brush " in hay:
+    elif ".brushset" in hay or ".brush " in hay or "containing procreate brushes" in hay or "containing procreate stamp brushes" in hay:
         heading = "How to install it"
         steps = [
             "Complete your order on Payhip, then download the files to your iPad.",

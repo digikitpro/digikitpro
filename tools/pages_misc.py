@@ -129,8 +129,10 @@ def _catalog_row(p):
     slug = p["slug"]
     link = absurl(f"products/{slug}/")
     im = p.get("images") or {}
+    full_images = [url for url, _ in _fullsize_product_images(p)]
     image = im.get("main") or im.get("card") or ""
-    image_link = image if is_abs(image) else absurl(f"assets/products/{slug}/{image}")
+    image_link = full_images[0] if full_images else (image if is_abs(image) else absurl(f"assets/products/{slug}/{image}"))
+    extra_images = full_images[1:11]
     title = p["name"]
     desc = (p.get("seoDesc") or p.get("short") or p["name"]).strip()
     price = f"{p['price']:.2f} {p.get('currency', 'USD')}"
@@ -142,6 +144,8 @@ def _catalog_row(p):
         "description": desc,
         "link": link,
         "image_link": image_link,
+        "additional_image_link": ",".join(extra_images),
+        "_extra_images": extra_images,
         "availability": availability,
         "price": price,
         "brand": "DigiKitPro",
@@ -158,9 +162,9 @@ def _catalog_row(p):
 def build_pinterest_feed():
     """Pinterest product-catalog data source: one row per PAID product, the
     exact fields Pinterest's catalog/data-source ingestion documents (id,
-    title, description, link, image_link, availability, price, brand and
-    condition). Its optional Google category is omitted until each product
-    can be classified accurately. Free items are Rich-Pin-only (see
+    title, description, link, image_link, additional_image_link, availability,
+    price, brand and condition). Its optional Google category is omitted until
+    each product can be classified accurately. Free items are Rich-Pin-only (see
     _catalog_row docstring) so they are left out of this feed on purpose.
 
     Written as both CSV (data-source upload / spreadsheet review) and XML/RSS
@@ -171,8 +175,8 @@ def build_pinterest_feed():
     rows = [_catalog_row(p) for p in PRODUCTS if not p.get("free")]
 
     # ── CSV ────────────────────────────────────────────────────────────
-    cols = ["id", "title", "description", "link", "image_link", "availability",
-            "price", "brand", "condition", "product_type", "item_group_id"]
+    cols = ["id", "title", "description", "link", "image_link", "additional_image_link",
+            "availability", "price", "brand", "condition", "product_type", "item_group_id"]
 
     def _csv_cell(v):
         v = str(v).replace('"', '""')
@@ -186,12 +190,16 @@ def build_pinterest_feed():
     # ── XML / RSS 2.0 with g: namespace (Google Shopping / Pinterest catalog format) ──
     items = []
     for r in rows:
+        extra_xml = "".join(
+            f"\n    <g:additional_image_link>{esc(u)}</g:additional_image_link>"
+            for u in r.get("_extra_images", [])
+        )
         items.append(f"""  <item>
     <g:id>{esc(r['id'])}</g:id>
     <title>{esc(r['title'])}</title>
     <description>{esc(r['description'])}</description>
     <link>{esc(r['link'])}</link>
-    <g:image_link>{esc(r['image_link'])}</g:image_link>
+    <g:image_link>{esc(r['image_link'])}</g:image_link>{extra_xml}
     <g:availability>{esc(r['availability'])}</g:availability>
     <g:price>{esc(r['price'])}</g:price>
     <g:brand>{esc(r['brand'])}</g:brand>
