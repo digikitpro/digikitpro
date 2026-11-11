@@ -328,6 +328,14 @@ def build_thanks():
     depth = 0
     journeys = [BY_SLUG[slug] for slug in FREE_JOURNEYS if slug in BY_SLUG and BY_SLUG[slug].get("free")]
     sections = "\n".join(free_next_step(p, depth, delivery=True) for p in journeys)
+    starter_slugs = [
+        "portrait-skin-brushes-procreate",
+        "essential-line-art-sketch-kit",
+        "organic-watercolor-80-brushes",
+        "christmas-sweater-knit-pattern-brushes",
+    ]
+    starter_kits = [BY_SLUG[s] for s in starter_slugs if s in BY_SLUG]
+    starter_grid = product_grid(starter_kits, depth)
     html_out = head(
         "Your Free Resource & Next Steps | DigiKitPro",
         "Practice ideas for your free Procreate resource and optional companion brushes.",
@@ -345,10 +353,26 @@ def build_thanks():
     <p class="muted">No purchase is required. Payhip handles downloads and may ask for delivery details.</p>
   </div></section>
   <div class="wrap journey-list">{sections}</div>
+  <section class="section section-alt" aria-labelledby="thanks-starters-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Optional $5 specialist packs</p>
+          <h2 id="thanks-starters-title">Popular $5 Kits to Explore When You Are Ready</h2>
+          <p class="muted">Focused single-workflow Procreate packs for portrait skin, line art, organic watercolor and holiday patterns.</p>
+        </div>
+        <a class="text-link" href="products.html">Browse all kits →</a>
+      </div>
+      {starter_grid}
+    </div>
+  </section>
   <section class="section"><div class="wrap narrow">
-    <h2>Keep learning</h2>
+    <h2>Keep learning &amp; exploring</h2>
     <p><a href="freebies.html">See all free resources →</a></p>
+    <p><a href="tools/canvas-calculator/">Procreate Canvas Size &amp; Layer Calculator (Free Tool) →</a></p>
+    <p><a href="tools/card-print-calculator/">Procreate Greeting Card &amp; Print Bleed Calculator (Free Tool) →</a></p>
     <p><a href="blog/how-to-install-procreate-brushes/">How to install Procreate brushes →</a></p>
+    <p><a href="blog/how-to-create-realistic-skin-in-procreate/">How to paint realistic skin in Procreate →</a></p>
     <p><a href="blog/procreate-portrait-workflow/">The portrait workflow →</a></p>
   </div></section>
 </main>
@@ -434,6 +458,14 @@ def build_products():
 
 # ─────────────────────────── FREEBIES ───────────────────────────
 def build_freebies():
+    starter_slugs = [
+        "portrait-skin-brushes-procreate",
+        "essential-line-art-sketch-kit",
+        "organic-watercolor-80-brushes",
+        "christmas-sweater-knit-pattern-brushes",
+    ]
+    starter_kits = [BY_SLUG[s] for s in starter_slugs if s in BY_SLUG]
+    starter_grid = product_grid(starter_kits, 0)
     html_out = head("Free Procreate Brushes | DigiKitPro",
         "Explore free Procreate resources: 100 fine liner brushes, 20+ chalk brushes, a 1,200-swatch color vault and a portrait starter guide.",
         SITE_URL + "/freebies.html", 0, ctx=page_ctx("freebies"),
@@ -451,6 +483,51 @@ def build_freebies():
     <p>These free resources are here to help you practise, whether you choose a paid product or not. The guide is a PDF, the colour vault contains palettes, and the brush sets import into Procreate. Explore the <a href="products.html">full catalog</a> whenever you need a different tool.</p>
     <p>New here? Start with the <a href="products/free-fine-liner-brushes-100/">100-brush Fine Liner set</a>, then grab the <a href="products/free-color-vault-1200-swatches/">1,200-swatch Color Vault</a> so you never stall on color again.</p>
   </div></section>
+  <section class="section section-alt" aria-labelledby="freebies-starters-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Keep exploring · Optional $5 upgrades</p>
+          <h2 id="freebies-starters-title">Popular $5 Specialist Kits to Pair With Your Freebies</h2>
+          <p class="muted">Once you test the free files on your iPad, explore focused $5 Procreate sets for portrait skin, line art, organic watercolor and holiday patterns.</p>
+        </div>
+        <a class="text-link" href="products.html">View all 54 kits →</a>
+      </div>
+      {starter_grid}
+    </div>
+  </section>
+  <section class="section" aria-labelledby="freebies-learn-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Free calculators &amp; step-by-step tutorials</p>
+          <h2 id="freebies-learn-title">Practice With Free Tools &amp; Procreate Guides</h2>
+        </div>
+        <a class="text-link" href="blog.html">All tutorials →</a>
+      </div>
+      <div class="grid grid-3">
+        <article class="card"><div class="card-body">
+          <div class="card-top"><span class="card-cat">Free Web Utility</span></div>
+          <h3 class="card-title"><a href="tools/canvas-calculator/">Procreate Canvas Size &amp; Layer Calculator</a></h3>
+          <p class="card-desc">Convert inches or mm to pixels at 300 DPI and estimate layer memory before creating your canvas.</p>
+          <div class="card-foot"><span class="price price-free">Free Tool</span><div class="card-actions"><a class="btn btn-gold btn-sm" href="tools/canvas-calculator/">Open Calculator</a></div></div>
+        </div></article>
+        <article class="card"><div class="card-body">
+          <div class="card-top"><span class="card-cat">Free Web Utility</span></div>
+          <h3 class="card-title"><a href="tools/card-print-calculator/">Greeting Card &amp; Print Bleed Calculator</a></h3>
+          <p class="card-desc">Calculate exact 300 DPI Procreate dimensions with 0.125 in or 3 mm print bleed and safe lettering zones.</p>
+          <div class="card-foot"><span class="price price-free">Free Tool</span><div class="card-actions"><a class="btn btn-gold btn-sm" href="tools/card-print-calculator/">Open Calculator</a></div></div>
+        </div></article>
+        <article class="card"><div class="card-body">
+          <div class="card-top"><span class="card-cat">Step-by-Step Guide</span></div>
+          <h3 class="card-title"><a href="blog/how-to-install-procreate-brushes/">How to Install Procreate Brushes (.brushset &amp; ZIP)</a></h3>
+          <p class="card-desc">Follow the 4-step iPad Files walkthrough to unzip and import your free .brushset and .swatches downloads.</p>
+          <div class="card-foot"><span class="price price-free">Free Guide</span><div class="card-actions"><a class="btn btn-line btn-sm" href="blog/how-to-install-procreate-brushes/">Read Guide</a></div></div>
+        </div></article>
+      </div>
+      {trend_topics()}
+    </div>
+  </section>
 </main>
 """
     html_out += footer(0)
