@@ -80,6 +80,8 @@ gone, no generated page may reference them, and the hero must offer exactly
 the two storefront CTAs (Shop All Brushes / Try Free Brushes). The two
 homepage-IA checks were re-pinned on 2026-09-19 to the proof-first order —
 results → ebooks → popular → craft → bundles → master-library → free → articles → newsletter — a re-pin of the same two checks, so the count is unchanged.
+And re-pinned again on 2026-11-10 to insert `christmas` ahead of `popular`
+(owner brief: special Christmas section with festive colours, ornaments and inline SVG characters).
 + 2 from the 2026-09-19 ebooks CTA uncrop: the Starter Guide & Masterclass
 pills must never be clipped by their card's overflow:hidden, and they must
 keep a full measure on a 320px phone + 2 from that day's no-clip second pass:
@@ -500,8 +502,12 @@ def main() -> int:
     # as an honest placeholder, learning late, email last. Same conversion
     # spine as the live brief: see → believe → find → try → start → deepen
     # → trust → learn → stay.
+    # 2026-11-10: owner asked for a special section presenting the Christmas
+    # products ("using Christmas colours and ornaments, characters around"), so
+    # the IA gains the `christmas` section directly after the hero and before
+    # #popular. Everything else keeps its order; the close check is unchanged.
     ids = homepage_section_ids(home_html)
-    IA = ["popular", "results", "craft", "bundles", "master-library", "free", "ebooks", "articles", "home-faq", "newsletter"]
+    IA = ["christmas", "popular", "results", "craft", "bundles", "master-library", "free", "ebooks", "articles", "home-faq", "newsletter"]
     check("homepage section order matches the product-first brief",
           ids == IA, ", ".join(ids) or "no sections found")
     # Learning resources and FAQs follow the featured paid kits.

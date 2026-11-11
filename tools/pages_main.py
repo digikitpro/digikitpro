@@ -18,6 +18,7 @@ built by tools/pages_finder.py because it shared a module, not because it is
 finder logic — lives here now and is unchanged in behavior.
 """
 from core import *
+from pages_christmas import christmas_section
 
 def page_head(depth, eyebrow, title, lead, crumbs_items=None, lead_html=None):
     c = crumbs(depth, crumbs_items) if crumbs_items else ""
@@ -44,6 +45,9 @@ def build_home():
             f'loading="eager" fetchpriority="high" decoding="async">'
             f'<span class="hero-cap">Explore the {esc(hero_p["name"])}<b>View the kit →</b></span>'
             f'</a></div>')
+
+    # ── Christmas collection (special section, 2026-11-10 brief) ───────
+    xmas_html = christmas_section(byslug, 0)
 
     # ── Popular: the four leading kits, one per workflow ────────────────
     popular = [byslug[s] for s in (
@@ -220,6 +224,9 @@ def build_home():
       {hero_art}
     </div>
   </section>
+
+  <!-- CHRISTMAS COLLECTION: special festive showcase, right after the hero -->
+  {xmas_html}
 
   <!-- FEATURED PAID KITS: show the core offer first -->
   <section class="section" id="popular" aria-labelledby="pop-title">
