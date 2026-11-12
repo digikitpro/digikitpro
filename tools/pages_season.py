@@ -57,7 +57,7 @@ SEASON_DEFS = [
         "products_pack": ["christmas-brushes-bundle", "christmas-sweater-knit-pattern-brushes",
                           "christmas-tree-stamp-brushes", "christmas-stamp-brushes-hand-drawn"],
         "products_effects": ["glitter-brushes-sparkle-shine-30", "free-chalkboard-artists-toolkit"],
-        "guides": ["christmas-procreate-tutorial", "how-to-install-procreate-brushes", "best-procreate-brushes-for-beginners"],
+        "guides": ["christmas-procreate-tutorial", "procreate-sweater-knit-pattern-tutorial", "how-to-install-procreate-brushes", "best-procreate-brushes-for-beginners"],
         "ideas_title": "Ways to use the Christmas bundle",
         "ideas": [
             "Stamp Christmas decor and florals, then layer colors and resize the shapes for cards and tags.",
