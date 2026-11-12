@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    var h=location.hostname, p=location.pathname, s=location.search, ha=location.hash;
+    var g=atob('Z2l0aHViLmlv');
+    if(h.slice(-g.length)===g){
+      var np=p.replace(/^\/digikitpro/,'')||'/';
+      document.write('<meta name="robots" content="noindex,follow">');
+      location.replace('https://digikitpro.shop'+np+s+ha);
+      return;
+    }
+    var isShop=h==='digikitpro.shop'||h==='www.digikitpro.shop';
+    if(isShop){
+      if(location.protocol==='http:'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(h==='www.digikitpro.shop'){
+        location.replace('https://digikitpro.shop'+p+s+ha);
+        return;
+      }
+      if(p!=='/' && p.slice(-11)==='/index.html'){
+        location.replace('https://digikitpro.shop'+p.slice(0,-10)+s+ha);
+        return;
+      }
+    }
+  }catch(e){}
+})();
+</script>
+  <!-- Analytics respects DNT / GPC and the site's opt-out before loading. -->
+  <script>
+  (function(){
+    // Never pollute production analytics when a branch is viewed on a preview host.
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false, hash = (location.hash || '').toLowerCase();
+    try {
+      if (hash.indexOf('dkp-analytics=off') !== -1) localStorage.setItem('dkp_analytics_optout', '1');
+      else if (hash.indexOf('dkp-analytics=on') !== -1) localStorage.removeItem('dkp_analytics_optout');
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) { off = hash.indexOf('dkp-analytics=off') !== -1; }
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    var id = "G-5MFQFHNB6B";
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // Keep the page URL free of arbitrary query text, while retaining the
+    // basic, explicitly tagged campaign labels used for traffic attribution.
+    // This format check is not a substitute for using non-personal campaign names.
+    var cfg = {page_location: location.origin + location.pathname};
+    try {
+      var query = new URLSearchParams(location.search);
+      function campaignValue(key) {
+        var value = query.get(key) || '';
+        return /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(value) ? value : '';
+      }
+      var source = campaignValue('utm_source'), medium = campaignValue('utm_medium'), name = campaignValue('utm_campaign');
+      if (source && medium && name) {
+        cfg.campaign_source = source; cfg.campaign_medium = medium; cfg.campaign_name = name;
+        var content = campaignValue('utm_content'), campaignId = campaignValue('utm_id');
+        if (content) cfg.campaign_content = content;
+        if (campaignId) cfg.campaign_id = campaignId;
+      }
+    } catch (e) { /* attribution fields are optional */ }
+    window.gtag('config', id, cfg);
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+    document.head.appendChild(tag);
+  })();
+  </script>
+  <!-- Google Tag Manager — loaded under the same host + opt-out guard as GA. -->
+  <script>
+  (function(){
+    var canonicalHost = "digikitpro.shop";
+    var alternateHost = canonicalHost.indexOf('www.') === 0 ? canonicalHost.slice(4) : 'www.' + canonicalHost;
+    if (location.hostname !== canonicalHost && location.hostname !== alternateHost) return;
+    var off = false;
+    try {
+      off = localStorage.getItem('dkp_analytics_optout') === '1';
+    } catch (e) {}
+    if (off || navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+        window.doNotTrack === '1' || navigator.msDoNotTrack === '1') return;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+    var tag = document.createElement('script');
+    tag.async = true;
+    tag.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent("GTM-ND84XKW4");
+    document.head.appendChild(tag);
+  })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>How to Import &amp; Use Procreate Color Palettes (.swatches) | DigiKitPro</title>
+  <meta name="description" content="Learn how to unzip and import .swatches color palette files into Procreate on iPad, set a default palette, and pair palettes with watercolor and portrait brushes.">
+  <link rel="canonical" href="https://digikitpro.shop/blog/procreate-color-palettes-guide/">
+  <meta name="google-site-verification" content="1e87093669a800cb">
+  <meta name="msvalidate.01" content="52B8ABC07828BE6CE77B297D3F2E50A3">
+  <meta name="yandex-verification" content="48977a1d04865b21">
+  <meta name="p:domain_verify" content="990d08b5349bfcbb0171eab3d6f8f2d2"/>
+  <meta property="og:see_also" content="https://www.pinterest.com/DigiKitProStudio/">
+  <meta name="pinterest-rich-pin" content="true">
+  <meta name="theme-color" content="#0A0A0C">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="DigiKitPro">
+  <meta property="og:title" content="How to Import &amp; Use Procreate Color Palettes (.swatches) | DigiKitPro">
+  <meta property="og:description" content="Learn how to unzip and import .swatches color palette files into Procreate on iPad, set a default palette, and pair palettes with watercolor and portrait brushes.">
+  <meta property="og:url" content="https://digikitpro.shop/blog/procreate-color-palettes-guide/">
+  <meta property="og:image" content="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp">
+  <meta property="og:image:width" content="750">
+  <meta property="og:image:height" content="500">
+  <meta property="og:image:alt" content="How to Import &amp; Use Procreate Color Palettes (.swatches) | DigiKitPro">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Import &amp; Use Procreate Color Palettes (.swatches) | DigiKitPro">
+  <meta name="twitter:description" content="Learn how to unzip and import .swatches color palette files into Procreate on iPad, set a default palette, and pair palettes with watercolor and portrait brushes.">
+  <meta name="twitter:image" content="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp">
+  <meta name="twitter:image:alt" content="How to Import &amp; Use Procreate Color Palettes (.swatches) | DigiKitPro">
+  <meta name="geo.placename" content="DigiKitPro">
+  <meta name="content-language" content="en">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="../../assets/img/favicon-48.png">
+  <link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://payhip.com" crossorigin>
+  <link rel="dns-prefetch" href="https://pe56d.s3.amazonaws.com">
+  <link rel="dns-prefetch" href="https://translate.google.com">
+  <link rel="preload" href="../../assets/fonts/playfairdisplay-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/manrope-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/style.css?v=916b77ae6d9dbbaa521d8d33d698e4a1">
+  <noscript><style>.header-actions [data-search-open],.header-actions .lang-wrap,.header-actions [data-menu-toggle]{display:none}</style></noscript>
+  <link rel="alternate" type="application/rss+xml" title="DigiKitPro Blog RSS feed" href="../../feed.xml">
+ <script>window.DKP={store:'https://payhip.com/digikitpro',email:'',analytics:true,feedbackEndpoint:'',page:{"type": "article", "slug": "procreate-color-palettes-guide", "name": "How to Import, Organize & Use Color Palettes (.swatches) in Procreate"}};</script>
+  <script src="../../js/search-index.js" defer></script>
+  <script src="../../js/main.js?v=33a4a6e4ad79" defer></script>
+  <script src="../../js/motion.js?v=8cbcc28f8c25" defer></script>
+  <script src="../../js/analytics.js?v=610c164ea071" defer></script>
+  <script src="../../js/translate.js?v=8877305ddd24" defer></script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How to Import, Organize & Use Color Palettes (.swatches) in Procreate", "description": "Learn how to unzip and import .swatches color palette files into Procreate on iPad, set a default palette, and pair palettes with watercolor and portrait brushes.", "datePublished": "2026-11-11", "dateModified": "2026-11-11", "keywords": "how to import Procreate color palettes, Procreate swatches file install, how to add palettes to Procreate, free Procreate color palettes, Procreate Color Companion", "author": {"@type": "Organization", "name": "DigiKitPro", "url": "https://digikitpro.shop"}, "publisher": {"@id": "https://digikitpro.shop/#org"}, "mainEntityOfPage": "https://digikitpro.shop/blog/procreate-color-palettes-guide/", "inLanguage": "en", "url": "https://digikitpro.shop/blog/procreate-color-palettes-guide/", "image": ["https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp"]}</script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://digikitpro.shop/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://digikitpro.shop/blog.html"}, {"@type": "ListItem", "position": 3, "name": "How to Import, Organize & Use Color Palettes (.swatches) in Procreate", "item": "https://digikitpro.shop/blog/procreate-color-palettes-guide/"}]}</script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the difference between a .swatches file and a .brushset file?", "acceptedAnswer": {"@type": "Answer", "text": "A .swatches file contains Procreate color palettes (squares of color that appear in the Palettes tab of your Color panel). A .brushset file contains drawing, painting, or stamp brushes that appear in your Brushes library."}}, {"@type": "Question", "name": "Why won’t my downloaded palette ZIP import directly into Procreate?", "acceptedAnswer": {"@type": "Answer", "text": "When multiple .swatches files are bundled together, they are compressed inside a .zip archive. Tap the .zip file once in the iPad Files app to extract the folder first, then tap or drag the .swatches files inside into Procreate."}}, {"@type": "Question", "name": "Where do imported palettes show up in Procreate?", "acceptedAnswer": {"@type": "Answer", "text": "Open any canvas in Procreate, tap the circular Color icon in the top-right corner, and tap the Palettes tab at the bottom-right of the Color popover. Scroll to the top or bottom of the Cards list and tap Set as Default on the palette you want active."}}, {"@type": "Question", "name": "Can I download free Procreate color palettes to test .swatches import first?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The Free Color Vault on the DigiKitPro Free Brushes page includes 40 Procreate color palettes (1,200+ swatches total) in a 142KB ZIP download at no cost."}}, {"@type": "Question", "name": "Which paid pack includes both Procreate brushes and color palettes?", "acceptedAnswer": {"@type": "Answer", "text": "The 160 Procreate Brush & Palette Bundle ($5, 104MB ZIP) includes 160 pattern brushes alongside 12 color palettes, and the Sketchbook & Traditional Media Kit ($10, 653MB ZIP) includes 27 sketching brushes, 2 canvas files, and 13 color palettes."}}]}</script>
+ <script type="application/ld+json">{"@context": "https://schema.org", "@type": "HowTo", "name": "How to Import, Organize & Use Color Palettes (.swatches) in Procreate", "description": "Learn how to unzip and import .swatches color palette files into Procreate on iPad, set a default palette, and pair palettes with watercolor and portrait brushes.", "inLanguage": "en", "step": [{"@type": "HowToStep", "position": 1, "name": "Download and unzip the palette ZIP in the iPad Files app", "text": "Like brush packs, multi-palette collections are delivered inside a compressed `.zip` folder so you don't have to download 40 or 50 separate files one by one from your receipt: 1. Download your palette archive from Payhip (to practise for free right now, grab the 142KB Free Color Vault on our Free Brushes page). 2. Open the Files app on your iPad and go to your Downloads folder (under iCloud Drive or On My iPad). 3. Tap the `.zip` file once. iPadOS extracts a blue folder right beside the ZIP containing the individual `.swatches` files. If your download also includes `.brushset` files—such as the 160 Procreate Brush & Palette Bundle—keep that extracted folder open so you can import both the brushes and the palettes."}, {"@type": "HowToStep", "position": 2, "name": "Import .swatches files into Procreate (single tap or Split View drag-and-drop)", "text": "You can load `.swatches` files into Procreate in two ways: Single-file tap: Inside the extracted folder in the iPad Files app, tap any `.swatches` file once. It opens Procreate automatically and adds the palette to the Palettes tab of your Color panel. Batch drag-and-drop via Split View (fastest for 40–50 palettes): Open a canvas in Procreate, open the Color panel > Palettes tab, and bring the iPad Files app up beside Procreate in Split View or Slide Over. Tap Select in Files, choose several `.swatches` files at once, and drag the stack directly into Procreate’s Palettes list. Need to install `.brushset` files at the same time? Follow our companion guide on how to install Procreate brushes."}, {"@type": "HowToStep", "position": 3, "name": "Set a Default Palette and pin the floating Color Companion", "text": "Once imported, new palettes sometimes appear at the bottom or top of your Palettes list depending on your Procreate version: 1. Open the Color circle in the top-right corner of Procreate and tap the Palettes tab at the bottom of the popover. 2. Tap Cards (for visual 30-swatch grids) or Compact (for seeing more palette titles at once), then press and drag any palette card to reorder your favorites to the top. 3. Tap the `•••` (three dots) menu beside the palette you are using for your current piece and choose Set as Default so it appears at the bottom of the Classic, Disc, Harmony, and Value color pickers. 4. Drag the small gray handle bar at the very top of the Color popover toward the center of your screen to detach it as a floating Color Companion window—keeping your 30 swatches visible on canvas while you paint."}, {"@type": "HowToStep", "position": 4, "name": "Apply the 60-30-10 rule so a 30-swatch palette stays cohesive", "text": "Having 30 swatches in a palette does not mean using all 30 colors equally in one drawing. To keep an illustration unified: 60% Dominant family (2–3 swatches): Your background wash, primary clothing mass, or overall ambient light tone. 30% Secondary family (2–3 swatches): Supporting mid-tones, skin planes, foliage, or shadow values. 10% Accent note (1–2 high-contrast swatches): Focal details such as eye catchlights, jewelry, floral centers, or warm rim light. Within each color family on a 30-swatch card, pick one light value, one mid-tone, and one shadow value so your forms read clearly even when you test the canvas in grayscale."}, {"@type": "HowToStep", "position": 5, "name": "Pair your palettes with portrait, watercolor, and pattern brushes", "text": "Curated color palettes shine brightest when paired with brushes that mix or layer pigment naturally: Watercolor & botanical washes: Pair earth, floral, and botanical palettes from the 50 Procreate Color Palettes Bundle or the Free Color Vault with the wash, liner, and blender tools in 80 Organic Watercolor Brushes ($5). Overlapping two translucent washes from the same palette creates natural third tones along the wet edge (see our realistic watercolor guide). Portraits & skin tones: Pair warm Undertone, Peach, Olive, and Deep Umber swatches with the 19 textured pore and blending brushes in Portrait Skin Brushes for Procreate ($5). Seamless pattern fills: Pair the 12 included palettes and 160 filled/transparent pattern brushes in the 160 Procreate Brush & Palette Bundle ($5) to block in patterned clothing, wallpaper, and stationery backgrounds. {{products}}"}]}</script>
+</head>
+<body>
+<noscript><div class="noscript-bar">JavaScript is off. Browse products and guides; search and filters need JavaScript.</div></noscript>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="wrap header-inner">
+    <a class="brand" href="../../" aria-label="DigiKitPro home">
+      <svg class="brand-mark" width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="15" stroke="#C9A86A" stroke-width="1.4"/><path d="M11 22.5V9.5h4.4c3.9 0 6.6 2.7 6.6 6.5s-2.7 6.5-6.6 6.5H11Zm2.5-2.2h1.8c2.6 0 4.1-1.8 4.1-4.3s-1.5-4.3-4.1-4.3h-1.8v8.6Z" fill="#C9A86A"/></svg>
+      <span class="brand-name">DigiKit<em>Pro</em></span>
+    </a>
+    <nav class="main-nav" aria-label="Primary"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html" class="active">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a></nav>
+    <div class="header-actions">
+      <div class="lang-wrap" data-lang-wrap>
+        <button class="icon-btn lang-btn" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false" aria-label="EN - Translate / choose language">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+          <span class="lang-cd">EN</span>
+        </button>
+        <div class="lang-menu" data-lang-menu hidden>
+          <p class="lang-title">Translate this page</p>
+          <button class="lang-opt" type="button" data-lang="en" data-lang-name="English">English<span class="lang-code">EN</span></button><button class="lang-opt" type="button" data-lang="es" data-lang-name="Español">Español<span class="lang-code">ES</span></button><button class="lang-opt" type="button" data-lang="fr" data-lang-name="Français">Français<span class="lang-code">FR</span></button><button class="lang-opt" type="button" data-lang="de" data-lang-name="Deutsch">Deutsch<span class="lang-code">DE</span></button><button class="lang-opt" type="button" data-lang="it" data-lang-name="Italiano">Italiano<span class="lang-code">IT</span></button><button class="lang-opt" type="button" data-lang="pt" data-lang-name="Português">Português<span class="lang-code">PT</span></button><button class="lang-opt" type="button" data-lang="nl" data-lang-name="Nederlands">Nederlands<span class="lang-code">NL</span></button>
+        </div>
+      </div>
+      <button class="icon-btn" type="button" data-search-open aria-label="Search products and articles">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <a class="icon-btn" href="https://www.instagram.com/digikitprostudio/" target="_blank" rel="noopener" aria-label="DigiKitPro on Instagram">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="btn btn-gold btn-sm" href="../../products.html" rel="noopener">Browse kits</a>
+      <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <noscript><details class="noscript-menu">
+        <summary class="icon-btn" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+        <nav class="mobile-nav" aria-label="Mobile navigation"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a><a class="btn btn-gold" href="../../products.html">Browse kits</a></nav>
+      </details></noscript>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-menu" aria-label="Mobile"><a href="../../freebies.html">Free Brushes</a><a href="../../products.html">Products</a><a href="../../bundles.html">Bundles</a><a href="../../blog.html">Articles</a><a href="../../tools/">Tools</a><a href="../../about.html">About</a><a class="btn btn-gold" href="../../products.html" rel="noopener">Browse kits</a></nav>
+  <div id="google_translate_element" class="gt-holder" aria-hidden="true"></div>
+</header>
+<div class="search-overlay" data-search-overlay hidden>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="Site search">
+    <div class="search-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" placeholder="Search brushes, kits, articles…" data-search-input aria-label="Search">
+      <button type="button" class="icon-btn" data-search-close aria-label="Close search">✕</button>
+    </div>
+    <div class="search-results" data-search-results></div>
+  </div>
+</div>
+
+<main id="main">
+  <article class="article wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../../">Home</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><a href="../../blog.html">Articles</a><svg class="crumb-ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">How to Import, Organize &amp; Use Color Palettes (.swatches) in Procreate</span></nav>
+    <header class="article-head">
+      <span class="art-cat">Guides</span>
+      <h1>How to Import, Organize &amp; Use Color Palettes (.swatches) in Procreate</h1>
+      <p class="article-meta">By the DigiKitPro studio · Published <time datetime="2026-11-11">2026-11-11</time></p>
+    </header>
+    <figure class="article-hero"><img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp" srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" sizes="(min-width: 860px) 760px, 94vw" width="1160" height="774" alt="How to Import, Organize &amp; Use Color Palettes (.swatches) in Procreate" fetchpriority="high" decoding="async"><figcaption>Artwork shown: Ultimate Procreate Color Vault: 1,200+ Swatches (Free)</figcaption></figure>
+    <div class="prose article-body"><p>Choosing harmonious colors from scratch on an empty color wheel is one of the fastest ways to stall before an illustration even starts. Procreate uses a dedicated <strong>`.swatches`</strong> file format that stores up to 30 curated color squares per palette card inside your Color panel.</p>
+<p>Importing a `.swatches` download on iPad takes less than a minute once you extract the ZIP archive in the <strong>iPad Files app</strong>—and you can undock the Palettes panel onto your canvas as a floating Color Companion while you paint.</p>
+<h2>Comparing DigiKitPro Procreate color palette resources</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Palette resource</th><th scope="col">Price</th><th scope="col">Listed contents &amp; format</th><th scope="col">Download size</th></tr></thead><tbody><tr><td><a href="../../products/free-color-vault-1200-swatches/">Free Color Vault (1,200+ Swatches)</a></td><td><strong>Free ($0)</strong></td><td>40 Procreate color palettes · 1,200+ swatches (`.swatches` only, no brushes)</td><td>142KB ZIP</td></tr><tr><td><a href="../../products/procreate-palettes-bundle-50/">50 Procreate Color Palettes Bundle</a></td><td><strong>$5.00</strong></td><td>50 Procreate color palettes · 30 swatches per palette (1,500 swatches, `.swatches` only)</td><td>282KB ZIP</td></tr><tr><td><a href="../../products/brush-palette-bundle-160/">160 Procreate Brush &amp; Palette Bundle</a></td><td><strong>$5.00</strong></td><td>160 pattern brushes (`.brushset`, filled &amp; transparent versions) + 12 color palettes</td><td>104MB ZIP</td></tr><tr><td><a href="../../products/sketchbook-traditional-media-kit/">Sketchbook &amp; Traditional Media Kit</a></td><td><strong>$10.00</strong></td><td>27 sketching brushes (`.brushset`) + 2 `.procreate` 300 DPI canvases + 13 color palettes (`.swatches`)</td><td>653MB ZIP</td></tr></tbody></table></div>
+<p>For official documentation on the Color panel and palettes, see the <a href="https://help.procreate.com/procreate/handbook/colors/colors-palettes" target="_blank" rel="noopener">Procreate Handbook: Colors and Palettes</a>.</p>
+<h2>Step 1: Download and unzip the palette ZIP in the iPad Files app</h2>
+<p>Like brush packs, multi-palette collections are delivered inside a compressed <strong>`.zip`</strong> folder so you don&#x27;t have to download 40 or 50 separate files one by one from your receipt:</p>
+<ol><li>Download your palette archive from Payhip (to practise for free right now, grab the 142KB <a href="../../products/free-color-vault-1200-swatches/">Free Color Vault</a> on our <a href="../../freebies.html">Free Brushes</a> page).</li><li>Open the <strong>Files</strong> app on your iPad and go to your <strong>Downloads</strong> folder (under iCloud Drive or On My iPad).</li><li>Tap the <strong>`.zip`</strong> file once. iPadOS extracts a blue folder right beside the ZIP containing the individual <strong>`.swatches`</strong> files.</li></ol>
+<p>If your download also includes `.brushset` files—such as the <a href="../../products/brush-palette-bundle-160/">160 Procreate Brush &amp; Palette Bundle</a>—keep that extracted folder open so you can import both the brushes and the palettes.</p>
+<h2>Step 2: Import .swatches files into Procreate (single tap or Split View drag-and-drop)</h2>
+<p>You can load `.swatches` files into Procreate in two ways:</p>
+<ul><li><strong>Single-file tap:</strong> Inside the extracted folder in the iPad Files app, tap any <strong>`.swatches`</strong> file once. It opens Procreate automatically and adds the palette to the <strong>Palettes</strong> tab of your Color panel.</li><li><strong>Batch drag-and-drop via Split View (fastest for 40–50 palettes):</strong> Open a canvas in Procreate, open the <strong>Color panel &gt; Palettes tab</strong>, and bring the <strong>iPad Files app</strong> up beside Procreate in <strong>Split View</strong> or <strong>Slide Over</strong>. Tap <strong>Select</strong> in Files, choose several `.swatches` files at once, and drag the stack directly into Procreate’s Palettes list.</li></ul>
+<p>Need to install `.brushset` files at the same time? Follow our companion guide on <a href="../../blog/how-to-install-procreate-brushes/">how to install Procreate brushes</a>.</p>
+<h2>Step 3: Set a Default Palette and pin the floating Color Companion</h2>
+<p>Once imported, new palettes sometimes appear at the bottom or top of your Palettes list depending on your Procreate version:</p>
+<ol><li>Open the <strong>Color</strong> circle in the top-right corner of Procreate and tap the <strong>Palettes</strong> tab at the bottom of the popover.</li><li>Tap <strong>Cards</strong> (for visual 30-swatch grids) or <strong>Compact</strong> (for seeing more palette titles at once), then press and drag any palette card to reorder your favorites to the top.</li><li>Tap the <strong>`•••` (three dots)</strong> menu beside the palette you are using for your current piece and choose <strong>Set as Default</strong> so it appears at the bottom of the Classic, Disc, Harmony, and Value color pickers.</li><li>Drag the small gray handle bar at the very top of the Color popover toward the center of your screen to detach it as a floating <strong>Color Companion</strong> window—keeping your 30 swatches visible on canvas while you paint.</li></ol>
+<h2>Step 4: Apply the 60-30-10 rule so a 30-swatch palette stays cohesive</h2>
+<p>Having 30 swatches in a palette does not mean using all 30 colors equally in one drawing. To keep an illustration unified:</p>
+<ul><li><strong>60% Dominant family (2–3 swatches):</strong> Your background wash, primary clothing mass, or overall ambient light tone.</li><li><strong>30% Secondary family (2–3 swatches):</strong> Supporting mid-tones, skin planes, foliage, or shadow values.</li><li><strong>10% Accent note (1–2 high-contrast swatches):</strong> Focal details such as eye catchlights, jewelry, floral centers, or warm rim light.</li></ul>
+<p>Within each color family on a 30-swatch card, pick one <strong>light value</strong>, one <strong>mid-tone</strong>, and one <strong>shadow value</strong> so your forms read clearly even when you test the canvas in grayscale.</p>
+<h2>Step 5: Pair your palettes with portrait, watercolor, and pattern brushes</h2>
+<p>Curated color palettes shine brightest when paired with brushes that mix or layer pigment naturally:</p>
+<ul><li><strong>Watercolor &amp; botanical washes:</strong> Pair earth, floral, and botanical palettes from the <a href="../../products/procreate-palettes-bundle-50/">50 Procreate Color Palettes Bundle</a> or the Free Color Vault with the wash, liner, and blender tools in <a href="../../products/organic-watercolor-80-brushes/">80 Organic Watercolor Brushes ($5)</a>. Overlapping two translucent washes from the same palette creates natural third tones along the wet edge (see our <a href="../../blog/how-to-create-realistic-watercolor-in-procreate/">realistic watercolor guide</a>).</li><li><strong>Portraits &amp; skin tones:</strong> Pair warm Undertone, Peach, Olive, and Deep Umber swatches with the 19 textured pore and blending brushes in <a href="../../products/portrait-skin-brushes-procreate/">Portrait Skin Brushes for Procreate ($5)</a>.</li><li><strong>Seamless pattern fills:</strong> Pair the 12 included palettes and 160 filled/transparent pattern brushes in the <a href="../../products/brush-palette-bundle-160/">160 Procreate Brush &amp; Palette Bundle ($5)</a> to block in patterned clothing, wallpaper, and stationery backgrounds.</li></ul>
+<aside class="article-products" aria-labelledby="ap-title">
+    <p class="eyebrow">Tools mentioned in this guide</p>
+    <h2 id="ap-title">Get the brushes</h2>
+    <div class="grid cards cards-sm">
+<article class="card" data-category="Other" data-name="ultimate procreate color vault: 1,200+ swatches (free)" data-tags="free color palettes swatches color vault" data-free="1" data-featured="1" data-tier="free" data-line="procreate" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">
+  <div class="card-img">
+  <a class="card-media media-3x2" href="../../products/free-color-vault-1200-swatches/" data-pin-description="Ultimate Procreate Color Vault: 1,200+ Swatches (Free) - 40 free Procreate palettes with 1,200+ listed swatches for digital art. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/free-color-vault-1200-swatches/" data-pin-media="https://digikitpro.shop/assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp">
+    <img src="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp" srcset="../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches-card.webp 750w, ../../assets/products/free-color-vault-1200-swatches/free-color-vault-1200-swatches.webp 1160w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Ultimate Procreate Color Vault: 1,200+ Swatches (Free): 40 free Procreate palettes with 1,200+ listed swatches for digital art." loading="lazy" decoding="async">
+  </a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Ffree-color-vault-1200-swatches%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-color-vault-1200-swatches%2Ffree-color-vault-1200-swatches-card.webp&amp;description=Ultimate+Procreate+Color+Vault%3A+1%2C200%2B+Swatches+%28Free%29+-+40+free+Procreate+palettes+with+1%2C200%2B+listed+swatches+for+digital+art.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Ultimate Procreate Color Vault: 1,200+ Swatches (Free) on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="card-body">
+    <div class="card-top">
+      <a class="card-cat" href="../../products.html#cat-Other">Other</a>
+      <span class="badge badge-free">Free</span>
+    </div>
+    <h3 class="card-title"><a href="../../products/free-color-vault-1200-swatches/">Ultimate Procreate Color Vault: 1,200+ Swatches (Free)</a></h3>
+    <p class="card-short">40 free Procreate palettes with 1,200+ listed swatches for digital art.</p>
+    <div class="card-foot">
+      <span class="price">Free</span>
+      <a class="btn btn-line btn-sm" href="../../products/free-color-vault-1200-swatches/" data-dkp-slug="free-color-vault-1200-swatches" data-dkp-name="Ultimate Procreate Color Vault: 1,200+ Swatches (Free)" data-dkp-price="0.00" data-dkp-tier="free" data-dkp-free="1" data-dkp-loc="card">Get Free</a>
+    </div>
+  </div>
+</article>
+<article class="card" data-category="Bundles" data-name="procreate brush &amp; color palette bundle: 160 brushes + 12 palettes" data-tags="pattern brushes color palettes swatches bundle stickers" data-free="0" data-featured="1" data-tier="bundle" data-line="procreate" data-dkp-slug="brush-palette-bundle-160" data-dkp-name="Procreate Brush &amp; Color Palette Bundle: 160 Brushes + 12 Palettes" data-dkp-price="5.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="card">
+  <div class="card-img">
+  <a class="card-media media-3x2" href="../../products/brush-palette-bundle-160/" data-pin-description="Procreate Brush &amp; Color Palette Bundle: 160 Brushes + 12 Palettes - 160 listed pattern brushes and 12 Procreate color palettes for illustration and surface design. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/brush-palette-bundle-160/" data-pin-media="https://digikitpro.shop/assets/products/brush-palette-bundle-160/brush-palette-bundle-160-card.webp">
+    <img src="../../assets/products/brush-palette-bundle-160/brush-palette-bundle-160-card.webp" srcset="../../assets/products/brush-palette-bundle-160/brush-palette-bundle-160-card.webp 750w, ../../assets/products/brush-palette-bundle-160/brush-palette-bundle-160.webp 1200w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Procreate Brush &amp; Color Palette Bundle: 160 Brushes + 12 Palettes: 160 listed pattern brushes and 12 Procreate color palettes for illustration and surface design." loading="lazy" decoding="async">
+  </a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fbrush-palette-bundle-160%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fbrush-palette-bundle-160%2Fbrush-palette-bundle-160-card.webp&amp;description=Procreate+Brush+%26+Color+Palette+Bundle%3A+160+Brushes+%2B+12+Palettes+-+160+listed+pattern+brushes+and+12+Procreate+color+palettes+for+illustration+and+surface+design.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Procreate Brush &amp; Color Palette Bundle: 160 Brushes + 12 Palettes on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="card-body">
+    <div class="card-top">
+      <a class="card-cat" href="../../bundles.html">Bundles</a>
+      <span class="badge">Bundle</span>
+    </div>
+    <h3 class="card-title"><a href="../../products/brush-palette-bundle-160/">Procreate Brush &amp; Color Palette Bundle: 160 Brushes + 12 Palettes</a></h3>
+    <p class="card-short">160 listed pattern brushes and 12 Procreate color palettes for illustration and surface design.</p>
+    <div class="card-foot">
+      <span class="price">$5.00</span>
+      <a class="btn btn-line btn-sm" href="../../products/brush-palette-bundle-160/" data-dkp-slug="brush-palette-bundle-160" data-dkp-name="Procreate Brush &amp; Color Palette Bundle: 160 Brushes + 12 Palettes" data-dkp-price="5.00" data-dkp-tier="bundle" data-dkp-free="0" data-dkp-loc="card">View Product</a>
+    </div>
+  </div>
+</article>
+<article class="card" data-category="Other" data-name="procreate palettes bundle: 50 sets × 30 swatches" data-tags="color palettes swatches color palettes bundle" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="procreate-palettes-bundle-50" data-dkp-name="Procreate Palettes Bundle: 50 Sets × 30 Swatches" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
+  <div class="card-img">
+  <a class="card-media media-3x2" href="../../products/procreate-palettes-bundle-50/" data-pin-description="Procreate Palettes Bundle: 50 Sets × 30 Swatches - 50 Procreate color palettes with 30 listed swatches per palette. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/procreate-palettes-bundle-50/" data-pin-media="https://digikitpro.shop/assets/products/procreate-palettes-bundle-50/procreate-palettes-bundle-50-card.webp">
+    <img src="../../assets/products/procreate-palettes-bundle-50/procreate-palettes-bundle-50-card.webp" srcset="../../assets/products/procreate-palettes-bundle-50/procreate-palettes-bundle-50-card.webp 750w, ../../assets/products/procreate-palettes-bundle-50/procreate-palettes-bundle-50.webp 1200w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="750" height="500" alt="Procreate Palettes Bundle: 50 Sets × 30 Swatches: 50 Procreate color palettes with 30 listed swatches per palette." loading="lazy" decoding="async">
+  </a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Fprocreate-palettes-bundle-50%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Fprocreate-palettes-bundle-50%2Fprocreate-palettes-bundle-50-card.webp&amp;description=Procreate+Palettes+Bundle%3A+50+Sets+%C3%97+30+Swatches+-+50+Procreate+color+palettes+with+30+listed+swatches+per+palette.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save Procreate Palettes Bundle: 50 Sets × 30 Swatches on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="card-body">
+    <div class="card-top">
+      <a class="card-cat" href="../../products.html#cat-Other">Other</a>
+
+    </div>
+    <h3 class="card-title"><a href="../../products/procreate-palettes-bundle-50/">Procreate Palettes Bundle: 50 Sets × 30 Swatches</a></h3>
+    <p class="card-short">50 Procreate color palettes with 30 listed swatches per palette.</p>
+    <div class="card-foot">
+      <span class="price">$5.00</span>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/CK2LX" target="_blank" rel="noopener" data-dkp-slug="procreate-palettes-bundle-50" data-dkp-name="Procreate Palettes Bundle: 50 Sets × 30 Swatches" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
+    </div>
+  </div>
+</article>
+<article class="card" data-category="Watercolor" data-name="80 organic brushes: watercolor studio kit for procreate" data-tags="watercolor organic washes bleed grain traditional" data-free="0" data-featured="0" data-tier="entry" data-line="procreate" data-dkp-slug="organic-watercolor-80-brushes" data-dkp-name="80 Organic Brushes: Watercolor Studio Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">
+  <div class="card-img">
+  <a class="card-media media-4x3" href="../../products/organic-watercolor-80-brushes/" data-pin-description="80 Organic Brushes: Watercolor Studio Kit for Procreate - 80 listed watercolor-style Procreate brushes for washes, texture, liners and blending. | DigiKitPro" data-pin-url="https://digikitpro.shop/products/organic-watercolor-80-brushes/" data-pin-media="https://digikitpro.shop/assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes-card.webp">
+    <img src="../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes-card.webp" srcset="../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes-card.webp 580w, ../../assets/products/organic-watercolor-80-brushes/organic-watercolor-80-brushes.webp 580w" sizes="(min-width: 1100px) 350px, (min-width: 680px) 31vw, 50vw" width="580" height="435" alt="80 Organic Brushes: Watercolor Studio Kit for Procreate: 80 listed watercolor-style Procreate brushes for washes, texture, liners and blending." loading="lazy" decoding="async">
+  </a>
+    <a class="pin-btn" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fproducts%2Forganic-watercolor-80-brushes%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Forganic-watercolor-80-brushes%2Forganic-watercolor-80-brushes-card.webp&amp;description=80+Organic+Brushes%3A+Watercolor+Studio+Kit+for+Procreate+-+80+listed+watercolor-style+Procreate+brushes+for+washes%2C+texture%2C+liners+and+blending.+%7C+DigiKitPro" target="_blank" rel="noopener" aria-label="Save 80 Organic Brushes: Watercolor Studio Kit for Procreate on Pinterest"><span aria-hidden="true">📌</span> Save</a>
+  </div>
+  <div class="card-body">
+    <div class="card-top">
+      <a class="card-cat" href="../../category/watercolor/">Watercolor</a>
+
+    </div>
+    <h3 class="card-title"><a href="../../products/organic-watercolor-80-brushes/">80 Organic Brushes: Watercolor Studio Kit for Procreate</a></h3>
+    <p class="card-short">80 listed watercolor-style Procreate brushes for washes, texture, liners and blending.</p>
+    <div class="card-foot">
+      <span class="price">$5.00</span>
+      <a class="btn btn-line btn-sm" href="https://payhip.com/b/PKVXa" target="_blank" rel="noopener" data-dkp-slug="organic-watercolor-80-brushes" data-dkp-name="80 Organic Brushes: Watercolor Studio Kit for Procreate" data-dkp-price="5.00" data-dkp-tier="entry" data-dkp-free="0" data-dkp-loc="card">Buy Now</a>
+    </div>
+  </div>
+</article>
+</div>
+    </aside>
+<h2>FAQ</h2>
+<h3>What is the difference between a .swatches file and a .brushset file?</h3>
+<p>A .swatches file contains Procreate color palettes (squares of color that appear in the Palettes tab of your Color panel). A .brushset file contains drawing, painting, or stamp brushes that appear in your Brushes library.</p>
+<h3>Why won’t my downloaded palette ZIP import directly into Procreate?</h3>
+<p>When multiple .swatches files are bundled together, they are compressed inside a .zip archive. Tap the .zip file once in the iPad Files app to extract the folder first, then tap or drag the .swatches files inside into Procreate.</p>
+<h3>Where do imported palettes show up in Procreate?</h3>
+<p>Open any canvas in Procreate, tap the circular Color icon in the top-right corner, and tap the Palettes tab at the bottom-right of the Color popover. Scroll to the top or bottom of the Cards list and tap Set as Default on the palette you want active.</p>
+<h3>Can I download free Procreate color palettes to test .swatches import first?</h3>
+<p>Yes. The Free Color Vault on the DigiKitPro Free Brushes page includes 40 Procreate color palettes (1,200+ swatches total) in a 142KB ZIP download at no cost.</p>
+<h3>Which paid pack includes both Procreate brushes and color palettes?</h3>
+<p>The 160 Procreate Brush &amp; Palette Bundle ($5, 104MB ZIP) includes 160 pattern brushes alongside 12 color palettes, and the Sketchbook &amp; Traditional Media Kit ($10, 653MB ZIP) includes 27 sketching brushes, 2 canvas files, and 13 color palettes.</p>
+<h2>Sources and update note</h2>
+<ul><li><a href="https://help.procreate.com/procreate/handbook/colors/colors-palettes" target="_blank" rel="noopener">Procreate Handbook: Colors and Palettes</a> — official reference for importing `.swatches` files, Default Palettes, and the floating Color Companion.</li><li>DigiKitPro product pages linked above — verified swatch counts, formats, and ZIP sizes.</li></ul></div>
+    <section class="psec share-sec" aria-label="Share">
+      <p class="share-heading">Save or share this guide</p>
+      <div class="share-row"><a class="share-btn share-pin" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fdigikitpro.shop%2Fblog%2Fprocreate-color-palettes-guide%2F&amp;media=https%3A%2F%2Fdigikitpro.shop%2Fassets%2Fproducts%2Ffree-color-vault-1200-swatches%2Ffree-color-vault-1200-swatches.webp&amp;description=Learn+how+to+unzip+and+import+.swatches+color+palette+files+into+Procreate+on+iPad%2C+set+a+default+palette%2C+and+pair+palettes+with+watercolor+and+portrait+brushes." target="_blank" rel="noopener" aria-label="Pin it on Pinterest"><span aria-hidden="true">📌</span> <span>Pin it</span></a><a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdigikitpro.shop%2Fblog%2Fprocreate-color-palettes-guide%2F" target="_blank" rel="noopener" aria-label="Share on Facebook">Facebook</a><a class="share-btn" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdigikitpro.shop%2Fblog%2Fprocreate-color-palettes-guide%2F&amp;text=How%20to%20Import%2C%20Organize%20%26%20Use%20Color%20Palettes%20%28.swatches%29%20in%20Procreate" target="_blank" rel="noopener" aria-label="Share on X">X</a><a class="share-btn" href="https://wa.me/?text=Learn%20how%20to%20unzip%20and%20import%20.swatches%20color%20palette%20files%20into%20Procreate%20on%20iPad%2C%20set%20a%20default%20palette%2C%20and%20pair%20palettes%20with%20watercolor%20and%20portrait%20brushes.%20https%3A%2F%2Fdigikitpro.shop%2Fblog%2Fprocreate-color-palettes-guide%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">WhatsApp</a></div>
+    </section>
+    <nav class="article-related" aria-label="Related articles"><p class="eyebrow">Keep reading</p><div class="rel-arts"><a class="text-link" href="../best-procreate-brushes-for-beginners/">Best Procreate Brushes for Beginners: A Simple Starter Kit</a><a class="text-link" href="../how-to-create-realistic-watercolor-in-procreate/">How to Create Realistic Watercolor in Procreate</a><a class="text-link" href="../how-to-install-procreate-brushes/">How to Install Procreate Brushes on iPad: .brushset Step by Step</a></div></nav>
+    <nav class="article-nav" aria-label="More articles"><a class="btn btn-line" href="../../blog.html">← All articles</a><a class="btn btn-gold" href="../../products.html">Browse brushes</a></nav>
+  </article>
+  <section class="newsletter" id="newsletter">
+  <div class="wrap"><div class="nl-card">
+    <p class="eyebrow">Free learning resource</p>
+    <h2>Start with a portrait, not a blank canvas</h2>
+    <p class="muted nl-sub">Follow the free Portrait Starter Guide at your own pace, or explore the free brushes and palettes. Downloads are handled by Payhip.</p>
+    <div class="resource-actions"><a class="btn btn-gold" href="../../products/procreate-starter-guide-free-ebook/">Explore the free guide</a>
+    <a class="btn btn-line" href="../../freebies.html">See all free resources</a></div>
+  </div></div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="foot-brand">
+      <a class="brand" href="../../"><span class="brand-name">DigiKit<em>Pro</em></span></a>
+      <p class="muted">Procreate brushes for iPad artists.</p>
+      <p class="foot-label">Store</p>
+      <div class="foot-links"><a href="https://payhip.com/digikitpro" target="_blank" rel="noopener">Payhip ↗</a></div>
+    </div>
+    <nav aria-label="Footer shop">
+      <p class="foot-label">Shop</p>
+      <div class="foot-links">
+        <a href="../../freebies.html">Free Brushes</a>
+        <a href="../../products.html">All Products</a>
+        <a href="../../bundles.html">Bundles</a>
+        <a href="../../season/halloween/">Halloween Art</a>
+        <a href="../../season/christmas/">Christmas Art</a>
+        <a href="../../category/portrait/">Portrait Brushes</a>
+        <a href="../../category/skin-texture/">Skin Texture</a>
+        <a href="../../category/line-art/">Line Art</a>
+        <a href="../../category/watercolor/">Watercolor</a>
+        <a href="../../category/anime/">Anime Brushes</a>
+      </div>
+    </nav>
+    <nav aria-label="Footer learn and buyer guides">
+      <p class="foot-label">Learn</p>
+      <div class="foot-links">
+        <a href="../../blog.html">Articles</a>
+        <a href="../../blog/best-procreate-brushes-for-portraits/">Best Portrait Brushes</a>
+        <a href="../../blog/how-to-create-realistic-skin-in-procreate/">Realistic Skin Guide</a>
+        <a href="../../about.html">About</a>
+      </div>
+      <p class="foot-label">Buyer Guides</p>
+      <div class="foot-links">
+        <a href="../../guides/procreate-starter-kits/">Starter Kits</a>
+        <a href="../../guides/procreate-pencil-brushes/">Pencil Brushes</a>
+        <a href="../../guides/procreate-texture-brushes/">Texture Brushes</a>
+        <a href="../../guides/procreate-animation-brushes/">Animation Brushes</a>
+        <a href="../../guides/procreate-bundles-compared/">Bundles Compared</a>
+      </div>
+    </nav>
+    <nav aria-label="Footer legal">
+      <p class="foot-label">Company</p>
+      <div class="foot-links">
+        <a href="../../faq.html">FAQ</a>
+        <a href="../../contact.html">Contact</a>
+        <a href="../../partner/">Partner Program</a>
+        <a href="../../refunds.html">Refund Policy</a>
+        <a href="../../privacy.html">Privacy Policy</a>
+        <a href="../../terms.html">Terms</a>
+      </div>
+      <p class="foot-label">Follow</p><div class="foot-links"><a href="https://www.pinterest.com/DigiKitProStudio/" target="_blank" rel="noopener">Pinterest</a><a href="https://www.instagram.com/digikitprostudio/" target="_blank" rel="noopener">Instagram</a></div>
+    </nav>
+  </div>
+  <div class="wrap foot-bottom">
+    <p>© 2026 DigiKitPro. Digital products sold via Payhip. Procreate is a trademark of Savage Interactive.</p>
+  </div>
+</footer>
+</body>
+</html>
