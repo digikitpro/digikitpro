@@ -224,9 +224,12 @@
               <button type="button" class="preset-btn" data-preset="ig-square">Instagram Square 1080×1080</button>
               <button type="button" class="preset-btn" data-preset="ig-portrait">Instagram Portrait 1080×1350</button>
               <button type="button" class="preset-btn" data-preset="ig-story">Instagram Story 1080×1920</button>
+              <button type="button" class="preset-btn" data-preset="pin">Pinterest Pin 1000×1500</button>
               <button type="button" class="preset-btn" data-preset="a4">A4 300 DPI (2480×3508)</button>
               <button type="button" class="preset-btn" data-preset="a3">A3 300 DPI (3508×4961)</button>
               <button type="button" class="preset-btn" data-preset="letter">Letter 300 DPI (2550×3300)</button>
+              <button type="button" class="preset-btn" data-preset="print-8x10">8×10 Print 300 DPI (2400×3000)</button>
+              <button type="button" class="preset-btn" data-preset="sticker-3x3">Sticker 3×3 in (900×900)</button>
               <button type="button" class="preset-btn" data-preset="4k">4K 3840×2160</button>
               <button type="button" class="preset-btn" data-preset="portrait-hd">Portrait HD 3000×4000</button>
               <button type="button" class="preset-btn" data-preset="screen-fhd">FHD 1920×1080</button>
@@ -264,6 +267,7 @@
               <p class="out-label">Pixel dimensions</p>
               <p class="out-value" id="out-px">3000 × 4000 px</p>
               <p class="out-sub" id="out-mp">12.0 MP</p>
+              <button type="button" class="btn btn-line btn-sm" id="calc-copy-btn" style="margin-top:0.5rem">Copy canvas size</button>
             </div>
             <div class="out-card">
               <p class="out-label">Print size</p>
@@ -411,9 +415,12 @@
     'ig-square': {w:1080,h:1080,unit:'px',dpi:72},
     'ig-portrait': {w:1080,h:1350,unit:'px',dpi:72},
     'ig-story': {w:1080,h:1920,unit:'px',dpi:72},
+    'pin': {w:1000,h:1500,unit:'px',dpi:72},
     'a4': {w:210,h:297,unit:'mm',dpi:300},
     'a3': {w:297,h:420,unit:'mm',dpi:300},
     'letter': {w:8.5,h:11,unit:'in',dpi:300},
+    'print-8x10': {w:8,h:10,unit:'in',dpi:300},
+    'sticker-3x3': {w:3,h:3,unit:'in',dpi:300},
     '4k': {w:3840,h:2160,unit:'px',dpi:72},
     'portrait-hd': {w:3000,h:4000,unit:'px',dpi:300},
     'screen-fhd': {w:1920,h:1080,unit:'px',dpi:72}
@@ -471,6 +478,20 @@
     outL4.textContent = layersFor(4);
     outL6.textContent = layersFor(6);
     outL8.textContent = layersFor(8);
+    window._dkpCanvasCopy = `${pxW} x ${pxH} px (${dpi} DPI)`;
+  }
+
+  const copyBtn = $('calc-copy-btn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', ()=>{
+      const txt = window._dkpCanvasCopy || outPx.textContent;
+      if (navigator.clipboard && txt) {
+        navigator.clipboard.writeText(txt).then(()=>{
+          copyBtn.textContent = 'Copied!';
+          setTimeout(()=>{ copyBtn.textContent = 'Copy canvas size'; }, 1500);
+        });
+      }
+    });
   }
 
   document.querySelectorAll('.preset-btn').forEach(btn=>{
@@ -508,7 +529,6 @@
         <a href="../../freebies.html">Free Brushes</a>
         <a href="../../products.html">All Products</a>
         <a href="../../bundles.html">Bundles</a>
-        <a href="../../season/halloween/">Halloween Art</a>
         <a href="../../season/christmas/">Christmas Art</a>
         <a href="../../category/portrait/">Portrait Brushes</a>
         <a href="../../category/skin-texture/">Skin Texture</a>
@@ -518,8 +538,10 @@
       </div>
     </nav>
     <nav aria-label="Footer learn and buyer guides">
-      <p class="foot-label">Learn</p>
+      <p class="foot-label">Learn &amp; Free Tools</p>
       <div class="foot-links">
+        <a href="../../tools/canvas-calculator/">Canvas Size Calculator</a>
+        <a href="../../tools/card-print-calculator/">Card &amp; Print Bleed Calculator</a>
         <a href="../../blog.html">Articles</a>
         <a href="../../blog/best-procreate-brushes-for-portraits/">Best Portrait Brushes</a>
         <a href="../../blog/how-to-create-realistic-skin-in-procreate/">Realistic Skin Guide</a>

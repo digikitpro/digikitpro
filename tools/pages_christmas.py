@@ -161,7 +161,7 @@ def christmas_section(byslug, depth=0):
       </aside>
     </div>
     {product_grid(items, depth, classes="grid cards cards-4 xmas-cards", dual_buy=True)}
-    <p class="xmas-foot">For iPad with the Procreate app · No physical item ships · Digital downloads via Payhip</p>
+    <p class="xmas-foot">For iPad with the Procreate app · <a href="{rel(depth, 'tools/card-print-calculator/')}">Free Greeting Card &amp; Print Bleed Calculator →</a> · <a href="{rel(depth, 'blog/procreate-sweater-knit-pattern-tutorial/')}">Sweater Knit Pattern Tutorial →</a></p>
   </div>
 </section>
 """

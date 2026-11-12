@@ -90,7 +90,7 @@ def build_home():
         <div><p class="eyebrow">Portrait workflow</p><h2 id="results-title">From broad shapes to finer detail</h2></div>
         <a class="text-link" href="products/portrait-mastery-kit-46-brushes/">See the portrait kit →</a>
       </div>
-      <p class="sec-note muted">A portrait can develop from a simple value study into a textured finish. Drag the divider to explore an illustrative comparison; the final result also depends on observation and practice.</p>
+      <p class="sec-note muted">See how a portrait builds from a flat value block-in to textured skin, pores, freckles and hair strands. Drag the divider to compare the base stage and finished detail.</p>
       <figure class="ba-figure">
         <div class="ba-stage" data-ba>
           <img class="ba-img ba-after" src="assets/img/ba-after.webp" width="1200" height="800" alt="Finished portrait: detailed skin texture, hair strands and final rendering" loading="lazy" decoding="async">
@@ -104,7 +104,7 @@ def build_home():
           </div>
           <div class="ba-sweep" aria-hidden="true"></div>
         </div>
-        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use ← →.</span><span>Illustrative artwork, not a verified brush-pack demonstration.</span></figcaption>
+        <figcaption class="ba-cap"><span>Drag anywhere on the image, or focus the handle and use ← →.</span><span>Step-by-step portrait progression: flat base values → skin texture, pores, freckles and hair detail.</span></figcaption>
       </figure>
       <ol class="ba-steps" aria-label="What the tools add, in paint order">
         <li>Skin texture</li><li>Pores</li><li>Freckles</li><li>Hair</li><li>Final polish</li>
@@ -182,14 +182,17 @@ def build_home():
     _by_aslug = {a.get("slug"): a for a in _img_articles}
     _pinned = ("best-procreate-brushes-for-beginners",
                "best-procreate-brushes-for-line-art",
-               "best-procreate-brushes-for-anime")
+               "best-procreate-brushes-for-anime",
+               "how-to-create-realistic-skin-in-procreate",
+               "procreate-brush-settings-explained",
+               "procreate-sweater-knit-pattern-tutorial")
     articles = [_by_aslug[s] for s in _pinned if s in _by_aslug]
     for a in _img_articles:  # safety net if a pinned slug ever gets renamed
-        if len(articles) >= 3:
+        if len(articles) >= 6:
             break
         if a not in articles:
             articles.append(a)
-    articles = articles[:3]
+    articles = articles[:6]
     def art_card(a, depth):
         ss = img_srcset(depth, a.get("_pslug", ""), a.get("_im") or {}, "(min-width: 1100px) 370px, (min-width: 700px) 45vw, 92vw")
         return f"""<a class="art-card" href="{rel(depth, 'blog/' + a['slug'] + '/')}">
@@ -200,10 +203,22 @@ def build_home():
       <span class="text-link">Read the guide →</span></div></a>"""
     art_cards = "".join(art_card(a, 0) for a in articles)
 
+    home_faqs = [
+        ("Which brush kit should a portrait beginner start with?",
+         "The Portrait Mastery Kit ($8, 46 brushes + 4 paper textures) groups sketch, blending, hair, texture and finishing tools into one portrait workflow. For focused skin details, start with Portrait Skin Brushes for Procreate ($5, 19 pore, freckle and blending brushes). You can also practise first with the free Starter Guide PDF and 100 Free Fine Liner Brushes."),
+        ("Should I start with a $5 specialist pack or a larger bundle?",
+         "If you want to solve one specific step today—such as skin texture ($5), line art ($5, 43 brushes) or organic watercolor ($5, 80 brushes)—start with a $5 specialist pack. If you want multiple workflows together, compare the Ultimate Portrait Mastery Bundle ($15, 4 kits / 252+ assets) or the complete 2,000+ Master Library ($19)."),
+        ("Do you have a free Procreate canvas size and print DPI calculator?",
+         "Yes. Use our free Procreate Canvas Size & Layer Calculator to convert print inches, cm or mm into exact pixel dimensions at 300 DPI, or open the Greeting Card & Print Bleed Calculator for 5×7 and A2 holiday card dimensions with bleed."),
+        ("What do I need to use DigiKitPro brush packs?",
+         "Procreate brush packs (.brushset) require the Procreate app on an iPad. An Apple Pencil is recommended for pressure and tilt response. Each product page lists its exact file format, ZIP size and 4-step iPad installation instructions."),
+        ("How do downloads, technical support and refunds work?",
+         "Payhip handles secure checkout and digital delivery. Because digital files cannot be returned, all sales are final once downloaded—and if you ever run into a technical problem with a download or a file that will not import into Procreate, contact us and we will resolve it."),
+    ]
     html_out = head(
         "DigiKitPro | Procreate Brushes for iPad Artists",
         "Explore Procreate portrait, skin and illustration brush packs for iPad artists, plus free guides and resources for learning at your own pace.",
-        SITE_URL + "/", 0, schemas=schema_org_home(), ctx=page_ctx("home"),
+        SITE_URL + "/", 0, schemas=schema_org_home() + schema_faq(home_faqs), ctx=page_ctx("home"),
         preload="assets/products/portrait-skin-brushes-procreate/portrait-skin-brushes-procreate.webp")
     html_out += header(0, active="index.html")
     html_out += f"""
@@ -261,18 +276,26 @@ def build_home():
       </div>
       <p class="sec-note muted">Practise with a free portrait guide, brushes and colour palettes. Each is useful on its own, whether or not you choose a paid kit later.</p>
       {product_grid(free_row, 0, free_direct=True, classes="grid cards cards-4")}
+      <div class="trend-pills-wrap" style="margin-top:2rem">
+        <p class="trend-label">Free interactive Procreate calculators — plan your canvas &amp; print dimensions</p>
+        <div class="trend-pills">
+          <a class="trend-pill" href="tools/canvas-calculator/">Procreate Canvas Size &amp; Layer Calculator →</a>
+          <a class="trend-pill" href="tools/card-print-calculator/">Greeting Card &amp; Print Bleed Calculator →</a>
+          <a class="trend-pill" href="tools/">All Free Tools →</a>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- FREE GUIDE AND OPTIONAL MASTERCLASS -->
   {ebooks_section}
 
-  <!-- LEARN PROCREATE: three guides -->
+  <!-- LEARN PROCREATE: six guides -->
   <section class="section" id="articles" aria-labelledby="articles-title">
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">The blog</p><h2 id="articles-title">Learn Procreate. Create Better.</h2></div>
-        <a class="text-link" href="blog.html">All articles →</a>
+        <a class="text-link" href="blog.html">All {len(_img_articles)} articles →</a>
       </div>
       <div class="grid arts-grid">{art_cards}</div>
     </div>
@@ -281,9 +304,11 @@ def build_home():
   <section class="section section-alt" id="home-faq" aria-labelledby="home-faq-title">
     <div class="wrap narrow">
       <div class="sec-head"><div><p class="eyebrow">Before you choose</p><h2 id="home-faq-title">A few useful answers</h2></div></div>
-      <details class="faq-item"><summary>Which brush kit should a portrait beginner start with?</summary><div class="faq-body"><p>The <a href="products/portrait-mastery-kit-46-brushes/">Portrait Mastery Kit</a> groups sketch, blending, hair, texture and finishing tools into one portrait workflow. For skin details specifically, look at the separate <a href="products/portrait-skin-brushes-procreate/">Portrait Skin Brushes</a>. You can also practise first with the <a href="products/procreate-starter-guide-free-ebook/">free Starter Guide</a> and Procreate's built-in brushes.</p></div></details>
-      <details class="faq-item"><summary>What do I need to use the brush packs?</summary><div class="faq-body"><p>Brush packs require Procreate on an iPad. An Apple Pencil is recommended for pressure-sensitive work. Check each product page for its exact requirements and installation steps.</p></div></details>
-      <details class="faq-item"><summary>How do downloads and refunds work?</summary><div class="faq-body"><p>Payhip handles checkout and digital delivery. Downloaded digital files are generally final sale; see the <a href="refunds.html">refund policy</a> or <a href="contact.html">contact us</a> if a file has a technical problem.</p></div></details>
+      <details class="faq-item"><summary>Which brush kit should a portrait beginner start with?</summary><div class="faq-body"><p>The <a href="products/portrait-mastery-kit-46-brushes/">Portrait Mastery Kit ($8)</a> groups 46 sketch, blending, hair, texture and finishing tools into one portrait workflow. For focused skin details, start with <a href="products/portrait-skin-brushes-procreate/">Portrait Skin Brushes ($5, 19 brushes)</a>. You can also practise first with the <a href="products/procreate-starter-guide-free-ebook/">free Starter Guide</a> and <a href="products/free-fine-liner-brushes-100/">100 Free Fine Liner Brushes</a>.</p></div></details>
+      <details class="faq-item"><summary>Should I start with a $5 specialist pack or a larger bundle?</summary><div class="faq-body"><p>If you want to solve one specific step today—such as <a href="products/portrait-skin-brushes-procreate/">skin texture ($5)</a>, <a href="products/essential-line-art-sketch-kit/">line art ($5, 43 brushes)</a> or <a href="products/organic-watercolor-80-brushes/">organic watercolor ($5, 80 brushes)</a>—start with a $5 specialist pack. If you want multiple kits together, compare the <a href="products/ultimate-portrait-mastery-bundle/">Ultimate Portrait Mastery Bundle ($15, 252+ assets)</a> or the <a href="products/master-library-2000-brushes/">2,000+ Master Library ($19)</a>.</p></div></details>
+      <details class="faq-item"><summary>Do you have a free Procreate canvas size and print DPI calculator?</summary><div class="faq-body"><p>Yes. Open the free <a href="tools/canvas-calculator/">Procreate Canvas Size &amp; Layer Calculator</a> to convert inches, cm or mm into exact pixel dimensions at 300 DPI, or use the <a href="tools/card-print-calculator/">Greeting Card &amp; Print Bleed Calculator</a> for 5×7 and A2 card dimensions with bleed.</p></div></details>
+      <details class="faq-item"><summary>What do I need to use DigiKitPro brush packs?</summary><div class="faq-body"><p>Procreate brush packs (<code>.brushset</code>) require the Procreate app on an iPad. An Apple Pencil is recommended for pressure and tilt response. Check each product page for its exact file format, ZIP size and <a href="blog/how-to-install-procreate-brushes/">4-step installation guide</a>.</p></div></details>
+      <details class="faq-item"><summary>How do downloads, technical support and refunds work?</summary><div class="faq-body"><p>Payhip handles secure checkout and digital delivery. Because digital files cannot be returned, all sales are final once downloaded—and if you ever run into a technical problem with a download or a file that will not import into Procreate, <a href="contact.html">contact us</a> and we will resolve it. See the <a href="refunds.html">refund &amp; support policy</a>.</p></div></details>
     </div>
   </section>
 

@@ -375,7 +375,13 @@ def build_product_pages():
         cslug = CATEGORY_SLUGS.get(p.get("category"))
         crumb_items = [("Home","/"),("Products","/products.html")]
         visual_crumbs = [("Products","products.html")]
-        if cslug:
+        if p.get("category") == "Other" and "christmas" in slug:
+            crumb_items.append(("Christmas", "/season/christmas/"))
+            visual_crumbs.append(("Christmas", "season/christmas/"))
+        elif p.get("category") == "Other" and "halloween" in slug:
+            crumb_items.append(("Halloween", "/season/halloween/"))
+            visual_crumbs.append(("Halloween", "season/halloween/"))
+        elif cslug:
             crumb_items.append((p["category"], f"/category/{cslug}/"))
             visual_crumbs.append((p["category"], f"category/{cslug}/"))
         elif p.get("category") == "Bundles":
@@ -457,8 +463,16 @@ def build_product_pages():
                         (f'<span class="meta-chip gold">{esc(badge_text(p))}</span>' if badge_text(p) else "")))
         assets_chip = f'<span class="meta-chip">{esc(p["assets"])}</span>' if p.get("assets") else ""
         cslug = CATEGORY_SLUGS.get(p.get("category"))
-        cat_href = f"../../category/{cslug}/" if cslug else (f"../../bundles.html" if p.get("category") == "Bundles" else f"../../products.html#cat-{p['category'].replace(' ', '%20')}")
-        cat_chip = f'<a class="meta-chip cat" href="{cat_href}">{esc(p["category"])}</a>'
+        if p.get("category") == "Other" and "christmas" in slug:
+            cat_label = "Christmas"
+            cat_href = "../../season/christmas/"
+        elif p.get("category") == "Other" and "halloween" in slug:
+            cat_label = "Halloween"
+            cat_href = "../../season/halloween/"
+        else:
+            cat_label = p["category"]
+            cat_href = f"../../category/{cslug}/" if cslug else (f"../../bundles.html" if p.get("category") == "Bundles" else f"../../products.html#cat-{p['category'].replace(' ', '%20')}")
+        cat_chip = f'<a class="meta-chip cat" href="{cat_href}">{esc(cat_label)}</a>'
         chips_html = status_chip + assets_chip + cat_chip
         caption = ("Launches soon · Newsletter subscribers get it first · Opens the store in a new tab"
                    if coming else ("Opens the free product on Payhip in a new tab" if p['free'] else "Opens the product on Payhip in a new tab. Review the total and payment options there before paying."))
