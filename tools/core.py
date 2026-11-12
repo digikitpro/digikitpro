@@ -838,7 +838,6 @@ def footer(depth):
         <a href="{rel(depth,'freebies.html')}">Free Brushes</a>
         <a href="{rel(depth,'products.html')}">All Products</a>
         <a href="{rel(depth,'bundles.html')}">Bundles</a>
-        <a href="{rel(depth,'season/halloween/')}">Halloween Art</a>
         <a href="{rel(depth,'season/christmas/')}">Christmas Art</a>
         <a href="{rel(depth,'category/portrait/')}">Portrait Brushes</a>
         <a href="{rel(depth,'category/skin-texture/')}">Skin Texture</a>
@@ -848,8 +847,10 @@ def footer(depth):
       </div>
     </nav>
     <nav aria-label="Footer learn and buyer guides">
-      <p class="foot-label">Learn</p>
+      <p class="foot-label">Learn &amp; Free Tools</p>
       <div class="foot-links">
+        <a href="{rel(depth,'tools/canvas-calculator/')}">Canvas Size Calculator</a>
+        <a href="{rel(depth,'tools/card-print-calculator/')}">Card &amp; Print Bleed Calculator</a>
         <a href="{rel(depth,'blog.html')}">Articles</a>
         <a href="{rel(depth,'blog/best-procreate-brushes-for-portraits/')}">Best Portrait Brushes</a>
         <a href="{rel(depth,'blog/how-to-create-realistic-skin-in-procreate/')}">Realistic Skin Guide</a>
@@ -985,9 +986,9 @@ def trust_bridge(depth=0, free=False):
     promising a particular support outcome.
     """
     terms = ("free resource · Payhip may request delivery details" if free
-             else "all sales final once downloaded")
+             else "all sales final once downloaded · technical file issues resolved")
     return (f'<p class="trust-bridge">Checkout and digital delivery via Payhip · '
-            f'{terms} · <a href="{rel(depth, "refunds.html")}">Refund policy</a></p>')
+            f'{terms} · <a href="{rel(depth, "refunds.html")}">Refund &amp; support policy</a></p>')
 
 # ── product-card media: the frame ladder ─────────────────────────────────
 # Every product card is ONE full-bleed image: the media box takes the ratio of
@@ -1078,7 +1079,15 @@ def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
     # corner badge lives in the card body (top-right) so it never sits on the
     # artwork, which a full-bleed image would otherwise guarantee.
     cslug = CATEGORY_SLUGS.get(p.get("category"))
-    cat_url = rel(depth, f"category/{cslug}/") if cslug else (rel(depth, "bundles.html") if p.get("category") == "Bundles" else rel(depth, f"products.html#cat-{esc(p['category'].replace(' ','%20'))}"))
+    if p.get("category") == "Other" and "christmas" in p.get("slug", ""):
+        cat_label = "Christmas"
+        cat_url = rel(depth, "season/christmas/")
+    elif p.get("category") == "Other" and "halloween" in p.get("slug", ""):
+        cat_label = "Halloween"
+        cat_url = rel(depth, "season/halloween/")
+    else:
+        cat_label = p["category"]
+        cat_url = rel(depth, f"category/{cslug}/") if cslug else (rel(depth, "bundles.html") if p.get("category") == "Bundles" else rel(depth, f"products.html#cat-{esc(p['category'].replace(' ','%20'))}"))
     _tier = tier_of(p); _line = line_of(p)
     # ── Pinterest: every product image on the site is pinnable ──────────
     # The data-pin-* trio tells Pinterest's own save button which page, which
@@ -1096,7 +1105,7 @@ def product_card(p, depth, eager=False, free_direct=False, dual_buy=False):
   </div>
   <div class="card-body">
     <div class="card-top">
-      <a class="card-cat" href="{cat_url}">{esc(p['category'])}</a>
+      <a class="card-cat" href="{cat_url}">{esc(cat_label)}</a>
       {badge}
     </div>
     <h3 class="card-title"><a href="{u}">{esc(p['name'])}</a></h3>
@@ -1292,7 +1301,9 @@ def craft_grid(depth=0):
     tiles = ""
     for c in cards:
         n = counts.get(c["id"], 0)
-        href = rel(depth, c["href"])
+        raw_href = "guides/procreate-animation-brushes/" if c["id"] == "animation" else c["href"]
+        label = "Line Art & Illustration" if c["id"] == "illustration" else c["label"]
+        href = rel(depth, raw_href)
         art = ""
         ap = BY_SLUG.get(CRAFT_ART.get(c["id"]) or "")
         if ap:
@@ -1301,12 +1312,12 @@ def craft_grid(depth=0):
             if acard:
                 art = (f'<span class="craft-art"><img src="{asset_file(depth, ap["slug"], acard)}" '
                        f'width="{aim.get("cardW") or 750}" height="{aim.get("cardH") or 500}" '
-                       f'alt="{esc(c["label"])} — artwork from {esc(ap["name"])}" loading="lazy" decoding="async"></span>')
+                       f'alt="{esc(label)} — artwork from {esc(ap["name"])}" loading="lazy" decoding="async"></span>')
         tiles += (
             f'<a class="craft-card" href="{esc(href)}" data-dkp-event="craft_card_click" '
             f'data-dkp-craft="{esc(c["id"])}" data-dkp-count="{n}">'
             f'{art}'
-            f'<span class="craft-name">{esc(c["label"])}</span>'
+            f'<span class="craft-name">{esc(label)}</span>'
             f'<span class="craft-blurb">{esc(c["blurb"])}</span>'
             f'<span class="craft-meta" aria-hidden="true">→</span></a>')
     return f"""<section class="section section-alt" id="craft" aria-labelledby="craft-title">
@@ -1485,8 +1496,8 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False, neutral_co
         lo_s = f"${lo:.0f}" if float(lo).is_integer() else f"${lo:.2f}"
         hi_s = f"${hi:.0f}" if float(hi).is_integer() else f"${hi:.2f}"
         compare = (f'Single specialist packs run <b>{lo_s}\u2013{hi_s}</b> each across '
-                   f'{len(prices)} kits. The Master Library is listed at {esc(f["priceText"])}; '
-                   'confirm contents and possible overlap before buying.')
+                   f'{len(prices)} kits — or get the complete 2,000+ Master Library for <b>{esc(f["priceText"])}</b>. '
+                   'Already own individual kits? Large collections can share sets with single packs.')
     ladder_link = ""
     if ladder_href:
         if neutral_compare:
@@ -1513,10 +1524,10 @@ def flagship_band(depth=0, bridge=True, ladder_href=None, home=False, neutral_co
     <div class="flag-body">
       <p class="eyebrow">{esc(f['name'])}</p>
       <h2 id="flag-title">One Library. Multiple Workflows. Less Tool Hunting.</h2>
-      <p class="lead-sm">A listed collection of 2,000+ Procreate brushes across portrait, line art, watercolor and other drawing styles.</p>
+      <p class="lead-sm">2,000+ Procreate brushes organized into 14 themed ZIP folders across portrait, skin, hair, line art, watercolor and character styles.</p>
       <ul class="flag-points">
-        <li><b>{esc(f.get('assets') or '2,000+ brushes')}</b> listed in organised category folders</li>
-        <li>Organized tools for a range of Procreate workflows</li>
+        <li><b>{esc(f.get('assets') or '2,000+ organized brushes')}</b> in structured category folders</li>
+        <li>Covers portrait, linework, watercolor, traditional media and effects workflows</li>
       </ul>
       <ul class="flag-chips">{chips}</ul>
       <p class="flag-compare muted">{compare}</p>
