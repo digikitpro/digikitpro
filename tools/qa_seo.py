@@ -205,6 +205,11 @@ def main():
     html_files = sorted(p for p in ROOT.rglob("*.html")
                         if not SKIP.intersection(p.relative_to(ROOT).parts)
                         and not p.name.lower().startswith(("google", "yandex")))
+    dir_paths = {
+        "/" + p.relative_to(ROOT).parent.as_posix() + "/"
+        for p in html_files
+        if p.name == "index.html" and p.relative_to(ROOT).parent.as_posix() != "."
+    }
     pages = {}
     titles, descriptions = defaultdict(list), defaultdict(list)
     article_count = howto_count = 0
@@ -224,15 +229,18 @@ def main():
             # browser or crawler would; relative href strings alone are not URLs.
             base = urljoin(canonical, parser.bases[0]) if parser.bases else canonical
             alias = urlsplit(SITE + "/index.html")
-            aliases, insecure = [], []
+            aliases, insecure, noslash_dirs = [], [], []
             for href in parser.anchors:
                 target = urlsplit(urljoin(base, href))
-                if target.netloc == alias.netloc and target.path == alias.path:
+                if target.netloc == alias.netloc and (target.path == alias.path or target.path.endswith("/index.html")):
                     aliases.append(href)
-                if target.netloc == SITE_PARTS.netloc and target.scheme == "http":
+                if target.netloc in (SITE_PARTS.netloc, "www." + SITE_PARTS.netloc) and (target.scheme == "http" or target.netloc != SITE_PARTS.netloc):
                     insecure.append(href)
-            check(not aliases, f"{rel}: links to the noncanonical homepage alias: {aliases}")
-            check(not insecure, f"{rel}: internal links use HTTP instead of HTTPS: {insecure}")
+                if target.netloc == SITE_PARTS.netloc and target.path != "/" and not target.path.endswith("/") and (target.path + "/") in dir_paths:
+                    noslash_dirs.append(href)
+            check(not aliases, f"{rel}: links to a noncanonical /index.html alias: {aliases}")
+            check(not insecure, f"{rel}: internal links use HTTP or www redirect host: {insecure}")
+            check(not noslash_dirs, f"{rel}: internal directory links omit trailing slash (causes 301 redirect): {noslash_dirs}")
             home = parser.home_links
             all_home_links = home["header"] + home["footer"] + home["breadcrumbs"]
             check(len(home["header"]) == len(home["footer"]) == 1 and len(home["breadcrumbs"]) == parser.breadcrumb_count

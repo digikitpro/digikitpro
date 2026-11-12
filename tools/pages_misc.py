@@ -211,7 +211,7 @@ def build_pinterest_feed():
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 <channel>
   <title>{esc(SITE_NAME)} product catalog</title>
-  <link>{esc(SITE_URL)}</link>
+  <link>{esc(SITE_URL)}/</link>
   <description>Paid {esc(SITE_NAME)} products for the Pinterest product catalog / data source.</description>
 {chr(10).join(items)}
 </channel>
@@ -342,7 +342,7 @@ def build_google_merchant_feed():
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 <channel>
   <title>{esc(SITE_NAME)} Google Merchant Center products</title>
-  <link>{esc(SITE_URL)}</link>
+  <link>{esc(SITE_URL)}/</link>
   <description>Available DigiKitPro digital products. Product landing pages, prices and images are generated from the live catalog.</description>
 {chr(10).join(items)}
 </channel>

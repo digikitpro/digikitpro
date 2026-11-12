@@ -337,7 +337,7 @@ def share_buttons(url, title, media="", description="", heading="Share this"):
 def schema_org_home():
     return [
       {"@context":"https://schema.org","@type":"Organization","@id":SITE_URL+"/#org",
-       "name":SITE_NAME,"url":SITE_URL,
+       "name":SITE_NAME,"url":SITE_URL+"/",
        "logo":{"@type":"ImageObject","url":absurl("assets/img/logo.png"),"width":"512","height":"512"},
        "image":{"@type":"ImageObject","url":absurl("assets/img/og-cover.jpg"),"width":"1200","height":"630"},
        "brand":{"@type":"Brand","name":SITE_NAME},
@@ -346,7 +346,7 @@ def schema_org_home():
        "areaServed":"Worldwide","knowsLanguage":["en","es","fr","de","it","pt","nl"],
        "sameAs":[STORE_URL]+[v for v in SOCIAL.values() if v]},
       {"@context":"https://schema.org","@type":"WebSite","@id":SITE_URL+"/#website",
-       "url":SITE_URL,"name":SITE_NAME,"description":TAGLINE,"publisher":{"@id":SITE_URL+"/#org"},
+       "url":SITE_URL+"/","name":SITE_NAME,"description":TAGLINE,"publisher":{"@id":SITE_URL+"/#org"},
        "inLanguage":["en","es","fr","de","it","pt","nl"],
        "potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint",
         "urlTemplate":SITE_URL+"/search.html?q={search_term_string}"},"query-input":"required name=search_term_string"}}
@@ -440,7 +440,7 @@ def schema_article(a):
             "description":a["description"],
             "datePublished":a["date"],"dateModified":a.get("modified") or a["date"],
             "keywords":", ".join([a.get("primary_keyword", "")] + (a.get("secondary_keywords") or [])),
-            "author":{"@type":"Organization","name":SITE_NAME,"url":SITE_URL},
+            "author":{"@type":"Organization","name":SITE_NAME,"url":SITE_URL+"/"},
             "publisher":{"@id":SITE_URL+"/#org"},
             "mainEntityOfPage":absurl(f"blog/{a['slug']}/"),
             "inLanguage":"en","url":absurl(f"blog/{a['slug']}/")}
