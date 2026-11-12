@@ -8,12 +8,12 @@ field performance or availability of remote resources.
 import json
 import os
 import re
-from collections import defaultdict
+from collections import defaultdict, deque
 from datetime import date
 from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote, urljoin, urlsplit
+from urllib.parse import unquote, urljoin, urlsplit, urlunsplit
 import xml.etree.ElementTree as ET
 
 from core import home_href
@@ -319,6 +319,47 @@ def main():
         if page is not None:
             check(page.canonicals == [url], f"sitemap URL differs from canonical: {url}")
             check(all("noindex" not in value.lower() for value in page.meta["robots"]), f"sitemap includes a noindex page: {url}")
+
+    # Sitemap discovery should be backed by ordinary crawlable links, not only
+    # by XML. Build the internal anchor graph from the rendered HTML and ensure
+    # every submitted URL is reachable from the canonical homepage.
+    canonical_by_path = {path: expected_url(path) for path in pages}
+    canonical_urls = set(canonical_by_path.values())
+    internal_edges = defaultdict(set)
+    for source_path, page in pages.items():
+        source_url = canonical_by_path[source_path]
+        base = urljoin(source_url, page.bases[0]) if page.bases else source_url
+        for href in page.anchors:
+            target = urlsplit(urljoin(base, href))
+            if (target.scheme, target.netloc) != (SITE_PARTS.scheme, SITE_PARTS.netloc):
+                continue
+            destination = urlunsplit((target.scheme, target.netloc, target.path, "", ""))
+            if destination in canonical_urls:
+                internal_edges[source_url].add(destination)
+    reachable = {SITE + "/"}
+    queue = deque(reachable)
+    while queue:
+        source_url = queue.popleft()
+        for destination in internal_edges[source_url]:
+            if destination not in reachable:
+                reachable.add(destination)
+                queue.append(destination)
+    for url in urls:
+        check(url in reachable, f"sitemap URL is not reachable by internal links from homepage: {url}")
+
+    # Keep the two primary editorial hubs useful as crawl paths: every product
+    # is linked from the catalog and every article from the article directory.
+    catalog_url = SITE + "/products.html"
+    for product in json.loads((ROOT / "data/products.json").read_text(encoding="utf-8")):
+        product_url = f"{SITE}/products/{product['slug']}/"
+        check(product_url in internal_edges[catalog_url],
+              f"{product_url}: missing direct link from products.html")
+    article_index_url = SITE + "/blog.html"
+    for article in load_articles():
+        article_url = f"{SITE}/blog/{article['slug']}/"
+        check(article_url in internal_edges[article_index_url],
+              f"{article_url}: missing direct link from blog.html")
+
     text_urls = {line.strip() for line in (ROOT / "sitemap.txt").read_text(encoding="utf-8").splitlines() if line.strip()}
     check(text_urls == set(urls), "text sitemap and XML sitemap differ")
     image_ns = {**namespace, "image": "http://www.google.com/schemas/sitemap-image/1.1"}
