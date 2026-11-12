@@ -49,12 +49,12 @@ def build_home():
     # ── Christmas collection (special section, 2026-11-10 brief) ───────
     xmas_html = christmas_section(byslug, 0)
 
-    # ── Popular: the four leading kits, one per workflow ────────────────
+    # ── Popular: the three proven $5 Payhip best-sellers + Portrait Mastery ─
     popular = [byslug[s] for s in (
-        "portrait-mastery-kit-46-brushes",
         "portrait-skin-brushes-procreate",
-        "artista-studio-kit-76-brushes",
         "essential-line-art-sketch-kit",
+        "organic-watercolor-80-brushes",
+        "portrait-mastery-kit-46-brushes",
     ) if s in byslug]
 
     # ── Free row: the Starter Guide leads, then the three $0 kits ───────
@@ -227,14 +227,27 @@ def build_home():
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Premium Procreate brushes · organized by workflow</p>
-        <h1>Procreate Brushes<br>for <em>iPad Artists</em></h1>
-        <p class="hero-sub">Thoughtfully organized portrait, skin and illustration brushes for beginners and growing iPad artists. Find the tools for your workflow, with free resources to practise alongside them.</p>
+        <p class="eyebrow">Hand-tested Procreate brush kits · From $5 · 4 Free Downloads</p>
+        <h1>Paint Realistic Skin, Clean Line Art &amp; Textures in <em>Procreate</em></h1>
+        <p class="hero-sub">Focused $5–$10 Procreate brush packs organized by workflow — 19 skin texture brushes, 43 line-art &amp; sketch tools, 80 organic watercolor brushes and 4 festive Christmas sets, plus 4 free starter downloads and free iPad canvas calculators.</p>
         <div class="hero-ctas">
           <a class="btn btn-gold btn-lg" href="products.html">Shop All Brushes</a>
           <a class="btn btn-line btn-lg" href="freebies.html">Try Free Brushes</a>
+          <a class="btn btn-line btn-lg" href="tools/canvas-calculator/">Canvas Size Calculator</a>
         </div>
-        <p class="hero-meta">Secure checkout via Payhip &nbsp;·&nbsp; Digital delivery &nbsp;·&nbsp; Free resources available</p>
+        <p class="hero-meta">✓ Procreate on iPad &nbsp;·&nbsp; ✓ Digital delivery via Payhip &nbsp;·&nbsp; ✓ Technical file issues resolved (<a href="refunds.html">policy</a>)</p>
+        <div class="trend-pills-wrap" style="margin-top:1.25rem">
+          <p class="trend-label">Jump straight to your workflow or free tool</p>
+          <div class="trend-pills">
+            <a class="trend-pill" href="products/portrait-skin-brushes-procreate/">Portrait Skin ($5)</a>
+            <a class="trend-pill" href="products/essential-line-art-sketch-kit/">Line Art &amp; Sketch ($5)</a>
+            <a class="trend-pill" href="products/organic-watercolor-80-brushes/">80 Watercolor Brushes ($5)</a>
+            <a class="trend-pill" href="season/christmas/">Christmas Brushes ($5–$8)</a>
+            <a class="trend-pill" href="bundles.html">Compare Bundles</a>
+            <a class="trend-pill" href="tools/canvas-calculator/">Canvas Size Calculator</a>
+            <a class="trend-pill" href="tools/card-print-calculator/">Card Print Bleed Calculator</a>
+          </div>
+        </div>
       </div>
       {hero_art}
     </div>
@@ -247,10 +260,10 @@ def build_home():
   <section class="section" id="popular" aria-labelledby="pop-title">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Featured brush kits</p><h2 id="pop-title">Find your starting point</h2></div>
+        <div><p class="eyebrow">Most-chosen $5–$8 Procreate kits</p><h2 id="pop-title">Start With a Focused Brush Kit</h2></div>
         <a class="text-link" href="products.html">Browse all {len(PRODUCTS)} products →</a>
       </div>
-      <p class="sec-note muted">Start with a portrait workflow, add skin details, or explore a broader studio. Each kit has its own previews, contents and requirements.</p>
+      <p class="sec-note muted">Our most popular single-workflow Procreate sets: 19 skin texture &amp; pore brushes ($5), 43 line-art &amp; sketch brushes ($5), 80 organic watercolor brushes ($5) and the 46-brush Portrait Mastery Kit ($8).</p>
       {product_grid(popular, 0, classes="grid cards cards-4", dual_buy=True)}
     </div>
   </section>
@@ -276,13 +289,23 @@ def build_home():
       </div>
       <p class="sec-note muted">Practise with a free portrait guide, brushes and colour palettes. Each is useful on its own, whether or not you choose a paid kit later.</p>
       {product_grid(free_row, 0, free_direct=True, classes="grid cards cards-4")}
-      <div class="trend-pills-wrap" style="margin-top:2rem">
-        <p class="trend-label">Free interactive Procreate calculators — plan your canvas &amp; print dimensions</p>
-        <div class="trend-pills">
-          <a class="trend-pill" href="tools/canvas-calculator/">Procreate Canvas Size &amp; Layer Calculator →</a>
-          <a class="trend-pill" href="tools/card-print-calculator/">Greeting Card &amp; Print Bleed Calculator →</a>
-          <a class="trend-pill" href="tools/">All Free Tools →</a>
-        </div>
+      <div class="sec-head" style="margin-top:2.5rem">
+        <div><p class="eyebrow">Free interactive web utilities</p><h3>Free Procreate Canvas &amp; Print Calculators</h3></div>
+        <a class="text-link" href="tools/">All free tools →</a>
+      </div>
+      <div class="grid arts-grid">
+        <article class="card"><div class="card-body">
+          <div class="card-top"><span class="card-cat">Free Web Utility</span><span class="badge badge-free">Free Tool</span></div>
+          <h3 class="card-title"><a href="tools/canvas-calculator/">Procreate Canvas Size &amp; Layer Calculator</a></h3>
+          <p class="card-short">Convert inches, cm or mm into exact Procreate pixel dimensions at 300 DPI, preview aspect ratio and estimate uncompressed layer memory.</p>
+          <div class="card-foot"><span class="price price-free">Free</span><div class="card-actions"><a class="btn btn-gold btn-sm" href="tools/canvas-calculator/">Open Calculator →</a></div></div>
+        </div></article>
+        <article class="card"><div class="card-body">
+          <div class="card-top"><span class="card-cat">Free Web Utility</span><span class="badge badge-free">Free Tool</span></div>
+          <h3 class="card-title"><a href="tools/card-print-calculator/">Procreate Greeting Card &amp; Print Bleed Calculator</a></h3>
+          <p class="card-short">Calculate exact 300 DPI Procreate canvas pixels with 0.125 in or 3 mm print bleed and safe lettering margins for 5×7, A2, A6 and KDP prints.</p>
+          <div class="card-foot"><span class="price price-free">Free</span><div class="card-actions"><a class="btn btn-gold btn-sm" href="tools/card-print-calculator/">Open Calculator →</a></div></div>
+        </div></article>
       </div>
     </div>
   </section>
