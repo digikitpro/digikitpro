@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "purpose": "Google product categories for paid Pinterest feed items intentionally excluded from the common Google Merchant feed mapping.",
+    "taxonomy": "Google_Product_Taxonomy_Version 2021-09-21",
+    "ids_verified_against": "https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt"
+  },
+  "categories": {
+    "morocco-7-day-itinerary": {
+      "id": "543542",
+      "path": "Media > Books > E-books",
+      "reason": "The paid item is delivered as two PDF travel-guide publications (itinerary and phrase guide), with no physical trip or accommodation included."
+    },
+    "procreate-portrait-masterclass-ebook": {
+      "id": "543542",
+      "path": "Media > Books > E-books",
+      "reason": "The paid item is a 107-page, 15-chapter PDF coursebook delivered as an eBook."
+    }
+  }
+}

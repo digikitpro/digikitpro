@@ -117,16 +117,18 @@ SITE_FAQS = [
 ]
 
 
-def _catalog_row(p):
-    """One product's data for the Pinterest/Google-style product feed (CSV +
-    XML share this same field set — see pinterest_feed() below). Every value
-    comes straight from data/products.json; nothing is invented or estimated.
-    Free items are marked out_of_stock intentionally: Pinterest catalogs are
-    for items with a real checkout, and a $0 'purchase' isn't one — free
-    items still get full Rich Pin treatment via product:price:amount=0.00
-    on the page itself, they are just excluded from the paid catalog feed.
+def _catalog_row(p, categories):
+    """One paid product's data for the Pinterest CSV and XML feeds.
+
+    Catalog values come from ``data/products.json`` plus the reviewed Google
+    Product Taxonomy mapping. Pinterest's optional ``google_product_category``
+    is populated per product from that mapping; there is no blanket fallback.
+    Free resources remain excluded from this paid catalog feed.
     """
     slug = p["slug"]
+    category = categories.get(slug)
+    if category is None:
+        raise ValueError(f"Pinterest feed product {slug!r} has no reviewed Google product category")
     link = absurl(f"products/{slug}/")
     im = p.get("images") or {}
     full_images = [url for url, _ in _fullsize_product_images(p)]
@@ -150,33 +152,43 @@ def _catalog_row(p):
         "price": price,
         "brand": "DigiKitPro",
         "condition": "new",
-        # Pinterest makes google_product_category optional. These downloads
-        # include brushes, planners, illustrations and books; none has been
-        # individually verified as graphic-design software, so omit the
-        # blanket taxonomy rather than misclassifying the catalog.
+        "google_product_category": category["id"],
         "product_type": cat_path,
         "item_group_id": p.get("category") or "",
     }
 
 
 def build_pinterest_feed():
-    """Pinterest product-catalog data source: one row per PAID product, the
-    exact fields Pinterest's catalog/data-source ingestion documents (id,
-    title, description, link, image_link, additional_image_link, availability,
-    price, brand and condition). Its optional Google category is omitted until
-    each product can be classified accurately. Free items are Rich-Pin-only (see
-    _catalog_row docstring) so they are left out of this feed on purpose.
+    """Pinterest product catalog: paid items with reviewed Google categories.
 
-    Written as both CSV (data-source upload / spreadsheet review) and XML/RSS
-    2.0 with the g: namespace (feed-URL ingestion, no re-upload needed after
-    every price/catalog change — Pinterest just re-fetches the URL).
-    Regenerate by re-running tools/build.py; nothing here needs manual sync.
+    The category map reuses reviewed per-product Merchant categories and adds
+    Pinterest-only categories for the paid PDF publications that Merchant
+    intentionally excludes. Every paid product must have exactly one category
+    from the vendored Google taxonomy; missing or stale mappings fail the build
+    rather than silently recreating warning 157. Free items remain excluded.
+
+    Written as both CSV and RSS 2.0 XML with the Google ``g:`` namespace.
+    Rebuild with ``python3 tools/build.py``; the deployed source changes when
+    catalog or reviewed category data changes.
     """
-    rows = [_catalog_row(p) for p in PRODUCTS if not p.get("free")]
+    products = [p for p in PRODUCTS if not p.get("free")]
+    categories = merchant_feed.load_pinterest_categories()
+    product_slugs = {p["slug"] for p in products}
+    missing = sorted(product_slugs - set(categories))
+    stale = sorted(set(categories) - product_slugs)
+    if missing or stale:
+        details = []
+        if missing:
+            details.append("missing categories: " + ", ".join(missing))
+        if stale:
+            details.append("categories without paid products: " + ", ".join(stale))
+        raise ValueError("Pinterest category map must match all paid catalog items (" + "; ".join(details) + ")")
+    rows = [_catalog_row(p, categories) for p in products]
 
     # ── CSV ────────────────────────────────────────────────────────────
     cols = ["id", "title", "description", "link", "image_link", "additional_image_link",
-            "availability", "price", "brand", "condition", "product_type", "item_group_id"]
+            "availability", "price", "brand", "condition", "google_product_category",
+            "product_type", "item_group_id"]
 
     def _csv_cell(v):
         v = str(v).replace('"', '""')
@@ -204,6 +216,7 @@ def build_pinterest_feed():
     <g:price>{esc(r['price'])}</g:price>
     <g:brand>{esc(r['brand'])}</g:brand>
     <g:condition>{esc(r['condition'])}</g:condition>
+    <g:google_product_category>{esc(r['google_product_category'])}</g:google_product_category>
     <g:product_type>{esc(r['product_type'])}</g:product_type>
     <g:item_group_id>{esc(r['item_group_id'])}</g:item_group_id>
   </item>""")

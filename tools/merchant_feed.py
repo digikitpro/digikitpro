@@ -28,6 +28,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CATEGORIES = ROOT / "data/merchant-categories.json"
+PINTEREST_CATEGORY_EXTRAS = ROOT / "data/pinterest-category-extras.json"
 TITLES = ROOT / "data/merchant-titles.json"
 TAXONOMY_NODES = ROOT / "data/google-taxonomy-nodes.json"
 
@@ -121,6 +122,36 @@ def load_categories(path: Path = CATEGORIES, nodes: dict[str, str] | None = None
             raise ValueError(f"merchant category for {slug!r}: unknown class {cls!r}")
         out[slug] = {"id": node_id, "path": path_text, "class": cls,
                      "reason": str(entry.get("reason", "")).strip()}
+    return out
+
+
+def load_pinterest_categories(path: Path = PINTEREST_CATEGORY_EXTRAS) -> dict[str, dict]:
+    """Merge reviewed Merchant categories with Pinterest-only digital books.
+
+    Most paid products already have a per-product Google taxonomy category in
+    the Merchant feed map. Pinterest also carries two PDF publications that
+    are intentionally excluded from that Merchant source; their format-matched
+    categories are kept in a separate, validated supplement so Merchant-feed
+    eligibility and category coverage remain independent decisions.
+    """
+    nodes = load_taxonomy_nodes()
+    out = load_categories(nodes=nodes)
+    extras = _read(path, "categories")
+    for slug, entry in extras.items():
+        if slug in out:
+            raise ValueError(f"Pinterest category extra for {slug!r} duplicates the Merchant category map")
+        if not isinstance(entry, dict):
+            raise ValueError(f"Pinterest category extra for {slug!r} is not an object")
+        node_id = str(entry.get("id", "")).strip()
+        path_text = str(entry.get("path", "")).strip()
+        reason = str(entry.get("reason", "")).strip()
+        if node_id not in nodes:
+            raise ValueError(f"Pinterest category extra for {slug!r}: id {node_id!r} is not a verified taxonomy node")
+        if nodes[node_id] != path_text:
+            raise ValueError(f"Pinterest category extra for {slug!r}: path does not match taxonomy node {node_id}")
+        if not reason:
+            raise ValueError(f"Pinterest category extra for {slug!r}: missing review reason")
+        out[slug] = {"id": node_id, "path": path_text, "reason": reason}
     return out
 
 
