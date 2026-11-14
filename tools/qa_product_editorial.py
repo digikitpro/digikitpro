@@ -141,10 +141,42 @@ def main():
 
     ns = {"g": "http://base.google.com/ns/1.0"}
     pinterest_rows = load_csv(ROOT / "pinterest-feed.csv")
-    check(len(pinterest_rows) == sum(not p.get("free") for p in products), "Pinterest paid product coverage changed")
-    check(all("google_product_category" not in row for row in pinterest_rows), "Pinterest has blanket Google category")
+    paid_products = [p for p in products if not p.get("free")]
+    pinterest_categories = merchant_feed.load_pinterest_categories()
+    taxonomy_nodes = merchant_feed.load_taxonomy_nodes()
+    pinterest_by_id = {row.get("id"): row for row in pinterest_rows}
+    check(len(pinterest_rows) == len(paid_products), "Pinterest paid product coverage changed")
+    check(len(pinterest_by_id) == len(pinterest_rows), "Pinterest CSV has duplicate or empty item IDs")
+    check("google_product_category" in (pinterest_rows[0] if pinterest_rows else {}),
+          "Pinterest CSV is missing the google_product_category column")
+    check(set(pinterest_by_id) == {p["slug"] for p in paid_products},
+          "Pinterest CSV item IDs differ from the paid catalog")
+    for product in paid_products:
+        row = pinterest_by_id.get(product["slug"], {})
+        value = row.get("google_product_category", "").strip()
+        expected = pinterest_categories.get(product["slug"])
+        check(bool(value), f"{product['slug']}: Pinterest CSV category is missing")
+        check(value in taxonomy_nodes, f"{product['slug']}: Pinterest CSV category is not in Google taxonomy")
+        check(expected is not None and value == expected["id"],
+              f"{product['slug']}: Pinterest CSV category differs from its reviewed mapping")
+    check(len({row.get("google_product_category", "") for row in pinterest_rows}) > 1,
+          "Pinterest feed uses a blanket category for the whole catalog")
     pin_xml = ET.parse(ROOT / "pinterest-feed.xml")
-    check(not pin_xml.findall(".//g:google_product_category", ns), "Pinterest XML has blanket Google category")
+    pinterest_xml_items = pin_xml.findall("./channel/item")
+    pinterest_xml_by_id = {item.findtext("g:id", namespaces=ns): item for item in pinterest_xml_items}
+    check(len(pinterest_xml_items) == len(paid_products), "Pinterest XML paid product coverage changed")
+    check(set(pinterest_xml_by_id) == {p["slug"] for p in paid_products},
+          "Pinterest XML item IDs differ from the paid catalog")
+    for product in paid_products:
+        item = pinterest_xml_by_id.get(product["slug"])
+        value = item.findtext("g:google_product_category", namespaces=ns) if item is not None else None
+        expected = pinterest_categories.get(product["slug"])
+        check(bool(value), f"{product['slug']}: Pinterest XML category is missing")
+        check(value in taxonomy_nodes, f"{product['slug']}: Pinterest XML category is not in Google taxonomy")
+        check(expected is not None and value == expected["id"],
+              f"{product['slug']}: Pinterest XML category differs from its reviewed mapping")
+        check(value == pinterest_by_id.get(product["slug"], {}).get("google_product_category"),
+              f"{product['slug']}: Pinterest CSV and XML categories differ")
     merchant = ET.parse(ROOT / "google-merchant-feed.xml")
     merchant_ids = {x.text for x in merchant.findall(".//g:id", ns)}
     check(not any(p["slug"] in merchant_ids for p in products if p.get("free")), "Free download sent to Merchant source")

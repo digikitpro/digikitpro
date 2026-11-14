@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Offline tests for Merchant feed description provenance and safe fallbacks.
+"""Offline tests for Merchant/Pinterest feed metadata and safe fallbacks.
 
-Run after ``python3 tools/build.py`` (or the standalone Merchant feed build).
-These checks do not contact Google, validate product rights or test checkout.
+Run after ``python3 tools/build.py`` (or the standalone feed builds).
+These checks do not contact Google or Pinterest, validate product rights or test checkout.
 """
 from __future__ import annotations
 
 import contextlib
+import csv
 import hashlib
 import io
 import json
@@ -306,6 +307,59 @@ class MerchantEnrichmentTests(unittest.TestCase):
                 tmp.unlink()
         self.assertEqual(len(merchant_feed.load_categories(ROOT / "data/merchant-categories.json", nodes)),
                          len(good["categories"]))
+
+
+class PinterestCategoryTests(unittest.TestCase):
+    """Pinterest GPC values cover the paid catalog and match the taxonomy."""
+
+    def test_every_paid_item_has_a_verified_category_in_csv_and_xml(self):
+        products = json.loads((ROOT / "data/products.json").read_text(encoding="utf-8"))
+        paid = {p["slug"]: p for p in products if not p.get("free")}
+        categories = merchant_feed.load_pinterest_categories()
+        nodes = merchant_feed.load_taxonomy_nodes()
+        with (ROOT / "pinterest-feed.csv").open(encoding="utf-8", newline="") as fh:
+            csv_rows = list(csv.DictReader(fh))
+        csv_by_id = {row.get("id"): row for row in csv_rows}
+        xml_items = ET.parse(ROOT / "pinterest-feed.xml").findall("./channel/item")
+        xml_by_id = {row.findtext("g:id", namespaces=NS): row for row in xml_items}
+
+        self.assertEqual(set(csv_by_id), set(paid))
+        self.assertEqual(set(xml_by_id), set(paid))
+        self.assertEqual(set(categories), set(paid), "every paid Pinterest item needs one reviewed mapping")
+        self.assertIn("google_product_category", csv_rows[0])
+        self.assertGreater(len({row.get("google_product_category") for row in csv_rows}), 1,
+                           "do not apply one blanket category to unlike products")
+        for slug in paid:
+            with self.subTest(slug=slug):
+                expected = categories[slug]["id"]
+                csv_value = csv_by_id[slug].get("google_product_category", "").strip()
+                xml_values = xml_by_id[slug].findall("g:google_product_category", NS)
+                self.assertEqual(csv_value, expected)
+                self.assertIn(csv_value, nodes)
+                self.assertEqual(len(xml_values), 1)
+                self.assertEqual(xml_values[0].text, expected)
+                self.assertEqual(xml_values[0].text, csv_value)
+        self.assertEqual(categories["morocco-7-day-itinerary"]["id"], "543542")
+        self.assertEqual(categories["procreate-portrait-masterclass-ebook"]["id"], "543542")
+
+    def test_pinterest_category_extras_reject_bad_taxonomy_entries(self):
+        nodes = merchant_feed.load_taxonomy_nodes()
+        invalid_payloads = (
+            {"categories": {"extra": {"id": "999999", "path": nodes["543542"], "reason": "reviewed"}}},
+            {"categories": {"extra": {"id": "543542", "path": "Media > Books > Made Up", "reason": "reviewed"}}},
+            {"categories": {"extra": {"id": "543542", "path": nodes["543542"], "reason": ""}}},
+            {"categories": {"portrait-skin-brushes-procreate": {
+                "id": "543542", "path": nodes["543542"], "reason": "duplicate mapping"}}},
+        )
+        for payload in invalid_payloads:
+            with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
+                json.dump(payload, fh)
+                tmp = Path(fh.name)
+            try:
+                with self.subTest(payload=payload), self.assertRaises(ValueError):
+                    merchant_feed.load_pinterest_categories(tmp)
+            finally:
+                tmp.unlink()
 
 
 class FeedHoldTests(unittest.TestCase):

@@ -2,10 +2,11 @@
   "_meta": {
     "source": "https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt",
     "version": "Google_Product_Taxonomy_Version 2021-09-21",
-    "note": "Vendored subset: only the taxonomy nodes the feed actually uses, so QA can verify every google_product_category offline."
+    "note": "Vendored subset of Google taxonomy nodes used by the Merchant Center and Pinterest feeds, for offline category validation."
   },
   "nodes": {
     "8022": "Software > Digital Goods & Currency > Document Templates",
-    "500046": "Software > Digital Goods & Currency > Digital Artwork"
+    "500046": "Software > Digital Goods & Currency > Digital Artwork",
+    "543542": "Media > Books > E-books"
   }
 }

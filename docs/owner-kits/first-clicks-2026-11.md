@@ -15,10 +15,10 @@ The store's problem per today's GSC exports is not merchandising and not code �
 
 ## C. Pinterest — the channel Google isn't strangling (45 minutes, ongoing)
 
-`https://digikitpro.shop/pinterest-feed.xml` (or .csv) is already generated every build with all 47 paid products — use it.
+`https://digikitpro.shop/pinterest-feed.xml` (or .csv) is generated every build with all 50 paid products and a per-item `google_product_category` from Google's taxonomy. The category IDs use the reviewed product map; after the feed update is deployed, refresh or wait for the scheduled Pinterest source fetch so it ingests the changed rows.
 
 1. Pinterest → Business account → Settings → Claim → verify `digikitpro.shop` (method Pinterest offers — HTML tag or DNS).
-2. Pinterest → Create → **Catalogs** → connect your data source: the pinterest-feed.xml URL. Once processed, product pins become shoppable/searchable.
+2. Pinterest → Create → **Catalogs** → connect your data source: the pinterest-feed.xml URL. Once processed, product pins become shoppable/searchable. A "no changes since the last successful update" warning is an ingestion no-op, not an item error; the category change should give the next fetch updated feed content.
 3. Manual cadence to prove ROI: **2 pins/week** for 8 weeks using REAL artwork only (cover renders, before/after portraits for skin/mastery pages). Link = the PDP URL. Caption like "19 portrait-skin brushes for Procreate — pore and freckle marks, matte before/after inside" (truthful sensations, no fake stats).
 4. Track: Pinterest analytics → outbound clicks → PDPs. Pins that earn saves → note and remake in that style.
 

@@ -42,10 +42,18 @@ Measuring & Marking Tools > Art Brushes`) describes a physical paintbrush. All
 downloadable creative assets therefore use
 `Software > Digital Goods & Currency > Digital Artwork` (`500046`), and
 page-based products (hyperlinked PDF planners, Canva templates) use
-`Software > Digital Goods & Currency > Document Templates` (`8022`).
-`qa_product_editorial.py` fails if a Merchant item uses an `Arts & Entertainment`
-category, if the feed falls back to one blanket category, or if any item has no
-reviewed category.
+`Software > Digital Goods & Currency > Document Templates` (`8022`). The
+Pinterest catalog reuses these reviewed IDs for the 48 products already mapped
+in `data/merchant-categories.json`. Its two
+paid PDF publications, excluded from the common Merchant source, use the
+format-matched `Media > Books > E-books` category (`543542`) in
+`data/pinterest-category-extras.json`. The shared taxonomy subset is
+`data/google-taxonomy-nodes.json`; the Pinterest feed build fails if a paid item
+has no reviewed mapping, a stale mapping remains, or an ID/path is not in the
+verified taxonomy. `qa_product_editorial.py` and the feed QA fail if a Merchant
+item uses an `Arts & Entertainment` category, if the Merchant feed falls back to
+one blanket category, or if any Pinterest paid item lacks its own reviewed
+category.
 
 `product_highlight` and `product_detail` are derived from the existing
 `features`, `technical` and `requirements` fields. `custom_label_0` is the
