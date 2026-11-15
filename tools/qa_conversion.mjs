@@ -85,7 +85,7 @@ async function testHeaderAndLayout() {
       await toggle.click();
     }
   }
-  for (const path of ['/products/portrait-mastery-kit-46-brushes/', '/products/portrait-skin-brushes-procreate/', '/products/artista-studio-kit-76-brushes/', '/products/free-fine-liner-brushes-100/', '/thank-you.html?lead=free-fine-liner-brushes-100', '/freebies.html']) {
+  for (const path of ['/products/portrait-mastery-kit-46-brushes/', '/products/portrait-skin-brushes-procreate/', '/products/artista-studio-kit-76-brushes/', '/products/essential-line-art-sketch-kit/', '/products/free-fine-liner-brushes-100/', '/thank-you.html?lead=free-fine-liner-brushes-100', '/freebies.html']) {
     await page.setViewportSize({ width: 320, height: 844 });
     await page.goto(BASE + path, { waitUntil: 'load' });
     const x = await page.evaluate(() => {
@@ -275,7 +275,7 @@ async function testJourneys() {
   console.log('\n── Free-resource mappings and optional follow-up ──');
   const cases = [
     ['procreate-starter-guide-free-ebook', 'portrait-mastery-kit-46-brushes'],
-    ['free-fine-liner-brushes-100', 'artista-studio-kit-76-brushes'],
+    ['free-fine-liner-brushes-100', 'essential-line-art-sketch-kit'],
     ['free-chalkboard-artists-toolkit', 'professional-charcoal-studio'],
     ['free-color-vault-1200-swatches', 'brush-palette-bundle-160'],
   ];
@@ -309,6 +309,33 @@ async function testJourneys() {
     ok(`${source}: recommendation reaches the matching paid page`, page.url() === `${BASE}/products/${paid}/` && !!report.events.premium_product_click, page.url());
     await ctx.close();
   }
+  const { ctx: freebiesCtx } = await makeContext();
+  const freebiesPage = await freebiesCtx.newPage();
+  await freebiesPage.goto(BASE + '/freebies.html');
+  for (const [source, paid] of cases) {
+    const recommendation = freebiesPage.locator(`.dl-companion-link[data-dkp-source-product-id="${source}"]`);
+    ok(`${source}: freebie card shows its optional paid companion`,
+       await recommendation.isVisible() &&
+       await recommendation.evaluate(el => el.href) === `${BASE}/products/${paid}/` &&
+       await recommendation.getAttribute('data-dkp-product-id') === paid &&
+       await recommendation.getAttribute('data-dkp-surface') === 'freebies');
+  }
+  const linerRecommendation = freebiesPage.locator('.dl-companion-link[data-dkp-source-product-id="free-fine-liner-brushes-100"]');
+  await linerRecommendation.evaluate(el => el.addEventListener('click', event => event.preventDefault(), { once: true }));
+  await linerRecommendation.click();
+  const freebiesEvents = await events(freebiesPage);
+  const linerClick = freebiesEvents.find(x => x[1] === 'premium_product_click');
+  ok('fine-liner companion click is attributed to its free resource and paid kit',
+     !!linerClick && linerClick[2].source_product_id === 'free-fine-liner-brushes-100' &&
+       linerClick[2].product_id === 'essential-line-art-sketch-kit' && linerClick[2].surface === 'freebies',
+     JSON.stringify(linerClick));
+  await Promise.all([
+    freebiesPage.waitForURL(`${BASE}/products/essential-line-art-sketch-kit/`),
+    linerRecommendation.click(),
+  ]);
+  ok('fine-liner companion link opens its paid product page', freebiesPage.url() === `${BASE}/products/essential-line-art-sketch-kit/`);
+  await freebiesCtx.close();
+
   const { ctx } = await makeContext();
   const page = await ctx.newPage();
   await page.goto(BASE + '/thank-you.html?lead=not-a-product');
