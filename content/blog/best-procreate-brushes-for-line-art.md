@@ -11,7 +11,7 @@ search_intent: Commercial investigation with informational support
 target_audience: Line-art beginners, comic and manga artists, illustrators, tattoo designers, and character artists
 tags: [line art, Procreate brushes, inking, manga, sketching, iPad art]
 products: [free-fine-liner-brushes-100, essential-line-art-sketch-kit, liner-marker-studio-39-brushes, master-line-art-vault-300]
-related: [how-to-choose-procreate-brushes, best-procreate-brushes-for-beginners, tattoo-design-in-procreate]
+related: [best-procreate-brushes-guide, how-to-choose-procreate-brushes, best-procreate-brushes-for-beginners, tattoo-design-in-procreate]
 ---
 
 A line-art brush should make your decisions clearer, not hide them. The right tool gives you predictable width changes, a useful edge, and enough texture to match the style you want. It cannot replace drawing practice, but it can remove avoidable friction while you learn.

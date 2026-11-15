@@ -12,7 +12,7 @@ search_intent: Informational
 target_audience: Procreate beginners, iPad artists, and customers who have downloaded a brush file but cannot find it in the app
 tags: [Procreate brushes, installation, iPad, brushset, troubleshooting]
 products: [free-fine-liner-brushes-100, essential-line-art-sketch-kit, portrait-mastery-kit-46-brushes]
-related: [best-procreate-brushes-for-beginners, how-to-choose-procreate-brushes, best-procreate-brushes-for-line-art]
+related: [best-procreate-brushes-guide, best-procreate-brushes-for-beginners, how-to-choose-procreate-brushes, best-procreate-brushes-for-line-art]
 ---
 
 Installing a Procreate brush set is simple once you know which file you are looking for. Most confusion comes from opening the ZIP instead of the extracted `.brushset`, importing a single `.brush` and looking in the wrong set, or trying to use a Procreate file in another app.

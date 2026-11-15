@@ -13,7 +13,7 @@ search_intent: Informational with light commercial investigation
 target_audience: New Procreate users, iPad artists, hobby illustrators, and learners building a first brush library
 tags: [Procreate brushes, beginners, iPad art, brush workflow, free resources]
 products: [free-fine-liner-brushes-100, free-chalkboard-artists-toolkit, free-color-vault-1200-swatches, procreate-starter-guide-free-ebook, artista-studio-kit-76-brushes]
-related: [how-to-choose-procreate-brushes, how-to-install-procreate-brushes, best-procreate-brushes-for-line-art]
+related: [best-procreate-brushes-guide, how-to-choose-procreate-brushes, how-to-install-procreate-brushes, best-procreate-brushes-for-line-art]
 ---
 
 Begin with Procreate’s built-in sketch, liner and painting brushes. Practise one small drawing with them before adding a texture brush or downloading a specialist set.

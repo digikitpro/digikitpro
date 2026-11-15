@@ -12,7 +12,7 @@ search_intent: Informational
 target_audience: Digital painters, sketchbook artists, illustrators, and Procreate users seeking traditional-media effects
 tags: [watercolor, traditional media, Procreate tutorial, texture, digital painting]
 products: [watercolor-studio-kit-50-brushes, organic-watercolor-80-brushes, professional-digital-sketchbook, free-color-vault-1200-swatches]
-related: [how-to-make-digital-art-look-traditional, best-procreate-brushes-for-beginners, how-to-choose-procreate-brushes]
+related: [best-procreate-brushes-guide, how-to-make-digital-art-look-traditional, best-procreate-brushes-for-beginners, how-to-choose-procreate-brushes]
 ---
 
 Digital watercolor looks artificial when pigment stays perfectly where the stylus put it. A convincing result suggests several behaviours at once: translucent washes, uneven edges, pigment pooling, paper tooth, and controlled overlaps. Procreate cannot reproduce every physical interaction, but you can design a workflow that avoids the clean-gradient look.

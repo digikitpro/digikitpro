@@ -13,7 +13,7 @@ search_intent: Commercial investigation
 target_audience: Anime and manga illustrators, character artists, chibi artists, and beginners building a stylised workflow
 tags: [anime, manga, Procreate brushes, character art, line art, watercolor]
 products: [anime-soft-style-studio-kit, anime-soft-style-brushes-100, liner-marker-studio-39-brushes, essential-line-art-sketch-kit]
-related: [best-procreate-brushes-for-line-art, how-to-make-digital-art-look-traditional, how-to-paint-realistic-hair-in-procreate]
+related: [best-procreate-brushes-guide, best-procreate-brushes-for-line-art, how-to-make-digital-art-look-traditional, how-to-paint-realistic-hair-in-procreate]
 ---
 
 For anime and manga in Procreate, start with a controlled liner and a simple painting brush. Add a soft blender or texture tool only if your style calls for it; built-in brushes can cover the basics.
