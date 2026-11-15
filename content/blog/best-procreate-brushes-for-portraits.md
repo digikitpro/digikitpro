@@ -11,7 +11,7 @@ search_intent: Commercial investigation
 target_audience: Digital portrait painters, character artists, illustrators, and Procreate users building a portrait workflow
 tags: [portraits, Procreate brushes, skin, hair, digital painting, iPad art]
 products: [portrait-mastery-kit-46-brushes, portrait-skin-brushes-procreate, professional-hair-brushes, hair-hairstyle-stamp-kit, ultimate-portrait-mastery-bundle, procreate-portrait-masterclass-ebook]
-related: [procreate-portrait-workflow, how-to-create-realistic-skin-in-procreate, how-to-paint-realistic-hair-in-procreate]
+related: [best-procreate-brushes-guide, procreate-portrait-workflow, how-to-create-realistic-skin-in-procreate, how-to-paint-realistic-hair-in-procreate]
 ---
 
 Portrait painting needs more than a “realistic” brush. You need a tool for construction, one for controlled edges, something that can build soft colour without flattening the form, and a way to place texture only where it helps. The best Procreate portrait brushes are therefore the ones that fit a sequence from drawing to finish.

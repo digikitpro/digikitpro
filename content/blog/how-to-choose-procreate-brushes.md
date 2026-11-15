@@ -13,7 +13,7 @@ search_intent: Informational with commercial investigation
 target_audience: Procreate beginners, intermediate illustrators, portrait artists, and buyers comparing brush packs
 tags: [Procreate brushes, buying guide, brush workflow, digital art resources, licensing]
 products: [portrait-mastery-kit-46-brushes, master-line-art-vault-300, watercolor-studio-kit-50-brushes, anime-soft-style-studio-kit, procreate-mega-bundle-650]
-related: [best-procreate-brushes-for-beginners, best-procreate-brushes-for-portraits, stamp-brushes-vs-painting-brushes]
+related: [best-procreate-brushes-guide, best-procreate-brushes-for-beginners, best-procreate-brushes-for-portraits, stamp-brushes-vs-painting-brushes]
 ---
 
 Start with a job your current brush cannot do, then compare sets by their marks, contents and compatibility. Procreate’s built-in tools or a small free set may be enough to learn before buying.
