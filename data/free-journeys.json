@@ -4,20 +4,23 @@
     "title": "Turn the portrait lessons into a practice routine",
     "freeSummary": "The free PDF teaches structure, value, surface and finishing. Procreate’s built-in brushes are enough to follow it.",
     "paidSummary": "The separate Portrait Mastery Kit adds 46 brushes organized for sketch, ink, blending, hair, detail, texture and finish, plus four paper textures.",
+    "cardCopy": "Dedicated portrait brushes for sketching, blending, hair, texture and finishing.",
     "practice": "Try this: make a quick head study using three value groups. Once the shapes read clearly, add a little texture on a new layer."
   },
   "free-fine-liner-brushes-100": {
-    "paid": "artista-studio-kit-76-brushes",
-    "title": "Take your linework into a broader studio workflow",
+    "paid": "essential-line-art-sketch-kit",
+    "title": "Move from fine liners to a focused sketch-and-ink workflow",
     "freeSummary": "The free set gives you 100 fine liner, micron, marker and textured-line brushes plus 13 paper textures.",
-    "paidSummary": "Artista is a separate 76-brush collection with sketching, graphite, charcoal, shading, traditional media and effects alongside linework. Some brush types overlap; it is a different toolkit, not a required upgrade.",
-    "practice": "Try this: draw the same small object with two line weights, then use a soft shading brush to group its shadows."
+    "paidSummary": "The separate Essential Line Art & Sketch Kit groups pencil, liner, ink, detail and sketch tools into a focused drawing workflow. It complements the free set rather than promising a larger brush count.",
+    "cardCopy": "A task-focused set for pencil, liner, ink, detail and sketch workflows.",
+    "practice": "Try this: sketch a small object, ink its outline with two line weights, then try one of the free paper textures underneath."
   },
   "free-chalkboard-artists-toolkit": {
     "paid": "professional-charcoal-studio",
     "title": "Explore another traditional-media texture",
     "freeSummary": "The free chalk toolkit includes 20+ chalk brushes, a chalk eraser and swatches for dark backgrounds.",
     "paidSummary": "The separate Charcoal Studio focuses on compressed, vine and willow charcoal, smudging tools and textured detailers for sketches and tonal work.",
+    "cardCopy": "Try charcoal, smudging and tonal texture as a separate medium from chalk.",
     "practice": "Try this: letter a short word on a dark canvas, then lift small areas with the chalk eraser for a worn finish."
   },
   "free-color-vault-1200-swatches": {
@@ -25,6 +28,7 @@
     "title": "Pair your colours with pattern-making tools",
     "freeSummary": "The free Color Vault contains 40 Procreate palettes and 1,200+ swatches; it is a colour resource, not a brush set.",
     "paidSummary": "The separate Brush & Color Palette Bundle contains 160 pattern brushes and 12 palettes. The free palettes are still useful on their own and are not a trial version of the bundle.",
+    "cardCopy": "Add pattern-making brushes to the palettes you already have.",
     "practice": "Try this: choose three colours from one free palette and use them consistently across a small illustration."
   }
 }

@@ -1347,18 +1347,22 @@ def main() -> int:
 
     # Free-to-paid recommendations must never replace or invent a download.
     journeys = json.loads(read("data/free-journeys.json"))
+    freebies_page = read("freebies.html")
     journey_bad = []
     for source, detail in journeys.items():
         free = products.get(source) or {}
         paid = products.get(detail.get("paid")) or {}
         page_path = ROOT / "products" / source / "index.html"
         page = page_path.read_text(encoding="utf-8") if page_path.is_file() else ""
-        if not (free.get("free") and free.get("payhipUrl") in page and paid
-                and not paid.get("free") and f'data-journey="{source}"' in page
+        if not (free.get("free") and free.get("payhipUrl") in page and free.get("payhipUrl") in freebies_page
+                and paid and not paid.get("free") and f'data-journey="{source}"' in page
                 and f'data-dkp-product-id="{paid.get("slug")}"' in page
-                and f'thank-you.html?lead={source}' in page):
+                and f'thank-you.html?lead={source}' in page
+                and f'data-dkp-source-product-id="{source}"' in freebies_page
+                and f'data-dkp-product-id="{paid.get("slug")}"' in freebies_page
+                and 'data-dkp-surface="freebies"' in freebies_page):
             journey_bad.append(source)
-    check("four free resources retain Payhip links and point to relevant paid journeys",
+    check("four free resources keep direct downloads and show matched optional paid companions",
           len(journeys) == 4 and not journey_bad, ", ".join(journey_bad) or "4/4 journeys")
 
     thanks = read("thank-you.html")

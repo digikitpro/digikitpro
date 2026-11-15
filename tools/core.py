@@ -1244,6 +1244,15 @@ def freebie_download_row(depth=0):
         im = p.get("images") or {}
         img = im.get("card") or im.get("main") or ""
         srcset = img_srcset(depth, p["slug"], im, "(min-width: 1100px) 350px, (min-width: 680px) 31vw, 92vw")
+        plan = FREE_JOURNEYS.get(p["slug"]) or {}
+        paid = BY_SLUG.get(plan.get("paid"))
+        companion = ""
+        if plan and paid and not paid.get("free") and not paid.get("comingSoon") and plan.get("cardCopy"):
+            companion = f"""<div class="dl-companion">
+      <p class="dl-companion-label">Optional companion · {esc(paid.get('priceText') or '')}</p>
+      <p class="dl-companion-copy">{esc(plan['cardCopy'])}</p>
+      <a class="dl-companion-link text-link" href="{rel(depth, 'products/' + paid['slug'] + '/')}" data-dkp-event="premium_product_click" data-dkp-source-product-id="{esc(p['slug'])}" data-dkp-product-id="{esc(paid['slug'])}" data-dkp-surface="freebies">See {esc(paid['name'])} →</a>
+    </div>"""
         cards += f"""<article class="dl-card">
   <div class="card-img">
   <a class="dl-media" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-direct')}{pin_attrs(p)}>
@@ -1259,6 +1268,7 @@ def freebie_download_row(depth=0):
       <a class="btn btn-gold" href="{p['payhipUrl']}" target="_blank" rel="noopener" {buy_attrs(p, 'freebie-direct')}>Get Free <span class="btn-arr">↗</span></a>
     </div>
     <p class="dl-note">Free via Payhip · newsletter signup not required</p>
+    {companion}
     <a class="dl-next" href="{rel(depth, 'thank-you.html')}?lead={urllib.parse.quote(p['slug'])}" data-dkp-event="free_next_step_click" data-dkp-source-product-id="{esc(p['slug'])}" data-dkp-surface="freebies">After downloading: your next step →</a>
   </div>
 </article>"""
